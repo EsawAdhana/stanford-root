@@ -1,0 +1,61 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Stanford Identity Guide Colors */
+    
+    /* Cardinal Red #8C1515 -> HSL(358, 74%, 32%) */
+    /* Stanford Black #2E2D29 -> HSL(48, 6%, 17%) */
+    /* Cool Grey #53565A -> HSL(214, 4%, 34%) */
+    /* White #FFFFFF -> HSL(0, 0%, 100%) */
+    /* 10% Black (Light Grey) #EAEAEA -> HSL(0, 0%, 92%) */
+    /* 20% Black #D5D5D4 -> HSL(60, 1%, 83%) */
+    
+    --background: 0 0% 100%; /* White */
+    --foreground: 48 6% 17%; /* Stanford Black */
+    
+    --card: 0 0% 100%;
+    --card-foreground: 48 6% 17%;
+    
+    --popover: 0 0% 100%;
+    --popover-foreground: 48 6% 17%;
+    
+    --primary: 358 74% 32%; /* Cardinal Red */
+    --primary-foreground: 0 0% 100%;
+    
+    --secondary: 0 0% 92%; /* 10% Black (Light Grey) */
+    --secondary-foreground: 48 6% 17%;
+    
+    --muted: 0 0% 92%;
+    --muted-foreground: 214 4% 34%; /* Cool Grey */
+    
+    --accent: 0 0% 92%;
+    --accent-foreground: 48 6% 17%;
+    
+    --destructive: 358 74% 32%;
+    --destructive-foreground: 0 0% 100%;
+    
+    --border: 0 0% 88%; /* Slightly darker than secondary for definition */
+    --input: 0 0% 88%;
+    
+    --ring: 358 74% 32%;
+    --radius: 0.75rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
