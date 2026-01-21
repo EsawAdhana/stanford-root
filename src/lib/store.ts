@@ -18,11 +18,12 @@ export const useCourseStore = create<CourseStore>((set, get) => ({
 
     set({ isLoading: true })
     try {
+      const basePath = (process.env.NEXT_PUBLIC_BASE_PATH || '').replace(/\/$/, '')
       const urls = [
-        'data/fall.json',
-        'data/winter.json',
-        'data/spring.json',
-        'data/summer.json'
+        `${basePath}/data/fall.json`,
+        `${basePath}/data/winter.json`,
+        `${basePath}/data/spring.json`,
+        `${basePath}/data/summer.json`
       ]
 
       const results = await Promise.allSettled(
@@ -37,7 +38,7 @@ export const useCourseStore = create<CourseStore>((set, get) => ({
 
       // Back-compat: if split files aren't present yet, fall back to legacy file
       if (responses.length === 0) {
-        const res = await fetch('data/courses.json', { cache: 'no-store' })
+        const res = await fetch(`${basePath}/data/courses.json`, { cache: 'no-store' })
         if (!res.ok) throw new Error(`Failed to fetch courses: ${res.status}`)
         const data = await res.json()
         const courses = Array.isArray(data) ? data : (data?.courses ?? [])

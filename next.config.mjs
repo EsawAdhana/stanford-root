@@ -7,6 +7,9 @@ const nextConfig = {
   basePath: process.env.NODE_ENV === 'production' ? '/revised-navigator' : '',
   assetPrefix: process.env.NODE_ENV === 'production' ? '/revised-navigator/' : '',
   images: { unoptimized: true },
+  env: {
+    NEXT_PUBLIC_BASE_PATH: process.env.NODE_ENV === 'production' ? '/revised-navigator' : ''
+  }
 };
 
 export default nextConfig;
