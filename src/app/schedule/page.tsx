@@ -2,6 +2,7 @@
 
 import React, { Suspense, useMemo, useState } from 'react';
 import { CalendarView } from '@/components/calendar-view';
+import { Logo } from '@/components/logo';
 import { Button } from '@/components/ui/button';
 import { AlertCircle, CalendarDays, ChevronLeft } from 'lucide-react';
 import Link from 'next/link';
@@ -205,6 +206,12 @@ END:VEVENT
       <header className="flex-none h-16 border-b bg-card">
         <div className="h-full w-full max-w-7xl mx-auto px-6 flex items-center justify-between gap-4">
           <div className="flex items-center gap-4">
+              <Link href={backHref} className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+                  <Logo className="h-8 w-8 shadow-primary/20" />
+                  <h1 className="text-xl tracking-tight text-foreground font-[family-name:var(--font-outfit)] font-medium hidden sm:block">
+                      Navi<span className="font-bold text-primary">Greater</span>
+                  </h1>
+              </Link>
               <Link href={backHref}>
                   <Button variant="ghost" size="sm" className="gap-2">
                       <ChevronLeft className="h-4 w-4" />
@@ -212,7 +219,7 @@ END:VEVENT
                   </Button>
               </Link>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 ml-auto">
             <Button
               variant="outline"
               size="sm"
@@ -224,53 +231,6 @@ END:VEVENT
               <CalendarDays className="h-4 w-4" />
               Export .ics
             </Button>
-
-            {isOverload && !isIgnored ? (
-              <Popover>
-                <PopoverTrigger asChild>
-                  <div className={cn(
-                    'flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium border transition-colors cursor-pointer',
-                    'bg-destructive/10 text-destructive border-destructive/20 hover:bg-destructive/20'
-                  )}>
-                    <AlertCircle className="h-4 w-4" />
-                    <span>
-                      {totalUnitsMin === totalUnitsMax ? totalUnitsMin : `${totalUnitsMin}-${totalUnitsMax}`} {totalUnitsMin === 1 && totalUnitsMax === 1 ? 'Unit' : 'Units'}
-                    </span>
-                  </div>
-                </PopoverTrigger>
-                <PopoverContent className="w-80">
-                  <div className="space-y-3">
-                    <div className="space-y-1">
-                      <h4 className="font-medium text-destructive flex items-center gap-2">
-                        <AlertCircle className="h-4 w-4" />
-                        Unit Overload
-                      </h4>
-                      <p className="text-sm text-muted-foreground">
-                        You are exceeding the typical 20 unit limit for {currentTerm}.
-                      </p>
-                    </div>
-                    <div className="flex justify-end">
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        onClick={() => setIgnoredOverloads(prev => ({ ...prev, [currentTerm]: true }))}
-                      >
-                        Ignore
-                      </Button>
-                    </div>
-                  </div>
-                </PopoverContent>
-              </Popover>
-            ) : (
-              <div className={cn(
-                'flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium border transition-colors',
-                'bg-secondary text-secondary-foreground border-transparent'
-              )}>
-                <span>
-                  {totalUnitsMin === totalUnitsMax ? totalUnitsMin : `${totalUnitsMin}-${totalUnitsMax}`} Units
-                </span>
-              </div>
-            )}
           </div>
         </div>
       </header>
@@ -278,7 +238,15 @@ END:VEVENT
       {/* Main Content */}
       <main className="flex-1 overflow-auto p-6">
         <div className="min-h-full w-full max-w-7xl mx-auto flex flex-col">
-            <CalendarView currentTerm={currentTerm} onPrevTerm={prevTerm} onNextTerm={nextTerm} />
+            <CalendarView 
+              currentTerm={currentTerm} 
+              onPrevTerm={prevTerm} 
+              onNextTerm={nextTerm}
+              totalUnitsMin={totalUnitsMin}
+              totalUnitsMax={totalUnitsMax}
+              isOverload={isOverload && !isIgnored}
+              onIgnoreOverload={() => setIgnoredOverloads(prev => ({ ...prev, [currentTerm]: true }))}
+            />
         </div>
       </main>
     </div>

@@ -4,9 +4,10 @@ import React, { useMemo, useState } from 'react';
 import { useCartStore } from '@/lib/cart-store';
 import { isMeetingOptional, parseMeetingTimes, timeToMinutes } from '@/lib/schedule-utils';
 import { cn } from '@/lib/utils';
-import { ChevronLeft, ChevronRight, Trash2, EyeOff, Eye } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Trash2, EyeOff, Eye, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { CourseDetail } from '@/components/course-detail';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
 type CalendarEvent = {
   id: string
@@ -31,6 +32,10 @@ type CalendarViewProps = {
   currentTerm: string
   onPrevTerm: () => void
   onNextTerm: () => void
+  totalUnitsMin: number
+  totalUnitsMax: number
+  isOverload: boolean
+  onIgnoreOverload: () => void
 }
 
 const DAYS: Array<{ key: CalendarEvent['day'], label: string }> = [
@@ -108,7 +113,7 @@ function layoutDayEvents (events: CalendarEvent[]) {
   return laidOut
 }
 
-export function CalendarView ({ currentTerm, onPrevTerm, onNextTerm }: CalendarViewProps) {
+export function CalendarView ({ currentTerm, onPrevTerm, onNextTerm, totalUnitsMin, totalUnitsMax, isOverload, onIgnoreOverload }: CalendarViewProps) {
   const { items, removeItem, toggleOptionalMeeting } = useCartStore()
   const [selectedCourseId, setSelectedCourseId] = useState<string | null>(null)
 
@@ -327,7 +332,55 @@ export function CalendarView ({ currentTerm, onPrevTerm, onNextTerm }: CalendarV
 
             {/* Selected classes list */}
             <div className="space-y-2 min-h-0">
-                <h3 className="font-semibold text-sm mb-2">Classes in {currentTerm}</h3>
+                <div className="flex items-center justify-between gap-2 mb-2">
+                    <h3 className="font-semibold text-sm">Classes in {currentTerm}</h3>
+                    {isOverload ? (
+                        <Popover>
+                            <PopoverTrigger asChild>
+                                <div className={cn(
+                                    'flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium border transition-colors cursor-pointer',
+                                    'bg-destructive/10 text-destructive border-destructive/20 hover:bg-destructive/20'
+                                )}>
+                                    <AlertCircle className="h-4 w-4" />
+                                    <span>
+                                        {totalUnitsMin === totalUnitsMax ? totalUnitsMin : `${totalUnitsMin}-${totalUnitsMax}`} {totalUnitsMin === 1 && totalUnitsMax === 1 ? 'Unit' : 'Units'}
+                                    </span>
+                                </div>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-80">
+                                <div className="space-y-3">
+                                    <div className="space-y-1">
+                                        <h4 className="font-medium text-destructive flex items-center gap-2">
+                                            <AlertCircle className="h-4 w-4" />
+                                            Unit Limit Exceeded
+                                        </h4>
+                                        <p className="text-sm text-muted-foreground">
+                                            You are exceeding the typical 20 unit limit for {currentTerm}.
+                                        </p>
+                                    </div>
+                                    <div className="flex justify-end">
+                                        <Button
+                                            variant="secondary"
+                                            size="sm"
+                                            onClick={onIgnoreOverload}
+                                        >
+                                            Ignore
+                                        </Button>
+                                    </div>
+                                </div>
+                            </PopoverContent>
+                        </Popover>
+                    ) : (
+                        <div className={cn(
+                            'flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium border transition-colors',
+                            'bg-background text-foreground border-border'
+                        )}>
+                            <span>
+                                {totalUnitsMin === totalUnitsMax ? totalUnitsMin : `${totalUnitsMin}-${totalUnitsMax}`} Units
+                            </span>
+                        </div>
+                    )}
+                </div>
                 {currentTermCourses.length === 0 ? (
                     <div className="text-center text-muted-foreground text-sm">No classes this term.</div>
                 ) : (

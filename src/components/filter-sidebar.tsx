@@ -1,7 +1,9 @@
 import React, { useMemo, useState } from 'react';
 import { useCourseStore } from '@/lib/store';
+import { useCartStore } from '@/lib/cart-store';
 import { useQueryState, parseAsArrayOf, parseAsString, parseAsBoolean } from 'nuqs';
 import { cn, getSchoolFromSubject } from '@/lib/utils';
+import { parseMeetingTimes, timeToMinutes, isMeetingOptional } from '@/lib/schedule-utils';
 import { CheckboxItem, FilterGroup } from '@/components/ui/filter-components';
 import { Input } from '@/components/ui/input';
 import { Search, Plus, X, ChevronDown, ChevronRight } from 'lucide-react';
@@ -64,8 +66,10 @@ const FilterSection = ({
 
 export function FilterSidebar() {
     const { courses } = useCourseStore();
+    const cartItems = useCartStore(state => state.items);
 
     // State
+    const [query] = useQueryState('q', { defaultValue: '' });
     const [selectedDepts, setSelectedDepts] = useQueryState('depts', parseAsArrayOf(parseAsString).withDefault([]));
     const [selectedTerms, setSelectedTerms] = useQueryState('terms', parseAsArrayOf(parseAsString).withDefault([]));
     const [hideConflicts, setHideConflicts] = useQueryState('hideConflicts', parseAsBoolean.withDefault(false));
@@ -87,6 +91,7 @@ export function FilterSidebar() {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
     // Helper to filter courses based on all active filters except a specific one
+    // This ensures facet counts match the visible course list
     const getFilteredCoursesForFacets = (excludeFilter?: string) => {
             let filtered = courses;
 
@@ -213,6 +218,146 @@ export function FilterSidebar() {
                     }
                     return false;
                 });
+            }
+
+            // Apply conflict hiding filter (always applied, not excluded)
+            if (hideConflicts) {
+                const hasOverlap = (m1: any, m2: any, cartItem?: any) => {
+                    // Check Days - but exclude optional days from cartItem
+                    let commonDays = m1.days.filter((d: string) => m2.days.includes(d));
+                    
+                    // If cartItem is provided, filter out optional days
+                    if (cartItem) {
+                        commonDays = commonDays.filter((day: string) => {
+                            return !isMeetingOptional(cartItem, day, m2.startTime, m2.endTime);
+                        });
+                    }
+                    
+                    if (commonDays.length === 0) return false;
+                    
+                    // Check Times
+                    const start1 = timeToMinutes(m1.startTime);
+                    const end1 = timeToMinutes(m1.endTime);
+                    const start2 = timeToMinutes(m2.startTime);
+                    const end2 = timeToMinutes(m2.endTime);
+                    
+                    return start1 < end2 && start2 < end1;
+                };
+
+                const parseSectionMeetings = (section: any) => {
+                    return section.meetings.flatMap((m: any) => {
+                        let days: string[] = [];
+                        if (typeof m.days === 'string') days = m.days.split(/[ ,]+/);
+                        
+                        // Normalize Days (Mon, Tue...)
+                        const normalizedDays = days.map((d: string) => {
+                            const lower = d.toLowerCase();
+                            if (lower.startsWith('m')) return 'Mon';
+                            if (lower.startsWith('tu')) return 'Tue';
+                            if (lower.startsWith('w')) return 'Wed';
+                            if (lower.startsWith('th')) return 'Thu';
+                            if (lower.startsWith('f')) return 'Fri';
+                            return '';
+                        }).filter(Boolean);
+
+                        let startTime = '', endTime = '';
+                        if (m.time && m.time.includes('-')) {
+                            [startTime, endTime] = m.time.split('-').map((s: string) => s.trim());
+                        }
+
+                        if (!startTime) return [];
+
+                        return [{
+                            days: normalizedDays,
+                            startTime,
+                            endTime
+                        }];
+                    });
+                };
+
+                filtered = filtered.filter(c => {
+                    if (!c.sections || c.sections.length === 0) return true;
+                    
+                    let sectionsToCheck = c.sections;
+                    if (selectedTerms && selectedTerms.length > 0) {
+                        sectionsToCheck = sectionsToCheck.filter(s => selectedTerms.includes(s.term));
+                    }
+                    
+                    if (sectionsToCheck.length === 0) return true;
+
+                    // A course is valid if AT LEAST ONE section does not overlap
+                    return sectionsToCheck.some(section => {
+                        const cartItemsForTerm = cartItems.filter(item => item.selectedTerm === section.term);
+                        if (cartItemsForTerm.length === 0) return true;
+                        
+                        const sectionMeetings = parseSectionMeetings(section);
+                        if (sectionMeetings.length === 0) return true;
+
+                        const isOverlapping = cartItemsForTerm.some(cartItem => {
+                            const cartMeetings = parseMeetingTimes(cartItem, cartItem.selectedTerm);
+                            // Check conflicts, but pass cartItem to hasOverlap to exclude optional days
+                            return cartMeetings.some(cm => 
+                                sectionMeetings.some((sm: any) => hasOverlap(sm, cm, cartItem))
+                            );
+                        });
+                        
+                        return !isOverlapping;
+                    });
+                });
+            }
+
+            // Apply search query filter (always applied, not excluded)
+            if (query) {
+                const lowerQuery = query.toLowerCase().trim()
+                const compactQuery = lowerQuery.replace(/\s+/g, '')
+                const parts = lowerQuery.split(/\s+/).filter(Boolean)
+
+                const allSubjects = new Set(courses.map(c => c.subject))
+
+                let subject = parts[0]?.toUpperCase() || ''
+                let remainingQuery = parts.slice(1).join(' ')
+
+                // Support searches like "cs106a" as well as "cs 106a"
+                if (parts.length === 1 && compactQuery) {
+                    const m = compactQuery.match(/^([a-z&]+)(\d.*)$/i)
+                    if (m) {
+                        const maybeSubject = m[1].toUpperCase()
+                        if (allSubjects.has(maybeSubject)) {
+                            subject = maybeSubject
+                            remainingQuery = m[2]
+                        }
+                    }
+                }
+
+                const isSubjectSearch = Boolean(subject) && allSubjects.has(subject)
+
+                if (isSubjectSearch) {
+                    filtered = filtered.filter(c => c.subject === subject)
+
+                    if (remainingQuery) {
+                        const remainingLower = remainingQuery.toLowerCase().trim()
+                        const remainingCompact = remainingLower.replace(/\s+/g, '')
+                        filtered = filtered.filter(c => {
+                            const codeCompact = (c.code || '').toLowerCase().replace(/\s+/g, '')
+                            if (codeCompact.includes(remainingCompact)) return true
+                            if ((c.title || '').toLowerCase().includes(remainingLower)) return true
+                            return false
+                        })
+                    }
+                } else {
+                    filtered = filtered.filter(c => {
+                        const subjectCodeSpaced = `${c.subject} ${c.code}`.toLowerCase()
+                        const subjectCodeCompact = `${c.subject}${c.code}`.toLowerCase().replace(/\s+/g, '')
+                        const codeCompact = (c.code || '').toLowerCase().replace(/\s+/g, '')
+
+                        if (subjectCodeSpaced.startsWith(lowerQuery)) return true
+                        if (subjectCodeCompact.startsWith(compactQuery)) return true
+                        if (codeCompact.includes(compactQuery)) return true
+                        if ((c.title || '').toLowerCase().includes(lowerQuery)) return true
+                        if (c.instructors && c.instructors.some(i => i.toLowerCase().includes(lowerQuery))) return true
+                        return false
+                    })
+                }
             }
 
         return filtered;
@@ -402,7 +547,7 @@ export function FilterSidebar() {
             timeCounts,
             schools,
         };
-    }, [courses, excludedWords, selectedDepts, selectedTerms, selectedFormats, selectedStatus, selectedLevels, selectedGers, selectedSchools, unitRanges, timeRanges]);
+    }, [courses, excludedWords, selectedDepts, selectedTerms, selectedFormats, selectedStatus, selectedLevels, selectedGers, selectedSchools, unitRanges, timeRanges, query, hideConflicts, cartItems]);
 
     const filteredDepts = useMemo(() => {
         if (!deptQuery) return facets.depts;

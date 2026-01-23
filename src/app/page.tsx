@@ -39,12 +39,12 @@ function HomeContent() {
     <div className="flex flex-col h-screen overflow-hidden bg-background">
       {/* Header */}
       <header className="flex-none h-20 border-b border-border/40 flex items-center px-8 gap-8 bg-background/80 backdrop-blur-xl sticky top-0 z-30 transition-all duration-300 justify-between">
-        <div className="flex items-center gap-3 min-w-[200px]">
+        <Link href="/" className="flex items-center gap-3 min-w-[200px] hover:opacity-80 transition-opacity cursor-pointer">
             <Logo className="h-9 w-9 shadow-primary/20" />
             <h1 className="text-2xl tracking-tight text-foreground font-[family-name:var(--font-outfit)] font-medium">
                 Navi<span className="font-bold text-primary">Greater</span>
             </h1>
-        </div>
+        </Link>
         
         <div className="flex-1 flex justify-center max-w-4xl">
             <SearchBar />
@@ -58,11 +58,6 @@ function HomeContent() {
                 >
                     <ShoppingBag className="h-4 w-4" />
                     <span>My Schedule</span>
-                    {mounted && cartItems.length > 0 && (
-                        <span className="ml-1 bg-primary text-primary-foreground text-[10px] font-bold h-5 min-w-[20px] flex items-center justify-center rounded-full">
-                            {cartItems.length}
-                        </span>
-                    )}
                 </Button>
             </Link>
         </div>

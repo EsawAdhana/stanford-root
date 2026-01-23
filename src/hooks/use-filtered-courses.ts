@@ -246,34 +246,57 @@ export function useFilteredCourses() {
 
     // Filter by Query
     if (query) {
-      const lowerQuery = query.toLowerCase().trim();
-      const parts = lowerQuery.split(' ');
-      const potentialSubject = parts[0].toUpperCase();
-      
-      const allSubjects = new Set(courses.map(c => c.subject));
-      const isSubjectSearch = allSubjects.has(potentialSubject);
+      const lowerQuery = query.toLowerCase().trim()
+      const compactQuery = lowerQuery.replace(/\s+/g, '')
+      const parts = lowerQuery.split(/\s+/).filter(Boolean)
+
+      const allSubjects = new Set(courses.map(c => c.subject))
+
+      let subject = parts[0]?.toUpperCase() || ''
+      let remainingQuery = parts.slice(1).join(' ')
+
+      // Support searches like "cs106a" as well as "cs 106a"
+      if (parts.length === 1 && compactQuery) {
+        const m = compactQuery.match(/^([a-z&]+)(\d.*)$/i)
+        if (m) {
+          const maybeSubject = m[1].toUpperCase()
+          if (allSubjects.has(maybeSubject)) {
+            subject = maybeSubject
+            remainingQuery = m[2]
+          }
+        }
+      }
+
+      const isSubjectSearch = Boolean(subject) && allSubjects.has(subject)
 
       if (isSubjectSearch) {
-          result = result.filter(c => c.subject === potentialSubject);
-          
-          if (parts.length > 1) {
-              const remainingQuery = parts.slice(1).join(' ');
-              result = result.filter(c => {
-                  if (c.code.toLowerCase().includes(remainingQuery)) return true;
-                  if (c.title.toLowerCase().includes(remainingQuery)) return true;
-                  return false;
-              });
-          }
-      } else {
+        result = result.filter(c => c.subject === subject)
+
+        if (remainingQuery) {
+          const remainingLower = remainingQuery.toLowerCase().trim()
+          const remainingCompact = remainingLower.replace(/\s+/g, '')
           result = result.filter(c => {
-            const subjectCode = `${c.subject} ${c.code}`.toLowerCase();
-            if (subjectCode.startsWith(lowerQuery)) return true;
-            if (c.code.toLowerCase().includes(lowerQuery)) return true;
-            if (c.title.toLowerCase().includes(lowerQuery)) return true;
-            if (c.instructors && c.instructors.some(i => i.toLowerCase().includes(lowerQuery))) return true;
-            return false;
-          });
+            const codeCompact = (c.code || '').toLowerCase().replace(/\s+/g, '')
+            if (codeCompact.includes(remainingCompact)) return true
+            if ((c.title || '').toLowerCase().includes(remainingLower)) return true
+            return false
+          })
+        }
+        return result
       }
+
+      result = result.filter(c => {
+        const subjectCodeSpaced = `${c.subject} ${c.code}`.toLowerCase()
+        const subjectCodeCompact = `${c.subject}${c.code}`.toLowerCase().replace(/\s+/g, '')
+        const codeCompact = (c.code || '').toLowerCase().replace(/\s+/g, '')
+
+        if (subjectCodeSpaced.startsWith(lowerQuery)) return true
+        if (subjectCodeCompact.startsWith(compactQuery)) return true
+        if (codeCompact.includes(compactQuery)) return true
+        if ((c.title || '').toLowerCase().includes(lowerQuery)) return true
+        if (c.instructors && c.instructors.some(i => i.toLowerCase().includes(lowerQuery))) return true
+        return false
+      })
     }
     
     // Sort alphabetically by Subject then Code

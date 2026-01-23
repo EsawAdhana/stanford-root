@@ -73,3 +73,68 @@ export function getDepartmentUrl (code: string) {
 
   return `https://www.stanford.edu/search/?q=${encodeURIComponent(`${code} department`)}`
 }
+
+function convertTermToCode (term: string): string {
+  // Convert "Winter 2026" -> "W26", "Autumn 2025" -> "F25", etc.
+  if (!term) return ''
+  
+  const parts = term.split(' ')
+  if (parts.length < 2) return ''
+  
+  const season = parts[0].toUpperCase()
+  const year = parts[1]
+  
+  // Map season to code: Autumn/Fall -> F, Winter -> W, Spring -> S, Summer -> U
+  let seasonCode = ''
+  if (season === 'AUTUMN' || season === 'FALL') {
+    seasonCode = 'F'
+  } else if (season === 'WINTER') {
+    seasonCode = 'W'
+  } else if (season === 'SPRING') {
+    seasonCode = 'S'
+  } else if (season === 'SUMMER') {
+    seasonCode = 'U'
+  } else {
+    // Fallback to first letter if unknown
+    seasonCode = season.charAt(0)
+  }
+  
+  // Get last 2 digits of year
+  const yearCode = year.slice(-2)
+  
+  return `${seasonCode}${yearCode}`
+}
+
+export function getSyllabusUrl (subject: string, code: string, classId?: number, term?: string, sectionNumber?: string) {
+  // Stanford syllabus URLs use format: {termCode}-{subject}-{code}-{section}
+  // e.g., W26-ATHLETIC-60-01
+  if (term) {
+    const termCode = convertTermToCode(term)
+    const subjectClean = (subject || '').replace(/\s+/g, '').toUpperCase()
+    const codeClean = (code || '').replace(/\s+/g, '').toUpperCase()
+    
+    // Use provided section number, or default to "01" if missing
+    const sectionToUse = (sectionNumber && sectionNumber.trim() !== '') 
+      ? sectionNumber.replace(/\s+/g, '').padStart(2, '0')
+      : '01'
+    
+    // Validate all required parts are present
+    if (termCode && subjectClean && codeClean && sectionToUse) {
+      const courseIdentifier = `${termCode}-${subjectClean}-${codeClean}-${sectionToUse}`
+      // The identifier appears twice in the URL path
+      return `https://syllabus.stanford.edu/syllabus/doWebAuth/${courseIdentifier}/${courseIdentifier}`
+    }
+  }
+  
+  // Fallback: Try classId-based URL if available
+  if (classId) {
+    return `https://syllabus.stanford.edu/syllabus/#/viewSyllabus/${classId}`
+  }
+  
+  // Final fallback: Course code-based search
+  const subjectClean = (subject || '').replace(/\s+/g, '')
+  const codeClean = (code || '').replace(/\s+/g, '')
+  const courseCode = `${subjectClean}${codeClean}`
+  
+  return `https://syllabus.stanford.edu/syllabus/#/search?q=${encodeURIComponent(courseCode)}`
+}
