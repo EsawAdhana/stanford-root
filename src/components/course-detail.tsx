@@ -2,17 +2,14 @@
 
 import React, { useState, useEffect } from 'react';
 import { useCourseStore } from '@/lib/store';
-import { X, ExternalLink, Calendar, MapPin, Clock, Users, BookOpen, GraduationCap, Info, Check, Plus, FileText, AlertCircle, Loader2 } from 'lucide-react';
+import { X, ExternalLink, MapPin, Clock, Check, Plus, FileText, AlertCircle, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useCartStore } from '@/lib/cart-store';
 import { Section } from '@/types/course';
-import { cn, getSyllabusUrl } from '@/lib/utils';
+import { cn, getSyllabusUrl, parseUnitsOptions, hasVariableUnits } from '@/lib/utils';
 import { InstructorList } from './instructor-list';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useSyllabusValidity } from '@/hooks/use-syllabus-validity';
-import { useCourseEvaluations } from '@/hooks/use-course-evaluations';
-import { Star, Clock as ClockIcon, MessageSquare, BarChart3 } from 'lucide-react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 
 interface CourseDetailProps {
   courseId: string;
@@ -56,12 +53,26 @@ export function CourseDetail({ courseId, onClose, closeOnRemove }: CourseDetailP
       return terms[0] || '';
   });
 
-  // State for dialog visibility
-  const [showQuantitativeDialog, setShowQuantitativeDialog] = useState(false);
-  const [showQualitativeDialog, setShowQualitativeDialog] = useState(false);
-
-  // Load evaluation data
-  const { evaluation, isLoading: isLoadingEvaluations } = useCourseEvaluations(course || null, activeTerm);
+  // Units: use active section or course; support variable units (e.g. 3-4)
+  const unitsSource = (() => {
+    const secs = sectionsByTerm[activeTerm]
+    const section = secs?.find(s => s.classId === (cartItem?.selectedSectionId ?? secs?.[0]?.classId)) ?? secs?.[0]
+    return section?.units ?? course?.units
+  })()
+  const unitOptions = course ? parseUnitsOptions(unitsSource ?? course.units) : []
+  const hasVariable = unitOptions.length > 1
+  const [selectedUnits, setSelectedUnits] = useState<number>(() => {
+    if (cartItem?.selectedUnits !== undefined && unitOptions.includes(cartItem.selectedUnits)) return cartItem.selectedUnits
+    return unitOptions[0] ?? 0
+  })
+  // Sync selectedUnits when cart item or unit options change
+  useEffect(() => {
+    if (cartItem?.selectedUnits !== undefined && unitOptions.includes(cartItem.selectedUnits)) {
+      setSelectedUnits(cartItem.selectedUnits)
+    } else if (unitOptions.length > 0 && !unitOptions.includes(selectedUnits)) {
+      setSelectedUnits(unitOptions[0])
+    }
+  }, [cartItem?.selectedUnits, unitOptions.join(',')]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // Get the first section with a valid sectionNumber for the active term to use in syllabus URL
   // Calculate these before the early return so we can use them in hooks
@@ -112,15 +123,24 @@ export function CourseDetail({ courseId, onClose, closeOnRemove }: CourseDetailP
             onClose();
         }
     } else {
-        // Add or Update
-        // Default to first section if available
         const defaultSectionId = sectionsByTerm[activeTerm]?.[0]?.classId;
-        addItem(course!, activeTerm, defaultSectionId);
+        addItem(course!, activeTerm, defaultSectionId, hasVariable ? selectedUnits : undefined);
     }
   };
 
   const handleSelectSection = (sectionId: number) => {
-      addItem(course!, activeTerm, sectionId);
+      addItem(course!, activeTerm, sectionId, hasVariable ? selectedUnits : undefined);
+  };
+
+  const handleUnitsChange = (value: string) => {
+    const u = parseInt(value, 10);
+    if (!isNaN(u)) {
+      setSelectedUnits(u);
+      if (isTermInCart) {
+        const sectionId = cartItem?.selectedSectionId ?? sectionsByTerm[activeTerm]?.[0]?.classId;
+        addItem(course!, activeTerm, sectionId, u);
+      }
+    }
   };
 
   return (
@@ -241,276 +261,6 @@ export function CourseDetail({ courseId, onClose, closeOnRemove }: CourseDetailP
                 </div>
             </div>
 
-            {/* Course Evaluations */}
-            {evaluation && (
-                <div className="space-y-4 border border-border/60 rounded-xl p-6 bg-card/50">
-                    <h2 className="text-xl font-bold text-foreground">Course Evaluations</h2>
-                    
-                    {/* Primary Information - Always Visible */}
-                    <div className="space-y-4">
-                        {/* Quality of Instruction */}
-                        {evaluation.qualityOfInstruction && (
-                            <div className="space-y-2">
-                                <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
-                                    <Star size={16} className="text-primary" />
-                                    <span>How would you describe the quality of instruction?</span>
-                                </div>
-                                <div className="pl-6 space-y-1">
-                                    <div className="flex items-baseline gap-2">
-                                        <span className="text-2xl font-bold text-primary">{evaluation.qualityOfInstruction.average}</span>
-                                        <span className="text-sm text-muted-foreground">/ 5.0</span>
-                                        <span className="text-xs text-muted-foreground ml-2">({evaluation.qualityOfInstruction.responses} responses)</span>
-                                    </div>
-                                    {evaluation.qualityOfInstruction.distribution && evaluation.qualityOfInstruction.distribution.length > 0 && (
-                                        <div className="text-xs text-muted-foreground space-y-0.5">
-                                            {evaluation.qualityOfInstruction.distribution.slice(0, 3).map((item, idx) => (
-                                                <div key={idx} className="flex items-center gap-2">
-                                                    <span className="w-20 truncate">{item.label}</span>
-                                                    <span className="text-foreground/60">{item.percentage}</span>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-                        )}
-
-                        {/* Hours Per Week with Histogram */}
-                        {evaluation.hoursPerWeek && (() => {
-                            const hoursData = evaluation.hoursPerWeek
-                            const distribution = hoursData.distribution || []
-                            const hasDistribution = distribution.length > 0
-                            const maxCount = hasDistribution ? Math.max(...distribution.map(d => parseInt(d.count) || 0)) : 0
-                            
-                            return (
-                                <div className="space-y-3">
-                                    <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
-                                        <ClockIcon size={16} className="text-primary" />
-                                        <span>How many hours per week on average did you spend?</span>
-                                    </div>
-                                    <div className="pl-6 space-y-3">
-                                        <div className="flex items-baseline gap-2">
-                                            <span className="text-2xl font-bold text-primary">{hoursData.average}</span>
-                                            <span className="text-sm text-muted-foreground">hours/week</span>
-                                            <span className="text-xs text-muted-foreground ml-2">({hoursData.responses} responses)</span>
-                                        </div>
-                                        {/* Histogram */}
-                                        {hasDistribution && (
-                                            <div className="space-y-2">
-                                                <div className="text-xs font-medium text-muted-foreground mb-2">Distribution</div>
-                                                <div className="relative" style={{ height: '128px' }}>
-                                                    <div className="absolute inset-0 flex items-end gap-1.5">
-                                                        {distribution
-                                                            .sort((a, b) => {
-                                                                const hoursA = parseInt(a.hours) || 0
-                                                                const hoursB = parseInt(b.hours) || 0
-                                                                return hoursA - hoursB
-                                                            })
-                                                            .map((item, idx) => {
-                                                                const count = parseInt(item.count) || 0
-                                                                const height = maxCount > 0 ? (count / maxCount) * 128 : 0
-                                                            
-                                                                return (
-                                                                    <div key={idx} className="flex-1 flex flex-col items-center justify-end gap-1 group h-full">
-                                                                        <div 
-                                                                            className="w-full bg-primary/60 hover:bg-primary transition-colors rounded-t group-hover:bg-primary/80 relative"
-                                                                            style={{ 
-                                                                                height: `${height}px`, 
-                                                                                minHeight: count > 0 ? '4px' : '0'
-                                                                            }}
-                                                                            title={`${item.hours} hours: ${item.count} responses (${item.percentage})`}
-                                                                        >
-                                                                            {count > 0 && (
-                                                                                <span className="absolute -top-5 left-1/2 -translate-x-1/2 text-[10px] font-medium text-foreground/70 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity z-10 bg-background/90 px-1 rounded">
-                                                                                    {count}
-                                                                                </span>
-                                                                            )}
-                                                                        </div>
-                                                                    </div>
-                                                                )
-                                                            })}
-                                                    </div>
-                                                    <div className="absolute -bottom-5 left-0 right-0 flex items-center gap-1.5">
-                                                        {distribution
-                                                            .sort((a, b) => {
-                                                                const hoursA = parseInt(a.hours) || 0
-                                                                const hoursB = parseInt(b.hours) || 0
-                                                                return hoursA - hoursB
-                                                            })
-                                                            .map((item, idx) => (
-                                                                <div key={idx} className="flex-1 flex justify-center">
-                                                                    <span className="text-[10px] text-muted-foreground font-medium">{item.hours}</span>
-                                                                </div>
-                                                            ))}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        )}
-                                    </div>
-                                </div>
-                            )
-                        })()}
-
-                        {/* Qualitative Comments */}
-                        {evaluation.qualitativeComments && evaluation.qualitativeComments.length > 0 && (
-                            <div className="space-y-2">
-                                <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
-                                    <MessageSquare size={16} className="text-primary" />
-                                    <span>Student Comments</span>
-                                </div>
-                                <div className="pl-6 space-y-3 max-h-96 overflow-y-auto">
-                                    {evaluation.qualitativeComments.map((comment, idx) => (
-                                        <div key={idx} className="text-sm text-foreground/90 leading-relaxed p-3 bg-secondary/30 rounded-lg border border-border/40">
-                                            {comment}
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-                    </div>
-
-                    {/* Action Buttons for Additional Info */}
-                    <div className="pt-4 border-t border-border/40 flex flex-wrap gap-2">
-                        {evaluation.allQuantitative.filter(q => {
-                            const questionLower = q.question.toLowerCase()
-                            return !questionLower.includes('quality of instruction') && 
-                                   !questionLower.includes('hours per week')
-                        }).length > 0 && (
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => setShowQuantitativeDialog(true)}
-                                className="flex-1 sm:flex-none"
-                            >
-                                <BarChart3 size={16} className="mr-2" />
-                                View All Quantitative Results
-                            </Button>
-                        )}
-                        {evaluation.allQualitative.filter(q => {
-                            const questionLower = q.question.toLowerCase()
-                            return !questionLower.includes('what would you like to say') && 
-                                   !questionLower.includes('considering taking it')
-                        }).length > 0 && (
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => setShowQualitativeDialog(true)}
-                                className="flex-1 sm:flex-none"
-                            >
-                                <MessageSquare size={16} className="mr-2" />
-                                View All Qualitative Responses
-                            </Button>
-                        )}
-                    </div>
-                </div>
-            )}
-
-            {/* Quantitative Results Dialog */}
-            <Dialog open={showQuantitativeDialog} onOpenChange={setShowQuantitativeDialog}>
-                <DialogContent 
-                    className="max-w-2xl max-h-[80vh] overflow-y-auto z-[60]"
-                    onInteractOutside={(e) => {
-                        e.stopPropagation()
-                    }}
-                >
-                    <DialogHeader>
-                        <DialogTitle>All Quantitative Results</DialogTitle>
-                        <DialogDescription>
-                            Complete breakdown of all quantitative evaluation questions
-                            {evaluation?.term && ` • ${evaluation.term}`}
-                        </DialogDescription>
-                    </DialogHeader>
-                    <div className="space-y-4 mt-4">
-                        {evaluation?.allQuantitative.map((q, idx) => {
-                            // Skip questions we already showed
-                            const questionLower = q.question.toLowerCase()
-                            if (questionLower.includes('quality of instruction') || 
-                                questionLower.includes('hours per week')) {
-                                return null
-                            }
-                            
-                            return (
-                                <div key={idx} className="space-y-3 p-4 bg-secondary/20 rounded-lg border border-border/40">
-                                    <div className="text-sm font-semibold text-foreground">{q.question}</div>
-                                    {q.average && (
-                                        <div className="text-sm text-muted-foreground">
-                                            Average: <span className="font-semibold text-foreground">{q.average}</span>
-                                            {q.responses && <span className="ml-2">({q.responses} responses)</span>}
-                                        </div>
-                                    )}
-                                    {q.distribution && Array.isArray(q.distribution) && q.distribution.length > 0 && (
-                                        <div className="space-y-1.5 mt-3">
-                                            {q.distribution.map((row: any[], rowIdx: number) => (
-                                                <div key={rowIdx} className="flex items-center justify-between text-sm p-2 bg-secondary/30 rounded">
-                                                    <span className="font-medium text-foreground">{row[0] || ''}</span>
-                                                    <div className="flex items-center gap-3 text-muted-foreground">
-                                                        <span>{row[2] || '0'} responses</span>
-                                                        <span className="font-semibold">{row[3] || ''}</span>
-                                                    </div>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    )}
-                                </div>
-                            )
-                        })}
-                    </div>
-                </DialogContent>
-            </Dialog>
-
-            {/* Qualitative Responses Dialog */}
-            <Dialog open={showQualitativeDialog} onOpenChange={setShowQualitativeDialog}>
-                <DialogContent 
-                    className="max-w-2xl max-h-[80vh] overflow-y-auto z-[60]"
-                    onInteractOutside={(e) => {
-                        e.stopPropagation()
-                    }}
-                >
-                    <DialogHeader>
-                        <DialogTitle>All Qualitative Responses</DialogTitle>
-                        <DialogDescription>
-                            Complete qualitative feedback from students
-                            {evaluation?.term && ` • ${evaluation.term}`}
-                        </DialogDescription>
-                    </DialogHeader>
-                    <div className="space-y-4 mt-4">
-                        {evaluation?.allQualitative.map((q, idx) => {
-                            // Skip the main "what would you like to say" question (already shown)
-                            const questionLower = q.question.toLowerCase()
-                            if (questionLower.includes('what would you like to say') || 
-                                questionLower.includes('considering taking it')) {
-                                return null
-                            }
-                            
-                            if (!q.comments || q.comments.length === 0) return null
-                            
-                            return (
-                                <div key={idx} className="space-y-3 p-4 bg-secondary/20 rounded-lg border border-border/40">
-                                    <div className="text-sm font-semibold text-foreground">{q.question}</div>
-                                    <div className="space-y-2">
-                                        {q.comments.map((comment, commentIdx) => (
-                                            <div key={commentIdx} className="text-sm text-foreground/90 leading-relaxed p-3 bg-secondary/30 rounded border border-border/40">
-                                                {comment}
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            )
-                        })}
-                    </div>
-                </DialogContent>
-            </Dialog>
-
-            {/* Loading State for Evaluations */}
-            {isLoadingEvaluations && (
-                <div className="border border-border/60 rounded-xl p-6 bg-card/50">
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <Loader2 size={16} className="animate-spin" />
-                        <span>Loading course evaluations...</span>
-                    </div>
-                </div>
-            )}
-
             {/* Sections List via Tabs */}
             <div className="space-y-6">
                 {terms.length > 0 ? (
@@ -526,6 +276,26 @@ export function CourseDetail({ courseId, onClose, closeOnRemove }: CourseDetailP
                                 </TabsTrigger>
                             ))}
                         </TabsList>
+
+                        {hasVariable && (
+                          <div className="mt-4 flex flex-wrap gap-2">
+                              {unitOptions.map(u => (
+                                <button
+                                  key={u}
+                                  type="button"
+                                  onClick={() => handleUnitsChange(String(u))}
+                                  className={cn(
+                                    'px-4 py-2 rounded-lg text-sm font-medium transition-colors',
+                                    selectedUnits === u
+                                      ? 'bg-primary text-primary-foreground shadow-sm'
+                                      : 'bg-background border border-border hover:bg-muted/80 text-foreground'
+                                  )}
+                                >
+                                  {u} {u === 1 ? 'unit' : 'units'}
+                                </button>
+                              ))}
+                          </div>
+                        )}
                         
                         {terms.map(term => (
                             <TabsContent key={term} value={term} className="space-y-6 mt-6 focus-visible:outline-none focus-visible:ring-0">
@@ -586,7 +356,27 @@ export function CourseDetail({ courseId, onClose, closeOnRemove }: CourseDetailP
                                                 <div className="font-medium text-xs text-muted-foreground mb-1.5 uppercase tracking-wide">
                                                     Units
                                                 </div>
-                                                <div className="font-medium">{section.units}</div>
+                                                {hasVariableUnits(section.units) ? (
+                                                  <div className="flex flex-wrap gap-1.5 mt-0.5">
+                                                    {unitOptions.map(u => (
+                                                      <button
+                                                        key={u}
+                                                        type="button"
+                                                        onClick={() => handleUnitsChange(String(u))}
+                                                        className={cn(
+                                                          'px-2.5 py-1 rounded text-xs font-medium transition-colors',
+                                                          selectedUnits === u
+                                                            ? 'bg-primary text-primary-foreground'
+                                                            : 'bg-muted hover:bg-muted/80 text-foreground'
+                                                        )}
+                                                      >
+                                                        {u}
+                                                      </button>
+                                                    ))}
+                                                  </div>
+                                                ) : (
+                                                  <div className="font-medium">{section.units}</div>
+                                                )}
                                             </div>
                                             <div>
                                                 <div className="font-medium text-xs text-muted-foreground mb-1.5 uppercase tracking-wide">

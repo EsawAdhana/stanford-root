@@ -37,7 +37,9 @@ export const CourseCard = React.memo(({ course, style, onClick }: CourseCardProp
             </span>
           </div>
           <div className="bg-secondary/60 text-secondary-foreground text-[10px] font-medium px-2 py-0.5 rounded-full shrink-0 ml-2">
-            {course.units} {course.units.toString().trim() === '1' ? 'Unit' : 'Units'}
+            {course.selectedUnits !== undefined
+              ? `${course.selectedUnits} ${course.selectedUnits === 1 ? 'Unit' : 'Units'}`
+              : `${course.units} ${course.units.toString().trim() === '1' ? 'Unit' : 'Units'}`}
           </div>
         </div>
         

@@ -11,7 +11,7 @@ import { Course } from '@/types/course';
 import { Button } from '@/components/ui/button';
 import { useCartStore } from '@/lib/cart-store';
 import Link from 'next/link';
-import { ShoppingBag } from 'lucide-react';
+import { ShoppingBag, GraduationCap } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 
 function HomeContent() {
@@ -51,6 +51,15 @@ function HomeContent() {
         </div>
         
         <div className="flex items-center justify-end gap-4 min-w-[200px]">
+            <Link href="/degree-audit">
+                <Button 
+                    variant="ghost" 
+                    className="rounded-full h-11 px-6 hover:bg-secondary/80 transition-all font-medium gap-2"
+                >
+                    <GraduationCap className="h-4 w-4" />
+                    <span>MAP</span>
+                </Button>
+            </Link>
             <Link href={scheduleHref}>
                 <Button 
                     variant="outline" 

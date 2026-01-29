@@ -77,6 +77,12 @@ function ScheduleContent() {
     let totalUnitsMax = 0
 
     currentTermCourses.forEach(c => {
+      if (c.selectedUnits !== undefined && !isNaN(c.selectedUnits)) {
+        totalUnitsMin += c.selectedUnits
+        totalUnitsMax += c.selectedUnits
+        return
+      }
+
       if (c.selectedSectionId && c.sections) {
         const section = c.sections.find(s => s.classId === c.selectedSectionId)
         if (section) {

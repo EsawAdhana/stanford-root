@@ -43,5 +43,6 @@ export interface Course {
   sections?: Section[];
   selectedTerm?: string; // The term selected by the user for their schedule
   selectedSectionId?: number; // The specific section (classId) selected
+  selectedUnits?: number; // When course/section has variable units (e.g. 3-4), the user's choice
   optionalMeetings?: string[]; // Array of meeting keys that are marked as optional/not in class
 }

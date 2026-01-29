@@ -138,3 +138,32 @@ export function getSyllabusUrl (subject: string, code: string, classId?: number,
   
   return `https://syllabus.stanford.edu/syllabus/#/search?q=${encodeURIComponent(courseCode)}`
 }
+
+/** Parse a units string (e.g. "3-4", "3", "5+") into selectable unit options. */
+export function parseUnitsOptions (units: string | number): number[] {
+  if (typeof units === 'number') {
+    return isNaN(units) ? [] : [units]
+  }
+  const s = String(units).trim()
+  if (!s) return []
+  const rangeMatch = s.match(/^(\d+)\s*-\s*(\d+)$/)
+  if (rangeMatch) {
+    const low = parseInt(rangeMatch[1], 10)
+    const high = parseInt(rangeMatch[2], 10)
+    if (low <= high) {
+      const opts: number[] = []
+      for (let i = low; i <= high; i++) opts.push(i)
+      return opts
+    }
+  }
+  const plusMatch = s.match(/^(\d+)\+$/)
+  if (plusMatch) return [parseInt(plusMatch[1], 10)]
+  const single = parseFloat(s)
+  return isNaN(single) ? [] : [single]
+}
+
+/** True when the course/section can be taken for more than one unit value (e.g. "3-4"). */
+export function hasVariableUnits (units: string | number): boolean {
+  const opts = parseUnitsOptions(units)
+  return opts.length > 1
+}

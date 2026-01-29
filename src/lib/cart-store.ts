@@ -10,7 +10,7 @@ export type CartItem = Course & {
 
 type CartStore = {
   items: CartItem[]
-  addItem: (course: Course, term?: string, sectionId?: number) => void
+  addItem: (course: Course, term?: string, sectionId?: number, selectedUnits?: number) => void
   removeItem: (courseId: string) => void
   hasItem: (courseId: string) => boolean
   getItem: (courseId: string) => CartItem | undefined
@@ -21,14 +21,15 @@ export const useCartStore = create<CartStore>()(
   persist(
     (set, get) => ({
       items: [],
-      addItem: (course, term, sectionId) => {
+      addItem: (course, term, sectionId, selectedUnits) => {
         const currentItems = get().items
         const existingIndex = currentItems.findIndex(c => c.id === course.id)
 
         const courseWithTerm: CartItem = {
           ...course,
           selectedTerm: term || course.selectedTerm || (course.terms ? course.terms[0] : course.term),
-          selectedSectionId: sectionId
+          selectedSectionId: sectionId,
+          selectedUnits: selectedUnits !== undefined ? selectedUnits : course.selectedUnits
         }
 
         if (existingIndex >= 0) {
