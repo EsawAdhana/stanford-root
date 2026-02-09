@@ -19,6 +19,7 @@ export function useSyllabusValidity (url: string | null): SyllabusValidityResult
     let cancelled = false
 
     async function checkUrl () {
+      if (!url) return
       setIsChecking(true)
       setIsValid(null)
 

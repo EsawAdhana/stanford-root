@@ -3,7 +3,6 @@ import fs from 'fs';
 import path from 'path';
 import { algoliasearch } from 'algoliasearch';
 
-// Configuration — set ALGOLIA_APP_ID and ALGOLIA_API_KEY env vars before running
 const APP_ID = process.env.ALGOLIA_APP_ID || '';
 const API_KEY = process.env.ALGOLIA_API_KEY || '';
 
