@@ -29,6 +29,9 @@ export const useAuthStore = create<AuthState>((set) => ({
       }
 
       set({ user, session, isLoading: false })
+    }).catch((err) => {
+      console.error('Failed to get session:', err)
+      set({ user: null, session: null, isLoading: false })
     })
 
     // Listen for auth state changes (sign in, sign out, token refresh)
