@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { parseDegreeAudit } from '@/lib/parse-degree-audit'
 import { findRemainingCourses } from '@/lib/find-remaining-courses'
+import { getStanfordUser } from '@/lib/auth-server'
 import type { Course } from '@/types/course'
 import fs from 'fs'
 import path from 'path'
@@ -50,6 +51,11 @@ function loadWorkerTermsMap (): Map<string, string[]> {
 }
 
 export async function POST (req: NextRequest) {
+  const user = await getStanfordUser(req)
+  if (!user) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
   try {
     const formData = await req.formData()
     const file = formData.get('file') as File | null

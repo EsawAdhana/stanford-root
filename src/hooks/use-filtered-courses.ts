@@ -310,5 +310,6 @@ export function useFilteredCourses() {
     return sortedResult;
   }, [courses, query, selectedDepts, selectedTerms, selectedFormats, selectedStatus, selectedLevels, selectedGers, selectedSchools, unitRanges, timeRanges, hideConflicts, cartItems, excludedWords]);
 
-  return { courses: filteredCourses, isLoading };
+  const isEnriching = useCourseStore(state => state.isEnriching);
+  return { courses: filteredCourses, isLoading, isEnriching };
 }

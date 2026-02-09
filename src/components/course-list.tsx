@@ -6,7 +6,7 @@ import { useCourseStore } from '@/lib/store';
 import { useFilteredCourses } from '@/hooks/use-filtered-courses';
 import { CourseCard } from './course-card';
 import { Course } from '@/types/course';
-import { cn } from '@/lib/utils';
+import { SearchX } from 'lucide-react';
 
 interface CourseListProps {
   onCourseClick: (course: Course) => void;
@@ -17,12 +17,10 @@ export function CourseList({ onCourseClick }: CourseListProps) {
   const { courses, isLoading } = useFilteredCourses();
   const vListRef = useRef<VListHandle>(null);
 
-  // Load data on mount
   useEffect(() => {
     fetchCourses();
   }, [fetchCourses]);
 
-  // Compute indices for each letter
   const letterMap = useMemo(() => {
     const map = new Map<string, number>();
     courses.forEach((course, index) => {
@@ -46,49 +44,57 @@ export function CourseList({ onCourseClick }: CourseListProps) {
   };
 
   if (isLoading) {
-    return <div className="p-8 text-center">Loading courses...</div>;
+    return null;
   }
 
   return (
     <div className="flex-1 h-full w-full overflow-hidden flex flex-col relative">
-      <div className="px-4 py-3 text-sm font-medium text-muted-foreground border-b bg-background shadow-sm z-10 flex justify-between items-center">
-        <span>Showing {courses.length.toLocaleString()} classes</span>
+      {/* Results bar */}
+      <div className="px-4 py-2.5 text-xs font-medium text-muted-foreground border-b border-border/30 bg-background/80 backdrop-blur-sm z-10 flex items-center gap-2">
+        <span>
+          <span className="tabular-nums font-semibold text-foreground/70">{courses.length.toLocaleString()}</span>
+          {' '}classes
+        </span>
       </div>
-      
+
       <div className="flex-1 min-h-0 relative group">
         {courses.length === 0 ? (
-           <div className="p-8 text-center text-muted-foreground">No courses found.</div>
+          <div className="flex flex-col items-center justify-center h-full gap-3 text-muted-foreground">
+            <SearchX size={32} className="text-muted-foreground/30" />
+            <p className="text-sm font-medium">No courses match your filters.</p>
+            <p className="text-xs text-muted-foreground/60">Try adjusting your search or filters.</p>
+          </div>
         ) : (
-           <>
-             <VList ref={vListRef} className="h-full w-full scrollbar-hide pb-8">
-                 {courses.map((course) => (
-                 <CourseCard 
-                     key={course.id}
-                     course={course} 
-                     onClick={() => onCourseClick(course)}
-                 />
-                 ))}
-             </VList>
+          <>
+            <VList ref={vListRef} className="h-full w-full scrollbar-hide pb-8">
+              {courses.map((course) => (
+                <CourseCard
+                  key={course.id}
+                  course={course}
+                  onClick={() => onCourseClick(course)}
+                />
+              ))}
+            </VList>
 
-             {/* Alphabet Scrubber */}
-             {sortedLetters.length > 1 && (
-                <div className="absolute right-2 top-1/2 -translate-y-1/2 flex flex-col gap-0.5 z-20 bg-background/80 backdrop-blur-sm p-1 rounded-full shadow-sm border border-border/40 opacity-50 group-hover:opacity-100 transition-opacity">
-                    {sortedLetters.map(letter => (
-                        <button
-                            key={letter}
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                handleScrollToLetter(letter);
-                            }}
-                            className="text-[10px] font-bold text-muted-foreground hover:text-primary hover:scale-125 transition-all w-4 h-4 flex items-center justify-center leading-none"
-                            title={`Jump to ${letter}`}
-                        >
-                            {letter}
-                        </button>
-                    ))}
-                </div>
-             )}
-           </>
+            {/* Alphabet Scrubber */}
+            {sortedLetters.length > 1 && (
+              <div className="absolute right-1.5 top-1/2 -translate-y-1/2 flex flex-col gap-px z-20 bg-background/90 backdrop-blur-md py-1.5 px-0.5 rounded-full shadow-sm border border-border/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                {sortedLetters.map(letter => (
+                  <button
+                    key={letter}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleScrollToLetter(letter);
+                    }}
+                    className="text-[9px] font-bold text-muted-foreground/50 hover:text-primary hover:scale-150 transition-all w-3.5 h-3.5 flex items-center justify-center leading-none rounded-full hover:bg-primary/5"
+                    title={`Jump to ${letter}`}
+                  >
+                    {letter}
+                  </button>
+                ))}
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>

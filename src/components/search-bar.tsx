@@ -15,7 +15,6 @@ export function SearchBar() {
     setLocalValue(query);
   }, [query]);
 
-  // Debounce URL updates so filtering runs after typing pauses
   useEffect(() => {
     if (debounceRef.current) window.clearTimeout(debounceRef.current)
     debounceRef.current = window.setTimeout(() => {
@@ -43,19 +42,18 @@ export function SearchBar() {
   }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = e.target.value;
-    setLocalValue(val);
+    setLocalValue(e.target.value);
   };
 
   return (
-    <div className="relative w-full max-w-4xl group">
-      <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-        <Search className="h-5 w-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
+    <div className="relative w-full max-w-2xl group">
+      <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+        <Search className="h-4 w-4 text-muted-foreground/50 group-focus-within:text-primary transition-colors duration-200" />
       </div>
       <Input
         ref={inputRef}
-        placeholder="Search by class (eg. PSYCH 1), subject (eg. MATH), or instructors (eg. Piech)"
-        className="pl-12 h-12 rounded-full border-border/60 bg-secondary/30 hover:bg-secondary/50 focus:bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary/50 text-base shadow-sm transition-all duration-200"
+        placeholder="Search classes, subjects, or instructors..."
+        className="pl-10 pr-16 h-10 rounded-xl border-border/50 bg-secondary/40 hover:bg-secondary/60 focus:bg-background focus:ring-2 focus:ring-primary/15 focus:border-primary/30 text-sm shadow-none transition-all duration-200 placeholder:text-muted-foreground/40"
         value={localValue}
         onChange={handleChange}
         onKeyDown={(e) => {
@@ -68,8 +66,10 @@ export function SearchBar() {
           setQuery(localValue.trim() ? localValue : null)
         }}
       />
-      <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2 pointer-events-none">
-          <span className="text-[10px] text-muted-foreground border border-border/50 rounded px-1.5 py-0.5 bg-background/50 hidden sm:inline-block">/</span>
+      <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5 pointer-events-none">
+        <kbd className="hidden sm:inline-flex items-center gap-0.5 rounded-md border border-border/40 bg-background/60 px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground/40 shadow-[0_1px_0_0_hsl(var(--border)/0.3)]">
+          <span className="text-[11px]">/</span>
+        </kbd>
       </div>
     </div>
   );

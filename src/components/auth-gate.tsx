@@ -4,6 +4,52 @@ import React, { useEffect, useState } from 'react'
 import { useAuthStore } from '@/lib/auth-store'
 import { Logo } from './logo'
 import { Loader2 } from 'lucide-react'
+import Link from 'next/link'
+
+const PHRASES = [
+  'Find courses.',
+  'Read syllabi.',
+  'Browse evaluations.',
+  'Build your schedule.',
+  'Filter by WAYS.',
+  'Detect time conflicts.',
+  'Compare sections.',
+  'Check enrollment.',
+  'Plan your degree.',
+  'Explore departments.',
+  'Read student reviews.',
+  'Find open seats.',
+  'Search by instructor.',
+  'Filter by units.',
+  'View meeting times.',
+]
+
+// Duplicate so the scroll loops seamlessly
+const ROW_1 = PHRASES.slice(0, 8)
+const ROW_2 = PHRASES.slice(5).concat(PHRASES.slice(0, 3))
+const ROW_3 = [...PHRASES].reverse().slice(0, 8)
+
+function MarqueeRow ({ items, duration, reverse = false }: { items: string[], duration: string, reverse?: boolean }) {
+  return (
+    <div className="flex overflow-hidden whitespace-nowrap select-none">
+      <div
+        className={reverse ? 'animate-marquee-reverse' : 'animate-marquee'}
+        style={{ animationDuration: duration }}
+      >
+        <div className="flex gap-3 pr-3">
+          {[...items, ...items].map((text, i) => (
+            <span
+              key={i}
+              className="inline-block rounded-full border border-border/40 bg-background/80 px-4 py-1.5 text-sm text-muted-foreground/25 font-medium whitespace-nowrap"
+            >
+              {text}
+            </span>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
 
 export function AuthGate ({ children }: { children: React.ReactNode }) {
   const { user, isLoading, initialize, signInWithGoogle } = useAuthStore()
@@ -11,70 +57,79 @@ export function AuthGate ({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const unsubscribe = initialize()
-
-    // Safety timeout — if loading takes more than 3s, show login page anyway
     const timer = setTimeout(() => setTimedOut(true), 3000)
-
     return () => {
       unsubscribe()
       clearTimeout(timer)
     }
   }, [initialize])
 
-  // Show spinner only briefly — if timed out, skip to login
   if (isLoading && !timedOut) {
     return (
       <div className="flex h-screen items-center justify-center bg-background">
-        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+        <Loader2 className="h-6 w-6 animate-spin text-primary/60" />
       </div>
     )
   }
 
   if (!user) {
     return (
-      <div className="flex h-screen items-center justify-center bg-background">
-        <div className="text-center space-y-8 max-w-sm px-6">
-          <div className="space-y-4">
-            <Logo className="h-16 w-16 mx-auto shadow-primary/20" />
-            <h1 className="text-3xl tracking-tight text-foreground font-[family-name:var(--font-outfit)] font-medium">
-              <span className="font-bold text-primary">Root</span>
-            </h1>
-            <p className="text-muted-foreground text-sm leading-relaxed">
-              Stanford Root — a better way to browse Stanford courses.
-              <br />
-              Sign in with your Stanford account to continue.
-            </p>
-          </div>
+      <div className="relative flex h-screen flex-col items-center justify-center bg-background overflow-hidden">
+        {/* Scrolling text background — fills entire screen */}
+        <div className="pointer-events-none absolute inset-0 flex flex-col justify-center gap-3">
+          <MarqueeRow items={ROW_3} duration="37s" />
+          <MarqueeRow items={ROW_1} duration="44s" reverse />
+          <MarqueeRow items={ROW_2} duration="33s" />
+          <MarqueeRow items={[...ROW_3].reverse()} duration="41s" reverse />
+          <MarqueeRow items={ROW_1} duration="35s" />
+          <MarqueeRow items={ROW_2} duration="40s" reverse />
+          <MarqueeRow items={ROW_3} duration="32s" />
+          <MarqueeRow items={[...ROW_1].reverse()} duration="38s" reverse />
+          <MarqueeRow items={ROW_2} duration="42s" />
+          <MarqueeRow items={ROW_3} duration="36s" reverse />
+          <MarqueeRow items={ROW_1} duration="34s" />
+          <MarqueeRow items={[...ROW_2].reverse()} duration="39s" reverse />
+          <MarqueeRow items={ROW_3} duration="43s" />
+          <MarqueeRow items={ROW_1} duration="31s" reverse />
+          <MarqueeRow items={ROW_2} duration="37s" />
+        </div>
+
+        {/* Center fade overlay so text is readable */}
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,_hsl(var(--background))_30%,_transparent_70%)]" />
+
+        {/* Content */}
+        <div className="relative z-10 flex flex-col items-center px-6">
+          <Logo className="h-24 w-24 mb-8" />
+
+          <h1 className="text-5xl sm:text-6xl font-[family-name:var(--font-outfit)] font-bold tracking-tight leading-[1.1] text-center">
+            <span className="text-primary">Everything Stanford,</span>
+            <br />
+            <span className="text-foreground">in one place.</span>
+          </h1>
+
+          <p className="mt-5 text-center text-base sm:text-lg text-muted-foreground max-w-sm leading-relaxed">
+            Course search, evals, syllabi, and scheduling&nbsp;&mdash;
+            without juggling five tabs.
+          </p>
 
           <button
             type="button"
             onClick={signInWithGoogle}
-            className="inline-flex items-center gap-3 px-6 py-3 rounded-xl bg-foreground text-background font-medium text-sm hover:opacity-90 transition-opacity shadow-lg shadow-foreground/10 mx-auto"
+            className="mt-10 w-full max-w-xs flex items-center justify-center rounded-2xl bg-background text-foreground border border-border px-8 py-4 font-semibold text-[15px] shadow-sm transition-all duration-200 hover:bg-secondary active:bg-secondary/80"
           >
-            <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden="true">
-              <path
-                d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"
-                fill="#4285F4"
-              />
-              <path
-                d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-                fill="#34A853"
-              />
-              <path
-                d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
-                fill="#FBBC05"
-              />
-              <path
-                d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-                fill="#EA4335"
-              />
-            </svg>
-            Sign in with Stanford Google
+            Log in through Stanford
           </button>
+        </div>
 
-          <p className="text-[10px] text-muted-foreground/60">
-            Only @stanford.edu accounts are accepted.
-          </p>
+        {/* Footer */}
+        <div className="absolute bottom-6 z-10 flex items-center gap-3 text-[11px] text-muted-foreground/30">
+          <Link href="/privacy" className="hover:text-muted-foreground transition-colors">
+            Privacy Policy
+          </Link>
+          <span>&middot;</span>
+          <Link href="/terms" className="hover:text-muted-foreground transition-colors">
+            Terms of Service
+          </Link>
         </div>
       </div>
     )

@@ -4,6 +4,7 @@ import { useState, useRef } from 'react'
 import { Button } from '@/components/ui/button'
 import { Upload, FileText, Loader2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { useAuthStore } from '@/lib/auth-store'
 import type { ParsedAudit, RemainingCourse } from '@/types/degree-audit'
 
 interface DegreeAuditUploaderProps {
@@ -33,15 +34,24 @@ export function DegreeAuditUploader ({ onUploadComplete }: DegreeAuditUploaderPr
     try {
       const formData = new FormData()
       formData.append('file', file)
+      const session = useAuthStore.getState().session
+      const headers: HeadersInit = {}
+      if (session?.access_token) {
+        headers.Authorization = `Bearer ${session.access_token}`
+      }
 
       const response = await fetch('/api/degree-audit', {
         method: 'POST',
+        headers,
         body: formData
       })
 
       if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.error || 'Failed to process PDF')
+        const errorData = await response.json().catch(() => ({}))
+        const message = response.status === 401
+          ? 'Please log in with your Stanford account to use degree audit.'
+          : (errorData.error || 'Failed to process PDF')
+        throw new Error(message)
       }
 
       const data = await response.json()
