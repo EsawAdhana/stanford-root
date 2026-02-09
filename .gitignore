@@ -6,3 +6,12 @@ out
 .env
 .env.local
 .tmp-pages
+
+# Build artifacts
+tsconfig.tsbuildinfo
+
+# Scraper temp files
+.eval-scrape-progress.json
+
+# Generated per-course evaluation files
+public/data/evals/

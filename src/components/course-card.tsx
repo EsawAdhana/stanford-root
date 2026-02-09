@@ -14,7 +14,7 @@ export const CourseCard = React.memo(({ course, style, onClick }: CourseCardProp
   return (
     <div 
       style={style} 
-      className="p-3"
+      className="py-3 pl-3 pr-8"
     >
       <div 
         className="h-full w-full rounded-2xl bg-card text-card-foreground shadow-[0_2px_8px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] transition-all duration-300 cursor-pointer flex flex-col p-6 group border border-border/50 hover:border-primary/20 relative overflow-hidden"

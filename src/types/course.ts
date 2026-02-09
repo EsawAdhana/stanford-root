@@ -46,3 +46,31 @@ export interface Course {
   selectedUnits?: number; // When course/section has variable units (e.g. 3-4), the user's choice
   optionalMeetings?: string[]; // Array of meeting keys that are marked as optional/not in class
 }
+
+// --- Course Evaluation Types ---
+
+export interface EvalOption {
+  text: string;
+  weight: number;
+  count: number;
+  pct: string;
+}
+
+export interface EvalQuestion {
+  text: string;
+  type: 'rating' | 'numeric';
+  mean: number;
+  median: number;
+  std: number;
+  responseRate: string;
+  options: EvalOption[];
+}
+
+export interface CourseEvaluation {
+  term: string;
+  instructor: string;
+  courseCode: string;
+  respondents: string;
+  questions: EvalQuestion[];
+  comments: string[];
+}

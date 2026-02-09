@@ -15,7 +15,7 @@ export default function DegreeAuditPage () {
           <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
             <Logo className="h-9 w-9 shadow-primary/20" />
             <h1 className="text-2xl tracking-tight text-foreground font-[family-name:var(--font-outfit)] font-medium">
-              Navi<span className="font-bold text-primary">Greater</span>
+              <span className="font-bold text-primary">Root</span>
             </h1>
           </Link>
           <Link href="/">

@@ -10,6 +10,8 @@ import { cn, getSyllabusUrl, parseUnitsOptions, hasVariableUnits } from '@/lib/u
 import { InstructorList } from './instructor-list';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useSyllabusValidity } from '@/hooks/use-syllabus-validity';
+import { CourseEvaluations } from './course-evaluations';
+import { SyllabusVoting } from './syllabus-voting';
 
 interface CourseDetailProps {
   courseId: string;
@@ -192,7 +194,7 @@ export function CourseDetail({ courseId, onClose, closeOnRemove }: CourseDetailP
                 <p className="text-muted-foreground text-base leading-relaxed font-normal">{course.description}</p>
                 
                 {/* Syllabus Link */}
-                <div className="pt-2 space-y-2">
+                <div className="pt-2 space-y-2 group/syllabus">
                     {activeTerm && syllabusSectionNumber ? (
                         <>
                             <div className="text-xs text-muted-foreground flex items-center gap-2">
@@ -243,14 +245,17 @@ export function CourseDetail({ courseId, onClose, closeOnRemove }: CourseDetailP
                                 </a>
                             </Button>
                             {isSpring2026 && (
-                                <p className="text-xs text-muted-foreground">
-                                    Note: Syllabi for Spring 2026 are not yet available on syllabus.stanford.edu.
+                                <p className="text-xs text-muted-foreground opacity-0 group-hover/syllabus:opacity-100 transition-opacity">
+                                    Syllabi for Spring 2026 are not yet available on syllabus.stanford.edu.
                                 </p>
                             )}
                             {!isSpring2026 && isSyllabusValid === false && (
                                 <p className="text-xs text-amber-600 dark:text-amber-400">
                                     This syllabus link may not be available. Try searching on syllabus.stanford.edu directly.
                                 </p>
+                            )}
+                            {!isSpring2026 && (
+                                <SyllabusVoting courseId={course.id} term={activeTerm} />
                             )}
                         </>
                     ) : (
@@ -261,9 +266,27 @@ export function CourseDetail({ courseId, onClose, closeOnRemove }: CourseDetailP
                 </div>
             </div>
 
-            {/* Sections List via Tabs */}
-            <div className="space-y-6">
-                {terms.length > 0 ? (
+            {/* Main content tabs: Sections and Evaluations */}
+            <Tabs defaultValue="sections" className="w-full">
+              <TabsList className="w-full justify-start bg-transparent border-b border-border/40 rounded-none h-auto p-0 gap-6 mb-0">
+                <TabsTrigger
+                  value="sections"
+                  className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-0 py-3 font-semibold text-muted-foreground data-[state=active]:text-foreground transition-all"
+                >
+                  Sections
+                </TabsTrigger>
+                <TabsTrigger
+                  value="evaluations"
+                  className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-0 py-3 font-semibold text-muted-foreground data-[state=active]:text-foreground transition-all"
+                >
+                  Evaluations
+                </TabsTrigger>
+              </TabsList>
+
+              {/* Sections Tab */}
+              <TabsContent value="sections" className="mt-6 focus-visible:outline-none focus-visible:ring-0">
+                <div className="space-y-6">
+                  {terms.length > 0 ? (
                     <Tabs value={activeTerm} onValueChange={setActiveTerm} className="w-full">
                         <TabsList className="w-full justify-start overflow-x-auto bg-transparent border-b border-border/40 rounded-none h-auto p-0 gap-6">
                             {terms.map(term => (
@@ -277,25 +300,6 @@ export function CourseDetail({ courseId, onClose, closeOnRemove }: CourseDetailP
                             ))}
                         </TabsList>
 
-                        {hasVariable && (
-                          <div className="mt-4 flex flex-wrap gap-2">
-                              {unitOptions.map(u => (
-                                <button
-                                  key={u}
-                                  type="button"
-                                  onClick={() => handleUnitsChange(String(u))}
-                                  className={cn(
-                                    'px-4 py-2 rounded-lg text-sm font-medium transition-colors',
-                                    selectedUnits === u
-                                      ? 'bg-primary text-primary-foreground shadow-sm'
-                                      : 'bg-background border border-border hover:bg-muted/80 text-foreground'
-                                  )}
-                                >
-                                  {u} {u === 1 ? 'unit' : 'units'}
-                                </button>
-                              ))}
-                          </div>
-                        )}
                         
                         {terms.map(term => (
                             <TabsContent key={term} value={term} className="space-y-6 mt-6 focus-visible:outline-none focus-visible:ring-0">
@@ -460,12 +464,23 @@ export function CourseDetail({ courseId, onClose, closeOnRemove }: CourseDetailP
                             </TabsContent>
                         ))}
                     </Tabs>
-                ) : (
+                  ) : (
                     <div className="text-center text-muted-foreground py-12 bg-secondary/20 rounded-xl border border-dashed border-border/60">
                         No detailed section information available.
                     </div>
-                )}
-            </div>
+                  )}
+                </div>
+              </TabsContent>
+
+              {/* Evaluations Tab */}
+              <TabsContent value="evaluations" className="mt-6 focus-visible:outline-none focus-visible:ring-0">
+                <CourseEvaluations
+                  courseId={course.id}
+                  subject={course.subject}
+                  code={course.code}
+                />
+              </TabsContent>
+            </Tabs>
         </div>
       </div>
 

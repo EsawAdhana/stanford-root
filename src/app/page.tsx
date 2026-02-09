@@ -6,12 +6,14 @@ import { SearchBar } from '@/components/search-bar';
 import { FilterSidebar } from '@/components/filter-sidebar';
 import { CourseDetail } from '@/components/course-detail';
 import { Logo } from '@/components/logo';
+import { AuthGate } from '@/components/auth-gate';
+import { useAuthStore } from '@/lib/auth-store';
 import { useQueryState } from 'nuqs';
 import { Course } from '@/types/course';
 import { Button } from '@/components/ui/button';
 import { useCartStore } from '@/lib/cart-store';
 import Link from 'next/link';
-import { ShoppingBag, GraduationCap } from 'lucide-react';
+import { ShoppingBag, LogOut } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 
 function HomeContent() {
@@ -19,6 +21,7 @@ function HomeContent() {
   const cartItems = useCartStore(state => state.items);
   const [mounted, setMounted] = useState(false);
   const searchParams = useSearchParams()
+  const { user, signOut } = useAuthStore()
 
   useEffect(() => {
     setMounted(true);
@@ -42,7 +45,7 @@ function HomeContent() {
         <Link href="/" className="flex items-center gap-3 min-w-[200px] hover:opacity-80 transition-opacity cursor-pointer">
             <Logo className="h-9 w-9 shadow-primary/20" />
             <h1 className="text-2xl tracking-tight text-foreground font-[family-name:var(--font-outfit)] font-medium">
-                Navi<span className="font-bold text-primary">Greater</span>
+                <span className="font-bold text-primary">Root</span>
             </h1>
         </Link>
         
@@ -50,16 +53,7 @@ function HomeContent() {
             <SearchBar />
         </div>
         
-        <div className="flex items-center justify-end gap-4 min-w-[200px]">
-            <Link href="/degree-audit">
-                <Button 
-                    variant="ghost" 
-                    className="rounded-full h-11 px-6 hover:bg-secondary/80 transition-all font-medium gap-2"
-                >
-                    <GraduationCap className="h-4 w-4" />
-                    <span>MAP</span>
-                </Button>
-            </Link>
+        <div className="flex items-center justify-end gap-3 min-w-[200px]">
             <Link href={scheduleHref}>
                 <Button 
                     variant="outline" 
@@ -69,6 +63,30 @@ function HomeContent() {
                     <span>My Schedule</span>
                 </Button>
             </Link>
+            {user && (
+              <div className="flex items-center gap-2">
+                {user.user_metadata?.avatar_url ? (
+                  <img
+                    src={user.user_metadata.avatar_url}
+                    alt=""
+                    className="h-8 w-8 rounded-full border border-border/40"
+                    referrerPolicy="no-referrer"
+                  />
+                ) : (
+                  <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-xs font-bold text-primary">
+                    {(user.email || '?')[0].toUpperCase()}
+                  </div>
+                )}
+                <button
+                  type="button"
+                  onClick={signOut}
+                  className="text-muted-foreground hover:text-foreground transition-colors"
+                  title="Sign out"
+                >
+                  <LogOut size={16} />
+                </button>
+              </div>
+            )}
         </div>
       </header>
 
@@ -103,7 +121,9 @@ function HomeContent() {
 export default function Home() {
   return (
     <Suspense fallback={<div className="flex h-screen items-center justify-center">Loading...</div>}>
-      <HomeContent />
+      <AuthGate>
+        <HomeContent />
+      </AuthGate>
     </Suspense>
   );
 }

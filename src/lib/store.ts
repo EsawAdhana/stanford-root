@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import { supabase } from '@/lib/supabase'
 import type { Course } from '@/types/course'
 
 type CourseStore = {
@@ -6,6 +7,29 @@ type CourseStore = {
   isLoading: boolean
   hasLoaded: boolean
   fetchCourses: () => Promise<void>
+}
+
+// Supabase defaults to 1000 rows — paginate to get all
+async function fetchAllCourses () {
+  const allRows: any[] = []
+  const pageSize = 1000
+  let from = 0
+
+  while (true) {
+    const { data, error } = await supabase
+      .from('courses')
+      .select('course_id, quarter, subject, code, title, description, units, grading, instructors, terms, dept, sections')
+      .range(from, from + pageSize - 1)
+
+    if (error) throw error
+    if (!data || data.length === 0) break
+
+    allRows.push(...data)
+    if (data.length < pageSize) break
+    from += pageSize
+  }
+
+  return allRows
 }
 
 export const useCourseStore = create<CourseStore>((set, get) => ({
@@ -18,66 +42,46 @@ export const useCourseStore = create<CourseStore>((set, get) => ({
 
     set({ isLoading: true })
     try {
-      const basePath = (process.env.NEXT_PUBLIC_BASE_PATH || '').replace(/\/$/, '')
-      const urls = [
-        `${basePath}/data/fall.json`,
-        `${basePath}/data/winter.json`,
-        `${basePath}/data/spring.json`,
-        `${basePath}/data/summer.json`
-      ]
+      const rows = await fetchAllCourses()
 
-      const results = await Promise.allSettled(
-        urls.map(url => fetch(url, { cache: 'no-store' }))
-      )
+      // Merge courses across quarters (same logic as before)
+      const merged = new Map<string, Course>()
 
-      const responses = results
-        .filter(r => r.status === 'fulfilled')
-        // @ts-ignore
-        .map(r => r.value)
-        .filter(res => res && res.ok)
-
-      // Back-compat: if split files aren't present yet, fall back to legacy file
-      if (responses.length === 0) {
-        const res = await fetch(`${basePath}/data/courses.json`, { cache: 'no-store' })
-        if (!res.ok) throw new Error(`Failed to fetch courses: ${res.status}`)
-        const data = await res.json()
-        const courses = Array.isArray(data) ? data : (data?.courses ?? [])
-        set({ courses, hasLoaded: true })
-        return
-      }
-
-      const payloads = await Promise.all(
-        responses.map(async res => {
-          const data = await res.json()
-          return Array.isArray(data) ? data : (data?.courses ?? [])
-        })
-      )
-
-      const merged = new Map()
-      for (const list of payloads) {
-        for (const c of list) {
-          if (!c || !c.id) continue
-          const existing = merged.get(c.id)
-          if (!existing) {
-            merged.set(c.id, c)
-            continue
-          }
-
-          const terms = Array.from(new Set([...(existing.terms || []), ...(c.terms || [])]))
-          const sections = [...(existing.sections || []), ...(c.sections || [])]
-
-          merged.set(c.id, {
-            ...existing,
-            terms,
-            sections
-          })
+      for (const row of rows) {
+        const course: Course = {
+          id: row.course_id,
+          subject: row.subject,
+          code: row.code,
+          title: row.title,
+          description: row.description,
+          units: row.units,
+          grading: row.grading,
+          instructors: row.instructors || [],
+          terms: row.terms || [],
+          dept: row.dept || undefined,
+          sections: row.sections || []
         }
+
+        const existing = merged.get(course.id)
+        if (!existing) {
+          merged.set(course.id, course)
+          continue
+        }
+
+        // Combine terms and sections from different quarters
+        const terms = Array.from(new Set([...(existing.terms || []), ...(course.terms || [])]))
+        const sections = [...(existing.sections || []), ...(course.sections || [])]
+
+        merged.set(course.id, {
+          ...existing,
+          terms,
+          sections
+        })
       }
 
       set({ courses: Array.from(merged.values()), hasLoaded: true })
     } catch (err) {
-      // keep app usable even if data fetch fails
-      console.error(err)
+      console.error('Failed to fetch courses:', err)
       set({ courses: [], hasLoaded: true })
     } finally {
       set({ isLoading: false })

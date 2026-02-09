@@ -2,12 +2,12 @@
 
 import React, { Suspense, useMemo, useState } from 'react';
 import { CalendarView } from '@/components/calendar-view';
-import { Logo } from '@/components/logo';
 import { Button } from '@/components/ui/button';
 import { AlertCircle, CalendarDays, ChevronLeft } from 'lucide-react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useCartStore } from '@/lib/cart-store';
+import { AuthGate } from '@/components/auth-gate';
 import { parseMeetingTimes, timeToMinutes } from '@/lib/schedule-utils';
 import { cn } from '@/lib/utils';
 import {
@@ -128,7 +128,7 @@ function ScheduleContent() {
 
     let icsContent = `BEGIN:VCALENDAR
 VERSION:2.0
-PRODID:-//Revised Navigator//Stanford Course Schedule//EN
+PRODID:-//Stanford Root//Course Schedule//EN
 CALSCALE:GREGORIAN
 METHOD:PUBLISH
 X-WR-CALNAME:Stanford Schedule - ${currentTerm}
@@ -190,7 +190,7 @@ LOCATION:${event.location}
 DTSTART;TZID=America/Los_Angeles:${dtStart}
 DTEND;TZID=America/Los_Angeles:${dtEnd}
 RRULE:FREQ=WEEKLY;COUNT=10
-UID:${event.courseId}-${event.day}-${dtStart}@navigator.stanford.edu
+UID:${event.courseId}-${event.day}-${dtStart}@root.stanford.edu
 END:VEVENT
 `
     })
@@ -212,12 +212,6 @@ END:VEVENT
       <header className="flex-none h-16 border-b bg-card">
         <div className="h-full w-full max-w-7xl mx-auto px-6 flex items-center justify-between gap-4">
           <div className="flex items-center gap-4">
-              <Link href={backHref} className="flex items-center gap-3 hover:opacity-80 transition-opacity">
-                  <Logo className="h-8 w-8 shadow-primary/20" />
-                  <h1 className="text-xl tracking-tight text-foreground font-[family-name:var(--font-outfit)] font-medium hidden sm:block">
-                      Navi<span className="font-bold text-primary">Greater</span>
-                  </h1>
-              </Link>
               <Link href={backHref}>
                   <Button variant="ghost" size="sm" className="gap-2">
                       <ChevronLeft className="h-4 w-4" />
@@ -262,7 +256,9 @@ END:VEVENT
 export default function SchedulePage() {
   return (
     <Suspense fallback={<div className="flex h-screen items-center justify-center">Loading...</div>}>
-      <ScheduleContent />
+      <AuthGate>
+        <ScheduleContent />
+      </AuthGate>
     </Suspense>
   );
 }
