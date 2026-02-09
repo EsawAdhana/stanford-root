@@ -8,6 +8,7 @@ interface AuthState {
   isLoading: boolean
   initialize: () => () => void
   signInWithGoogle: () => Promise<void>
+  signInAsGuest: () => Promise<void>
   signOut: () => Promise<void>
 }
 
@@ -59,6 +60,42 @@ export const useAuthStore = create<AuthState>((set) => ({
           hd: 'stanford.edu' // Hint Google to only show Stanford accounts
         }
       }
+    })
+  },
+
+  signInAsGuest: async () => {
+    const mockUser = {
+      id: 'guest-123',
+      aud: 'authenticated',
+      role: 'authenticated',
+      email: 'guest@stanford.edu',
+      email_confirmed_at: new Date().toISOString(),
+      phone: '',
+      confirmation_sent_at: '',
+      confirmed_at: '',
+      last_sign_in_at: '',
+      app_metadata: {
+        provider: 'email',
+        providers: ['email']
+      },
+      user_metadata: {
+        full_name: 'Guest Developer',
+      },
+      identities: [],
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    } as unknown as User
+
+    set({
+      user: mockUser,
+      session: {
+        access_token: 'mock-token',
+        refresh_token: 'mock-refresh',
+        expires_in: 3600,
+        token_type: 'bearer',
+        user: mockUser
+      },
+      isLoading: false
     })
   },
 

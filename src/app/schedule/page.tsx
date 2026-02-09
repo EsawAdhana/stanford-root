@@ -369,7 +369,7 @@ END:VEVENT
                       Import Schedule
                     </div>
                     <span className="text-xs text-muted-foreground pl-6">
-                      Upload an .ics file to add classes from another calendar.
+                      Upload an .ics file to add classes from another calendar (or OnCourse).
                     </span>
                   </button>
                 </div>

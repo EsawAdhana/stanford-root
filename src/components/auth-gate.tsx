@@ -148,6 +148,20 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
             </button>
           </div>
 
+          {/* 
+          {(process.env.NODE_ENV === 'development' || true) && (
+            <button
+              type="button"
+              onClick={() => {
+                const { signInAsGuest } = useAuthStore.getState()
+                signInAsGuest()
+              }}
+              className="mt-6 sm:mt-8 text-sm text-muted-foreground hover:text-primary transition-colors opacity-60 hover:opacity-100"
+            >
+              [Dev] Guest Login
+            </button>
+          )} 
+          */}
         </div>
 
         {/* Footer */}
