@@ -29,7 +29,7 @@ const ROW_1 = PHRASES.slice(0, 8)
 const ROW_2 = PHRASES.slice(5).concat(PHRASES.slice(0, 3))
 const ROW_3 = [...PHRASES].reverse().slice(0, 8)
 
-function MarqueeRow ({ items, duration, reverse = false }: { items: string[], duration: string, reverse?: boolean }) {
+function MarqueeRow({ items, duration, reverse = false }: { items: string[], duration: string, reverse?: boolean }) {
   return (
     <div className="flex overflow-hidden whitespace-nowrap select-none">
       <div
@@ -40,7 +40,7 @@ function MarqueeRow ({ items, duration, reverse = false }: { items: string[], du
           {[...items, ...items].map((text, i) => (
             <span
               key={i}
-              className="inline-block rounded-full border border-border/40 bg-background/80 px-4 py-1.5 text-sm text-muted-foreground/25 font-medium whitespace-nowrap"
+              className="inline-block rounded-full border border-border/40 bg-background/80 px-4 py-1.5 text-base sm:text-lg text-muted-foreground/40 font-medium whitespace-nowrap"
             >
               {text}
             </span>
@@ -51,7 +51,7 @@ function MarqueeRow ({ items, duration, reverse = false }: { items: string[], du
   )
 }
 
-export function AuthGate ({ children }: { children: React.ReactNode }) {
+export function AuthGate({ children }: { children: React.ReactNode }) {
   const { user, isLoading, initialize, signInWithGoogle } = useAuthStore()
   const [timedOut, setTimedOut] = useState(false)
 
@@ -73,62 +73,91 @@ export function AuthGate ({ children }: { children: React.ReactNode }) {
   }
 
   if (!user) {
+    // Extended phrase list for variety
+    const ALL_PHRASES = [
+      'Find courses.', 'Read syllabi.', 'Browse evaluations.', 'Build your schedule.',
+      'Filter by WAYS.', 'Detect time conflicts.', 'Compare sections.', 'Check enrollment.',
+      'Plan your degree.', 'Explore departments.', 'Read student reviews.', 'Find open seats.',
+      'Search by instructor.', 'Filter by units.', 'View meeting times.', 'Export to calendar.',
+      'Ace your quarter.', 'Plan in seconds.', 'Visualize your week.', 'Track requirements.',
+      'Discover gems.', 'Avoid 8am classes.', 'Optimize your path.', 'Graduate on time.',
+      'Master your major.', 'Simplifying Stanford.', 'Analyze trends.', 'Smart scheduling.',
+      'Search historically.', 'Review professors.', 'Mockup schedules.', 'Waitlist tracking.',
+      'Unit planning.', 'Search efficiently.', 'Fast & responsive.', 'Mobile friendly.',
+      'Degree progress.', 'Major requirements.', 'GER fulfillment.', 'Language requirements.',
+      'Writing requirements.', 'Visualize workload.', 'Balance your life.', 'Academic roadmap.',
+    ]
+
+    // Helper to shuffle array
+    const shuffle = (array: string[]) => {
+      const newArray = [...array]
+      for (let i = newArray.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+      }
+      return newArray
+    }
+
+    // Create 15 rows of randomized content
+    const rows = Array.from({ length: 15 }, () => shuffle(ALL_PHRASES).slice(0, 12))
+
     return (
-      <div className="relative flex h-screen flex-col items-center justify-center bg-background overflow-hidden">
-        {/* Scrolling text background — fills entire screen */}
-        <div className="pointer-events-none absolute inset-0 flex flex-col justify-center gap-3">
-          <MarqueeRow items={ROW_3} duration="37s" />
-          <MarqueeRow items={ROW_1} duration="44s" reverse />
-          <MarqueeRow items={ROW_2} duration="33s" />
-          <MarqueeRow items={[...ROW_3].reverse()} duration="41s" reverse />
-          <MarqueeRow items={ROW_1} duration="35s" />
-          <MarqueeRow items={ROW_2} duration="40s" reverse />
-          <MarqueeRow items={ROW_3} duration="32s" />
-          <MarqueeRow items={[...ROW_1].reverse()} duration="38s" reverse />
-          <MarqueeRow items={ROW_2} duration="42s" />
-          <MarqueeRow items={ROW_3} duration="36s" reverse />
-          <MarqueeRow items={ROW_1} duration="34s" />
-          <MarqueeRow items={[...ROW_2].reverse()} duration="39s" reverse />
-          <MarqueeRow items={ROW_3} duration="43s" />
-          <MarqueeRow items={ROW_1} duration="31s" reverse />
-          <MarqueeRow items={ROW_2} duration="37s" />
+      <div className="relative min-h-[100dvh] flex flex-col items-center justify-center bg-background overflow-hidden selection:bg-primary/20">
+        {/* Scrolling text background — fills entire screen edge-to-edge */}
+        <div className="pointer-events-none absolute inset-0 flex flex-col justify-between -my-2 sm:-my-8 opacity-[0.4] dark:opacity-[0.25]">
+          {rows.map((rowItems, i) => (
+            <MarqueeRow
+              key={i}
+              items={rowItems}
+              duration={`${30 + (i % 5) * 5 + Math.random() * 10}s`}
+              reverse={i % 2 === 1}
+            />
+          ))}
         </div>
 
         {/* Center fade overlay so text is readable */}
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,_hsl(var(--background))_30%,_transparent_70%)]" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,_hsl(var(--background))_0%,_transparent_80%)] sm:bg-[radial-gradient(ellipse_at_center,_hsl(var(--background))_20%,_transparent_100%)]" />
 
         {/* Content */}
-        <div className="relative z-10 flex flex-col items-center px-6">
-          <Logo className="h-24 w-24 mb-8" />
+        <div className="relative z-10 flex flex-col items-center px-6 py-8 sm:py-0 animate-fade-in-up">
+          <div className="mb-6 sm:mb-8 relative group">
+            <div className="absolute -inset-1 bg-gradient-to-r from-primary to-orange-500 rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200" />
+            <Logo className="h-20 w-20 sm:h-24 sm:w-24 relative rounded-2xl" />
+          </div>
 
-          <h1 className="text-5xl sm:text-6xl font-[family-name:var(--font-outfit)] font-bold tracking-tight leading-[1.1] text-center">
-            <span className="text-primary">Everything Stanford,</span>
+          <h1 className="text-4xl sm:text-7xl font-[family-name:var(--font-outfit)] font-bold tracking-tight leading-[1.1] text-center text-foreground">
+            Everything <span className="text-primary">Stanford</span>,
             <br />
-            <span className="text-foreground">in one place.</span>
+            in one place.
           </h1>
 
-          <p className="mt-5 text-center text-base sm:text-lg text-muted-foreground max-w-sm leading-relaxed">
+          <p className="mt-4 sm:mt-6 text-center text-base sm:text-xl text-muted-foreground/80 max-w-lg leading-relaxed font-light">
             Course search, evals, syllabi, and scheduling&nbsp;&mdash;
-            without juggling five tabs.
+            <br className="hidden sm:block" />
+            without juggling five different tabs.
           </p>
 
-          <button
-            type="button"
-            onClick={signInWithGoogle}
-            className="mt-10 w-full max-w-xs flex items-center justify-center rounded-2xl bg-background text-foreground border border-border px-8 py-4 font-semibold text-[15px] shadow-sm transition-all duration-200 hover:bg-secondary active:bg-secondary/80"
-          >
-            Log in through Stanford
-          </button>
+          <div className="mt-8 sm:mt-12 flex flex-col items-center gap-4 w-full max-w-xs">
+            <button
+              type="button"
+              onClick={signInWithGoogle}
+              className="w-full relative group flex items-center justify-center gap-3 rounded-xl bg-foreground text-background px-8 py-3.5 sm:py-4 font-semibold text-[15px] shadow-lg transition-all duration-300 hover:scale-[1.02] hover:shadow-xl active:scale-[0.98]"
+            >
+              {/* Icon removed as requested */}
+              <span>Log in with Stanford</span>
+            </button>
+          </div>
+
         </div>
 
         {/* Footer */}
-        <div className="absolute bottom-6 z-10 flex items-center gap-3 text-[11px] text-muted-foreground/30">
-          <Link href="/privacy" className="hover:text-muted-foreground transition-colors">
-            Privacy Policy
+        <div className="absolute bottom-6 z-10 flex items-center gap-4 text-xs font-medium text-muted-foreground/40">
+          <Link href="/privacy" className="hover:text-primary transition-colors">
+            Privacy
           </Link>
-          <span>&middot;</span>
-          <Link href="/terms" className="hover:text-muted-foreground transition-colors">
-            Terms of Service
+          <span className="w-1 h-1 rounded-full bg-current opacity-30" />
+          <Link href="/terms" className="hover:text-primary transition-colors">
+            Terms
           </Link>
         </div>
       </div>

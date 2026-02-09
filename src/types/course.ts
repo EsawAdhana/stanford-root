@@ -45,6 +45,7 @@ export interface Course {
   selectedSectionId?: number; // The specific section (classId) selected
   selectedUnits?: number; // When course/section has variable units (e.g. 3-4), the user's choice
   optionalMeetings?: string[]; // Array of meeting keys that are marked as optional/not in class
+  color?: string; // User-selected color theme for the course (e.g. 'sky', 'emerald')
 }
 
 // --- Course Evaluation Types ---

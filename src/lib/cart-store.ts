@@ -12,6 +12,7 @@ type CartStore = {
   items: CartItem[]
   addItem: (course: Course, term?: string, sectionId?: number, selectedUnits?: number) => void
   removeItem: (courseId: string) => void
+  setItemColor: (courseId: string, color: string) => void
   hasItem: (courseId: string) => boolean
   getItem: (courseId: string) => CartItem | undefined
   toggleOptionalMeeting: (courseId: string, day: string, startTime: string, endTime: string) => void
@@ -25,11 +26,15 @@ export const useCartStore = create<CartStore>()(
         const currentItems = get().items
         const existingIndex = currentItems.findIndex(c => c.id === course.id)
 
+        // Preserve existing color if updating same course
+        const existingColor = existingIndex >= 0 ? currentItems[existingIndex].color : undefined
+
         const courseWithTerm: CartItem = {
           ...course,
           selectedTerm: term || course.selectedTerm || (course.terms ? course.terms[0] : course.term),
           selectedSectionId: sectionId,
-          selectedUnits: selectedUnits !== undefined ? selectedUnits : course.selectedUnits
+          selectedUnits: selectedUnits !== undefined ? selectedUnits : course.selectedUnits,
+          color: existingColor || course.color // Keep existing or use provided
         }
 
         if (existingIndex >= 0) {
@@ -43,6 +48,13 @@ export const useCartStore = create<CartStore>()(
       },
       removeItem: (courseId) => {
         set(state => ({ items: state.items.filter(c => c.id !== courseId) }))
+      },
+      setItemColor: (courseId, color) => {
+        set(state => ({
+          items: state.items.map(item =>
+            item.id === courseId ? { ...item, color } : item
+          )
+        }))
       },
       hasItem: (courseId) => {
         return get().items.some(c => c.id === courseId)

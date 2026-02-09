@@ -11,7 +11,7 @@ import type { CourseEvaluation, EvalQuestion, EvalOption } from '@/types/course'
 
 // --- Color helpers (green=good, yellow/orange=mid, red=bad) ---
 
-function scoreColor (score: number): string {
+function scoreColor(score: number): string {
   if (score >= 4.5) return 'text-emerald-600'
   if (score >= 4.0) return 'text-green-600'
   if (score >= 3.5) return 'text-yellow-600'
@@ -19,7 +19,7 @@ function scoreColor (score: number): string {
   return 'text-red-600'
 }
 
-function scoreBg (score: number): string {
+function scoreBg(score: number): string {
   if (score >= 4.5) return 'bg-emerald-500/12 border-emerald-500/25'
   if (score >= 4.0) return 'bg-green-500/12 border-green-500/25'
   if (score >= 3.5) return 'bg-yellow-500/12 border-yellow-500/25'
@@ -27,7 +27,7 @@ function scoreBg (score: number): string {
   return 'bg-red-500/12 border-red-500/25'
 }
 
-function barFill (score: number): string {
+function barFill(score: number): string {
   if (score >= 4.5) return 'bg-emerald-500'
   if (score >= 4.0) return 'bg-green-500'
   if (score >= 3.5) return 'bg-yellow-500'
@@ -39,7 +39,7 @@ function barFill (score: number): string {
 
 type QuestionCategory = 'quality' | 'learning' | 'organization' | 'goals' | 'hours' | 'attendance_in_person' | 'attendance_online' | 'unknown'
 
-function categorizeQuestion (text: string): QuestionCategory {
+function categorizeQuestion(text: string): QuestionCategory {
   const t = text.toLowerCase()
   if (t.includes('quality') || t.includes('overall')) return 'quality'
   if (t.includes('how much did you learn')) return 'learning'
@@ -73,7 +73,7 @@ const CATEGORY_SHORT: Record<QuestionCategory, string> = {
   unknown: ''
 }
 
-function parseRespondentCount (respondents: string): number {
+function parseRespondentCount(respondents: string): number {
   const match = respondents.match(/(\d+)\s+of\s+(\d+)/)
   if (match) return parseInt(match[1], 10)
   const simpleMatch = respondents.match(/(\d+)/)
@@ -82,7 +82,7 @@ function parseRespondentCount (respondents: string): number {
 
 // --- Aggregation ---
 
-function aggregateMetrics (evals: CourseEvaluation[]) {
+function aggregateMetrics(evals: CourseEvaluation[]) {
   const sums: Record<QuestionCategory, { total: number, weight: number }> = {
     quality: { total: 0, weight: 0 },
     learning: { total: 0, weight: 0 },
@@ -110,7 +110,7 @@ function aggregateMetrics (evals: CourseEvaluation[]) {
   return result
 }
 
-function computeInstructorStats (evals: CourseEvaluation[]) {
+function computeInstructorStats(evals: CourseEvaluation[]) {
   const byInstructor: Record<string, { scores: Record<QuestionCategory, { total: number, weight: number }>, evalCount: number, terms: Set<string> }> = {}
 
   for (const ev of evals) {
@@ -152,7 +152,7 @@ function computeInstructorStats (evals: CourseEvaluation[]) {
 
 // --- Sub-components ---
 
-function ScoreBadge ({ score, size = 'md' }: { score: number, size?: 'sm' | 'md' | 'lg' }) {
+function ScoreBadge({ score, size = 'md' }: { score: number, size?: 'sm' | 'md' | 'lg' }) {
   const sizeClasses = {
     sm: 'text-xs px-1.5 py-0.5 min-w-[36px]',
     md: 'text-sm px-2 py-0.5 min-w-[44px]',
@@ -172,7 +172,7 @@ function ScoreBadge ({ score, size = 'md' }: { score: number, size?: 'sm' | 'md'
 }
 
 // Horizontal histogram for hours data
-function HoursHistogram ({ options }: { options: EvalOption[] }) {
+function HoursHistogram({ options }: { options: EvalOption[] }) {
   const buckets = useMemo(() => {
     const ranges = [
       { label: '0-5', min: 0, max: 5 },
@@ -231,7 +231,7 @@ function HoursHistogram ({ options }: { options: EvalOption[] }) {
 
 // --- Instructor row that expands on click ---
 
-function InstructorRow ({ instructor, ratingCats, isExpanded, onToggle, evals }: {
+function InstructorRow({ instructor, ratingCats, isExpanded, onToggle, evals }: {
   instructor: { name: string, scores: Partial<Record<QuestionCategory, number>>, evalCount: number, terms: string[] }
   ratingCats: QuestionCategory[]
   isExpanded: boolean
@@ -294,7 +294,7 @@ function InstructorRow ({ instructor, ratingCats, isExpanded, onToggle, evals }:
 }
 
 // Compact inline eval card
-function InlineEval ({ evaluation, disableComments }: { evaluation: CourseEvaluation, disableComments?: boolean }) {
+function InlineEval({ evaluation, disableComments }: { evaluation: CourseEvaluation, disableComments?: boolean }) {
   const [showComments, setShowComments] = useState(false)
   const ratingQuestions = evaluation.questions.filter(q => q.type === 'rating')
   const hoursQ = evaluation.questions.find(q => categorizeQuestion(q.text) === 'hours')
@@ -357,7 +357,7 @@ function InlineEval ({ evaluation, disableComments }: { evaluation: CourseEvalua
 
 // --- Comments panel ---
 
-function CommentsPanel ({ comments }: { comments: string[] }) {
+function CommentsPanel({ comments }: { comments: string[] }) {
   const [searchQuery, setSearchQuery] = useState('')
   const [visibleCount, setVisibleCount] = useState(10)
 
@@ -384,7 +384,7 @@ function CommentsPanel ({ comments }: { comments: string[] }) {
           value={searchQuery}
           onChange={e => { setSearchQuery(e.target.value); setVisibleCount(10) }}
           placeholder="Search comments..."
-          className="w-full bg-secondary/30 border border-border/40 rounded-lg pl-8 pr-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-1 focus:ring-primary/50"
+          className="w-full bg-secondary/30 border border-border/40 rounded-lg pl-8 pr-3 py-2 text-base md:text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-1 focus:ring-primary/50"
         />
         {searchQuery && (
           <button
@@ -426,7 +426,7 @@ function CommentsPanel ({ comments }: { comments: string[] }) {
 }
 
 // Aggregated rating breakdown across multiple questions of the same category
-function AggregatedRatingBreakdown ({ questions, aggregateScore }: { questions: EvalQuestion[], aggregateScore: number }) {
+function AggregatedRatingBreakdown({ questions, aggregateScore }: { questions: EvalQuestion[], aggregateScore: number }) {
   const mergedOptions = useMemo(() => {
     const map: Record<string, { text: string, weight: number, count: number }> = {}
     for (const q of questions) {
@@ -489,7 +489,7 @@ interface CourseEvaluationsProps {
   code: string
 }
 
-export function CourseEvaluations ({ courseId, subject, code }: CourseEvaluationsProps) {
+export function CourseEvaluations({ courseId, subject, code }: CourseEvaluationsProps) {
   const { fetchCourseEvaluations, getEvaluations, isLoadingCourse, hasErrorForCourse } = useEvaluationStore()
   const [activeTermFilter, setActiveTermFilter] = useState<string>('all')
   const [activeTab, setActiveTab] = useState<EvalTab>('overview')

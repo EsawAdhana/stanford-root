@@ -11,10 +11,10 @@ type CourseStore = {
 }
 
 const CACHE_KEY = 'root-courses-cache'
-const CACHE_VERSION = 4
+const CACHE_VERSION = 5
 const CACHE_TTL = 1000 * 60 * 30 // 30 minutes
 
-function readCache (): Course[] | null {
+function readCache(): Course[] | null {
   try {
     const raw = sessionStorage.getItem(CACHE_KEY)
     if (!raw) return null
@@ -27,7 +27,7 @@ function readCache (): Course[] | null {
   }
 }
 
-function writeCache (courses: Course[]) {
+function writeCache(courses: Course[]) {
   try {
     sessionStorage.setItem(CACHE_KEY, JSON.stringify({
       v: CACHE_VERSION,
@@ -39,7 +39,7 @@ function writeCache (courses: Course[]) {
   }
 }
 
-function rowToCourse (row: any): Course {
+function rowToCourse(row: any): Course {
   return {
     id: row.course_id,
     subject: row.subject,
@@ -95,8 +95,8 @@ export const useCourseStore = create<CourseStore>((set, get) => ({
         set({ courses: fullCourses, isEnriching: false, hasEnriched: true })
       } catch (err) {
         console.error('Failed to enrich courses:', err)
-        // Still cache the light data so we don't refetch next time
-        writeCache(lightCourses)
+        // Do NOT cache light data on error, so we retry next time
+        // writeCache(lightCourses) 
         set({ isEnriching: false, hasEnriched: true })
       }
     } catch (err) {

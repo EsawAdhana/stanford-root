@@ -5,7 +5,8 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
 const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
-const PAGE_SIZE = 1000
+const PAGE_SIZE = 500
+const CONCURRENCY = 3
 
 // In-memory cache (survives across requests in the same serverless instance)
 let cachedLight: any[] | null = null
@@ -14,7 +15,7 @@ let lightTimestamp = 0
 let fullTimestamp = 0
 const CACHE_TTL = 1000 * 60 * 15 // 15 min
 
-async function fetchAllRows (columns: string) {
+async function fetchAllRows(columns: string) {
   const { count, error: countError } = await supabase
     .from('courses')
     .select('*', { count: 'exact', head: true })
@@ -22,21 +23,30 @@ async function fetchAllRows (columns: string) {
   if (!count || count === 0) return []
 
   const pages = Math.ceil(count / PAGE_SIZE)
-  const promises = Array.from({ length: pages }, (_, i) => {
-    const from = i * PAGE_SIZE
-    return supabase.from('courses').select(columns).range(from, from + PAGE_SIZE - 1)
-  })
-
-  const results = await Promise.all(promises)
   const rows: any[] = []
-  for (const r of results) {
-    if (r.error) throw r.error
-    if (r.data) rows.push(...r.data)
+
+  // Process pages in chunks to avoid overwhelming the DB (timeout fix)
+  for (let i = 0; i < pages; i += CONCURRENCY) {
+    const chunkPromises = []
+    for (let j = 0; j < CONCURRENCY && (i + j) < pages; j++) {
+      const pageIndex = i + j
+      const from = pageIndex * PAGE_SIZE
+      chunkPromises.push(
+        supabase.from('courses').select(columns).range(from, from + PAGE_SIZE - 1)
+      )
+    }
+
+    const chunkResults = await Promise.all(chunkPromises)
+    for (const r of chunkResults) {
+      if (r.error) throw r.error
+      if (r.data) rows.push(...r.data)
+    }
   }
+
   return rows
 }
 
-function mergeRows (rows: any[]) {
+function mergeRows(rows: any[]) {
   const merged = new Map<string, any>()
   for (const row of rows) {
     const existing = merged.get(row.course_id)
@@ -53,7 +63,7 @@ function mergeRows (rows: any[]) {
   return Array.from(merged.values())
 }
 
-export async function GET (request: Request) {
+export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
   const full = searchParams.get('full') === '1'
 
@@ -97,6 +107,7 @@ export async function GET (request: Request) {
     })
   } catch (err: any) {
     console.error('Failed to fetch courses:', err)
-    return NextResponse.json({ error: err.message }, { status: 500 })
+    console.error('Error stack:', err.stack)
+    return NextResponse.json({ error: err.message, stack: err.stack }, { status: 500 })
   }
 }

@@ -40,24 +40,24 @@ export const CourseCard = React.memo(({ course, style, onClick }: CourseCardProp
         </h3>
 
         {/* Bottom row: instructor + term */}
-        <div className="flex items-center justify-between text-xs text-muted-foreground pt-3 border-t border-border/30">
-          <div className="flex items-center gap-1.5 min-w-0 max-w-[60%]">
+        <div className="flex items-center justify-between gap-3 text-xs text-muted-foreground pt-3 border-t border-border/30">
+          <div className="flex-1 min-w-0">
             <InstructorList instructors={course.instructors} />
           </div>
 
           {(course.terms && course.terms.length > 0) ? (
             <div className="flex items-center gap-1.5 font-medium text-muted-foreground/70 shrink-0">
-              <Calendar size={11} className="shrink-0" />
-              <span className="truncate max-w-[90px]">
+              <Calendar size={12} className="shrink-0" />
+              <div className="truncate max-w-[80px] text-right">
                 {course.terms.length === 1
                   ? course.terms[0].split(' ')[0]
                   : `${course.terms.length} Terms`}
-              </span>
+              </div>
             </div>
           ) : course.term ? (
             <div className="flex items-center gap-1.5 font-medium text-muted-foreground/70 shrink-0">
-              <Calendar size={11} className="shrink-0" />
-              <span className="truncate max-w-[90px]">{course.term.split(' ')[0]}</span>
+              <Calendar size={12} className="shrink-0" />
+              <div className="truncate max-w-[80px] text-right">{course.term.split(' ')[0]}</div>
             </div>
           ) : null}
         </div>

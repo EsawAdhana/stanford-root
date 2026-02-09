@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Inter, Outfit } from "next/font/google";
 import { NuqsAdapter } from 'nuqs/adapters/next/app'
+import { LoadingToast } from "@/components/loading-toast";
+import { Toaster } from 'sonner';
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -19,9 +21,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.className} ${outfit.variable}`}>
-          <NuqsAdapter>
-            {children}
-          </NuqsAdapter>
+        <NuqsAdapter>
+          {children}
+          <Toaster />
+          <LoadingToast />
+        </NuqsAdapter>
       </body>
     </html>
   );

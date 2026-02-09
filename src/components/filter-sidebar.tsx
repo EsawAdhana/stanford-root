@@ -33,28 +33,28 @@ const SimpleScrollArea = ({ className, children }: { className?: string, childre
 );
 
 // Helper for collapsible sections
-const FilterSection = ({ 
-    title, 
-    children, 
-    defaultOpen = false 
-}: { 
-    title: string, 
-    children: React.ReactNode, 
-    defaultOpen?: boolean 
+const FilterSection = ({
+    title,
+    children,
+    defaultOpen = false
+}: {
+    title: string,
+    children: React.ReactNode,
+    defaultOpen?: boolean
 }) => {
     const [isOpen, setIsOpen] = useState(defaultOpen);
     return (
         <Collapsible open={isOpen} onOpenChange={setIsOpen} className="space-y-2">
             <div className="flex items-center justify-between">
-                 <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2">
                     <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider pl-1">{title}</h3>
                     <span className="text-[10px] text-muted-foreground/60 italic font-normal hidden group-hover:block">None = All</span>
-                 </div>
-                 <CollapsibleTrigger asChild>
+                </div>
+                <CollapsibleTrigger asChild>
                     <Button variant="ghost" size="sm" className="h-6 w-6 p-0 hover:bg-secondary">
                         {isOpen ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
                     </Button>
-                 </CollapsibleTrigger>
+                </CollapsibleTrigger>
             </div>
             <CollapsibleContent className="space-y-1">
                 {children}
@@ -74,14 +74,14 @@ export function FilterSidebar() {
     const [selectedTerms, setSelectedTerms] = useQueryState('terms', parseAsArrayOf(parseAsString).withDefault([]));
     const [hideConflicts, setHideConflicts] = useQueryState('hideConflicts', parseAsBoolean.withDefault(false));
     const [excludedWords, setExcludedWords] = useQueryState('exclude', parseAsArrayOf(parseAsString).withDefault([]));
-    
+
     // New Filters
     const [selectedFormats, setSelectedFormats] = useQueryState('formats', parseAsArrayOf(parseAsString).withDefault([]));
     const [selectedStatus, setSelectedStatus] = useQueryState('status', parseAsArrayOf(parseAsString).withDefault([]));
     const [selectedLevels, setSelectedLevels] = useQueryState('levels', parseAsArrayOf(parseAsString).withDefault([]));
     const [selectedGers, setSelectedGers] = useQueryState('gers', parseAsArrayOf(parseAsString).withDefault([]));
     const [selectedSchools, setSelectedSchools] = useQueryState('schools', parseAsArrayOf(parseAsString).withDefault([]));
-    
+
     // Single Selects (Dropdowns) -> Now Multi Selects (Checkboxes)
     const [unitRanges, setUnitRanges] = useQueryState('units', parseAsArrayOf(parseAsString).withDefault([]));
     const [timeRanges, setTimeRanges] = useQueryState('times', parseAsArrayOf(parseAsString).withDefault([]));
@@ -93,272 +93,272 @@ export function FilterSidebar() {
     // Helper to filter courses based on all active filters except a specific one
     // This ensures facet counts match the visible course list
     const getFilteredCoursesForFacets = (excludeFilter?: string) => {
-            let filtered = courses;
+        let filtered = courses;
 
-            // Apply excluded words filter
-            if (excludedWords && excludedWords.length > 0 && excludeFilter !== 'exclude') {
-                filtered = filtered.filter(c => {
-                    const textToCheck = `${c.title} ${c.description} ${c.code}`.toLowerCase();
-                    return !excludedWords.some(word => textToCheck.includes(word.toLowerCase()));
-                });
-            }
+        // Apply excluded words filter
+        if (excludedWords && excludedWords.length > 0 && excludeFilter !== 'exclude') {
+            filtered = filtered.filter(c => {
+                const textToCheck = `${c.title} ${c.description} ${c.code}`.toLowerCase();
+                return !excludedWords.some(word => textToCheck.includes(word.toLowerCase()));
+            });
+        }
 
-            // Apply department filter
-            if (selectedDepts && selectedDepts.length > 0 && excludeFilter !== 'depts') {
-                filtered = filtered.filter(c => selectedDepts.includes(c.subject));
-            }
+        // Apply department filter
+        if (selectedDepts && selectedDepts.length > 0 && excludeFilter !== 'depts') {
+            filtered = filtered.filter(c => selectedDepts.includes(c.subject));
+        }
 
-            // Apply term filter
-            if (selectedTerms && selectedTerms.length > 0 && excludeFilter !== 'terms') {
-                filtered = filtered.filter(c => {
-                    if (c.terms) {
-                        return c.terms.some(t => selectedTerms.includes(t));
-                    }
-                    return c.term && selectedTerms.includes(c.term);
-                });
-            }
+        // Apply term filter
+        if (selectedTerms && selectedTerms.length > 0 && excludeFilter !== 'terms') {
+            filtered = filtered.filter(c => {
+                if (c.terms) {
+                    return c.terms.some(t => selectedTerms.includes(t));
+                }
+                return c.term && selectedTerms.includes(c.term);
+            });
+        }
 
-            // Apply format filter
-            if (selectedFormats && selectedFormats.length > 0 && excludeFilter !== 'formats') {
-                filtered = filtered.filter(c => {
-                    if (c.sections && c.sections.length > 0) {
-                        return c.sections.some(s => s.component && selectedFormats.includes(s.component));
-                    }
-                    return false;
-                });
-            }
+        // Apply format filter
+        if (selectedFormats && selectedFormats.length > 0 && excludeFilter !== 'formats') {
+            filtered = filtered.filter(c => {
+                if (c.sections && c.sections.length > 0) {
+                    return c.sections.some(s => s.component && selectedFormats.includes(s.component));
+                }
+                return false;
+            });
+        }
 
-            // Apply status filter
-            if (selectedStatus && selectedStatus.length > 0 && excludeFilter !== 'status') {
-                filtered = filtered.filter(c => {
-                    if (c.sections && c.sections.length > 0) {
-                        return c.sections.some(s => s.status && selectedStatus.includes(s.status));
-                    }
-                    return false;
-                });
-            }
+        // Apply status filter
+        if (selectedStatus && selectedStatus.length > 0 && excludeFilter !== 'status') {
+            filtered = filtered.filter(c => {
+                if (c.sections && c.sections.length > 0) {
+                    return c.sections.some(s => s.status && selectedStatus.includes(s.status));
+                }
+                return false;
+            });
+        }
 
-            // Apply level filter
-            if (selectedLevels && selectedLevels.length > 0 && excludeFilter !== 'levels') {
-                filtered = filtered.filter(c => {
-                    if (c.sections && c.sections.length > 0) {
-                        return c.sections.some(s => s.classLevel && selectedLevels.includes(s.classLevel));
-                    }
-                    return false;
-                });
-            }
+        // Apply level filter
+        if (selectedLevels && selectedLevels.length > 0 && excludeFilter !== 'levels') {
+            filtered = filtered.filter(c => {
+                if (c.sections && c.sections.length > 0) {
+                    return c.sections.some(s => s.classLevel && selectedLevels.includes(s.classLevel));
+                }
+                return false;
+            });
+        }
 
-            // Apply GER filter
-            if (selectedGers && selectedGers.length > 0 && excludeFilter !== 'gers') {
-                filtered = filtered.filter(c => {
-                    if (c.sections && c.sections.length > 0) {
-                        return c.sections.some(s => s.gers && s.gers.some(g => selectedGers.includes(g)));
-                    }
-                    return false;
-                });
-            }
+        // Apply GER filter
+        if (selectedGers && selectedGers.length > 0 && excludeFilter !== 'gers') {
+            filtered = filtered.filter(c => {
+                if (c.sections && c.sections.length > 0) {
+                    return c.sections.some(s => s.gers && s.gers.some(g => selectedGers.includes(g)));
+                }
+                return false;
+            });
+        }
 
-            // Apply school filter
-            if (selectedSchools && selectedSchools.length > 0 && excludeFilter !== 'schools') {
-                filtered = filtered.filter(c => {
-                    const school = getSchoolFromSubject(c.subject);
-                    return selectedSchools.includes(school);
-                });
-            }
+        // Apply school filter
+        if (selectedSchools && selectedSchools.length > 0 && excludeFilter !== 'schools') {
+            filtered = filtered.filter(c => {
+                const school = getSchoolFromSubject(c.subject);
+                return selectedSchools.includes(school);
+            });
+        }
 
-            // Apply unit range filter
-            if (unitRanges && unitRanges.length > 0 && excludeFilter !== 'units') {
-                filtered = filtered.filter(c => {
-                    const checkUnits = (uStr: string | number) => {
-                        if (!uStr) return false;
-                        const u = typeof uStr === 'string' ? parseFloat(uStr) : uStr;
-                        if (isNaN(u)) return false;
-                        return unitRanges.some(range => {
-                            if (range === '1') return u >= 1 && u < 2;
-                            if (range === '2') return u >= 2 && u < 3;
-                            if (range === '3') return u >= 3 && u < 4;
-                            if (range === '4') return u >= 4 && u < 5;
-                            if (range === '5+') return u >= 5;
+        // Apply unit range filter
+        if (unitRanges && unitRanges.length > 0 && excludeFilter !== 'units') {
+            filtered = filtered.filter(c => {
+                const checkUnits = (uStr: string | number) => {
+                    if (!uStr) return false;
+                    const u = typeof uStr === 'string' ? parseFloat(uStr) : uStr;
+                    if (isNaN(u)) return false;
+                    return unitRanges.some(range => {
+                        if (range === '1') return u >= 1 && u < 2;
+                        if (range === '2') return u >= 2 && u < 3;
+                        if (range === '3') return u >= 3 && u < 4;
+                        if (range === '4') return u >= 4 && u < 5;
+                        if (range === '5+') return u >= 5;
+                        return false;
+                    });
+                };
+                if (c.sections && c.sections.length > 0) {
+                    return c.sections.some(s => checkUnits(s.units));
+                }
+                const mainUnits = parseFloat(c.units);
+                if (!isNaN(mainUnits)) return checkUnits(mainUnits);
+                return false;
+            });
+        }
+
+        // Apply time range filter
+        if (timeRanges && timeRanges.length > 0 && excludeFilter !== 'times') {
+            const timeToHour = (timeStr: string) => {
+                if (!timeStr) return -1;
+                const [time, modifier] = timeStr.split(' ');
+                let [hours] = time.split(':').map(Number);
+                if (modifier === 'PM' && hours < 12) hours += 12;
+                if (modifier === 'AM' && hours === 12) hours = 0;
+                return hours;
+            };
+            filtered = filtered.filter(c => {
+                if (c.sections && c.sections.length > 0) {
+                    return c.sections.some(s => s.meetings.some(m => {
+                        const startHour = timeToHour(m.time.split('-')[0].trim());
+                        if (startHour === -1) return false;
+                        return timeRanges.some(range => {
+                            if (range === 'early-morning') return startHour < 10;
+                            if (range === 'morning') return startHour >= 10 && startHour < 12;
+                            if (range === 'afternoon') return startHour >= 12 && startHour < 14;
+                            if (range === 'late-afternoon') return startHour >= 14 && startHour < 17;
+                            if (range === 'evening') return startHour >= 17;
                             return false;
                         });
-                    };
-                    if (c.sections && c.sections.length > 0) {
-                        return c.sections.some(s => checkUnits(s.units));
-                    }
-                    const mainUnits = parseFloat(c.units);
-                    if (!isNaN(mainUnits)) return checkUnits(mainUnits);
-                    return false;
-                });
-            }
+                    }));
+                }
+                return false;
+            });
+        }
 
-            // Apply time range filter
-            if (timeRanges && timeRanges.length > 0 && excludeFilter !== 'times') {
-                const timeToHour = (timeStr: string) => {
-                    if (!timeStr) return -1;
-                    const [time, modifier] = timeStr.split(' ');
-                    let [hours] = time.split(':').map(Number);
-                    if (modifier === 'PM' && hours < 12) hours += 12;
-                    if (modifier === 'AM' && hours === 12) hours = 0;
-                    return hours;
-                };
-                filtered = filtered.filter(c => {
-                    if (c.sections && c.sections.length > 0) {
-                        return c.sections.some(s => s.meetings.some(m => {
-                            const startHour = timeToHour(m.time.split('-')[0].trim());
-                            if (startHour === -1) return false;
-                            return timeRanges.some(range => {
-                                if (range === 'early-morning') return startHour < 10;
-                                if (range === 'morning') return startHour >= 10 && startHour < 12;
-                                if (range === 'afternoon') return startHour >= 12 && startHour < 14;
-                                if (range === 'late-afternoon') return startHour >= 14 && startHour < 17;
-                                if (range === 'evening') return startHour >= 17;
-                                return false;
-                            });
-                        }));
-                    }
-                    return false;
-                });
-            }
+        // Apply conflict hiding filter (always applied, not excluded)
+        if (hideConflicts) {
+            const hasOverlap = (m1: any, m2: any, cartItem?: any) => {
+                // Check Days - but exclude optional days from cartItem
+                let commonDays = m1.days.filter((d: string) => m2.days.includes(d));
 
-            // Apply conflict hiding filter (always applied, not excluded)
-            if (hideConflicts) {
-                const hasOverlap = (m1: any, m2: any, cartItem?: any) => {
-                    // Check Days - but exclude optional days from cartItem
-                    let commonDays = m1.days.filter((d: string) => m2.days.includes(d));
-                    
-                    // If cartItem is provided, filter out optional days
-                    if (cartItem) {
-                        commonDays = commonDays.filter((day: string) => {
-                            return !isMeetingOptional(cartItem, day, m2.startTime, m2.endTime);
-                        });
-                    }
-                    
-                    if (commonDays.length === 0) return false;
-                    
-                    // Check Times
-                    const start1 = timeToMinutes(m1.startTime);
-                    const end1 = timeToMinutes(m1.endTime);
-                    const start2 = timeToMinutes(m2.startTime);
-                    const end2 = timeToMinutes(m2.endTime);
-                    
-                    return start1 < end2 && start2 < end1;
-                };
-
-                const parseSectionMeetings = (section: any) => {
-                    return section.meetings.flatMap((m: any) => {
-                        let days: string[] = [];
-                        if (typeof m.days === 'string') days = m.days.split(/[ ,]+/);
-                        
-                        // Normalize Days (Mon, Tue...)
-                        const normalizedDays = days.map((d: string) => {
-                            const lower = d.toLowerCase();
-                            if (lower.startsWith('m')) return 'Mon';
-                            if (lower.startsWith('tu')) return 'Tue';
-                            if (lower.startsWith('w')) return 'Wed';
-                            if (lower.startsWith('th')) return 'Thu';
-                            if (lower.startsWith('f')) return 'Fri';
-                            return '';
-                        }).filter(Boolean);
-
-                        let startTime = '', endTime = '';
-                        if (m.time && m.time.includes('-')) {
-                            [startTime, endTime] = m.time.split('-').map((s: string) => s.trim());
-                        }
-
-                        if (!startTime) return [];
-
-                        return [{
-                            days: normalizedDays,
-                            startTime,
-                            endTime
-                        }];
+                // If cartItem is provided, filter out optional days
+                if (cartItem) {
+                    commonDays = commonDays.filter((day: string) => {
+                        return !isMeetingOptional(cartItem, day, m2.startTime, m2.endTime);
                     });
-                };
-
-                filtered = filtered.filter(c => {
-                    if (!c.sections || c.sections.length === 0) return true;
-                    
-                    let sectionsToCheck = c.sections;
-                    if (selectedTerms && selectedTerms.length > 0) {
-                        sectionsToCheck = sectionsToCheck.filter(s => selectedTerms.includes(s.term));
-                    }
-                    
-                    if (sectionsToCheck.length === 0) return true;
-
-                    // A course is valid if AT LEAST ONE section does not overlap
-                    return sectionsToCheck.some(section => {
-                        const cartItemsForTerm = cartItems.filter(item => item.selectedTerm === section.term);
-                        if (cartItemsForTerm.length === 0) return true;
-                        
-                        const sectionMeetings = parseSectionMeetings(section);
-                        if (sectionMeetings.length === 0) return true;
-
-                        const isOverlapping = cartItemsForTerm.some(cartItem => {
-                            const cartMeetings = parseMeetingTimes(cartItem, cartItem.selectedTerm);
-                            // Check conflicts, but pass cartItem to hasOverlap to exclude optional days
-                            return cartMeetings.some(cm => 
-                                sectionMeetings.some((sm: any) => hasOverlap(sm, cm, cartItem))
-                            );
-                        });
-                        
-                        return !isOverlapping;
-                    });
-                });
-            }
-
-            // Apply search query filter (always applied, not excluded)
-            if (query) {
-                const lowerQuery = query.toLowerCase().trim()
-                const compactQuery = lowerQuery.replace(/\s+/g, '')
-                const parts = lowerQuery.split(/\s+/).filter(Boolean)
-
-                const allSubjects = new Set(courses.map(c => c.subject))
-
-                let subject = parts[0]?.toUpperCase() || ''
-                let remainingQuery = parts.slice(1).join(' ')
-
-                // Support searches like "cs106a" as well as "cs 106a"
-                if (parts.length === 1 && compactQuery) {
-                    const m = compactQuery.match(/^([a-z&]+)(\d.*)$/i)
-                    if (m) {
-                        const maybeSubject = m[1].toUpperCase()
-                        if (allSubjects.has(maybeSubject)) {
-                            subject = maybeSubject
-                            remainingQuery = m[2]
-                        }
-                    }
                 }
 
-                const isSubjectSearch = Boolean(subject) && allSubjects.has(subject)
+                if (commonDays.length === 0) return false;
 
-                if (isSubjectSearch) {
-                    filtered = filtered.filter(c => c.subject === subject)
+                // Check Times
+                const start1 = timeToMinutes(m1.startTime);
+                const end1 = timeToMinutes(m1.endTime);
+                const start2 = timeToMinutes(m2.startTime);
+                const end2 = timeToMinutes(m2.endTime);
 
-                    if (remainingQuery) {
-                        const remainingLower = remainingQuery.toLowerCase().trim()
-                        const remainingCompact = remainingLower.replace(/\s+/g, '')
-                        filtered = filtered.filter(c => {
-                            const codeCompact = (c.code || '').toLowerCase().replace(/\s+/g, '')
-                            if (codeCompact.includes(remainingCompact)) return true
-                            if ((c.title || '').toLowerCase().includes(remainingLower)) return true
-                            return false
-                        })
+                return start1 < end2 && start2 < end1;
+            };
+
+            const parseSectionMeetings = (section: any) => {
+                return section.meetings.flatMap((m: any) => {
+                    let days: string[] = [];
+                    if (typeof m.days === 'string') days = m.days.split(/[ ,]+/);
+
+                    // Normalize Days (Mon, Tue...)
+                    const normalizedDays = days.map((d: string) => {
+                        const lower = d.toLowerCase();
+                        if (lower.startsWith('m')) return 'Mon';
+                        if (lower.startsWith('tu')) return 'Tue';
+                        if (lower.startsWith('w')) return 'Wed';
+                        if (lower.startsWith('th')) return 'Thu';
+                        if (lower.startsWith('f')) return 'Fri';
+                        return '';
+                    }).filter(Boolean);
+
+                    let startTime = '', endTime = '';
+                    if (m.time && m.time.includes('-')) {
+                        [startTime, endTime] = m.time.split('-').map((s: string) => s.trim());
                     }
-                } else {
-                    filtered = filtered.filter(c => {
-                        const subjectCodeSpaced = `${c.subject} ${c.code}`.toLowerCase()
-                        const subjectCodeCompact = `${c.subject}${c.code}`.toLowerCase().replace(/\s+/g, '')
-                        const codeCompact = (c.code || '').toLowerCase().replace(/\s+/g, '')
 
-                        if (subjectCodeSpaced.startsWith(lowerQuery)) return true
-                        if (subjectCodeCompact.startsWith(compactQuery)) return true
-                        if (codeCompact.includes(compactQuery)) return true
-                        if ((c.title || '').toLowerCase().includes(lowerQuery)) return true
-                        if (c.instructors && c.instructors.some(i => i.toLowerCase().includes(lowerQuery))) return true
+                    if (!startTime) return [];
+
+                    return [{
+                        days: normalizedDays,
+                        startTime,
+                        endTime
+                    }];
+                });
+            };
+
+            filtered = filtered.filter(c => {
+                if (!c.sections || c.sections.length === 0) return true;
+
+                let sectionsToCheck = c.sections;
+                if (selectedTerms && selectedTerms.length > 0) {
+                    sectionsToCheck = sectionsToCheck.filter(s => selectedTerms.includes(s.term));
+                }
+
+                if (sectionsToCheck.length === 0) return true;
+
+                // A course is valid if AT LEAST ONE section does not overlap
+                return sectionsToCheck.some(section => {
+                    const cartItemsForTerm = cartItems.filter(item => item.selectedTerm === section.term);
+                    if (cartItemsForTerm.length === 0) return true;
+
+                    const sectionMeetings = parseSectionMeetings(section);
+                    if (sectionMeetings.length === 0) return true;
+
+                    const isOverlapping = cartItemsForTerm.some(cartItem => {
+                        const cartMeetings = parseMeetingTimes(cartItem, cartItem.selectedTerm);
+                        // Check conflicts, but pass cartItem to hasOverlap to exclude optional days
+                        return cartMeetings.some(cm =>
+                            sectionMeetings.some((sm: any) => hasOverlap(sm, cm, cartItem))
+                        );
+                    });
+
+                    return !isOverlapping;
+                });
+            });
+        }
+
+        // Apply search query filter (always applied, not excluded)
+        if (query) {
+            const lowerQuery = query.toLowerCase().trim()
+            const compactQuery = lowerQuery.replace(/\s+/g, '')
+            const parts = lowerQuery.split(/\s+/).filter(Boolean)
+
+            const allSubjects = new Set(courses.map(c => c.subject))
+
+            let subject = parts[0]?.toUpperCase() || ''
+            let remainingQuery = parts.slice(1).join(' ')
+
+            // Support searches like "cs106a" as well as "cs 106a"
+            if (parts.length === 1 && compactQuery) {
+                const m = compactQuery.match(/^([a-z&]+)(\d.*)$/i)
+                if (m) {
+                    const maybeSubject = m[1].toUpperCase()
+                    if (allSubjects.has(maybeSubject)) {
+                        subject = maybeSubject
+                        remainingQuery = m[2]
+                    }
+                }
+            }
+
+            const isSubjectSearch = Boolean(subject) && allSubjects.has(subject)
+
+            if (isSubjectSearch) {
+                filtered = filtered.filter(c => c.subject === subject)
+
+                if (remainingQuery) {
+                    const remainingLower = remainingQuery.toLowerCase().trim()
+                    const remainingCompact = remainingLower.replace(/\s+/g, '')
+                    filtered = filtered.filter(c => {
+                        const codeCompact = (c.code || '').toLowerCase().replace(/\s+/g, '')
+                        if (codeCompact.includes(remainingCompact)) return true
+                        if ((c.title || '').toLowerCase().includes(remainingLower)) return true
                         return false
                     })
                 }
+            } else {
+                filtered = filtered.filter(c => {
+                    const subjectCodeSpaced = `${c.subject} ${c.code}`.toLowerCase()
+                    const subjectCodeCompact = `${c.subject}${c.code}`.toLowerCase().replace(/\s+/g, '')
+                    const codeCompact = (c.code || '').toLowerCase().replace(/\s+/g, '')
+
+                    if (subjectCodeSpaced.startsWith(lowerQuery)) return true
+                    if (subjectCodeCompact.startsWith(compactQuery)) return true
+                    if (codeCompact.includes(compactQuery)) return true
+                    if ((c.title || '').toLowerCase().includes(lowerQuery)) return true
+                    if (c.instructors && c.instructors.some(i => i.toLowerCase().includes(lowerQuery))) return true
+                    return false
+                })
             }
+        }
 
         return filtered;
     };
@@ -368,7 +368,7 @@ export function FilterSidebar() {
         const depts = new Map<string, number>();
         const terms = new Map<string, number>();
         const deptNames = new Map<string, string>(); // Map Code -> Full Name
-        
+
         // New Facets
         const formats = new Map<string, number>();
         const statuses = new Map<string, number>();
@@ -444,7 +444,7 @@ export function FilterSidebar() {
             const uniqueComponents = new Set<string>();
             if (c.sections && c.sections.length > 0) {
                 c.sections.forEach(s => {
-                    if(s.component) uniqueComponents.add(s.component);
+                    if (s.component) uniqueComponents.add(s.component);
                 });
             }
             uniqueComponents.forEach(comp => formats.set(comp, (formats.get(comp) || 0) + 1));
@@ -455,7 +455,7 @@ export function FilterSidebar() {
             const uniqueStatus = new Set<string>();
             if (c.sections && c.sections.length > 0) {
                 c.sections.forEach(s => {
-                    if(s.status) uniqueStatus.add(s.status);
+                    if (s.status) uniqueStatus.add(s.status);
                 });
             }
             uniqueStatus.forEach(stat => statuses.set(stat, (statuses.get(stat) || 0) + 1));
@@ -466,7 +466,7 @@ export function FilterSidebar() {
             const uniqueLevels = new Set<string>();
             if (c.sections && c.sections.length > 0) {
                 c.sections.forEach(s => {
-                    if(s.classLevel) uniqueLevels.add(s.classLevel);
+                    if (s.classLevel) uniqueLevels.add(s.classLevel);
                 });
             }
             uniqueLevels.forEach(lvl => levels.set(lvl, (levels.get(lvl) || 0) + 1));
@@ -477,7 +477,7 @@ export function FilterSidebar() {
             const uniqueGers = new Set<string>();
             if (c.sections && c.sections.length > 0) {
                 c.sections.forEach(s => {
-                    if(s.gers) s.gers.forEach(g => uniqueGers.add(g));
+                    if (s.gers) s.gers.forEach(g => uniqueGers.add(g));
                 });
             }
             uniqueGers.forEach(g => gers.set(g, (gers.get(g) || 0) + 1));
@@ -597,8 +597,8 @@ export function FilterSidebar() {
             <div className="p-6 pb-4 border-b border-border/40">
                 <h2 className="text-sm font-semibold text-foreground/80 tracking-wide uppercase">Filters</h2>
                 <div className="mt-4 flex items-center space-x-2">
-                    <input 
-                        type="checkbox" 
+                    <input
+                        type="checkbox"
                         id="hideConflicts"
                         checked={hideConflicts}
                         onChange={(e) => setHideConflicts(e.target.checked)}
@@ -620,14 +620,14 @@ export function FilterSidebar() {
                             value={excludeInput}
                             onChange={(e) => setExcludeInput(e.target.value)}
                             onKeyDown={handleAddExclude}
-                            className="h-8 text-sm"
+                            className="h-8 text-base md:text-sm"
                         />
                         {excludedWords.length > 0 && (
                             <div className="flex flex-wrap gap-1.5">
                                 {excludedWords.map(word => (
                                     <span key={word} className="inline-flex items-center gap-1 px-2 py-1 rounded bg-destructive/10 text-destructive text-xs font-medium">
                                         {word}
-                                        <button 
+                                        <button
                                             onClick={() => removeExcludedWord(word)}
                                             className="hover:text-destructive/80"
                                         >
@@ -661,7 +661,7 @@ export function FilterSidebar() {
                     <div className="flex items-center justify-between">
                         <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider pl-1">Departments</h3>
                         {selectedDepts.length > 0 && (
-                            <button 
+                            <button
                                 onClick={() => setSelectedDepts(null)}
                                 className="text-[10px] text-muted-foreground hover:text-foreground transition-colors"
                             >
@@ -669,7 +669,7 @@ export function FilterSidebar() {
                             </button>
                         )}
                     </div>
-                    
+
                     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                         <DialogTrigger asChild>
                             <Button variant="outline" size="sm" className="w-full justify-start text-muted-foreground hover:text-foreground mb-2">
@@ -678,15 +678,16 @@ export function FilterSidebar() {
                             </Button>
                         </DialogTrigger>
                         <DialogContent className="sm:max-w-[425px] h-[80vh] flex flex-col p-0 gap-0 overflow-hidden">
-                             <DialogHeader className="px-6 py-4 border-b">
-                                <DialogTitle>Select Departments</DialogTitle>
+                            <DialogHeader className="px-6 py-4 border-b">
+                                <DialogTitle className="sr-only">Select Departments</DialogTitle>
+                                <div className="text-lg font-semibold">Select Departments</div>
                             </DialogHeader>
                             <div className="p-4 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 space-y-3">
                                 <div className="relative">
                                     <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                                     <Input
                                         placeholder="Search departments..."
-                                        className="pl-9"
+                                        className="pl-9 text-base md:text-sm"
                                         value={deptQuery}
                                         onChange={(e) => setDeptQuery(e.target.value)}
                                         autoFocus
@@ -696,8 +697,8 @@ export function FilterSidebar() {
                             <SimpleScrollArea className="flex-1 p-2">
                                 <div className="space-y-0.5">
                                     {filteredDepts.map(({ code, count, name }) => (
-                                        <div 
-                                            key={code} 
+                                        <div
+                                            key={code}
                                             className={cn(
                                                 "flex items-center justify-between px-4 py-2 rounded-md cursor-pointer transition-colors",
                                                 selectedDepts.includes(code) ? "bg-primary/10 hover:bg-primary/15" : "hover:bg-secondary/50"
@@ -727,7 +728,7 @@ export function FilterSidebar() {
                         {selectedDepts.map(dept => (
                             <div key={dept} className="group flex items-center justify-between text-sm px-2 py-1.5 rounded-md bg-secondary/40 hover:bg-secondary/60 transition-colors">
                                 <span>{dept}</span>
-                                <button 
+                                <button
                                     onClick={() => removeDept(dept)}
                                     className="text-muted-foreground hover:text-foreground opacity-0 group-hover:opacity-100 transition-opacity"
                                 >
@@ -752,7 +753,7 @@ export function FilterSidebar() {
                         />
                     ))}
                 </FilterSection>
-                
+
                 {/* Class Status */}
                 <FilterSection title="Class Status">
                     {facets.statuses.map(([status, count]) => (
@@ -800,13 +801,13 @@ export function FilterSidebar() {
 
                 {/* Start Time */}
                 <FilterSection title="Start Time">
-                     {[
-                         { val: 'early-morning', label: 'Early Morning (< 10 AM)' },
-                         { val: 'morning', label: 'Late Morning (10-12 PM)' },
-                         { val: 'afternoon', label: 'Early Afternoon (12-2 PM)' },
-                         { val: 'late-afternoon', label: 'Late Afternoon (2-5 PM)' },
-                         { val: 'evening', label: 'Evening (5 PM+)' }
-                     ].map(opt => (
+                    {[
+                        { val: 'early-morning', label: 'Early Morning (< 10 AM)' },
+                        { val: 'morning', label: 'Late Morning (10-12 PM)' },
+                        { val: 'afternoon', label: 'Early Afternoon (12-2 PM)' },
+                        { val: 'late-afternoon', label: 'Late Afternoon (2-5 PM)' },
+                        { val: 'evening', label: 'Evening (5 PM+)' }
+                    ].map(opt => (
                         <CheckboxItem
                             key={opt.val}
                             label={opt.label}
@@ -814,7 +815,7 @@ export function FilterSidebar() {
                             checked={timeRanges.includes(opt.val)}
                             onChange={() => toggleFilter(opt.val, timeRanges, setTimeRanges)}
                         />
-                     ))}
+                    ))}
                 </FilterSection>
 
                 {/* GERs */}
@@ -832,7 +833,7 @@ export function FilterSidebar() {
 
                 {/* School */}
                 <FilterSection title="School">
-                     {['Business', 'Education', 'Engineering', 'Humanities & Sciences', 'Law', 'Medicine', 'Sustainability'].map(school => (
+                    {['Business', 'Education', 'Engineering', 'Humanities & Sciences', 'Law', 'Medicine', 'Sustainability'].map(school => (
                         <CheckboxItem
                             key={school}
                             label={school}
@@ -840,7 +841,7 @@ export function FilterSidebar() {
                             checked={selectedSchools.includes(school)}
                             onChange={() => toggleFilter(school, selectedSchools, setSelectedSchools)}
                         />
-                     ))}
+                    ))}
                 </FilterSection>
 
             </SimpleScrollArea>

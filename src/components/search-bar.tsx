@@ -46,14 +46,14 @@ export function SearchBar() {
   };
 
   return (
-    <div className="relative w-full max-w-2xl group">
+    <div className="relative w-full group">
       <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
         <Search className="h-4 w-4 text-muted-foreground/50 group-focus-within:text-primary transition-colors duration-200" />
       </div>
       <Input
         ref={inputRef}
-        placeholder="Search classes, subjects, or instructors..."
-        className="pl-10 pr-16 h-10 rounded-xl border-border/50 bg-secondary/40 hover:bg-secondary/60 focus:bg-background focus:ring-2 focus:ring-primary/15 focus:border-primary/30 text-sm shadow-none transition-all duration-200 placeholder:text-muted-foreground/40"
+        placeholder="Search..."
+        className="pl-10 pr-4 h-10 rounded-xl border-border/50 bg-secondary/40 hover:bg-secondary/60 focus:bg-background focus:ring-2 focus:ring-primary/15 focus:border-primary/30 text-base md:text-sm shadow-none transition-all duration-200 placeholder:text-muted-foreground/40 md:placeholder:text-muted-foreground/40 md:w-full"
         value={localValue}
         onChange={handleChange}
         onKeyDown={(e) => {

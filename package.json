@@ -25,6 +25,7 @@
     "@radix-ui/react-tabs": "^1.1.13",
     "@radix-ui/react-visually-hidden": "^1.2.4",
     "@supabase/supabase-js": "^2.95.3",
+    "@types/uuid": "^10.0.0",
     "algoliasearch": "^5.46.2",
     "cheerio": "^1.2.0",
     "class-variance-authority": "^0.7.1",
@@ -39,7 +40,9 @@
     "puppeteer": "^24.34.0",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
+    "sonner": "^2.0.7",
     "tailwind-merge": "^3.4.0",
+    "uuid": "^13.0.0",
     "virtua": "^0.48.2",
     "zustand": "^5.0.9"
   },

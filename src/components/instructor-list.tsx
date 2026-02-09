@@ -20,12 +20,12 @@ export function InstructorList({ instructors, limit = 5 }: InstructorListProps) 
   const remaining = instructors.length - limit;
 
   return (
-    <div className="flex items-center gap-2" title={instructors.join(', ')}>
+    <div className="flex items-center gap-2 min-w-0" title={instructors.join(', ')}>
       <User size={14} className="shrink-0" />
-      <span className="truncate">
+      <div className="truncate text-xs">
         {displayed.join(', ')}
-        {remaining > 0 && <span className="text-muted-foreground ml-1">and {remaining} others</span>}
-      </span>
+        {remaining > 0 && <span className="text-muted-foreground ml-1">+{remaining}</span>}
+      </div>
     </div>
   );
 }
