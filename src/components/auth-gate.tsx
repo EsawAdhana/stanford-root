@@ -1,19 +1,28 @@
 'use client'
 
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useAuthStore } from '@/lib/auth-store'
 import { Logo } from './logo'
 import { Loader2 } from 'lucide-react'
 
 export function AuthGate ({ children }: { children: React.ReactNode }) {
   const { user, isLoading, initialize, signInWithGoogle } = useAuthStore()
+  const [timedOut, setTimedOut] = useState(false)
 
   useEffect(() => {
     const unsubscribe = initialize()
-    return unsubscribe
+
+    // Safety timeout — if loading takes more than 3s, show login page anyway
+    const timer = setTimeout(() => setTimedOut(true), 3000)
+
+    return () => {
+      unsubscribe()
+      clearTimeout(timer)
+    }
   }, [initialize])
 
-  if (isLoading) {
+  // Show spinner only briefly — if timed out, skip to login
+  if (isLoading && !timedOut) {
     return (
       <div className="flex h-screen items-center justify-center bg-background">
         <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
