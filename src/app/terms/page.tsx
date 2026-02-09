@@ -1,31 +1,37 @@
 import Link from 'next/link'
+import type { Metadata } from 'next'
 
-export const metadata = {
-  title: 'Terms of Service — Root',
-}
+export const metadata: Metadata = {
+  title: 'Terms of Service — Stanford Root',
+};
 
-export default function TermsOfService () {
+export default function TermsPage() {
   return (
     <div className="min-h-screen bg-background">
-      <div className="max-w-2xl mx-auto px-6 py-16">
-        <Link href="/" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-          &larr; Back to Root
-        </Link>
+      <div className="mx-auto max-w-3xl px-6 py-12">
+        <div className="mb-12">
+          <Link
+            href="/"
+            className="text-sm text-muted-foreground hover:text-primary transition-colors flex items-center gap-2"
+          >
+            &larr; Back to Stanford Root
+          </Link>
+        </div>
 
         <h1 className="text-3xl font-bold text-foreground mt-8 mb-2 font-[family-name:var(--font-outfit)]">Terms of Service</h1>
         <p className="text-sm text-muted-foreground mb-10">Last updated: February 9, 2026</p>
 
         <div className="prose prose-neutral max-w-none space-y-6 text-sm text-foreground/80 leading-relaxed">
           <section>
-            <h2 className="text-lg font-semibold text-foreground mb-2">Acceptance of Terms</h2>
+            <h2 className="text-lg font-semibold text-foreground mb-2">1. Acceptance of Terms</h2>
             <p>
-              By accessing or using Root (&quot;the Service&quot;), you agree to be bound by these
+              By accessing or using Stanford Root (&quot;the Service&quot;), you agree to be bound by these
               Terms of Service. If you do not agree, please do not use the Service.
             </p>
           </section>
 
           <section>
-            <h2 className="text-lg font-semibold text-foreground mb-2">Eligibility</h2>
+            <h2 className="text-lg font-semibold text-foreground mb-2">2. Eligibility</h2>
             <p>
               The Service is available exclusively to individuals with a valid @stanford.edu
               email address. By signing in, you represent that you are a current Stanford
@@ -34,16 +40,16 @@ export default function TermsOfService () {
           </section>
 
           <section>
-            <h2 className="text-lg font-semibold text-foreground mb-2">Description of Service</h2>
+            <h2 className="text-lg font-semibold text-foreground mb-2">3. Description of Service</h2>
             <p>
-              Root provides tools for browsing Stanford course catalogs, building schedules,
+              Stanford Root provides tools for browsing Stanford course catalogs, building schedules,
               viewing course evaluations, and planning degree requirements. Course data is sourced
               from publicly available Stanford University resources.
             </p>
           </section>
 
           <section>
-            <h2 className="text-lg font-semibold text-foreground mb-2">User Conduct</h2>
+            <h2 className="text-lg font-semibold text-foreground mb-2">4. User Conduct</h2>
             <p>You agree not to:</p>
             <ul className="list-disc pl-5 space-y-1 mt-2">
               <li>Use the Service for any unlawful purpose.</li>
@@ -55,7 +61,7 @@ export default function TermsOfService () {
           </section>
 
           <section>
-            <h2 className="text-lg font-semibold text-foreground mb-2">Intellectual Property</h2>
+            <h2 className="text-lg font-semibold text-foreground mb-2">5. Intellectual Property</h2>
             <p>
               Course information displayed in the Service is the property of Stanford University.
               The Service itself, including its design, code, and branding, is the property of its
@@ -64,7 +70,7 @@ export default function TermsOfService () {
           </section>
 
           <section>
-            <h2 className="text-lg font-semibold text-foreground mb-2">Disclaimer</h2>
+            <h2 className="text-lg font-semibold text-foreground mb-2">6. Disclaimer</h2>
             <p>
               The Service is provided &quot;as is&quot; without warranty of any kind. We do not guarantee
               the accuracy, completeness, or timeliness of course data. Always verify critical
@@ -74,9 +80,9 @@ export default function TermsOfService () {
           </section>
 
           <section>
-            <h2 className="text-lg font-semibold text-foreground mb-2">Limitation of Liability</h2>
+            <h2 className="text-lg font-semibold text-foreground mb-2">7. Limitation of Liability</h2>
             <p>
-              In no event shall the creators of Root be liable for any indirect, incidental,
+              In no event shall the creators of Stanford Root be liable for any indirect, incidental,
               special, or consequential damages arising from your use of the Service, including
               but not limited to missed enrollment deadlines or incorrect schedule planning.
             </p>

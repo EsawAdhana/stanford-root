@@ -66,7 +66,7 @@ function HomeContent() {
           <Link href="/" className="flex items-center gap-2.5 md:min-w-[120px] group">
             <Logo className="h-10 w-10 transition-transform duration-300 group-hover:scale-105" />
             <h1 className="text-2xl tracking-tight font-[family-name:var(--font-outfit)] font-bold text-primary select-none hidden sm:block">
-              Root
+              Stanford Root
             </h1>
           </Link>
         </div>

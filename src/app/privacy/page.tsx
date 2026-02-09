@@ -1,31 +1,39 @@
 import Link from 'next/link'
+import { Metadata } from 'next'
 
-export const metadata = {
-  title: 'Privacy Policy — Root',
-}
+export const metadata: Metadata = {
+  title: 'Privacy Policy — Stanford Root',
+};
 
-export default function PrivacyPolicy () {
+export default function PrivacyPage() {
   return (
     <div className="min-h-screen bg-background">
-      <div className="max-w-2xl mx-auto px-6 py-16">
-        <Link href="/" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-          &larr; Back to Root
-        </Link>
+      <div className="mx-auto max-w-3xl px-6 py-12">
+        <div className="mb-12">
+          <Link
+            href="/"
+            className="text-sm text-muted-foreground hover:text-primary transition-colors flex items-center gap-2"
+          >
+            &larr; Back to Stanford Root
+          </Link>
+        </div>
 
-        <h1 className="text-3xl font-bold text-foreground mt-8 mb-2 font-[family-name:var(--font-outfit)]">Privacy Policy</h1>
-        <p className="text-sm text-muted-foreground mb-10">Last updated: February 9, 2026</p>
-
-        <div className="prose prose-neutral max-w-none space-y-6 text-sm text-foreground/80 leading-relaxed">
+        <div className="space-y-12">
           <section>
+            <h1 className="text-4xl font-bold tracking-tight mb-4">Privacy Policy</h1>
+            <p className="text-muted-foreground">Last Updated: February 9, 2026</p>
+          </section>
+
+          <section className="prose prose-neutral dark:prose-invert max-w-none">
             <h2 className="text-lg font-semibold text-foreground mb-2">Overview</h2>
             <p>
-              Root (&quot;I&quot;, &quot;me&quot;, or &quot;the Service&quot;) is a course discovery and scheduling tool
+              Stanford Root (&quot;I&quot;, &quot;me&quot;, or &quot;the Service&quot;) is a course discovery and scheduling tool
               built for Stanford University students. I am committed to protecting your privacy and being
               transparent about how I handle your data.
             </p>
           </section>
 
-          <section>
+          <section className="prose prose-neutral dark:prose-invert max-w-none">
             <h2 className="text-lg font-semibold text-foreground mb-2">Information I Collect</h2>
             <p>When you sign in with your Stanford Google account, I receive:</p>
             <ul className="list-disc pl-5 space-y-1 mt-2">

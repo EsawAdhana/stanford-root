@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { ArrowLeft } from 'lucide-react'
 
-export default function DegreeAuditPage () {
+export default function DegreeAuditPage() {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -15,7 +15,7 @@ export default function DegreeAuditPage () {
           <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
             <Logo className="h-9 w-9 shadow-primary/20" />
             <h1 className="text-2xl tracking-tight text-foreground font-[family-name:var(--font-outfit)] font-medium">
-              <span className="font-bold text-primary">Root</span>
+              <span className="font-bold text-primary">Stanford Root</span>
             </h1>
           </Link>
           <Link href="/">
