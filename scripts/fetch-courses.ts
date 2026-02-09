@@ -3,9 +3,15 @@ import fs from 'fs';
 import path from 'path';
 import { algoliasearch } from 'algoliasearch';
 
-// Configuration
-const APP_ID = 'RXGHAPCKOF';
-const API_KEY = 'ZDExNzcxMDQxMWM5YzYwZTFlZWVkNmViZTUwNzFmYzlhNmYxYjEzYjFjYjYwNDlkNTE4MjdkNmI2OWU2ZThlMXJlc3RyaWN0SW5kaWNlcz1jbGFzc2VzJnZhbGlkVW50aWw9MTc2NzkzOTMzNQ==';
+// Configuration — set ALGOLIA_APP_ID and ALGOLIA_API_KEY env vars before running
+const APP_ID = process.env.ALGOLIA_APP_ID || '';
+const API_KEY = process.env.ALGOLIA_API_KEY || '';
+
+if (!APP_ID || !API_KEY) {
+  console.error('Missing env vars: ALGOLIA_APP_ID and ALGOLIA_API_KEY are required');
+  console.error('Usage: ALGOLIA_APP_ID=xxx ALGOLIA_API_KEY=yyy npx ts-node scripts/fetch-courses.ts');
+  process.exit(1);
+}
 const INDEX_NAME = 'classes';
 const OUTPUT_FILE = path.join(process.cwd(), 'public/data/courses.json');
 
