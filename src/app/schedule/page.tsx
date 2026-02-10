@@ -3,7 +3,8 @@
 import React, { Suspense, useMemo, useState } from 'react';
 import { CalendarView } from '@/components/calendar-view';
 import { Button } from '@/components/ui/button';
-import { AlertCircle, CalendarDays, ChevronLeft, ChevronDown, Download, Upload } from 'lucide-react';
+import { AlertCircle, CalendarDays, ChevronLeft, ChevronRight, ChevronDown, Download, Upload } from 'lucide-react';
+import NextImage from 'next/image';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useCartStore } from '@/lib/cart-store';
@@ -336,10 +337,9 @@ END:VEVENT
           <div className="flex items-center gap-3 ml-auto">
             <Popover>
               <PopoverTrigger asChild>
-                <Button variant="outline" size="sm" className="gap-2">
-                  <CalendarDays className="h-4 w-4" />
-                  Calendar
-                  <ChevronDown className="h-3 w-3 opacity-50" />
+                <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground hover:text-foreground">
+                  <NextImage src="/icon.png" alt="" width={16} height={16} className="h-4 w-4 opacity-70" />
+                  Transfer
                 </Button>
               </PopoverTrigger>
               <PopoverContent align="end" className="w-64 p-2">

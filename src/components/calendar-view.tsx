@@ -4,7 +4,7 @@ import React, { useMemo, useState } from 'react';
 import { useCartStore } from '@/lib/cart-store';
 import { isMeetingOptional, parseMeetingTimes, timeToMinutes } from '@/lib/schedule-utils';
 import { cn } from '@/lib/utils';
-import { ChevronLeft, ChevronRight, Trash2, EyeOff, Eye, AlertCircle } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Trash2, EyeOff, Eye, AlertCircle, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { CourseDetail } from '@/components/course-detail';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -204,41 +204,40 @@ export function CalendarView({ currentTerm, onPrevTerm, onNextTerm, totalUnitsMi
   return (
     <div className="flex flex-col min-h-0 relative">
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-6 min-h-0">
-        <div className="rounded-xl border bg-card overflow-hidden flex flex-col">
-          <div className="grid grid-cols-[40px_1fr_40px] items-center border-b bg-card/80 backdrop-blur supports-[backdrop-filter]:bg-card/60 px-2 py-2">
-            <Button variant="ghost" size="icon" onClick={onPrevTerm} aria-label="Previous term">
-              <ChevronLeft className="h-4 w-4" />
-            </Button>
-            <div className="text-center font-semibold text-base">
-              {currentTerm}
-            </div>
-            <Button variant="ghost" size="icon" onClick={onNextTerm} aria-label="Next term">
-              <ChevronRight className="h-4 w-4" />
-            </Button>
+        <div className="flex flex-col min-h-0 gap-2">
+          <div className="flex items-center justify-center mb-2 h-8">
+            <h3 className="font-semibold text-sm">Calendar</h3>
           </div>
-          <div className="grid grid-cols-[48px_repeat(5,1fr)] sm:grid-cols-[72px_repeat(5,1fr)] border-b bg-card/80 backdrop-blur supports-[backdrop-filter]:bg-card/60">
-            <div className="p-1 px-2 sm:p-3 text-xs font-semibold text-muted-foreground border-r" />
-            {DAYS.map(d => (
-              <div key={d.key} className="p-1.5 sm:p-3 text-[10px] sm:text-xs font-semibold text-muted-foreground border-r last:border-r-0 text-center truncate px-0.5">
-                {d.label}
+          <div className="rounded-xl border bg-card overflow-hidden flex flex-col flex-1">
+            <div className="grid grid-cols-[40px_1fr_40px] items-center border-b bg-card/80 backdrop-blur supports-[backdrop-filter]:bg-card/60 px-2 py-2">
+              <Button variant="ghost" size="icon" onClick={onPrevTerm} aria-label="Previous term">
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+              <div className="text-center font-semibold text-base">
+                {currentTerm}
               </div>
-            ))}
-          </div>
-
-          {calendarEvents.length === 0 ? (
-            <div className="flex-1 flex items-center justify-center text-sm text-muted-foreground min-h-[260px]">
-              Add classes to see your Monday–Friday calendar.
+              <Button variant="ghost" size="icon" onClick={onNextTerm} aria-label="Next term">
+                <ChevronRight className="h-4 w-4" />
+              </Button>
             </div>
-          ) : (
-            <div className="flex-1 w-full overflow-x-auto custom-scrollbar">
-              <div
-                className="calendar-grid grid grid-cols-[48px_repeat(5,1fr)] sm:grid-cols-[72px_repeat(5,1fr)] min-w-0 sm:min-w-[700px] relative"
-                style={{
-                  '--hour-height': `${HOUR_HEIGHT}px`,
-                  '--start-minutes': startMinutes,
-                } as any}
-              >
-                <style jsx>{`
+            <div className="flex-1 w-full overflow-x-auto scrollbar-hide">
+              <div className="min-w-0 sm:min-w-[700px]">
+                <div className="grid grid-cols-[48px_repeat(5,1fr)] sm:grid-cols-[72px_repeat(5,1fr)] border-b bg-card/80 backdrop-blur supports-[backdrop-filter]:bg-card/60 sticky top-0 z-30">
+                  <div className="p-1 px-2 sm:p-3 text-xs font-semibold text-muted-foreground border-r" />
+                  {DAYS.map(d => (
+                    <div key={d.key} className="p-1.5 sm:p-3 text-[10px] sm:text-xs font-semibold text-muted-foreground border-r last:border-r-0 text-center truncate px-0.5">
+                      {d.label}
+                    </div>
+                  ))}
+                </div>
+                <div
+                  className="calendar-grid grid grid-cols-[48px_repeat(5,1fr)] sm:grid-cols-[72px_repeat(5,1fr)] relative"
+                  style={{
+                    '--hour-height': `${HOUR_HEIGHT}px`,
+                    '--start-minutes': startMinutes,
+                  } as any}
+                >
+                  <style jsx>{`
                   .calendar-grid {
                     --current-hour-height: ${HOUR_HEIGHT}px;
                     height: calc(((${endMinutes} - ${startMinutes}) / 60) * var(--current-hour-height));
@@ -250,30 +249,78 @@ export function CalendarView({ currentTerm, onPrevTerm, onNextTerm, totalUnitsMi
                   }
                 `}</style>
 
-                {/* Time rail */}
-                <div className="relative border-r bg-background/50">
-                  {hours.map((h, idx) => (
-                    <div
-                      key={h}
-                      className="absolute left-0 right-0"
-                      style={{ top: `calc(${idx} * var(--current-hour-height))` }}
-                    >
-                      <div className="absolute left-0 right-0 border-t border-border/40" />
-                      <div className={cn(
-                        'absolute left-0 top-0 px-1 sm:px-2 text-[9px] sm:text-[10px] text-muted-foreground bg-background/50 whitespace-nowrap',
-                        idx === 0 && 'translate-y-0 mt-1',
-                        idx === hours.length - 1 && '-translate-y-full -mt-1',
-                        idx !== 0 && idx !== hours.length - 1 && '-translate-y-1/2'
-                      )}>
-                        {`${((h + 11) % 12) + 1}${h >= 12 ? 'p' : 'a'}`}
+                  {/* Time rail */}
+                  <div className="relative border-r bg-background/50">
+                    {hours.map((h, idx) => (
+                      <div
+                        key={h}
+                        className="absolute left-0 right-0"
+                        style={{ top: `calc(${idx} * var(--current-hour-height))` }}
+                      >
+                        {idx !== hours.length - 1 && (
+                          <div className={cn(
+                            'absolute left-0 top-0 px-1 sm:px-2 text-[9px] sm:text-[10px] text-muted-foreground bg-background/50 whitespace-nowrap',
+                            'translate-y-0 mt-1'
+                          )}>
+                            {`${((h + 11) % 12) + 1}${h >= 12 ? 'p' : 'a'}`}
+                          </div>
+                        )}
                       </div>
+                    ))}
+                  </div>
+
+                  {/* Columns */}
+                  {DAYS.map(({ key }) => (
+                    <div key={key} className="relative border-r last:border-r-0 bg-background/30">
+                      {eventsByDay[key].map(ev => {
+                        const colWidth = 100 / ev.colCount
+                        const leftPct = ev.colIndex * colWidth
+                        const gutter = 2
+                        const colorClasses = getEventColorClasses(ev.courseId, ev.color)
+
+                        return (
+                          <div
+                            key={ev.id}
+                            onClick={() => setSelectedCourseId(ev.courseId)}
+                            className={cn(
+                              'group absolute rounded-md border px-1 sm:px-2 py-0.5 sm:py-1 text-left shadow-sm hover:shadow transition-shadow overflow-hidden cursor-pointer z-20',
+                              colorClasses,
+                              ev.isOptional && 'opacity-55 border-dashed grayscale'
+                            )}
+                            style={{
+                              top: `calc((${ev.start} - var(--start-minutes)) / 60 * var(--current-hour-height))`,
+                              height: `calc((${ev.end} - ${ev.start}) / 60 * var(--current-hour-height))`,
+                              left: `calc(${leftPct}% + ${gutter}px)`,
+                              width: `calc(${colWidth}% - ${gutter * 2}px)`,
+                              minHeight: '18px'
+                            }}
+                          >
+                            <button
+                              type="button"
+                              className="absolute right-1 top-1 opacity-0 group-hover:opacity-100 transition-opacity rounded p-1 hover:bg-black/5 dark:hover:bg-white/10 z-20"
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                toggleOptionalMeeting(ev.courseId, ev.day, ev.startTime, ev.endTime)
+                              }}
+                            >
+                              {ev.isOptional ? <Eye className="h-3 w-3 sm:h-3.5 sm:w-3.5" /> : <EyeOff className="h-3 w-3 sm:h-3.5 sm:w-3.5" />}
+                            </button>
+                            <div className="pl-0.5">
+                              <div className="text-[10px] sm:text-[11px] font-semibold leading-tight truncate">
+                                {ev.courseCode}
+                              </div>
+                              <div className="text-[9px] sm:text-[10px] opacity-80 truncate hidden sm:block">
+                                {ev.location || 'TBA'}
+                              </div>
+                            </div>
+                          </div>
+                        )
+                      })}
                     </div>
                   ))}
-                </div>
 
-                {/* Columns */}
-                {DAYS.map(({ key }) => (
-                  <div key={key} className="relative border-r last:border-r-0 bg-background/30">
+                  {/* Horizontal Lines Layer - Rendered last to be on top of column backgrounds but below events (events are z-20) */}
+                  <div className="absolute inset-0 pointer-events-none">
                     {hours.map((_, idx) => (
                       <div
                         key={idx}
@@ -281,59 +328,15 @@ export function CalendarView({ currentTerm, onPrevTerm, onNextTerm, totalUnitsMi
                         style={{ top: `calc(${idx} * var(--current-hour-height))` }}
                       />
                     ))}
-                    {eventsByDay[key].map(ev => {
-                      const colWidth = 100 / ev.colCount
-                      const leftPct = ev.colIndex * colWidth
-                      const gutter = 2
-                      const colorClasses = getEventColorClasses(ev.courseId, ev.color)
-
-                      return (
-                        <div
-                          key={ev.id}
-                          onClick={() => setSelectedCourseId(ev.courseId)}
-                          className={cn(
-                            'group absolute rounded-md border px-1 sm:px-2 py-0.5 sm:py-1 text-left shadow-sm hover:shadow transition-shadow overflow-hidden cursor-pointer z-20',
-                            colorClasses,
-                            ev.isOptional && 'opacity-55 border-dashed grayscale'
-                          )}
-                          style={{
-                            top: `calc((${ev.start} - var(--start-minutes)) / 60 * var(--current-hour-height))`,
-                            height: `calc((${ev.end} - ${ev.start}) / 60 * var(--current-hour-height))`,
-                            left: `calc(${leftPct}% + ${gutter}px)`,
-                            width: `calc(${colWidth}% - ${gutter * 2}px)`,
-                            minHeight: '18px'
-                          }}
-                        >
-                          <button
-                            type="button"
-                            className="absolute right-1 top-1 opacity-0 group-hover:opacity-100 transition-opacity rounded p-1 hover:bg-black/5 dark:hover:bg-white/10 z-20"
-                            onClick={(e) => {
-                              e.stopPropagation()
-                              toggleOptionalMeeting(ev.courseId, ev.day, ev.startTime, ev.endTime)
-                            }}
-                          >
-                            {ev.isOptional ? <Eye className="h-3 w-3 sm:h-3.5 sm:w-3.5" /> : <EyeOff className="h-3 w-3 sm:h-3.5 sm:w-3.5" />}
-                          </button>
-                          <div className="pl-0.5">
-                            <div className="text-[10px] sm:text-[11px] font-semibold leading-tight truncate">
-                              {ev.courseCode}
-                            </div>
-                            <div className="text-[9px] sm:text-[10px] opacity-80 truncate hidden sm:block">
-                              {ev.location || 'TBA'}
-                            </div>
-                          </div>
-                        </div>
-                      )
-                    })}
                   </div>
-                ))}
+                </div>
               </div>
             </div>
-          )}
+          </div>
         </div>
 
         <div className="space-y-2 min-h-0">
-          <div className="flex items-center justify-between gap-2 mb-2">
+          <div className="flex items-center justify-between gap-2 mb-2 h-8">
             <h3 className="font-semibold text-sm">Classes {currentTermCourses.length > 0 ? `in ${currentTerm}` : ''}</h3>
             <div className={cn(
               'px-3 py-1.5 rounded-full text-sm font-medium border',
@@ -343,7 +346,13 @@ export function CalendarView({ currentTerm, onPrevTerm, onNextTerm, totalUnitsMi
             </div>
           </div>
           {currentTermCourses.length === 0 ? (
-            <div className="text-center text-muted-foreground text-sm py-8">No classes this term.</div>
+            <div className="flex flex-col items-center justify-center py-12 text-center text-muted-foreground border-2 border-dashed rounded-xl bg-muted/20">
+              <Calendar className="h-10 w-10 mb-3 opacity-20" />
+              <p className="font-medium text-sm">No classes yet</p>
+              <p className="text-xs mt-1 max-w-[200px]">
+                Search for courses to add them to your {currentTerm} schedule.
+              </p>
+            </div>
           ) : (
             <div className="space-y-2">
               {currentTermCourses.map(course => {

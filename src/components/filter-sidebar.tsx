@@ -596,7 +596,9 @@ export function FilterSidebar() {
         <div className="flex flex-col h-full bg-background border-r border-border/40">
             <div className="p-6 pb-4 border-b border-border/40">
                 <h2 className="text-sm font-semibold text-foreground/80 tracking-wide uppercase">Filters</h2>
-                <div className="mt-4 flex items-center space-x-2">
+            </div>
+            <SimpleScrollArea className="flex-1 px-4 py-4 space-y-6">
+                <div className="flex items-center space-x-2">
                     <input
                         type="checkbox"
                         id="hideConflicts"
@@ -608,8 +610,6 @@ export function FilterSidebar() {
                         Hide Conflicting Classes
                     </label>
                 </div>
-            </div>
-            <SimpleScrollArea className="flex-1 px-4 py-4 space-y-6">
 
                 {/* Exclude Keywords */}
                 <div className="space-y-3">
