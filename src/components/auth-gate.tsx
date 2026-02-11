@@ -176,10 +176,7 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
       {/* Footer */}
       <footer className="relative z-10 py-8 px-6 border-t border-border/40 bg-muted/20">
         <div className="max-w-4xl mx-auto flex flex-wrap items-center justify-center gap-12 text-xs font-medium text-muted-foreground/60">
-          <div className="flex items-center gap-2 mr-4">
-            <Logo className="h-4 w-4 grayscale opacity-70" />
-            <span>Stanford Root</span>
-          </div>
+
 
           <Link href="/privacy" className="hover:text-foreground transition-colors">
             Privacy Policy
@@ -189,7 +186,7 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
             Terms of Service
           </Link>
 
-          <span className="ml-4">
+          <span className="">
             &copy; {new Date().getFullYear()} Stanford Root
           </span>
         </div>

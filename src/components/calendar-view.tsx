@@ -205,8 +205,8 @@ export function CalendarView({ currentTerm, onPrevTerm, onNextTerm, totalUnitsMi
     <div className="flex flex-col min-h-0 relative">
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-6 min-h-0">
         <div className="flex flex-col min-h-0 gap-2">
-          <div className="flex items-center justify-center mb-2 h-8">
-            <h3 className="font-semibold text-sm">Calendar</h3>
+          <div className="flex items-center justify-center mb-2 h-9 px-1">
+            <h3 className="font-semibold text-base">Calendar</h3>
           </div>
           <div className="rounded-xl border bg-card overflow-hidden flex flex-col flex-1">
             <div className="grid grid-cols-[40px_1fr_40px] items-center border-b bg-card/80 backdrop-blur supports-[backdrop-filter]:bg-card/60 px-2 py-2">
@@ -335,9 +335,9 @@ export function CalendarView({ currentTerm, onPrevTerm, onNextTerm, totalUnitsMi
           </div>
         </div>
 
-        <div className="space-y-2 min-h-0">
-          <div className="flex items-center justify-between gap-2 mb-2 h-8">
-            <h3 className="font-semibold text-sm">Classes {currentTermCourses.length > 0 ? `in ${currentTerm}` : ''}</h3>
+        <div className="flex flex-col min-h-0 gap-2">
+          <div className="flex items-center justify-between gap-2 mb-2 h-9">
+            <h3 className="font-semibold text-base">Classes {currentTermCourses.length > 0 ? `in ${currentTerm}` : ''}</h3>
             <div className={cn(
               'px-3 py-1.5 rounded-full text-sm font-medium border',
               isOverload ? 'bg-destructive/10 text-destructive border-destructive/20' : 'bg-background text-foreground border-border'
@@ -346,7 +346,7 @@ export function CalendarView({ currentTerm, onPrevTerm, onNextTerm, totalUnitsMi
             </div>
           </div>
           {currentTermCourses.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-12 text-center text-muted-foreground border-2 border-dashed rounded-xl bg-muted/20">
+            <div className="flex-1 flex flex-col items-center justify-center py-12 text-center text-muted-foreground border-2 border-dashed rounded-xl bg-muted/20">
               <Calendar className="h-10 w-10 mb-3 opacity-20" />
               <p className="font-medium text-sm">No classes yet</p>
               <p className="text-xs mt-1 max-w-[200px]">
@@ -354,7 +354,7 @@ export function CalendarView({ currentTerm, onPrevTerm, onNextTerm, totalUnitsMi
               </p>
             </div>
           ) : (
-            <div className="space-y-2">
+            <div className="space-y-2 overflow-auto">
               {currentTermCourses.map(course => {
                 const meetings = parseMeetingTimes(course, currentTerm);
                 const lines = meetings.map(formatMeetingLine).filter(Boolean) as string[];
