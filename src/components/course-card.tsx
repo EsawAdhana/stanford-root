@@ -19,7 +19,7 @@ export const CourseCard = React.memo(({ course, style, onClick }: CourseCardProp
       >
         {/* Top row: code */}
         <div className="mb-2.5">
-          <span className="text-xs font-bold tracking-wider uppercase text-primary/80 group-hover:text-primary transition-colors">
+          <span className="text-sm font-bold tracking-wider uppercase text-primary/80 group-hover:text-primary transition-colors">
             <a
               href={getDepartmentUrl(course.subject)}
               target="_blank"
@@ -40,7 +40,7 @@ export const CourseCard = React.memo(({ course, style, onClick }: CourseCardProp
         </h3>
 
         {/* Bottom row: instructor + term */}
-        <div className="flex items-center justify-between gap-3 text-xs text-muted-foreground pt-3 border-t border-border/30">
+        <div className="flex items-center justify-between gap-3 text-sm text-muted-foreground pt-3 border-t border-border/30">
           <div className="flex-1 min-w-0">
             <InstructorList instructors={course.instructors} />
           </div>

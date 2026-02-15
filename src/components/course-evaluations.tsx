@@ -11,7 +11,7 @@ import type { CourseEvaluation, EvalQuestion, EvalOption } from '@/types/course'
 
 // --- Color helpers (green=good, yellow/orange=mid, red=bad) ---
 
-function scoreColor(score: number): string {
+export function scoreColor(score: number): string {
   if (score >= 4.5) return 'text-emerald-600'
   if (score >= 4.0) return 'text-green-600'
   if (score >= 3.5) return 'text-yellow-600'
@@ -19,7 +19,7 @@ function scoreColor(score: number): string {
   return 'text-red-600'
 }
 
-function scoreBg(score: number): string {
+export function scoreBg(score: number): string {
   if (score >= 4.5) return 'bg-emerald-500/12 border-emerald-500/25'
   if (score >= 4.0) return 'bg-green-500/12 border-green-500/25'
   if (score >= 3.5) return 'bg-yellow-500/12 border-yellow-500/25'
@@ -27,7 +27,7 @@ function scoreBg(score: number): string {
   return 'bg-red-500/12 border-red-500/25'
 }
 
-function barFill(score: number): string {
+export function barFill(score: number): string {
   if (score >= 4.5) return 'bg-emerald-500'
   if (score >= 4.0) return 'bg-green-500'
   if (score >= 3.5) return 'bg-yellow-500'
@@ -37,9 +37,9 @@ function barFill(score: number): string {
 
 // --- Question categorization ---
 
-type QuestionCategory = 'quality' | 'learning' | 'organization' | 'goals' | 'hours' | 'attendance_in_person' | 'attendance_online' | 'unknown'
+export type QuestionCategory = 'quality' | 'learning' | 'organization' | 'goals' | 'hours' | 'attendance_in_person' | 'attendance_online' | 'unknown'
 
-function categorizeQuestion(text: string): QuestionCategory {
+export function categorizeQuestion(text: string): QuestionCategory {
   const t = text.toLowerCase()
   if (t.includes('quality') || t.includes('overall')) return 'quality'
   if (t.includes('how much did you learn')) return 'learning'
@@ -51,7 +51,7 @@ function categorizeQuestion(text: string): QuestionCategory {
   return 'unknown'
 }
 
-const CATEGORY_LABELS: Record<QuestionCategory, string> = {
+export const CATEGORY_LABELS: Record<QuestionCategory, string> = {
   quality: 'Instruction Quality',
   learning: 'Learning',
   organization: 'Organization',
@@ -82,7 +82,7 @@ function parseRespondentCount(respondents: string): number {
 
 // --- Aggregation ---
 
-function aggregateMetrics(evals: CourseEvaluation[]) {
+export function aggregateMetrics(evals: CourseEvaluation[]) {
   const sums: Record<QuestionCategory, { total: number, weight: number }> = {
     quality: { total: 0, weight: 0 },
     learning: { total: 0, weight: 0 },
@@ -110,7 +110,7 @@ function aggregateMetrics(evals: CourseEvaluation[]) {
   return result
 }
 
-function computeInstructorStats(evals: CourseEvaluation[]) {
+export function computeInstructorStats(evals: CourseEvaluation[]) {
   const byInstructor: Record<string, { scores: Record<QuestionCategory, { total: number, weight: number }>, evalCount: number, terms: Set<string> }> = {}
 
   for (const ev of evals) {
@@ -152,7 +152,7 @@ function computeInstructorStats(evals: CourseEvaluation[]) {
 
 // --- Sub-components ---
 
-function ScoreBadge({ score, size = 'md' }: { score: number, size?: 'sm' | 'md' | 'lg' }) {
+export function ScoreBadge({ score, size = 'md' }: { score: number, size?: 'sm' | 'md' | 'lg' }) {
   const sizeClasses = {
     sm: 'text-xs px-1.5 py-0.5 min-w-[36px]',
     md: 'text-sm px-2 py-0.5 min-w-[44px]',
@@ -210,8 +210,13 @@ function HoursHistogram({ options }: { options: EvalOption[] }) {
                 </span>
               )}
               <div
-                className="w-full bg-foreground/30 rounded-t transition-all duration-300 group-hover:bg-foreground/50"
-                style={{ height: `${Math.max(height, bucket.count > 0 ? 4 : 0)}%` }}
+                className="w-full rounded-t transition-all duration-300"
+                style={{
+                  height: `${Math.max(height, bucket.count > 0 ? 4 : 0)}%`,
+                  backgroundColor: '#8C151599'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#8C1515CC'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#8C151599'}
               />
             </div>
           )
@@ -252,7 +257,7 @@ function InstructorRow({ instructor, ratingCats, isExpanded, onToggle, evals }: 
           'w-full grid gap-2 px-4 py-2.5 items-center hover:bg-secondary/20 transition-colors',
           isExpanded && 'bg-secondary/10'
         )}
-        style={{ gridTemplateColumns: '1fr repeat(5, minmax(40px, 52px))' }}
+        style={{ gridTemplateColumns: '1fr repeat(4, minmax(40px, 52px))' }}
       >
         <div className="min-w-0 text-left">
           <div className="text-sm font-medium text-foreground truncate">
@@ -264,22 +269,23 @@ function InstructorRow({ instructor, ratingCats, isExpanded, onToggle, evals }: 
         </div>
         {ratingCats.map(cat => (
           <div key={cat} className="flex justify-center">
-            {instructor.scores[cat] !== undefined ? (
-              <ScoreBadge score={instructor.scores[cat]!} size="sm" />
+            {cat === 'hours' ? (
+              instructor.scores.hours !== undefined ? (
+                <span className="text-xs font-semibold text-foreground tabular-nums">
+                  {instructor.scores.hours.toFixed(0)}h
+                </span>
+              ) : (
+                <span className="text-xs text-muted-foreground">--</span>
+              )
             ) : (
-              <span className="text-xs text-muted-foreground">--</span>
+              instructor.scores[cat] !== undefined ? (
+                <ScoreBadge score={instructor.scores[cat]!} size="sm" />
+              ) : (
+                <span className="text-xs text-muted-foreground">--</span>
+              )
             )}
           </div>
         ))}
-        <div className="flex justify-center">
-          {instructor.scores.hours !== undefined ? (
-            <span className="text-xs font-semibold text-foreground tabular-nums">
-              {instructor.scores.hours.toFixed(0)}h
-            </span>
-          ) : (
-            <span className="text-xs text-muted-foreground">--</span>
-          )}
-        </div>
       </button>
 
       {isExpanded && (
@@ -355,6 +361,7 @@ function InlineEval({ evaluation, disableComments }: { evaluation: CourseEvaluat
   )
 }
 
+
 // --- Comments panel ---
 
 function CommentsPanel({ comments }: { comments: string[] }) {
@@ -363,6 +370,7 @@ function CommentsPanel({ comments }: { comments: string[] }) {
 
   const filtered = useMemo(() => {
     if (!searchQuery.trim()) return comments
+
     const q = searchQuery.toLowerCase()
     return comments.filter(c => c.toLowerCase().includes(q))
   }, [comments, searchQuery])
@@ -377,31 +385,34 @@ function CommentsPanel({ comments }: { comments: string[] }) {
 
   return (
     <div className="space-y-3">
-      <div className="relative">
-        <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-        <input
-          type="text"
-          value={searchQuery}
-          onChange={e => { setSearchQuery(e.target.value); setVisibleCount(10) }}
-          placeholder="Search comments..."
-          className="w-full bg-secondary/30 border border-border/40 rounded-lg pl-8 pr-3 py-2 text-base md:text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-1 focus:ring-primary/50"
-        />
-        {searchQuery && (
-          <button
-            type="button"
-            onClick={() => setSearchQuery('')}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-          >
-            <X size={12} />
-          </button>
-        )}
+      <div className="space-y-2">
+        <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider pl-1">Search Keywords</div>
+        <div className="relative">
+          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={e => { setSearchQuery(e.target.value); setVisibleCount(10) }}
+            placeholder="Search comments..."
+            className="w-full bg-secondary/30 border border-border/40 rounded-lg pl-8 pr-3 py-2 text-base md:text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-1 focus:ring-primary/50"
+          />
+          {searchQuery && (
+            <button
+              type="button"
+              onClick={() => setSearchQuery('')}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+            >
+              <X size={12} />
+            </button>
+          )}
+        </div>
       </div>
 
       <div className="text-[11px] text-muted-foreground">
         {searchQuery ? `${filtered.length} of ${comments.length} comments` : `${comments.length} comments`}
       </div>
 
-      <div className="space-y-2 max-h-[400px] overflow-y-auto pr-1">
+      <div className="space-y-2 pr-1">
         {filtered.slice(0, visibleCount).map((comment, i) => (
           <div
             key={i}
@@ -416,7 +427,7 @@ function CommentsPanel({ comments }: { comments: string[] }) {
         <button
           type="button"
           onClick={() => setVisibleCount(prev => prev + 20)}
-          className="w-full text-center text-xs text-primary hover:underline font-medium py-2"
+          className="w-full text-center text-xs text-primary hover:underline font-medium py-2 mt-4"
         >
           Show more ({filtered.length - visibleCount} remaining)
         </button>
@@ -448,10 +459,6 @@ function AggregatedRatingBreakdown({ questions, aggregateScore }: { questions: E
 
   return (
     <div className="space-y-2">
-      <div className="flex items-center justify-between">
-        <span className="text-sm font-medium text-foreground">{label}</span>
-        <ScoreBadge score={aggregateScore} size="md" />
-      </div>
       <div className="space-y-1">
         {mergedOptions.map((opt, i) => {
           const pct = totalCount > 0 ? (opt.count / totalCount) * 100 : 0
@@ -481,20 +488,28 @@ function AggregatedRatingBreakdown({ questions, aggregateScore }: { questions: E
 
 // --- Main Component ---
 
-type EvalTab = 'overview' | 'instructors' | 'comments'
+export type EvalTab = 'overview' | 'instructors' | 'comments'
 
-interface CourseEvaluationsProps {
+
+export interface CourseEvaluationsProps {
   courseId: string
   subject: string
   code: string
+  forcedTab?: 'overview' | 'instructors' | 'comments'
 }
 
-export function CourseEvaluations({ courseId, subject, code }: CourseEvaluationsProps) {
+export function CourseEvaluations({ courseId, subject, code, forcedTab }: CourseEvaluationsProps) {
   const { fetchCourseEvaluations, getEvaluations, isLoadingCourse, hasErrorForCourse } = useEvaluationStore()
   const [activeTermFilter, setActiveTermFilter] = useState<string>('all')
-  const [activeTab, setActiveTab] = useState<EvalTab>('overview')
+  const [activeTab, setActiveTab] = useState<EvalTab>(forcedTab || 'overview')
   const [expandedInstructor, setExpandedInstructor] = useState<string | null>(null)
   const [expandedQuestion, setExpandedQuestion] = useState<QuestionCategory | null>(null)
+
+  useEffect(() => {
+    if (forcedTab) {
+      setActiveTab(forcedTab)
+    }
+  }, [forcedTab])
 
   const isLoading = isLoadingCourse(courseId)
   const hasError = hasErrorForCourse(courseId)
@@ -600,7 +615,7 @@ export function CourseEvaluations({ courseId, subject, code }: CourseEvaluations
     )
   }
 
-  const ratingCats: QuestionCategory[] = ['quality', 'learning', 'organization', 'goals']
+  const ratingCats: QuestionCategory[] = ['quality', 'learning', 'organization', 'hours']
   const tabItems: { key: EvalTab, label: string, count?: number }[] = [
     { key: 'overview', label: 'Overview' },
     ...(hasMultipleInstructors ? [{ key: 'instructors' as EvalTab, label: 'Instructors', count: instructors.length }] : []),
@@ -645,53 +660,81 @@ export function CourseEvaluations({ courseId, subject, code }: CourseEvaluations
         </div>
       )}
 
-      {/* Tab navigation */}
-      <div className="flex border-b border-border/50">
-        {tabItems.map(tab => (
-          <button
-            key={tab.key}
-            type="button"
-            onClick={() => setActiveTab(tab.key)}
-            className={cn(
-              'px-4 py-2 text-sm font-medium transition-colors relative',
-              activeTab === tab.key
-                ? 'text-foreground'
-                : 'text-muted-foreground hover:text-foreground'
-            )}
-          >
-            {tab.label}
-            {tab.count !== undefined && (
-              <span className="text-[10px] text-muted-foreground ml-1">({tab.count})</span>
-            )}
-            {activeTab === tab.key && (
-              <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-foreground rounded-full" />
-            )}
-          </button>
-        ))}
-      </div>
+      {/* Tab navigation - only show if no forcedTab */}
+      {!forcedTab && (
+        <div className="flex border-b border-border/50">
+          {tabItems.map(tab => (
+            <button
+              key={tab.key}
+              type="button"
+              onClick={() => setActiveTab(tab.key)}
+              className={cn(
+                'px-4 py-2 text-sm font-medium transition-colors relative',
+                activeTab === tab.key
+                  ? 'text-foreground'
+                  : 'text-muted-foreground hover:text-foreground'
+              )}
+            >
+              {tab.label}
+              {tab.count !== undefined && (
+                <span className="text-[10px] text-muted-foreground ml-1">({tab.count})</span>
+              )}
+              {activeTab === tab.key && (
+                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-foreground rounded-full" />
+              )}
+            </button>
+          ))}
+        </div>
+      )}
 
       {/* Tab content */}
       <div className="min-h-[200px]">
 
         {/* === Overview tab === */}
         {activeTab === 'overview' && (
-          <div className="space-y-4">
-            {/* Clickable metric rows */}
-            <div className="border border-border/50 rounded-xl overflow-hidden divide-y divide-border/30">
+          <div className="space-y-6">
+            {/* Clickable metric rows - Grid layout for wider screens */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {ratingCats.map(cat => {
                 if (metrics[cat] === undefined) return null
-                const isExpanded = expandedQuestion === cat
                 const questions = allQuestionsByCategory[cat]
+
+                if (cat === 'hours') {
+                  const hoursOptions = questions.length > 0
+                    ? questions.flatMap(q => q.options)
+                    : []
+
+                  return (
+                    <div key={cat}>
+                      <div
+                        className="w-full flex items-center gap-3 px-4 py-3 bg-secondary/5 rounded-t-lg border-b border-border/30"
+                      >
+                        <Clock size={16} className="text-muted-foreground shrink-0" />
+                        <span className="text-sm text-foreground font-medium flex-1 text-left">
+                          Hours / Week
+                        </span>
+                        <span className="text-sm font-bold text-foreground tabular-nums">
+                          {metrics.hours!.toFixed(1)} hrs
+                        </span>
+                      </div>
+
+                      <div className="px-5 pb-4 pt-4 bg-secondary/5 border border-border/20 rounded-b-lg">
+                        <HoursHistogram options={hoursOptions} />
+                        {questions[0] && (
+                          <div className="flex items-center justify-between text-[10px] text-muted-foreground mt-2 pt-1 border-t border-border/30">
+                            <span>{questions[0].responseRate}</span>
+                            <span className="tabular-nums">med {questions[0].median.toFixed(1)} / sd {questions[0].std.toFixed(2)}</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )
+                }
 
                 return (
                   <div key={cat}>
-                    <button
-                      type="button"
-                      onClick={() => setExpandedQuestion(isExpanded ? null : cat)}
-                      className={cn(
-                        'w-full flex items-center gap-3 px-4 py-3 hover:bg-secondary/20 transition-colors',
-                        isExpanded && 'bg-secondary/10'
-                      )}
+                    <div
+                      className="w-full flex items-center gap-3 px-4 py-3 bg-secondary/5 rounded-t-lg border-b border-border/30"
                     >
                       <span className="text-sm text-foreground font-medium flex-1 text-left">
                         {CATEGORY_LABELS[cat]}
@@ -703,76 +746,19 @@ export function CourseEvaluations({ courseId, subject, code }: CourseEvaluations
                         />
                       </div>
                       <ScoreBadge score={metrics[cat]!} size="sm" />
-                      {isExpanded ? (
-                        <ChevronUp size={14} className="text-muted-foreground" />
-                      ) : (
-                        <ChevronDown size={14} className="text-muted-foreground" />
-                      )}
-                    </button>
+                    </div>
 
-                    {isExpanded && questions.length > 0 && (
-                      <div className="px-5 pb-4 pt-1 bg-secondary/5 space-y-4">
-                        <AggregatedRatingBreakdown questions={questions} aggregateScore={metrics[cat]!} />
-                      </div>
-                    )}
+                    <div className="px-5 pb-4 pt-4 bg-secondary/5 border border-border/20 rounded-b-lg space-y-4">
+                      <AggregatedRatingBreakdown questions={questions} aggregateScore={metrics[cat]!} />
+                    </div>
                   </div>
                 )
               })}
-
-              {/* Hours row (expandable with histogram) */}
-              {metrics.hours !== undefined && (() => {
-                const isExpanded = expandedQuestion === 'hours'
-                const hoursOptions = representativeHoursQuestion
-                  ? [...representativeHoursQuestion.options].sort((a, b) => b.weight - a.weight)
-                  : []
-
-                return (
-                  <div>
-                    <button
-                      type="button"
-                      onClick={() => setExpandedQuestion(isExpanded ? null : 'hours')}
-                      className={cn(
-                        'w-full flex items-center gap-3 px-4 py-3 hover:bg-secondary/20 transition-colors',
-                        isExpanded && 'bg-secondary/10'
-                      )}
-                    >
-                      <Clock size={16} className="text-muted-foreground shrink-0" />
-                      <span className="text-sm text-foreground font-medium flex-1 text-left">Hours / Week</span>
-                      <span className="text-sm font-bold text-foreground tabular-nums">{metrics.hours.toFixed(1)} hrs</span>
-                      {isExpanded ? (
-                        <ChevronUp size={14} className="text-muted-foreground" />
-                      ) : (
-                        <ChevronDown size={14} className="text-muted-foreground" />
-                      )}
-                    </button>
-
-                    {isExpanded && hoursOptions.length > 0 && (
-                      <div className="px-5 pb-4 pt-2 bg-secondary/5">
-                        <HoursHistogram options={hoursOptions} />
-                        {representativeHoursQuestion && (
-                          <div className="flex items-center justify-between text-[10px] text-muted-foreground mt-2 pt-1 border-t border-border/30">
-                            <span>{representativeHoursQuestion.responseRate}</span>
-                            <span className="tabular-nums">med {representativeHoursQuestion.median.toFixed(1)} / sd {representativeHoursQuestion.std.toFixed(2)}</span>
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                )
-              })()}
             </div>
 
-            {/* Single instructor: show their per-eval list inline */}
-            {!hasMultipleInstructors && filteredEvals.length > 1 && (
-              <div className="space-y-2">
-                <div className="text-xs font-medium text-muted-foreground uppercase tracking-wider px-1">
-                  {instructors[0]?.name.split(', ').reverse().join(' ')} &middot; {filteredEvals.length} evals
-                </div>
-                {filteredEvals.map((ev, i) => (
-                  <InlineEval key={`${ev.term}-${ev.instructor}-${i}`} evaluation={ev} disableComments />
-                ))}
-              </div>
-            )}
+
+
+
           </div>
         )}
 
@@ -781,7 +767,7 @@ export function CourseEvaluations({ courseId, subject, code }: CourseEvaluations
           <div className="border border-border/50 rounded-xl overflow-hidden">
             <div
               className="grid gap-2 px-4 py-2.5 bg-secondary/30 border-b border-border/40"
-              style={{ gridTemplateColumns: '1fr repeat(5, minmax(40px, 52px))' }}
+              style={{ gridTemplateColumns: '1fr repeat(4, minmax(40px, 52px))' }}
             >
               <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">Instructor</div>
               {ratingCats.map(cat => (
@@ -789,9 +775,6 @@ export function CourseEvaluations({ courseId, subject, code }: CourseEvaluations
                   {CATEGORY_SHORT[cat]}
                 </div>
               ))}
-              <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider text-center">
-                {CATEGORY_SHORT.hours}
-              </div>
             </div>
 
             {instructors.map(inst => (
@@ -814,17 +797,7 @@ export function CourseEvaluations({ courseId, subject, code }: CourseEvaluations
       </div>
 
       {/* Footer link */}
-      <div className="pt-1 text-center">
-        <a
-          href={`https://stanford.evaluationkit.com/Report/Public/Results?Course=${encodeURIComponent(subject + ' ' + code)}&Search=true`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-primary transition-colors"
-        >
-          View on EvaluationKit
-          <ExternalLink size={12} />
-        </a>
-      </div>
-    </div>
+
+    </div >
   )
 }

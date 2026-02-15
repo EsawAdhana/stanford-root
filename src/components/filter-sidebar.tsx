@@ -45,17 +45,18 @@ const FilterSection = ({
     const [isOpen, setIsOpen] = useState(defaultOpen);
     return (
         <Collapsible open={isOpen} onOpenChange={setIsOpen} className="space-y-2">
-            <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                    <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider pl-1">{title}</h3>
-                    <span className="text-[10px] text-muted-foreground/60 italic font-normal hidden group-hover:block">None = All</span>
-                </div>
-                <CollapsibleTrigger asChild>
-                    <Button variant="ghost" size="sm" className="h-6 w-6 p-0 hover:bg-secondary">
-                        {isOpen ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
-                    </Button>
-                </CollapsibleTrigger>
-            </div>
+            <CollapsibleTrigger asChild>
+                <button
+                    type="button"
+                    className="group flex w-full cursor-pointer items-center justify-between rounded-sm py-2.5 px-1 text-left hover:bg-secondary/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-muted-foreground/25 focus-visible:ring-offset-1 min-h-[2.5rem]"
+                >
+                    <div className="flex items-center gap-2">
+                        <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider pl-1">{title}</h3>
+                        <span className="text-[10px] text-muted-foreground/60 italic font-normal hidden group-hover:block">None = All</span>
+                    </div>
+                    {isOpen ? <ChevronDown size={14} className="shrink-0 text-muted-foreground" /> : <ChevronRight size={14} className="shrink-0 text-muted-foreground" />}
+                </button>
+            </CollapsibleTrigger>
             <CollapsibleContent className="space-y-1">
                 {children}
             </CollapsibleContent>
@@ -741,7 +742,8 @@ export function FilterSidebar() {
 
                 <div className="h-px bg-border/40" />
 
-                {/* Format (Component) */}
+                {/* Collapsible filter sections: no gap so entire strip is clickable */}
+                <div className="space-y-0">
                 <FilterSection title="Format">
                     {facets.formats.map(([fmt, count]) => (
                         <CheckboxItem
@@ -843,6 +845,7 @@ export function FilterSidebar() {
                         />
                     ))}
                 </FilterSection>
+                </div>
 
             </SimpleScrollArea>
         </div>

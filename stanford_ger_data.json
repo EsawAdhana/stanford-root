@@ -1,0 +1,129 @@
+{
+  "generatedAt": "2026-02-13T08:18:14.663Z",
+  "source": "Transformed from Manual Text Input",
+  "requirements": {
+    "COLLEGE": {
+      "title": "Civic, Liberal, and Global Education (COLLEGE)",
+      "description": "Complete 2 courses during your first year.",
+      "units": "Approx. 6-8 units",
+      "options": [
+        {
+          "name": "Standard COLLEGE Curriculum",
+          "details": "Take one course in each of two quarters (autumn, winter, or spring)."
+        },
+        {
+          "name": "Immersion in the Arts (ITALIC)",
+          "details": "Residence-based, year-long program."
+        },
+        {
+          "name": "Structured Liberal Education (SLE)",
+          "details": "Residence-based, year-long program."
+        },
+        {
+          "name": "Education as Self-Fashioning (ESF)",
+          "details": "Autumn Quarter only. Satisfies one quarter of COLLEGE + PWR 1."
+        }
+      ]
+    },
+    "Writing": {
+      "title": "Writing and Rhetoric",
+      "description": "Complete coursework at three levels.",
+      "levels": [
+        {
+          "level": "WR 1",
+          "description": "First-year writing requirement.",
+          "options": [
+            "PWR 1",
+            "SLE",
+            "ESF",
+            "ITALIC",
+            "Transfer Credit"
+          ]
+        },
+        {
+          "level": "WR 2",
+          "description": "Second-year writing and research requirement.",
+          "options": [
+            "PWR 2",
+            "SLE",
+            "WRITE 2 (Departmental)",
+            "Transfer Credit"
+          ]
+        },
+        {
+          "level": "WIM",
+          "description": "Writing in the Major. Satisfied by specific courses within your major.",
+          "options": [
+            "Major-specific course"
+          ]
+        }
+      ]
+    },
+    "Language": {
+      "title": "Language",
+      "description": "Complete one year of college-level foreign language study.",
+      "units": "Approx. 12-15 units (or equivalent)",
+      "options": [
+        {
+          "type": "Coursework",
+          "details": "Three quarters of a first-year language course at Stanford (or transfer)."
+        },
+        {
+          "type": "Proficiency Exam",
+          "details": "Qualifying score on AP, IB, or other approved external exams."
+        },
+        {
+          "type": "Placement Diagnostic",
+          "details": "Place out via Stanford language diagnostic test."
+        }
+      ]
+    },
+    "Ways": {
+      "title": "Ways of Thinking/Ways of Doing",
+      "description": "Complete 11 certified courses across 8 ways.",
+      "subRequirements": [
+        {
+          "code": "Way-A-II",
+          "name": "Aesthetic and Interpretive Inquiry",
+          "count": 2
+        },
+        {
+          "code": "Way-AQR",
+          "name": "Applied Quantitative Reasoning",
+          "count": 1
+        },
+        {
+          "code": "Way-CE",
+          "name": "Creative Expression",
+          "count": 1,
+          "notes": "Min 2 units"
+        },
+        {
+          "code": "Way-EDP",
+          "name": "Exploring Difference and Power",
+          "count": 1
+        },
+        {
+          "code": "Way-ER",
+          "name": "Ethical Reasoning",
+          "count": 1
+        },
+        {
+          "code": "Way-FR",
+          "name": "Formal Reasoning",
+          "count": 1
+        },
+        {
+          "code": "Way-SI",
+          "name": "Social Inquiry",
+          "count": 2
+        },
+        {
+          "code": "Way-SMA",
+          "name": "Scientific Method and Analysis",
+          "count": 2
+        }
+      ]
+    }
+  }
+}

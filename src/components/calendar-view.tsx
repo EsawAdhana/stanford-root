@@ -6,18 +6,17 @@ import { isMeetingOptional, parseMeetingTimes, timeToMinutes } from '@/lib/sched
 import { cn } from '@/lib/utils';
 import { ChevronLeft, ChevronRight, Trash2, EyeOff, Eye, AlertCircle, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { CourseDetail } from '@/components/course-detail';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { useRouter } from 'next/navigation';
 
 const COLORS = {
   sky: 'bg-sky-500/15 border-sky-500/40 text-sky-950 dark:text-sky-50',
-  emerald: 'bg-emerald-500/15 border-emerald-500/40 text-emerald-950 dark:text-emerald-50',
-  violet: 'bg-violet-500/15 border-violet-500/40 text-violet-950 dark:text-violet-50',
-  amber: 'bg-amber-500/15 border-amber-500/40 text-amber-950 dark:text-amber-50',
-  rose: 'bg-rose-500/15 border-rose-500/40 text-rose-950 dark:text-rose-50',
-  teal: 'bg-teal-500/15 border-teal-500/40 text-teal-950 dark:text-teal-50',
-  pink: 'bg-pink-500/15 border-pink-500/40 text-pink-950 dark:text-pink-50',
   indigo: 'bg-indigo-500/15 border-indigo-500/40 text-indigo-950 dark:text-indigo-50',
+  violet: 'bg-violet-500/15 border-violet-500/40 text-violet-950 dark:text-violet-50',
+  fuchsia: 'bg-fuchsia-500/15 border-fuchsia-500/40 text-fuchsia-950 dark:text-fuchsia-50',
+  rose: 'bg-rose-500/15 border-rose-500/40 text-rose-950 dark:text-rose-50',
+  orange: 'bg-orange-500/15 border-orange-500/40 text-orange-950 dark:text-orange-50',
+  amber: 'bg-amber-500/15 border-amber-500/40 text-amber-950 dark:text-amber-50',
+  emerald: 'bg-emerald-500/15 border-emerald-500/40 text-emerald-950 dark:text-emerald-50',
 } as const
 
 type ColorKey = keyof typeof COLORS
@@ -121,7 +120,7 @@ function layoutDayEvents(events: CalendarEvent[]) {
 
 export function CalendarView({ currentTerm, onPrevTerm, onNextTerm, totalUnitsMin, totalUnitsMax, isOverload, onIgnoreOverload }: CalendarViewProps) {
   const { items, removeItem, toggleOptionalMeeting } = useCartStore()
-  const [selectedCourseId, setSelectedCourseId] = useState<string | null>(null)
+  const router = useRouter()
 
   const currentTermCourses = items.filter(c =>
     c.selectedTerm ? c.selectedTerm === currentTerm :
@@ -281,7 +280,7 @@ export function CalendarView({ currentTerm, onPrevTerm, onNextTerm, totalUnitsMi
                         return (
                           <div
                             key={ev.id}
-                            onClick={() => setSelectedCourseId(ev.courseId)}
+                            onClick={() => router.push(`/courses/${ev.courseId}`)}
                             className={cn(
                               'group absolute rounded-md border px-1 sm:px-2 py-0.5 sm:py-1 text-left shadow-sm hover:shadow transition-shadow overflow-hidden cursor-pointer z-20',
                               colorClasses,
@@ -362,7 +361,7 @@ export function CalendarView({ currentTerm, onPrevTerm, onNextTerm, totalUnitsMi
                   <div
                     key={course.id}
                     className="p-3 border rounded-lg bg-card hover:bg-accent/50 transition-colors group cursor-pointer"
-                    onClick={() => setSelectedCourseId(course.id)}
+                    onClick={() => router.push(`/courses/${course.id}`)}
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex-1 min-w-0">
@@ -387,9 +386,6 @@ export function CalendarView({ currentTerm, onPrevTerm, onNextTerm, totalUnitsMi
           )}
         </div>
       </div>
-      {selectedCourseId && (
-        <CourseDetail courseId={selectedCourseId} onClose={() => setSelectedCourseId(null)} closeOnRemove={true} />
-      )}
     </div>
   );
 }

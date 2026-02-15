@@ -5,6 +5,7 @@ out
 *.log
 .env
 .env.local
+.env*.local
 .tmp-pages
 
 # Build artifacts

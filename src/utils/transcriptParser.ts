@@ -1,4 +1,4 @@
-import { TextItem, TextMarkedContent } from 'pdfjs-dist/types/src/display/api';
+liimport { TextItem, TextMarkedContent } from 'pdfjs-dist/types/src/display/api';
 
 export interface CourseItem {
     code: string;

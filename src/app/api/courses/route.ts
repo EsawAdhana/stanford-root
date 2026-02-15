@@ -105,9 +105,12 @@ export async function GET(request: Request) {
     return NextResponse.json(merged, {
       headers: { 'Cache-Control': 'public, s-maxage=900, stale-while-revalidate=1800' }
     })
-  } catch (err: any) {
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : 'Failed to fetch courses'
     console.error('Failed to fetch courses:', err)
-    console.error('Error stack:', err.stack)
-    return NextResponse.json({ error: err.message, stack: err.stack }, { status: 500 })
+    return NextResponse.json(
+      { error: process.env.NODE_ENV === 'production' ? 'Internal server error' : message },
+      { status: 500 }
+    )
   }
 }

@@ -22,9 +22,9 @@ export function InstructorList({ instructors, limit = 5 }: InstructorListProps) 
   return (
     <div className="flex items-center gap-2 min-w-0" title={instructors.join(', ')}>
       <User size={14} className="shrink-0" />
-      <div className="truncate text-xs">
+      <div className="text-xs break-words">
         {displayed.join(', ')}
-        {remaining > 0 && <span className="text-muted-foreground ml-1">+{remaining}</span>}
+        {remaining > 0 && <span className="text-muted-foreground ml-1">+{remaining} more</span>}
       </div>
     </div>
   );

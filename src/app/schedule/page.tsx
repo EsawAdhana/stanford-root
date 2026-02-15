@@ -10,6 +10,7 @@ import { useSearchParams } from 'next/navigation';
 import { useCartStore } from '@/lib/cart-store';
 import { useCourseStore } from '@/lib/store';
 import { AuthGate } from '@/components/auth-gate';
+import { Logo } from '@/components/logo';
 import { parseMeetingTimes, timeToMinutes } from '@/lib/schedule-utils';
 import { cn } from '@/lib/utils';
 import {
@@ -325,13 +326,13 @@ END:VEVENT
     <div className="flex flex-col h-screen bg-background">
       {/* Header */}
       <header className="flex-none h-16 md:h-16 h-auto md:py-0 py-2 border-b bg-card">
-        <div className="h-full w-full max-w-[90rem] mx-auto px-4 md:px-6 flex items-center justify-between">
+        <div className="h-full w-full max-w-[100rem] mx-auto px-4 md:px-6 flex items-center justify-between">
           <div className="flex items-center">
-            <Link href={backHref}>
-              <Button variant="ghost" size="sm" className="gap-2 -ml-3 text-muted-foreground hover:text-foreground">
-                <ChevronLeft className="h-4 w-4" />
-                Back to Courses
-              </Button>
+            <Link href={backHref} className="flex items-center gap-2 px-2 py-1 -ml-2 rounded-lg hover:bg-secondary/50 transition-colors group">
+              <Logo className="h-8 w-8 md:h-10 md:w-10" />
+              <h1 className="text-xl md:text-2xl tracking-tight font-[family-name:var(--font-outfit)] font-bold text-primary select-none transition-colors duration-300 group-hover:text-cardinal-red">
+                Stanford Root
+              </h1>
             </Link>
           </div>
           <div className="flex items-center gap-3 ml-auto">
@@ -389,7 +390,7 @@ END:VEVENT
 
       {/* Main Content */}
       <main className="flex-1 overflow-auto p-4 md:p-6">
-        <div className="min-h-full w-full max-w-[85rem] mx-auto flex flex-col">
+        <div className="min-h-full w-full max-w-[95rem] mx-auto flex flex-col">
           <CalendarView
             currentTerm={currentTerm}
             onPrevTerm={prevTerm}
