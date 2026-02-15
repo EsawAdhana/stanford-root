@@ -331,7 +331,7 @@ END:VEVENT
             <Link href={backHref} className="flex items-center gap-2 px-2 py-1 -ml-2 rounded-lg hover:bg-secondary/50 transition-colors group">
               <Logo className="h-8 w-8 md:h-10 md:w-10" />
               <h1 className="text-xl md:text-2xl tracking-tight font-[family-name:var(--font-outfit)] font-bold text-primary select-none transition-colors duration-300 group-hover:text-cardinal-red">
-                Stanford Root
+                CHANGED
               </h1>
             </Link>
           </div>
