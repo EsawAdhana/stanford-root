@@ -25,8 +25,7 @@ import { cn } from '@/lib/utils'
 
 const MAX_LENGTH = 2000
 const TYPES = [
-  { value: 'general', label: 'General feedback' },
-  { value: 'comment', label: 'Comment' },
+  { value: 'feedback', label: 'Feedback' },
   { value: 'request', label: 'Request or idea' }
 ] as const
 
@@ -34,7 +33,7 @@ export function FeedbackDialog () {
   const [mounted, setMounted] = useState(false)
   const [open, setOpen] = useState(false)
   const [text, setText] = useState('')
-  const [type, setType] = useState<string>('general')
+  const [type, setType] = useState<string>('feedback')
   const [submitting, setSubmitting] = useState(false)
 
   useEffect(() => {
@@ -64,9 +63,9 @@ export function FeedbackDialog () {
         toast.error(data.error || 'Failed to send feedback')
         return
       }
-      toast.success('Thanks! Your feedback was sent.')
+      toast.success('Thanks! Your feedback was sent.', { duration: 2000 })
       setText('')
-      setType('general')
+      setType('feedback')
       setOpen(false)
     } catch {
       toast.error('Failed to send feedback')
@@ -98,7 +97,7 @@ export function FeedbackDialog () {
           <DialogHeader>
             <DialogTitle>Feedback</DialogTitle>
             <DialogDescription>
-              Leave a comment, request, or general feedback about the app. It goes straight to the team.
+              Leave feedback (reactions, praise, bugs) or a request/idea. It goes straight to the team.
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleSubmit} className="grid gap-4">

@@ -9,7 +9,7 @@ const feedbackEmailTo = process.env.FEEDBACK_EMAIL_TO || ''
 const fromEmail = process.env.RESEND_FROM_EMAIL || 'Stanford Root <onboarding@resend.dev>'
 
 const MAX_TEXT_LENGTH = 2000
-const ALLOWED_TYPES = ['comment', 'request', 'general'] as const
+const ALLOWED_TYPES = ['feedback', 'request'] as const
 
 export async function POST (request: Request) {
   if (!supabaseUrl || !supabaseAnonKey) {
@@ -39,7 +39,7 @@ export async function POST (request: Request) {
 
   const type = body.type && ALLOWED_TYPES.includes(body.type as typeof ALLOWED_TYPES[number])
     ? body.type
-    : 'general'
+    : 'feedback'
 
   const supabase = createClient(supabaseUrl, supabaseAnonKey)
   const { error: err } = await supabase

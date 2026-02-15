@@ -19,7 +19,7 @@ export default function TermsPage() {
         </div>
 
         <h1 className="text-3xl font-bold text-foreground mt-8 mb-2 font-[family-name:var(--font-outfit)]">Terms of Service</h1>
-        <p className="text-sm text-muted-foreground mb-10">Last updated: February 9, 2026</p>
+        <p className="text-sm text-muted-foreground mb-10">Last updated: February 15, 2026</p>
 
         <div className="prose prose-neutral max-w-none space-y-6 text-sm text-foreground/80 leading-relaxed">
           <section>
@@ -56,7 +56,7 @@ export default function TermsPage() {
               <li>Attempt to gain unauthorized access to the Service or its related systems.</li>
               <li>Scrape, crawl, or otherwise extract data from the Service in an automated manner without permission.</li>
               <li>Misrepresent your identity or affiliation with Stanford University.</li>
-              <li>Submit false, misleading, or abusive content (including syllabus votes or reviews).</li>
+              <li>Submit false, misleading, or abusive content (including syllabus votes, reviews, or feedback).</li>
             </ul>
           </section>
 
