@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Privacy Policy — Stanford Root',
+  title: 'Privacy Policy — CHANGING THIS',
 };
 
 export default function PrivacyPage() {
@@ -14,7 +14,7 @@ export default function PrivacyPage() {
             href="/"
             className="text-sm text-muted-foreground hover:text-primary transition-colors flex items-center gap-2"
           >
-            &larr; Back to Stanford Root
+            &larr; Back to CHANGING THIS
           </Link>
         </div>
 
@@ -27,7 +27,7 @@ export default function PrivacyPage() {
           <section className="prose prose-neutral dark:prose-invert max-w-none">
             <h2 className="text-lg font-semibold text-foreground mb-2">Overview</h2>
             <p>
-              Stanford Root (&quot;We&quot;, &quot;us&quot;, or &quot;the Service&quot;) is a course discovery and scheduling tool
+              CHANGING THIS (&quot;We&quot;, &quot;us&quot;, or &quot;the Service&quot;) is a course discovery and scheduling tool
               built for Stanford University students. We are committed to protecting your privacy and being
               transparent about how we handle your data.
             </p>

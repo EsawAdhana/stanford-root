@@ -187,7 +187,7 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
           </Link>
 
           <span className="">
-            &copy; {new Date().getFullYear()} Stanford Root
+            &copy; {new Date().getFullYear()} CHANGING THIS
           </span>
         </div>
       </footer>
