@@ -32,15 +32,27 @@ const SimpleScrollArea = ({ className, children }: { className?: string, childre
     </div>
 );
 
+// Unit/time value -> display label for active filter chips
+const UNIT_LABELS: Record<string, string> = { '1': '1 Unit', '2': '2 Units', '3': '3 Units', '4': '4 Units', '5+': '5+ Units' };
+const TIME_LABELS: Record<string, string> = {
+  'early-morning': 'Early Morning',
+  morning: 'Morning',
+  afternoon: 'Afternoon',
+  'late-afternoon': 'Late Afternoon',
+  evening: 'Evening'
+}
+
 // Helper for collapsible sections
 const FilterSection = ({
     title,
     children,
-    defaultOpen = false
+    defaultOpen = false,
+    hasActive = false
 }: {
     title: string,
     children: React.ReactNode,
-    defaultOpen?: boolean
+    defaultOpen?: boolean,
+    hasActive?: boolean
 }) => {
     const [isOpen, setIsOpen] = useState(defaultOpen);
     return (
@@ -52,6 +64,9 @@ const FilterSection = ({
                 >
                     <div className="flex items-center gap-2">
                         <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider pl-1">{title}</h3>
+                        {hasActive && (
+                            <span className="h-1.5 w-1.5 rounded-full bg-primary shrink-0" aria-hidden />
+                        )}
                         <span className="text-[10px] text-muted-foreground/60 italic font-normal hidden group-hover:block">None = All</span>
                     </div>
                     {isOpen ? <ChevronDown size={14} className="shrink-0 text-muted-foreground" /> : <ChevronRight size={14} className="shrink-0 text-muted-foreground" />}
@@ -593,11 +608,76 @@ export function FilterSidebar() {
         setExcludedWords(next.length ? next : null);
     };
 
+    // Active filter chips for the bar at top (label + remove handler)
+    const activeFilterChips = useMemo(() => {
+        const chips: { id: string, label: string, onRemove: () => void }[] = []
+        if (hideConflicts) {
+            chips.push({ id: 'hideConflicts', label: 'Hide conflicting', onRemove: () => setHideConflicts(false) })
+        }
+        excludedWords.forEach(word => {
+            chips.push({ id: `exclude-${word}`, label: `Exclude: ${word}`, onRemove: () => removeExcludedWord(word) })
+        })
+        selectedTerms.forEach(term => {
+            chips.push({ id: `term-${term}`, label: term, onRemove: () => toggleFilter(term, selectedTerms, setSelectedTerms) })
+        })
+        selectedDepts.forEach(dept => {
+            chips.push({ id: `dept-${dept}`, label: dept, onRemove: () => removeDept(dept) })
+        })
+        selectedFormats.forEach(fmt => {
+            chips.push({ id: `fmt-${fmt}`, label: fmt, onRemove: () => toggleFilter(fmt, selectedFormats, setSelectedFormats) })
+        })
+        selectedStatus.forEach(s => {
+            chips.push({ id: `status-${s}`, label: s, onRemove: () => toggleFilter(s, selectedStatus, setSelectedStatus) })
+        })
+        selectedLevels.forEach(lvl => {
+            chips.push({ id: `level-${lvl}`, label: lvl, onRemove: () => toggleFilter(lvl, selectedLevels, setSelectedLevels) })
+        })
+        unitRanges.forEach(r => {
+            chips.push({ id: `unit-${r}`, label: UNIT_LABELS[r] || r, onRemove: () => toggleFilter(r, unitRanges, setUnitRanges) })
+        })
+        timeRanges.forEach(r => {
+            chips.push({ id: `time-${r}`, label: TIME_LABELS[r] || r, onRemove: () => toggleFilter(r, timeRanges, setTimeRanges) })
+        })
+        selectedGers.forEach(ger => {
+            chips.push({ id: `ger-${ger}`, label: ger, onRemove: () => toggleFilter(ger, selectedGers, setSelectedGers) })
+        })
+        selectedSchools.forEach(school => {
+            chips.push({ id: `school-${school}`, label: school, onRemove: () => toggleFilter(school, selectedSchools, setSelectedSchools) })
+        })
+        return chips
+    }, [hideConflicts, excludedWords, selectedTerms, selectedDepts, selectedFormats, selectedStatus, selectedLevels, unitRanges, timeRanges, selectedGers, selectedSchools])
+
     return (
         <div className="flex flex-col h-full bg-background border-r border-border/40">
             <div className="p-6 pb-4 border-b border-border/40">
                 <h2 className="text-sm font-semibold text-foreground/80 tracking-wide uppercase">Filters</h2>
             </div>
+
+            {/* Active filters bar: chips with X to remove */}
+            {activeFilterChips.length > 0 && (
+                <div className="px-4 py-3 border-b border-border/40 bg-muted/30">
+                    <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-2">Active</p>
+                    <div className="flex flex-wrap gap-1.5">
+                        {activeFilterChips.map(({ id, label, onRemove }) => (
+                            <span
+                                key={id}
+                                className="inline-flex items-center gap-1 pl-2 pr-1 py-1 rounded-md bg-background border border-border/60 text-xs font-medium text-foreground"
+                            >
+                                <span className="max-w-[120px] truncate" title={label}>{label}</span>
+                                <button
+                                    type="button"
+                                    onClick={onRemove}
+                                    className="shrink-0 rounded p-0.5 hover:bg-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+                                    aria-label={`Remove ${label}`}
+                                >
+                                    <X size={12} className="text-muted-foreground hover:text-foreground" />
+                                </button>
+                            </span>
+                        ))}
+                    </div>
+                </div>
+            )}
+
             <SimpleScrollArea className="flex-1 px-4 py-4 space-y-6">
                 <div className="flex items-center space-x-2">
                     <input
@@ -607,14 +687,18 @@ export function FilterSidebar() {
                         onChange={(e) => setHideConflicts(e.target.checked)}
                         className="h-4 w-4 rounded border-input text-primary focus:ring-primary accent-primary"
                     />
-                    <label htmlFor="hideConflicts" className="text-sm text-foreground/80 font-medium cursor-pointer">
+                    <label htmlFor="hideConflicts" className="text-sm text-foreground/80 font-medium cursor-pointer flex items-center gap-1.5">
                         Hide Conflicting Classes
+                        {hideConflicts && <span className="h-1.5 w-1.5 rounded-full bg-primary shrink-0" aria-hidden />}
                     </label>
                 </div>
 
                 {/* Exclude Keywords */}
                 <div className="space-y-3">
-                    <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider pl-1">Exclude Keywords</h3>
+                    <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider pl-1 flex items-center gap-1.5">
+                        Exclude Keywords
+                        {excludedWords.length > 0 && <span className="h-1.5 w-1.5 rounded-full bg-primary shrink-0" aria-hidden />}
+                    </h3>
                     <div className="space-y-2">
                         <Input
                             placeholder="Type & press Enter to exclude..."
@@ -643,7 +727,10 @@ export function FilterSidebar() {
 
                 {/* Terms */}
                 <div className="space-y-3">
-                    <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider pl-1">Term</h3>
+                    <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider pl-1 flex items-center gap-1.5">
+                        Term
+                        {selectedTerms.length > 0 && <span className="h-1.5 w-1.5 rounded-full bg-primary shrink-0" aria-hidden />}
+                    </h3>
                     <div className="space-y-1">
                         {facets.terms.map(([term, count]) => (
                             <CheckboxItem
@@ -660,7 +747,10 @@ export function FilterSidebar() {
                 {/* Departments */}
                 <div className="space-y-3">
                     <div className="flex items-center justify-between">
-                        <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider pl-1">Departments</h3>
+                        <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider pl-1 flex items-center gap-1.5">
+                            Departments
+                            {selectedDepts.length > 0 && <span className="h-1.5 w-1.5 rounded-full bg-primary shrink-0" aria-hidden />}
+                        </h3>
                         {selectedDepts.length > 0 && (
                             <button
                                 onClick={() => setSelectedDepts(null)}
@@ -744,7 +834,7 @@ export function FilterSidebar() {
 
                 {/* Collapsible filter sections: no gap so entire strip is clickable */}
                 <div className="space-y-0">
-                <FilterSection title="Format">
+                <FilterSection title="Format" hasActive={selectedFormats.length > 0}>
                     {facets.formats.map(([fmt, count]) => (
                         <CheckboxItem
                             key={fmt}
@@ -757,7 +847,7 @@ export function FilterSidebar() {
                 </FilterSection>
 
                 {/* Class Status */}
-                <FilterSection title="Class Status">
+                <FilterSection title="Class Status" hasActive={selectedStatus.length > 0}>
                     {facets.statuses.map(([status, count]) => (
                         <CheckboxItem
                             key={status}
@@ -770,7 +860,7 @@ export function FilterSidebar() {
                 </FilterSection>
 
                 {/* Class Level */}
-                <FilterSection title="Class Level">
+                <FilterSection title="Class Level" hasActive={selectedLevels.length > 0}>
                     {facets.levels.map(([lvl, count]) => (
                         <CheckboxItem
                             key={lvl}
@@ -783,7 +873,7 @@ export function FilterSidebar() {
                 </FilterSection>
 
                 {/* Units */}
-                <FilterSection title="Number of Units">
+                <FilterSection title="Number of Units" hasActive={unitRanges.length > 0}>
                     {[
                         { val: '1', label: '1 Unit' },
                         { val: '2', label: '2 Units' },
@@ -802,7 +892,7 @@ export function FilterSidebar() {
                 </FilterSection>
 
                 {/* Start Time */}
-                <FilterSection title="Start Time">
+                <FilterSection title="Start Time" hasActive={timeRanges.length > 0}>
                     {[
                         { val: 'early-morning', label: 'Early Morning (< 10 AM)' },
                         { val: 'morning', label: 'Late Morning (10-12 PM)' },
@@ -821,7 +911,7 @@ export function FilterSidebar() {
                 </FilterSection>
 
                 {/* GERs */}
-                <FilterSection title="General Education Requirements">
+                <FilterSection title="General Education Requirements" hasActive={selectedGers.length > 0}>
                     {facets.gers.map(([ger, count]) => (
                         <CheckboxItem
                             key={ger}
@@ -834,7 +924,7 @@ export function FilterSidebar() {
                 </FilterSection>
 
                 {/* School */}
-                <FilterSection title="School">
+                <FilterSection title="School" hasActive={selectedSchools.length > 0}>
                     {['Business', 'Education', 'Engineering', 'Humanities & Sciences', 'Law', 'Medicine', 'Sustainability'].map(school => (
                         <CheckboxItem
                             key={school}

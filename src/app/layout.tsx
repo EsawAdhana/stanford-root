@@ -11,8 +11,8 @@ const inter = Inter({ subsets: ["latin"] });
 const outfit = Outfit({ subsets: ["latin"], variable: '--font-outfit' });
 
 export const metadata: Metadata = {
-  title: "CHANGING THIS",
-  description: "CHANGING THIS — A better way to browse Stanford courses",
+  title: "Stanford Root",
+  description: "Stanford Root — A better way to browse Stanford courses",
 };
 
 export default function RootLayout({
