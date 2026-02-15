@@ -133,7 +133,7 @@ function ScheduleContent() {
 
     let icsContent = `BEGIN:VCALENDAR
 VERSION:2.0
-PRODID:-//Stanford Root//Course Schedule//EN
+PRODID:-//CHANGING THIS//Course Schedule//EN
 CALSCALE:GREGORIAN
 METHOD:PUBLISH
 X-WR-CALNAME:Stanford Schedule - ${currentTerm}

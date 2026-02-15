@@ -2,7 +2,7 @@ import Link from 'next/link'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Terms of Service — Stanford Root',
+  title: 'Terms of Service — CHANGING THIS',
 };
 
 export default function TermsPage() {
@@ -14,7 +14,7 @@ export default function TermsPage() {
             href="/"
             className="text-sm text-muted-foreground hover:text-primary transition-colors flex items-center gap-2"
           >
-            &larr; Back to Stanford Root
+            &larr; Back to CHANGING THIS
           </Link>
         </div>
 
@@ -25,7 +25,7 @@ export default function TermsPage() {
           <section>
             <h2 className="text-lg font-semibold text-foreground mb-2">1. Acceptance of Terms</h2>
             <p>
-              By accessing or using Stanford Root (&quot;the Service&quot;), you agree to be bound by these
+              By accessing or using CHANGING THIS (&quot;the Service&quot;), you agree to be bound by these
               Terms of Service. If you do not agree, please do not use the Service.
             </p>
           </section>
@@ -42,7 +42,7 @@ export default function TermsPage() {
           <section>
             <h2 className="text-lg font-semibold text-foreground mb-2">3. Description of Service</h2>
             <p>
-              Stanford Root provides tools for browsing Stanford course catalogs, building schedules,
+              CHANGING THIS provides tools for browsing Stanford course catalogs, building schedules,
               viewing course evaluations, and planning degree requirements. Course data is sourced
               from publicly available Stanford University resources.
             </p>
@@ -82,7 +82,7 @@ export default function TermsPage() {
           <section>
             <h2 className="text-lg font-semibold text-foreground mb-2">7. Limitation of Liability</h2>
             <p>
-              In no event shall the creators of Stanford Root be liable for any indirect, incidental,
+              In no event shall the creators of CHANGING THIS be liable for any indirect, incidental,
               special, or consequential damages arising from your use of the Service, including
               but not limited to missed enrollment deadlines or incorrect schedule planning.
             </p>
