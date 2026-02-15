@@ -5,7 +5,7 @@ export function Logo({ className }: { className?: string }) {
   return (
     <img
       src="/roots.png"
-      alt="CHANGING THIS"
+      alt="Stanford Root"
       className={cn("object-contain", className)}
     />
   );

@@ -2,7 +2,7 @@ import Link from 'next/link'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Terms of Service — CHANGING THIS',
+  title: 'Terms of Service — Stanford Root',
 };
 
 export default function TermsPage() {
@@ -14,18 +14,18 @@ export default function TermsPage() {
             href="/"
             className="text-sm text-muted-foreground hover:text-primary transition-colors flex items-center gap-2"
           >
-            &larr; Back to CHANGING THIS
+            &larr; Back to Stanford Root
           </Link>
         </div>
 
         <h1 className="text-3xl font-bold text-foreground mt-8 mb-2 font-[family-name:var(--font-outfit)]">Terms of Service</h1>
-        <p className="text-sm text-muted-foreground mb-10">Last updated: February 9, 2026</p>
+        <p className="text-sm text-muted-foreground mb-10">Last updated: February 15, 2026</p>
 
         <div className="prose prose-neutral max-w-none space-y-6 text-sm text-foreground/80 leading-relaxed">
           <section>
             <h2 className="text-lg font-semibold text-foreground mb-2">1. Acceptance of Terms</h2>
             <p>
-              By accessing or using CHANGING THIS (&quot;the Service&quot;), you agree to be bound by these
+              By accessing or using Stanford Root (&quot;the Service&quot;), you agree to be bound by these
               Terms of Service. If you do not agree, please do not use the Service.
             </p>
           </section>
@@ -42,7 +42,7 @@ export default function TermsPage() {
           <section>
             <h2 className="text-lg font-semibold text-foreground mb-2">3. Description of Service</h2>
             <p>
-              CHANGING THIS provides tools for browsing Stanford course catalogs, building schedules,
+              Stanford Root provides tools for browsing Stanford course catalogs, building schedules,
               viewing course evaluations, and planning degree requirements. Course data is sourced
               from publicly available Stanford University resources.
             </p>
@@ -56,7 +56,7 @@ export default function TermsPage() {
               <li>Attempt to gain unauthorized access to the Service or its related systems.</li>
               <li>Scrape, crawl, or otherwise extract data from the Service in an automated manner without permission.</li>
               <li>Misrepresent your identity or affiliation with Stanford University.</li>
-              <li>Submit false, misleading, or abusive content (including syllabus votes or reviews).</li>
+              <li>Submit false, misleading, or abusive content (including syllabus votes, reviews, or feedback).</li>
             </ul>
           </section>
 
@@ -82,7 +82,7 @@ export default function TermsPage() {
           <section>
             <h2 className="text-lg font-semibold text-foreground mb-2">7. Limitation of Liability</h2>
             <p>
-              In no event shall the creators of CHANGING THIS be liable for any indirect, incidental,
+              In no event shall the creators of Stanford Root be liable for any indirect, incidental,
               special, or consequential damages arising from your use of the Service, including
               but not limited to missed enrollment deadlines or incorrect schedule planning.
             </p>

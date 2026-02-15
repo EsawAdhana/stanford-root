@@ -87,7 +87,7 @@ export function OnboardingModal({ open, onOpenChange }: OnboardingModalProps) {
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="sm:max-w-[600px] h-[80vh] flex flex-col p-0 gap-0 overflow-hidden" hideClose>
                 <DialogHeader className="px-6 pt-6 pb-4 border-b">
-                    <DialogTitle className="text-2xl font-bold">Welcome to CHANGED</DialogTitle>
+                    <DialogTitle className="text-2xl font-bold">Welcome to Stanford Root</DialogTitle>
                     <p className="text-sm text-muted-foreground mt-2">
                         Let's personalize your course planning experience
                     </p>

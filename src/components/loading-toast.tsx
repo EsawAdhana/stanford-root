@@ -71,7 +71,7 @@ export function LoadingToast() {
                     Laying down roots...
                 </p>
                 <p className="text-xs text-muted-foreground leading-relaxed">
-                    The first time you open CHANGING THIS, it may take an additional few seconds to render data, but future uses will use cached data and should be near-instantaneous.
+                    The first time you open Stanford Root, it may take an additional few seconds to render data, but future uses will use cached data and should be near-instantaneous.
                 </p>
             </div>
         </div>

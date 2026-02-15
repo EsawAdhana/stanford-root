@@ -66,31 +66,11 @@ export function CourseDescription({ description, className }: CourseDescriptionP
         return parts;
     };
 
-    // Split description into main text and prerequisites if present
-    const splitRegex = /(Prerequisites?:)/g;
-    const match = splitRegex.exec(description);
-
-    let mainText = description;
-    let prereqLabel = '';
-    let prereqText = '';
-
-    if (match) {
-        mainText = description.substring(0, match.index);
-        prereqLabel = match[0]; // "Prerequisite:" or "Prerequisites:"
-        prereqText = description.substring(match.index + match[0].length);
-    }
-
     return (
         <div className={className}>
             <p className="text-muted-foreground text-base leading-relaxed font-normal">
-                {renderDescriptionWithLinks(mainText)}
+                {renderDescriptionWithLinks(description)}
             </p>
-            {prereqLabel && (
-                <p className="mt-4 text-muted-foreground text-base leading-relaxed font-normal">
-                    <span className="font-semibold text-foreground">{prereqLabel}</span>
-                    {renderDescriptionWithLinks(prereqText)}
-                </p>
-            )}
         </div>
-    );
+    )
 }

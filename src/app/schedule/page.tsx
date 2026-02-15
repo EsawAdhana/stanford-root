@@ -134,7 +134,7 @@ function ScheduleContent() {
 
     let icsContent = `BEGIN:VCALENDAR
 VERSION:2.0
-PRODID:-//CHANGING THIS//Course Schedule//EN
+PRODID:-//Stanford Root//Course Schedule//EN
 CALSCALE:GREGORIAN
 METHOD:PUBLISH
 X-WR-CALNAME:Stanford Schedule - ${currentTerm}
@@ -331,7 +331,7 @@ END:VEVENT
             <Link href={backHref} className="flex items-center gap-2 px-2 py-1 -ml-2 rounded-lg hover:bg-secondary/50 transition-colors group">
               <Logo className="h-8 w-8 md:h-10 md:w-10" />
               <h1 className="text-xl md:text-2xl tracking-tight font-[family-name:var(--font-outfit)] font-bold text-primary select-none transition-colors duration-300 group-hover:text-cardinal-red">
-                CHANGED
+                Stanford Root
               </h1>
             </Link>
           </div>
