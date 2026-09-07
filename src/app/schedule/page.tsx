@@ -72,7 +72,7 @@ function ScheduleContent() {
     const params = new URLSearchParams(searchParams.toString())
     params.delete('courseId')
     const qs = params.toString()
-    return qs ? `/browse?${qs}` : '/browse'
+    return qs ? `/?${qs}` : '/'
   }, [searchParams])
 
   const QUARTERS = ['Winter', 'Spring', 'Summer', 'Autumn']

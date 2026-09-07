@@ -104,10 +104,10 @@ async function fetchAllRows(columns: string, pageSize: number) {
 // Left open it is the cheapest possible way to take the entire corpus, so it is
 // Deliberately not gated and not rate limited.
 //
-// The endpoint serves a public page: /browse is a client component and
+// The endpoint serves a public page: the catalog at / is a client component and
 // src/lib/store.ts fetches this route from the browser for both dumps -- light for
 // the list, then full for sections and descriptions. A browser cannot hold a shared
-// secret, so an x-catalog-key check took /browse to 0 classes (verified against
+// secret, so an x-catalog-key check took the catalog to 0 classes (verified against
 // origin/main on the same machine: 3,108 classes there, 0 with the gate on).
 //
 // A per-IP limit is the obvious next thought and is worse than nothing here: most

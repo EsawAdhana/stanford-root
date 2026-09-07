@@ -1,7 +1,15 @@
-import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
-export async function middleware(request: NextRequest) {
+/**
+ * One job: catch an OAuth code that landed somewhere other than the callback.
+ *
+ * This used to also call supabase.auth.getUser() on `/` to bounce signed-in
+ * users past the marketing landing page. There is no landing page now, `/` is
+ * the catalog for everyone, so that Supabase round trip is gone. Route handlers
+ * that need auth verify it themselves, and the browser client refreshes its own
+ * tokens.
+ */
+export function middleware(request: NextRequest) {
   const url = request.nextUrl
 
   // Supabase sometimes redirects to Site URL root (?code=...) instead of
@@ -20,60 +28,12 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(callbackUrl)
   }
 
-  // Only the landing page needs to know who the user is. getUser() is a network
-  // round trip to Supabase, and running it on every matched path billed one per
-  // navigation *and* per Next.js link prefetch (~1.5k/hour at near-zero
-  // traffic). Route handlers that need auth verify it themselves, and the
-  // browser client refreshes its own tokens.
-  if (url.pathname !== '/') {
-    return NextResponse.next({ request })
-  }
-
-  let supabaseResponse = NextResponse.next({ request })
-
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-  if (!supabaseUrl || !supabaseAnonKey) {
-    return supabaseResponse
-  }
-
-  const supabase = createServerClient(supabaseUrl, supabaseAnonKey, {
-    cookies: {
-      getAll() {
-        return request.cookies.getAll()
-      },
-      setAll(cookiesToSet) {
-        cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value))
-        supabaseResponse = NextResponse.next({ request })
-        cookiesToSet.forEach(({ name, value, options }) =>
-          supabaseResponse.cookies.set(name, value, options)
-        )
-      },
-    },
-  })
-
-  const { data: { user } } = await supabase.auth.getUser()
-
-  // Signed-in users skip the marketing landing page and go straight to the app.
-  if (
-    user?.email?.endsWith('@stanford.edu') &&
-    !url.searchParams.has('auth_error')
-  ) {
-    // Preserve any refreshed-session cookies getUser() set on supabaseResponse,
-    // otherwise the redirect drops them and the session can silently expire.
-    const redirect = NextResponse.redirect(new URL('/browse', url.origin))
-    supabaseResponse.cookies.getAll().forEach((cookie) => {
-      redirect.cookies.set(cookie)
-    })
-    return redirect
-  }
-
-  return supabaseResponse
+  return NextResponse.next({ request })
 }
 
 export const config = {
   // Stays broad so a `?code=` landing on any path still reaches the callback
-  // fallback above; everything other than `/` returns without touching Supabase.
+  // fallback above.
   matcher: [
     '/((?!api/|_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],

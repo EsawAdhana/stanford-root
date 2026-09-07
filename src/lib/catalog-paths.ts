@@ -9,7 +9,7 @@ import { join } from 'path'
 // or firewall rule would leave the file addressable.
 //
 // It does NOT make the catalog private, and this comment used to claim it did.
-// /browse is a client component and src/lib/store.ts fetches /api/courses from
+// the catalog at / is a client component and src/lib/store.ts fetches /api/courses from
 // the browser for both dumps, so the data is still reachable by anyone who loads
 // the site. What changed is that it now comes per-request, no-store and rate
 // limited, instead of as a static file a scraper can bookmark.

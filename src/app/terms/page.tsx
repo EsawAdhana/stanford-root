@@ -17,7 +17,7 @@ export default function TermsPage() {
       <div className="mx-auto max-w-3xl px-6 py-12 flex-1">
         <div className="mb-12">
           <Link
-            href="/browse"
+            href="/"
             className="text-sm text-muted-foreground hover:text-primary transition-colors flex items-center gap-2"
           >
             &larr; Back to Stanford Root

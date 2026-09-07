@@ -276,7 +276,7 @@ export function CalendarView({ currentTerm, onPrevTerm, onNextTerm, canPrevTerm 
                           return (
                             <div
                               key={ev.id}
-                              onClick={() => { startNavProgress(); router.push(`/courses/${encodeURIComponent(ev.courseId)}`); }}
+                              onClick={() => { startNavProgress(); router.push(`/${encodeURIComponent(ev.courseId)}`); }}
                               className={cn(
                                 'group absolute rounded-md border px-1 sm:px-2 py-0.5 sm:py-1 text-left shadow-sm hover:shadow transition-shadow overflow-hidden cursor-pointer z-20',
                                 colorClasses,
@@ -474,7 +474,7 @@ export function CalendarView({ currentTerm, onPrevTerm, onNextTerm, canPrevTerm 
                     <div
                       key={course.id}
                       className="p-3 border rounded-lg bg-card hover:bg-accent/50 transition-colors group cursor-pointer"
-                      onClick={() => { startNavProgress(); router.push(`/courses/${encodeURIComponent(course.id)}`); }}
+                      onClick={() => { startNavProgress(); router.push(`/${encodeURIComponent(course.id)}`); }}
                     >
                       <div className="flex items-start justify-between gap-3">
                         <div className="flex-1 min-w-0">

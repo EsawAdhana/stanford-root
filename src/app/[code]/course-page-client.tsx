@@ -19,7 +19,7 @@ export function CoursePageClient({ initialCourse }: { initialCourse?: Course | n
     useEnsureCatalog();
     const params = useParams();
     const router = useRouter();
-    const rawCourseId = params.courseId as string;
+    const rawCourseId = params.code as string;
     const courseId = (() => {
         try {
             return decodeURIComponent(rawCourseId);
@@ -65,7 +65,7 @@ export function CoursePageClient({ initialCourse }: { initialCourse?: Course | n
             const searchParams = new URLSearchParams(typeof window !== 'undefined' ? window.location.search : '');
             searchParams.set('q', currentQuery);
             const rest = searchParams.toString();
-            router.push(rest ? `/courses/${encodeURIComponent(firstSearchMatch.id)}?${rest}` : `/courses/${encodeURIComponent(firstSearchMatch.id)}`);
+            router.push(rest ? `/${encodeURIComponent(firstSearchMatch.id)}?${rest}` : `/${encodeURIComponent(firstSearchMatch.id)}`);
         }
     }, [query, courseId, firstSearchMatch, router]);
 
@@ -142,7 +142,7 @@ export function CoursePageClient({ initialCourse }: { initialCourse?: Course | n
         if (!hasLoaded || !resolvedTarget) return;
         if (resolvedTarget.id !== courseId) {
             const search = typeof window !== 'undefined' ? window.location.search : '';
-            router.replace(`/courses/${encodeURIComponent(resolvedTarget.id)}${search || ''}`);
+            router.replace(`/${encodeURIComponent(resolvedTarget.id)}${search || ''}`);
         }
     }, [hasLoaded, courseId, resolvedTarget, router]);
 
@@ -160,7 +160,7 @@ export function CoursePageClient({ initialCourse }: { initialCourse?: Course | n
                         <div className="flex items-center gap-2">
                             <Button onClick={retryDetail}>Try again</Button>
                             <Button variant="outline" asChild>
-                                <Link href="/browse">Back to browse</Link>
+                                <Link href="/">Back to the catalog</Link>
                             </Button>
                         </div>
                     </div>
@@ -176,7 +176,7 @@ export function CoursePageClient({ initialCourse }: { initialCourse?: Course | n
                         <h1 className="text-2xl font-bold">Course Not Found</h1>
                         <p className="text-muted-foreground">The course you are looking for does not exist or has been removed.</p>
                         <Button variant="outline" asChild>
-                            <Link href="/browse">Back to browse</Link>
+                            <Link href="/">Back to the catalog</Link>
                         </Button>
                     </div>
                 ) : (

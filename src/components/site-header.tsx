@@ -17,7 +17,7 @@ export function SiteHeader() {
     const pathname = usePathname();
     const searchParams = useSearchParams();
     const isFaq = pathname.toLowerCase() === '/faq';
-    const isCatalog = pathname === '/browse';
+    const isCatalog = pathname === '/';
     // Scoped selectors so the header (mounted on every page) doesn't re-render
     // on unrelated auth-store changes (e.g. isSigningIn toggles).
     const user = useAuthStore(s => s.user);
@@ -33,11 +33,11 @@ export function SiteHeader() {
 
     // Logo: from another page → catalog with search preserved; already on catalog → catalog with search cleared
     const homeHref = useMemo(() => {
-        if (pathname === '/browse') return '/browse';
+        if (pathname === '/') return '/';
         const params = new URLSearchParams(searchParams.toString());
         params.delete('courseId');
         const qs = params.toString();
-        return qs ? `/browse?${qs}` : '/browse';
+        return qs ? `/?${qs}` : '/';
     }, [pathname, searchParams]);
 
     return (

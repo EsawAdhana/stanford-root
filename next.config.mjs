@@ -13,14 +13,30 @@ const nextConfig = {
   // Supabase) but it is much slower, so keep this list in step with the
   // importers of @/lib/catalog-dump, @/lib/departments and @/lib/catalog-paths.
   outputFileTracingIncludes: {
+    '/[code]': ['./data/catalog/full.json', './data/catalog/light.json'],
     '/api/courses': ['./data/catalog/full.json', './data/catalog/light.json'],
     '/api/courses/[courseId]': ['./data/catalog/full.json'],
     '/api/instructors/[slug]': ['./data/catalog/full.json', './data/catalog/light.json'],
-    '/browse/[subject]': ['./data/catalog/full.json', './data/catalog/light.json'],
-    '/browse/departments': ['./data/catalog/light.json'],
-    '/courses/[courseId]': ['./data/catalog/full.json', './data/catalog/light.json'],
+    '/departments': ['./data/catalog/light.json'],
     '/instructors/[slug]': ['./data/catalog/full.json', './data/catalog/light.json'],
+    // The share card draws the real browse view, so it runs filterCourses over
+    // the full dump the way /browse does. Static at build, but traced anyway.
+    '/opengraph-image': ['./data/catalog/full.json', './data/catalog/light.json'],
+    '/twitter-image': ['./data/catalog/full.json', './data/catalog/light.json'],
     '/sitemap.xml': ['./data/catalog/light.json'],
+  },
+  // Course and department pages moved to the root: /courses/CS106B is now
+  // /CS106B and /browse/CS is now /CS. These are the ~15k URLs already in
+  // Google's index and in people's bookmarks, so they redirect rather than 404.
+  // Order matters, Next takes the first match: /browse/departments has to be
+  // listed before the /browse/:subject pattern that would otherwise swallow it.
+  async redirects () {
+    return [
+      { source: '/browse', destination: '/', permanent: true },
+      { source: '/browse/departments', destination: '/departments', permanent: true },
+      { source: '/browse/:subject', destination: '/:subject', permanent: true },
+      { source: '/courses/:courseId', destination: '/:courseId', permanent: true },
+    ]
   },
   turbopack: {
     root: path.resolve(__dirname)

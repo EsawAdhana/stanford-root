@@ -282,12 +282,12 @@ export function CourseList() {
                   <div key={course.id} className="w-full">
                   <CourseCard
                     course={course}
-                    // A course URL is just the course: /courses/CS106A. The browse filters used to
+                    // A course URL is just the course: /CS106A. The catalog filters used to
                     // ride along, which left shareable links like ?q=mark&hideConflicts=false.
                     // Nothing on the detail page needs them -- `terms` only pre-selected the
                     // Sections tab, which now falls back to getDefaultTerm -- and Back still
-                    // returns to the filtered browse view, because that URL is in history.
-                    href={`/courses/${encodeURIComponent(course.id)}`}
+                    // returns to the filtered catalog view, because that URL is in history.
+                    href={`/${encodeURIComponent(course.id)}`}
                     sortDisplayValue={getSortDisplayValue(course)}
                     rating={getRatingForCourse(course)}
                     onClick={openCourse}

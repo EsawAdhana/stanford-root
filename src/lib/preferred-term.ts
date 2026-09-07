@@ -2,7 +2,7 @@
  * The term a student was browsing, handed to the course page without touching the URL.
  *
  * The Sections panel used to read `terms` off the query string, which meant every course
- * link carried the browse filters (`/courses/AA199?terms=Winter+2027&q=mark&...`). A
+ * link carried the catalog filters (`/AA199?terms=Winter+2027&q=mark&...`). A
  * course URL should be just the course, so the preference travels here instead.
  *
  * sessionStorage rather than a module variable because the course page is

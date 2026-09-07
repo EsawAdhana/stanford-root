@@ -122,7 +122,7 @@ export function CourseDescription({ courseId, description, className }: CourseDe
                 ? (
                     <Link
                         key={`${i}-${seg.text}`}
-                        href={`/courses/${encodeURIComponent(seg.courseId)}`}
+                        href={`/${encodeURIComponent(seg.courseId)}`}
                         className="text-primary font-bold hover:underline"
                         onClick={(e) => { e.stopPropagation(); }}
                     >

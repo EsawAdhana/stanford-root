@@ -1,5 +1,6 @@
-import { cache, Suspense } from 'react';
+import { Suspense } from 'react';
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import type { Course, Section } from '@/types/course';
 import {
     abbreviateGer,
@@ -14,27 +15,8 @@ import { stripSeconds } from '@/lib/schedule-utils';
 import { isWimCourse } from '@/lib/wim-courses';
 import { compareTerms } from '@/lib/terms';
 import { SITE_URL } from '@/lib/site';
-import { getAllCourseIdsFromDump, getCourseFromDump, getDepartmentFromDump } from '@/lib/catalog-dump';
-import Link from 'next/link';
+import { getDepartmentFromDump } from '@/lib/catalog-dump';
 import { CoursePageClient } from './course-page-client';
-
-// Cache the server render (metadata + SSR summary + JSON-LD) for a day.
-export const revalidate = 86400;
-
-/**
- * Prerender every course page at build time. The catalog is a local JSON file,
- * so this needs no database, and it is what makes these pages CDN-cacheable
- * instead of re-rendered per view.
- */
-export async function generateStaticParams() {
-    const ids = await getAllCourseIdsFromDump();
-    return ids.map(courseId => ({ courseId }));
-}
-
-/** Prefer prebuilt catalog dump — live Supabase section reads hang after the 26-27 refresh. */
-const fetchCourse = cache(async (courseId: string): Promise<Course | null> => {
-    return getCourseFromDump(courseId);
-});
 
 function plainText(html: string): string {
     return decodeHtmlEntities((html || '').replace(/<[^>]*>/g, ' ')).replace(/\s+/g, ' ').trim();
@@ -46,40 +28,6 @@ function gersForCourse(course: Course): string[] {
     course.sections?.forEach((s) => s.gers?.forEach((g) => { if (isAllowedGer(g)) set.add(abbreviateGer(g)); }));
     if (isWimCourse(course.subject, course.code)) set.add('WIM');
     return Array.from(set).sort((a, b) => a.localeCompare(b));
-}
-
-export async function generateMetadata({
-    params,
-}: {
-    params: Promise<{ courseId: string }>;
-}): Promise<Metadata> {
-    const { courseId } = await params;
-    const decoded = decodeURIComponent(courseId);
-    const course = await fetchCourse(decoded);
-
-    if (!course) {
-        return { title: 'Course Not Found — Stanford Root' };
-    }
-
-    const code = `${course.subject} ${course.code}`;
-    const title = `${code}: ${decodeHtmlEntities(course.title)} — Stanford Root`;
-    const blurb = plainText(course.description);
-    const desc = (
-        `Student reviews, ratings, hours/week, sections, and syllabus for ${code} at Stanford. ` +
-        blurb
-    ).slice(0, 300);
-
-    return {
-        title,
-        description: desc,
-        alternates: { canonical: `/courses/${encodeURIComponent(course.id)}` },
-        openGraph: {
-            title,
-            description: desc,
-            url: `${SITE_URL}/courses/${encodeURIComponent(course.id)}`,
-            type: 'article',
-        },
-    };
 }
 
 /** schema.org/Course structured data for rich results. */
@@ -116,7 +64,7 @@ function courseJsonLd(course: Course) {
         courseCode: code,
         description: plainText(course.description).slice(0, 500) ||
             `Details, sections, and student evaluations for ${code} at Stanford.`,
-        url: `${SITE_URL}/courses/${encodeURIComponent(course.id)}`,
+        url: `${SITE_URL}/${encodeURIComponent(course.id)}`,
         provider: {
             '@type': 'CollegeOrUniversity',
             name: 'Stanford University',
@@ -212,7 +160,7 @@ async function RelatedCourses({ course }: { course: Course }) {
                     {related.map((c) => (
                         <li key={c.id}>
                             <Link
-                                href={`/courses/${encodeURIComponent(c.id)}`}
+                                href={`/${encodeURIComponent(c.id)}`}
                                 prefetch={false}
                                 className="text-muted-foreground hover:text-primary transition-colors"
                             >
@@ -223,14 +171,14 @@ async function RelatedCourses({ course }: { course: Course }) {
                 </ul>
                 <p className="mt-4 text-sm text-muted-foreground">
                     <Link
-                        href={`/browse/${encodeURIComponent(course.subject)}`}
+                        href={`/${encodeURIComponent(course.subject)}`}
                         prefetch={false}
                         className="underline hover:text-primary transition-colors"
                     >
                         All {course.subject} courses
                     </Link>
                     {' · '}
-                    <Link href="/browse/departments" prefetch={false} className="underline hover:text-primary transition-colors">
+                    <Link href="/departments" prefetch={false} className="underline hover:text-primary transition-colors">
                         All departments
                     </Link>
                 </p>
@@ -239,33 +187,46 @@ async function RelatedCourses({ course }: { course: Course }) {
     );
 }
 
-export default async function CoursePage({
-    params,
-}: {
-    params: Promise<{ courseId: string }>;
-}) {
-    const { courseId } = await params;
-    const decoded = decodeURIComponent(courseId);
-    const course = await fetchCourse(decoded);
+/** Title, description and canonical for one course, served at `/<COURSEID>`. */
+export function courseMetadata(course: Course): Metadata {
+    const code = `${course.subject} ${course.code}`;
+    const title = `${code}: ${decodeHtmlEntities(course.title)} — Stanford Root`;
+    const blurb = plainText(course.description);
+    const desc = (
+        `Student reviews, ratings, hours/week, sections, and syllabus for ${code} at Stanford. ` +
+        blurb
+    ).slice(0, 300);
+    const path = `/${encodeURIComponent(course.id)}`;
 
+    return {
+        title,
+        description: desc,
+        alternates: { canonical: path },
+        openGraph: {
+            title,
+            description: desc,
+            url: `${SITE_URL}${path}`,
+            type: 'article',
+        },
+    };
+}
+
+/** The interactive course page plus the crawlable summary underneath it. */
+export function CourseView({ course }: { course: Course }) {
     return (
         <>
-            {course && (
-                <script
-                    type="application/ld+json"
-                    // Escape < so a title or description containing "</script>"
-                    // cannot close this tag. No catalog row does today.
-                    dangerouslySetInnerHTML={{ __html: JSON.stringify(courseJsonLd(course)).replace(/</g, '\\u003c') }}
-                />
-            )}
+            <script
+                type="application/ld+json"
+                // Escape < so a title or description containing "</script>"
+                // cannot close this tag. No catalog row does today.
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(courseJsonLd(course)).replace(/</g, '\\u003c') }}
+            />
             <CoursePageClient initialCourse={course} />
-            {course && <CourseSummary course={course} />}
+            <CourseSummary course={course} />
             {/* SEO-only; must not block the interactive course view on a slow dept scan. */}
-            {course && (
-                <Suspense fallback={null}>
-                    <RelatedCourses course={course} />
-                </Suspense>
-            )}
+            <Suspense fallback={null}>
+                <RelatedCourses course={course} />
+            </Suspense>
         </>
     );
 }

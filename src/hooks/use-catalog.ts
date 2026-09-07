@@ -10,7 +10,7 @@ import { useCourseStore } from '@/lib/store'
  * transitively imports the store — so a visitor who only saw `/`, `/privacy` or
  * `/terms` still downloaded the light catalog plus the ~3.3MB full payload and
  * paid the parse on the main thread. Worse, that work competed with the render
- * of pages that never needed it: `/browse` is statically prerendered and served
+ * of pages that never needed it: the catalog at `/` is statically prerendered and served
  * from the CDN, yet real users saw TTFB p75 of 1272ms against an origin that
  * answers in ~110ms.
  *

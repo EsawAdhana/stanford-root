@@ -43,7 +43,7 @@ export function normalizeCourseId(id) {
  * the alphabetically first id that exists in the catalog. Only non-canonical
  * members are keyed, which makes resolution a single hop and idempotent.
  *
- * Cached per `courses` array identity: /browse mounts FilterSidebar and
+ * Cached per `courses` array identity: the catalog mounts FilterSidebar and
  * CourseList, which each built their own copy, and getCrossListGroupIds rebuilt
  * one per call — ~6 ms each over 8,648 courses, repeated on every catalog change.
  */

@@ -4,7 +4,7 @@ import { getCrossListPrimaryMap, getCrossListGroupIds, normalizeCourseId, resolv
 
 /**
  * Every course must be reachable at its own URL. Cross-list resolution rewrites
- * /courses/<id> to a canonical primary, so a bad mapping silently redirects a
+ * /<id> to a canonical primary, so a bad mapping silently redirects a
  * real course to a different one (or to nothing). Checked over the whole dump.
  */
 type Course = { course_id: string; subject: string; code: string; title: string }

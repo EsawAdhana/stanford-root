@@ -190,9 +190,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       })
     }, REDIRECT_WATCHDOG_MS)
 
-    // Landing `/` would bounce `/` → middleware → `/browse` after login; go straight there.
-    let next = returnPath ?? `${window.location.pathname}${window.location.search}`
-    if (!next || next === '/') next = '/browse'
+    const next = returnPath ?? `${window.location.pathname}${window.location.search}`
     const redirectTo = `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}`
 
     try {

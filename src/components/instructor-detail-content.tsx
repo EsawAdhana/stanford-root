@@ -347,7 +347,7 @@ export function InstructorDetailContent({ slug, name, upcoming }: InstructorDeta
               {upcoming.map(course => (
                 <Link
                   key={course.id}
-                  href={`/courses/${encodeURIComponent(course.id)}`}
+                  href={`/${encodeURIComponent(course.id)}`}
                   className="block rounded-xl border border-border/40 bg-secondary/10 px-4 py-3 hover:bg-secondary/20 transition-colors"
                 >
                   <div className="flex items-baseline justify-between gap-2">
@@ -382,7 +382,7 @@ function CoursesTaught({ stats }: { stats: CourseStat[] }) {
       {stats.map(stat => (
         <Link
           key={stat.courseId}
-          href={`/courses/${encodeURIComponent(stat.courseId)}`}
+          href={`/${encodeURIComponent(stat.courseId)}`}
           className="grid gap-2 px-4 py-3 items-center border-b border-border/30 last:border-0 hover:bg-secondary/20 transition-colors"
           style={{ gridTemplateColumns: '1fr repeat(2, minmax(44px, 60px))' }}
         >

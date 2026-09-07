@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   title: 'Stanford Departments — Browse Courses by Department — Stanford Root',
   description:
     "Browse Stanford's course catalog by department. Every department's full course list with student evaluation ratings and hours per week.",
-  alternates: { canonical: '/browse/departments' },
+  alternates: { canonical: '/departments' },
 }
 
 export default async function DepartmentsPage() {
@@ -32,7 +32,7 @@ export default async function DepartmentsPage() {
           {departments.map(({ subject }) => (
             <li key={subject}>
               <Link
-                href={`/browse/${encodeURIComponent(subject)}`}
+                href={`/${encodeURIComponent(subject)}`}
                 prefetch={false}
                 className="text-sm hover:text-primary transition-colors"
               >
@@ -43,7 +43,7 @@ export default async function DepartmentsPage() {
         </ul>
         <p className="mt-10 text-sm text-muted-foreground">
           Prefer search?{' '}
-          <Link href="/browse" className="underline hover:text-primary transition-colors">
+          <Link href="/" className="underline hover:text-primary transition-colors">
             Browse and filter the full catalog
           </Link>
           .

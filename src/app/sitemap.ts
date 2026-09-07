@@ -37,8 +37,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const staticRoutes: MetadataRoute.Sitemap = [
     { url: `${SITE_URL}/`, lastModified: now, changeFrequency: 'daily', priority: 1 },
-    { url: `${SITE_URL}/browse`, lastModified: now, changeFrequency: 'daily', priority: 0.9 },
-    { url: `${SITE_URL}/browse/departments`, lastModified: now, changeFrequency: 'weekly', priority: 0.8 },
+    { url: `${SITE_URL}/departments`, lastModified: now, changeFrequency: 'weekly', priority: 0.8 },
     { url: `${SITE_URL}/schedule`, lastModified: now, changeFrequency: 'monthly', priority: 0.4 },
     { url: `${SITE_URL}/privacy`, lastModified: now, changeFrequency: 'yearly', priority: 0.2 },
     { url: `${SITE_URL}/terms`, lastModified: now, changeFrequency: 'yearly', priority: 0.2 },
@@ -47,14 +46,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const { ids, subjects } = await getCatalog()
 
   const departmentRoutes: MetadataRoute.Sitemap = subjects.map((subject) => ({
-    url: `${SITE_URL}/browse/${encodeURIComponent(subject)}`,
+    url: `${SITE_URL}/${encodeURIComponent(subject)}`,
     lastModified: now,
     changeFrequency: 'weekly',
     priority: 0.8,
   }))
 
   const courseRoutes: MetadataRoute.Sitemap = ids.map((id) => ({
-    url: `${SITE_URL}/courses/${encodeURIComponent(id)}`,
+    url: `${SITE_URL}/${encodeURIComponent(id)}`,
     lastModified: now,
     changeFrequency: 'weekly',
     priority: 0.7,

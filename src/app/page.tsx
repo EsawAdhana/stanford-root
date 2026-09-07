@@ -1,67 +1,35 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
-import { Logo } from '@/components/logo';
-import { HeroActions } from '@/components/hero-actions';
-import { LandingRedirect } from '@/components/landing-redirect';
-import { ThemeToggle } from '@/components/theme-toggle';
+import { Suspense } from 'react';
+import { CourseList } from '@/components/course-list';
+import { SiteHeader } from '@/components/site-header';
+import { FilterSidebar } from '@/components/filter-sidebar';
+import { BrowsePageShell } from '@/components/browse-page-shell';
 
+// Canonicalize every filtered catalog URL (?depts=..., ?q=...) to the bare
+// origin, so search engines don't index thousands of filter permutations.
 export const metadata: Metadata = {
   title: 'Stanford Root — Search every Stanford course and evaluation',
   description:
-    "Browse Stanford's full course catalog, read real student course evaluations, and build a conflict-free weekly schedule.",
+    "Search and filter Stanford's full course catalog by department, term, units, time, GER, and more. See ratings and hours/week from real student evaluations.",
   alternates: { canonical: '/' },
 };
 
-export default function LandingPage() {
+/** The catalog is the site: `/` is the search, not a page about the search. */
+export default function CatalogPage() {
   return (
-    <main className="flex min-h-screen flex-col bg-background">
-      <LandingRedirect />
-      {/* Top bar */}
-      <header className="mx-auto flex w-full max-w-6xl items-center justify-between px-5 sm:px-8 h-16">
-        <div className="flex items-center gap-2.5">
-          <Logo className="h-8 w-8" />
-          <span className="font-display text-2xl tracking-tight text-foreground">
-            Stanford Root
-          </span>
-        </div>
-        <div className="flex items-center gap-1">
-          <ThemeToggle />
-        </div>
-      </header>
+    <Suspense fallback={<BrowsePageShell />}>
+      <div className="flex flex-col h-screen overflow-hidden bg-background">
+        <SiteHeader />
 
-      {/* Hero */}
-      <section className="mx-auto flex w-full max-w-6xl flex-1 items-center justify-center px-6 pb-16">
-        <div className="mx-auto max-w-3xl text-center">
-          <h1 className="animate-fade-in-up text-balance text-4xl font-bold leading-[1.1] tracking-tight text-foreground sm:text-5xl">
-            Every Stanford course and evaluation, in one search.
-          </h1>
-          <p className="animate-fade-in-up mx-auto mt-5 max-w-xl text-balance text-lg leading-relaxed text-muted-foreground">
-            Browse the full course catalog, read real student course evaluations, and build a
-            conflict-free weekly schedule.
-          </p>
-          <div className="relative z-10 mt-8 flex justify-center">
-            <HeroActions />
-          </div>
-          <p className="mt-5 text-sm text-muted-foreground/80">
-            Built on Stanford&rsquo;s official course catalog and student evaluations.
-          </p>
+        <div className="flex flex-1 overflow-hidden">
+          <aside className="w-[280px] border-r border-border/40 bg-background hidden md:block overflow-y-auto custom-scrollbar shrink-0">
+            <FilterSidebar />
+          </aside>
+          <main className="flex-1 flex flex-col min-w-0 overflow-hidden bg-secondary/20 relative">
+            <CourseList />
+          </main>
         </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="mt-auto border-t border-border/40">
-        <div className="mx-auto flex w-full max-w-6xl flex-col items-center justify-center gap-2 px-5 py-6 text-sm text-muted-foreground sm:flex-row sm:gap-6">
-          <div className="flex items-center gap-6">
-            <Link href="/privacy" className="transition-colors hover:text-foreground">
-              Privacy
-            </Link>
-            <Link href="/terms" className="transition-colors hover:text-foreground">
-              Terms
-            </Link>
-          </div>
-          <span>&copy; {new Date().getFullYear()} Stanford Root. All rights reserved.</span>
-        </div>
-      </footer>
-    </main>
+      </div>
+    </Suspense>
   );
 }

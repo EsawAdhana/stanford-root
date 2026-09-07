@@ -48,7 +48,7 @@ export function SearchBar() {
       if (
         (e.key === '/' && !isInput) ||
         (e.key === 'k' && (e.metaKey || e.ctrlKey)) ||
-        (pathname === '/browse' && e.key === 'f' && (e.ctrlKey || e.metaKey))
+        (pathname === '/' && e.key === 'f' && (e.ctrlKey || e.metaKey))
       ) {
         e.preventDefault();
         inputRef.current?.focus();

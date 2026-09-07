@@ -41,14 +41,16 @@ describe('classifyCallback', () => {
 describe('safeNextPath', () => {
   it('keeps a same-origin path', () => {
     expect(safeNextPath('/schedule')).toBe('/schedule')
+    // `/` is the catalog now, not a landing page that bounces, so it is kept.
+    expect(safeNextPath('/')).toBe('/')
+    expect(safeNextPath('/CS106B?q=abstractions')).toBe('/CS106B?q=abstractions')
   })
 
   it.each([
-    ['//evil.example.com', '/browse'],
-    ['https://evil.example.com', '/browse'],
-    ['evil', '/browse'],
-    [null, '/browse'],
-    ['/', '/browse'],
+    ['//evil.example.com', '/'],
+    ['https://evil.example.com', '/'],
+    ['evil', '/'],
+    [null, '/'],
   ])('rewrites %j to %s', (input, expected) => {
     expect(safeNextPath(input)).toBe(expected)
   })

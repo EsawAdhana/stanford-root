@@ -47,9 +47,9 @@ export function authErrorParam(verdict: CallbackVerdict): string | null {
   }
 }
 
-/** Safe `next` target: same-origin path only, never `/` (middleware bounces it). */
+/** Safe `next` target: a same-origin path, or the catalog at `/`. */
 export function safeNextPath(next: string | null): string {
-  const raw = next ?? '/browse'
-  if (!raw.startsWith('/') || raw.startsWith('//')) return '/browse'
-  return raw === '/' ? '/browse' : raw
+  const raw = next ?? '/'
+  if (!raw.startsWith('/') || raw.startsWith('//')) return '/'
+  return raw
 }

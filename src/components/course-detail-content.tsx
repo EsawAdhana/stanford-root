@@ -211,7 +211,7 @@ export function CourseDetailContent({ course }: CourseDetailContentProps) {
     // same `terms` change race -- the second reads the pre-update value and clobbers it.
     //
     // The browsed term arrives via sessionStorage (src/lib/preferred-term.ts), not the
-    // URL, so a course link stays /courses/CS106A. Read in an effect because this view is
+    // URL, so a course link stays /CS106A. Read in an effect because this view is
     // server-rendered and a render-time read would desync hydration, and consumed once so
     // a later direct visit gets the default instead of a stale term.
     useEffect(() => {
