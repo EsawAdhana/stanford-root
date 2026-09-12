@@ -26,7 +26,7 @@ const SCROLL_STORAGE_KEY = 'course-list-scroll';
 
 export function CourseList() {
     useEnsureCatalog();
-  const { courses, isLoading, getSortDisplayValue, getRatingForCourse, sortBy, setSortBy, sortOrder, setSortOrder } = useFilteredCourses();
+  const { courses, hiddenByToggles, isLoading, getSortDisplayValue, getRatingForCourse, sortBy, setSortBy, sortOrder, setSortOrder } = useFilteredCourses();
   const catalogError = useCourseStore(s => s.catalogError);
   const fetchCourses = useCourseStore(s => s.fetchCourses);
   const vListRef = useRef<VListHandle>(null);
@@ -241,14 +241,31 @@ export function CourseList() {
               <Button size="sm" variant="outline" onClick={() => fetchCourses()} className="mt-1">Retry</Button>
             </div>
           ) : (
-            <div className="flex-1 flex flex-col items-center justify-center gap-3 text-muted-foreground">
+            <div className="flex-1 flex flex-col items-center justify-center gap-3 text-muted-foreground px-4">
               <SearchX size={32} className="text-muted-foreground/30" />
               <p className="text-sm font-medium">
                 {hasSearchQuery ? 'No courses match your search.' : 'No courses match your filters.'}
               </p>
-              <p className="text-xs text-muted-foreground/60">
-                {hasSearchQuery ? 'Try a different search or clearing your filters.' : 'Try adjusting your filters.'}
-              </p>
+              {/* A toggle with no chip is invisible; name it and offer the one
+                  click that undoes it, rather than "try adjusting your filters". */}
+              {hiddenByToggles.length > 0 ? (
+                <div className="flex flex-col items-center gap-2">
+                  {hiddenByToggles.map(t => (
+                    <div key={t.key} className="flex flex-col items-center gap-1.5">
+                      <p className="text-xs text-muted-foreground/60 text-center">
+                        {t.count === 1 ? '1 class is' : `${t.count.toLocaleString('en-US')} classes are`} hidden by &ldquo;{t.label}&rdquo;.
+                      </p>
+                      <Button size="sm" variant="outline" onClick={t.disable}>
+                        Turn off &ldquo;{t.label}&rdquo;
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-xs text-muted-foreground/60">
+                  {hasSearchQuery ? 'Try a different search or clearing your filters.' : 'Try adjusting your filters.'}
+                </p>
+              )}
               {hasAnyFilter && (
                 <Button size="sm" variant="outline" onClick={resetFilters} className="mt-1">Clear all filters</Button>
               )}

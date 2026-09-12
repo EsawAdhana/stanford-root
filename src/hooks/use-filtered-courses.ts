@@ -8,6 +8,45 @@ import { searchCourses } from '@/lib/search-utils';
 import { filterCourses } from '@/lib/course-filter';
 import { useSelectedTerms } from '@/hooks/use-selected-terms';
 
+/**
+ * The free-text query step, kept out of filterCourses because the list adds
+ * cross-list primary inclusion on top of plain search. Extracted so the
+ * visible list and the empty-state "hidden by" counts run the identical
+ * pipeline — a second inlined copy is how those two drift apart.
+ */
+function applyQuery(result: Course[], query: string, courses: Course[], primaryMap: Map<string, string>): Course[] {
+    if (!query) return result;
+    const beforeSearch = result;
+    result = searchCourses(result, query);
+    // If the user searched for an alternate course code (e.g. "cs 238v"), include the primary course so it shows up
+    const queryNorm = normalizeCourseId(query.trim().replace(/\s+/g, ''));
+    if (queryNorm && primaryMap.has(queryNorm)) {
+        const canonicalNorm = resolveToCanonicalPrimary(queryNorm, primaryMap);
+        // Prefer primary from beforeSearch (so it passed term/dept etc.); fallback to full list so search always finds the course
+        let primary = beforeSearch.find(c => normalizeCourseId(c.id) === canonicalNorm);
+        if (!primary) {
+            const withGrading = courses.filter(c => c.grading && c.grading.trim() !== '' && c.grading !== 'TBD');
+            primary = withGrading.find(c => normalizeCourseId(c.id) === canonicalNorm);
+        }
+        if (primary && !result.some(c => c.id === primary!.id)) result = [...result, primary];
+    }
+    return result;
+}
+
+/**
+ * Filters that narrow the list but never show up as a removable chip, so an
+ * empty list gave no clue they were responsible. Searching "cs 448" under
+ * Autumn 2026 with a 10:30 Mon/Wed class already in the schedule showed
+ * "No courses match your search" with nothing to click; the one course was
+ * hidden by Hide conflicting classes.
+ */
+export type HiddenByToggle = {
+    key: string
+    label: string
+    count: number
+    disable: () => void
+}
+
 export function useFilteredCourses() {
     const courses = useCourseStore(state => state.courses);
     const isLoading = useCourseStore(state => state.isLoading);
@@ -25,11 +64,11 @@ export function useFilteredCourses() {
     const [unitMax] = useQueryState('unitMax', parseAsInteger.withDefault(5));
     const [timeMin] = useQueryState('timeMin', parseAsInteger.withDefault(420));
     const [timeMax] = useQueryState('timeMax', parseAsInteger.withDefault(1320));
-    const [hideConflicts] = useQueryState('hideConflicts', parseAsBoolean.withDefault(true));
+    const [hideConflicts, setHideConflicts] = useQueryState('hideConflicts', parseAsBoolean.withDefault(true));
     // Closed/waitlisted and study abroad (BOSP) courses are hidden by default.
-    const [hideUnavailable] = useQueryState('hideUnavailable', parseAsBoolean.withDefault(true));
-    const [hideStudyAbroad] = useQueryState('hideStudyAbroad', parseAsBoolean.withDefault(true));
-    const [newOnly] = useQueryState('newOnly', parseAsBoolean.withDefault(false));
+    const [hideUnavailable, setHideUnavailable] = useQueryState('hideUnavailable', parseAsBoolean.withDefault(true));
+    const [hideStudyAbroad, setHideStudyAbroad] = useQueryState('hideStudyAbroad', parseAsBoolean.withDefault(true));
+    const [newOnly, setNewOnly] = useQueryState('newOnly', parseAsBoolean.withDefault(false));
     const [excludedWords] = useQueryState('exclude', parseAsArrayOf(parseAsString).withDefault([]));
     const [sortBy, setSortBy] = useQueryState('sort', parseAsString.withDefault('az'));
     const [sortOrder, setSortOrder] = useQueryState('order', parseAsString);
@@ -62,29 +101,41 @@ export function useFilteredCourses() {
             newOnly,
         }, primaryMap, cartItems);
 
-        // Filter by Query
-        if (query) {
-            const beforeSearch = result;
-            result = searchCourses(result, query);
-            // If the user searched for an alternate course code (e.g. "cs 238v"), include the primary course so it shows up
-            const queryNorm = normalizeCourseId(query.trim().replace(/\s+/g, ''));
-            if (queryNorm) {
-                if (primaryMap.has(queryNorm)) {
-                    const canonicalNorm = resolveToCanonicalPrimary(queryNorm, primaryMap);
-                    // Prefer primary from beforeSearch (so it passed term/dept etc.); fallback to full list so search always finds the course
-                    let primary = beforeSearch.find(c => normalizeCourseId(c.id) === canonicalNorm);
-                    if (!primary) {
-                        const withGrading = courses.filter(c => c.grading && c.grading.trim() !== '' && c.grading !== 'TBD');
-                        primary = withGrading.find(c => normalizeCourseId(c.id) === canonicalNorm);
-                    }
-                    if (primary && !result.some(c => c.id === primary!.id)) result = [...result, primary];
-                }
-            }
-        }
+        result = applyQuery(result, query, courses, primaryMap);
 
         // All filtering is done; this is the set we will sort (sort is the last step)
         return result;
     }, [courses, primaryMap, query, selectedDepts, selectedTerms, selectedFormats, selectedLevels, selectedGers, selectedSchools, unitMin, unitMax, timeMin, timeMax, hideConflicts, hideUnavailable, hideStudyAbroad, newOnly, cartItems, excludedWords]);
+
+    // Only runs when the list is empty, so the extra filter passes (at most one
+    // per active toggle) never touch the common case.
+    const hiddenByToggles = useMemo<HiddenByToggle[]>(() => {
+        if (filteredResult.length > 0 || courses.length === 0) return [];
+        const criteria = {
+            excludedWords, selectedDepts, selectedTerms, selectedFormats, selectedLevels,
+            selectedGers, selectedSchools, unitMin, unitMax, timeMin, timeMax,
+            hideConflicts, hideUnavailable, hideStudyAbroad, newOnly,
+        };
+        const candidates: { key: string; label: string; active: boolean; off: Partial<typeof criteria>; disable: () => void }[] = [
+            { key: 'hideConflicts', label: 'Hide conflicting classes', active: hideConflicts, off: { hideConflicts: false }, disable: () => setHideConflicts(false) },
+            { key: 'hideUnavailable', label: 'Hide closed & waitlisted', active: hideUnavailable, off: { hideUnavailable: false }, disable: () => setHideUnavailable(false) },
+            { key: 'hideStudyAbroad', label: 'Hide study abroad', active: hideStudyAbroad, off: { hideStudyAbroad: false }, disable: () => setHideStudyAbroad(false) },
+            { key: 'newOnly', label: 'New courses only', active: newOnly, off: { newOnly: false }, disable: () => setNewOnly(null) },
+        ];
+        const out: HiddenByToggle[] = [];
+        for (const c of candidates) {
+            if (!c.active) continue;
+            const count = applyQuery(
+                filterCourses(courses, { ...criteria, ...c.off }, primaryMap, cartItems),
+                query, courses, primaryMap,
+            ).length;
+            if (count > 0) out.push({ key: c.key, label: c.label, count, disable: c.disable });
+        }
+        return out;
+    }, [filteredResult, courses, primaryMap, cartItems, query, excludedWords, selectedDepts, selectedTerms,
+        selectedFormats, selectedLevels, selectedGers, selectedSchools, unitMin, unitMax, timeMin, timeMax,
+        hideConflicts, hideUnavailable, hideStudyAbroad, newOnly,
+        setHideConflicts, setHideUnavailable, setHideStudyAbroad, setNewOnly]);
 
     // Precompute hrs/unit, hrs/week and rating per course. Figures are pooled
     // across every code a cross-listed class is listed under (mean, not
@@ -213,5 +264,5 @@ export function useFilteredCourses() {
         setSortOrder(getDefaultOrderForSort(v));
     }, [setSortBy, setSortOrder, getDefaultOrderForSort]);
 
-    return { courses: displayCourses, isLoading, isEnriching, getSortDisplayValue, getRatingForCourse, sortBy, setSortBy: handleSetSortBy, sortOrder: effectiveSortOrder, setSortOrder };
+    return { courses: displayCourses, hiddenByToggles, isLoading, isEnriching, getSortDisplayValue, getRatingForCourse, sortBy, setSortBy: handleSetSortBy, sortOrder: effectiveSortOrder, setSortOrder };
 }
