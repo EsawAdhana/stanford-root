@@ -193,7 +193,10 @@ function buildChecks(criteria: CourseFilterCriteria, cartItems: CartItem[], newC
     conflicts = (c) => {
       if (!c.sections || c.sections.length === 0) return true
       let sectionsToCheck = c.sections
-      if (termsSet.size > 0) {
+      // hasTermFilter, not termsSet.size: the "any term" selection is the
+      // sentinel ['any'], which no section's term equals, so gating on size
+      // emptied sectionsToCheck and passed every course through.
+      if (hasTermFilter) {
         sectionsToCheck = sectionsToCheck.filter(s => termsSet.has(s.term))
       }
       if (sectionsToCheck.length === 0) return true
@@ -215,7 +218,8 @@ function buildChecks(criteria: CourseFilterCriteria, cartItems: CartItem[], newC
     ? (c) => {
         if (!c.sections || c.sections.length === 0) return true
         let sectionsToCheck = c.sections
-        if (termsSet.size > 0) {
+        // See the conflicts check: gate on hasTermFilter, not termsSet.size.
+        if (hasTermFilter) {
           sectionsToCheck = sectionsToCheck.filter(s => termsSet.has(s.term))
         }
         if (sectionsToCheck.length === 0) return true
