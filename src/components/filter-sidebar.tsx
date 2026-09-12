@@ -253,6 +253,16 @@ export function FilterSidebar() {
             if (school) schools.set(school, (schools.get(school) || 0) + 1);
         });
 
+        // A selected value whose count drops to zero still has to render, or the
+        // only way to undo it is the chip row: with a conflicting class in the
+        // schedule, the sidebar dropped the Autumn 2026 checkbox while its own
+        // chip was still showing it as active. Departments and schools already
+        // render selections independently of the counts; these four did not.
+        selectedTerms.forEach(t => { if (t !== 'any' && !terms.has(t)) terms.set(t, 0); });
+        selectedFormats.forEach(f => { if (!formats.has(f)) formats.set(f, 0); });
+        selectedLevels.forEach(l => { if (!levels.has(l)) levels.set(l, 0); });
+        selectedGers.forEach(g => { if (!gers.has(g)) gers.set(g, 0); });
+
         return {
             depts: Array.from(depts.entries())
                 .map(([code, count]) => ({
@@ -267,7 +277,7 @@ export function FilterSidebar() {
             gers: Array.from(gers.entries()).sort((a, b) => a[0].localeCompare(b[0])),
             schools,
         };
-    }, [searchedFacetLists]);
+    }, [searchedFacetLists, selectedTerms, selectedFormats, selectedLevels, selectedGers]);
 
     const filteredDepts = useMemo(() => {
         if (!deptQuery) return facets.depts;
