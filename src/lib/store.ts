@@ -26,7 +26,7 @@ type CourseStore = {
 // is the ExploreCourses -> Navigator switch, which reshaped every meeting day
 // ("\n\tMon\n\tWed" -> "Monday, Wednesday") and time ("1:30:00 PM-2:50:00 PM"
 // -> "1:30 PM - 2:50 PM"), and is what makes weekend sections visible at all.
-export const CACHE_VERSION = 18
+export const CACHE_VERSION = 19
 const CACHE_TTL = 1000 * 60 * 30 // 30 minutes
 const STALE_MAX_AGE = 1000 * 60 * 60 * 24 // 24 hours
 const IDB_DB = 'root-cache'

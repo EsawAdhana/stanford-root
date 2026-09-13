@@ -119,6 +119,49 @@ export function percentileRanks(scores) {
 }
 
 /**
+ * A department needs this many rated courses before it is its own peer group.
+ *
+ * 197 subjects have at least one rated course and 85 of them have ten or fewer, so an
+ * unconditional within-department rank would hand a two-course subject a 50th and a
+ * 100th percentile and call that a ranking. Below the floor the course keeps its rank
+ * against every rated course at Stanford, and the label says which peer group it used.
+ */
+export const DEPARTMENT_RANK_MIN = 10
+
+/**
+ * Percentile each score within its own scope, falling back to the whole corpus for
+ * scopes that are too small to rank inside.
+ *
+ * Returns the scope each rank was actually computed in -- null for the fallback -- so
+ * the label can never claim a peer group the number was not measured against.
+ *
+ * @param {Array<{ scope: string | null, score: number }>} items
+ * @param {number} minScopeSize
+ * @returns {Array<{ pct: number, scope: string | null }>}
+ */
+export function scopedPercentileRanks(items, minScopeSize = DEPARTMENT_RANK_MIN) {
+    const sizes = new Map()
+    for (const item of items) sizes.set(item.scope, (sizes.get(item.scope) || 0) + 1)
+
+    const corpusRanks = percentileRanks(items.map(item => item.score))
+    const out = new Array(items.length)
+    const indexesByScope = new Map()
+    items.forEach((item, index) => {
+        if (item.scope == null || (sizes.get(item.scope) || 0) < minScopeSize) {
+            out[index] = { pct: corpusRanks[index], scope: null }
+            return
+        }
+        if (!indexesByScope.has(item.scope)) indexesByScope.set(item.scope, [])
+        indexesByScope.get(item.scope).push(index)
+    })
+    for (const [scope, indexes] of indexesByScope) {
+        const ranks = percentileRanks(indexes.map(index => items[index].score))
+        indexes.forEach((index, i) => { out[index] = { pct: ranks[i], scope } })
+    }
+    return out
+}
+
+/**
  * Adjust a set of comparable observations for sample size, then rank them against
  * each other. This is the whole pipeline for one question type.
  *
@@ -158,11 +201,24 @@ export function round3(value) {
  * and anything tied with it. Clamped to 1..99 because no course ranks above all courses
  * (itself included) and none ranks above none of them.
  *
+ * The peer group is always named. A department rank and a Stanford-wide rank are
+ * different numbers on the same 1-99 scale, so "62%" alone is ambiguous between the two
+ * and a reader cannot tell which one they are looking at.
+ *
  * @param {number | null | undefined} pct
+ * @param {string | null} [scope] subject the rank was computed in, null = all of Stanford
  */
-export function rankLabel(pct) {
+export function rankLabel(pct, scope) {
     const share = rankShare(pct)
-    return share == null ? null : `Ranks higher than ${share}% of courses`
+    return share == null ? null : `Ranks higher than ${share}% of ${rankScopeLabel(scope)}`
+}
+
+/**
+ * Names the peer group a percentile was measured against.
+ * @param {string | null} [scope]
+ */
+export function rankScopeLabel(scope) {
+    return scope ? `${scope} courses` : 'all Stanford courses'
 }
 
 /**

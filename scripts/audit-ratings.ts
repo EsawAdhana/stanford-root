@@ -15,7 +15,7 @@ import { readFileSync } from 'node:fs'
 import { resolveCrossListRating, normalizeCourseId, buildCrossListGroups, deriveEvalPairings } from '../src/lib/utils'
 import { useEvaluationStore } from '../src/lib/evaluation-store'
 import { toCourseEvaluation, type EvaluationRow } from '../src/lib/evaluation-row'
-import { addRatingCounts, pooledMean, percentileRanks, adjustAndRank, round3, headlineSampleSize } from '../src/lib/quality-score.mjs'
+import { addRatingCounts, pooledMean, percentileRanks, adjustAndRank, round3, headlineSampleSize, scopedPercentileRanks, DEPARTMENT_RANK_MIN } from '../src/lib/quality-score.mjs'
 import { categorizeQuestion, courseLevelSignature, dedupeCourseLevelReports } from '../src/lib/eval-reports.mjs'
 import type { Course, CourseEvaluation } from '../src/types/course'
 
@@ -350,10 +350,47 @@ for (const id of rated) {
   overallScore.set(id, round3(parts.reduce((s, p) => s + p.score, 0) / parts.length))
   overallN.set(id, headlineSampleSize(breakdown.get(id)!) as number)
 }
-const overallPct = new Map(rated.map((id, i) => [id, percentileRanks(rated.map(x => overallScore.get(x)!))[i]]))
+
+// Scores are per CLASS; percentiles are per LISTING. A course is ranked against its own
+// department, and a cross-listed class is listed in one department per code -- so CSRE
+// 10 and TAPS 10 carry the same score and two different ranks. Departments under
+// DEPARTMENT_RANK_MIN rated listings fall back to a Stanford-wide rank, recorded as a
+// null scope so nothing downstream can call it a department rank.
+type Rank = { pct: number; scope: string | null }
+const pairKey = (subject: unknown, canonical: string) => `${subject ?? null}||${canonical}`
+const listings: { subject: string | null; canonical: string; key: string }[] = []
 {
-  const pcts = percentileRanks(rated.map(id => overallScore.get(id)!))
-  rated.forEach((id, i) => overallPct.set(id, pcts[i]))
+  const seen = new Set<string>()
+  for (const c of courses) {
+    const canonical = groupOfCourse.get(c.id) ?? c.id
+    const subject = (c.subject as string) || null
+    const key = pairKey(subject, canonical)
+    if (seen.has(key)) continue
+    seen.add(key)
+    listings.push({ subject, canonical, key })
+  }
+}
+const rankListings = (scoreOf: (canonical: string) => number | undefined) => {
+  const pairs = listings.filter(l => scoreOf(l.canonical) != null)
+  const ranks = scopedPercentileRanks(pairs.map(l => ({ scope: l.subject, score: scoreOf(l.canonical)! })))
+  return new Map<string, Rank>(pairs.map((l, i) => [l.key, ranks[i]]))
+}
+const overallPct = rankListings(id => overallScore.get(id))
+const catPct = new Map<Cat, Map<string, Rank>>(RATING_CATEGORIES.map(key =>
+  [key, rankListings(id => breakdown.get(id)?.[key]?.score)]))
+
+/** The stored rating_breakdown for one listing: class scores, this listing's ranks. */
+const breakdownFor = (key: string, canonical: string) => {
+  const parts = breakdown.get(canonical)
+  if (!parts) return undefined
+  const out: Record<string, { score: number; n: number; pct: number; scope: string | null }> = {}
+  for (const cat of RATING_CATEGORIES) {
+    const stat = parts[cat]
+    if (!stat) continue
+    const rank = catPct.get(cat)!.get(key)!
+    out[cat] = { score: stat.score, n: stat.n, pct: rank.pct, scope: rank.scope }
+  }
+  return out
 }
 
 info(`${rated.length} rated classes; ` + RATING_CATEGORIES.map(k =>
@@ -362,14 +399,21 @@ info(`${rated.length} rated classes; ` + RATING_CATEGORIES.map(k =>
 {
   const bad: string[] = []
   for (const id of rated) {
-    const q = overallScore.get(id)!, n = overallN.get(id)!, pct = overallPct.get(id)!
+    const q = overallScore.get(id)!, n = overallN.get(id)!
     if (!(q >= 1 && q <= 5)) bad.push(`${id} quality=${q}`)
     if (!(n > 0) || !Number.isInteger(n)) bad.push(`${id} quality_n=${n}`)
-    if (!(pct >= 1 && pct <= 100) || !Number.isInteger(pct)) bad.push(`${id} quality_pct=${pct}`)
-    for (const [cat, s] of Object.entries(breakdown.get(id)!) as [string, { score: number; n: number; pct: number }][]) {
+    for (const [cat, s] of Object.entries(breakdown.get(id)!) as [string, { score: number; n: number }][]) {
       if (!(s.score >= 1 && s.score <= 5)) bad.push(`${id}.${cat} score=${s.score}`)
       if (!(s.n > 0) || !Number.isInteger(s.n)) bad.push(`${id}.${cat} n=${s.n}`)
-      if (!(s.pct >= 1 && s.pct <= 100)) bad.push(`${id}.${cat} pct=${s.pct}`)
+    }
+  }
+  for (const { key, subject } of listings) {
+    for (const [label, rank] of [['quality_pct', overallPct.get(key)],
+      ...RATING_CATEGORIES.map(cat => [`${cat}.pct`, catPct.get(cat)!.get(key)] as const)] as [string, Rank | undefined][]) {
+      if (!rank) continue
+      if (!(rank.pct >= 1 && rank.pct <= 100) || !Number.isInteger(rank.pct)) bad.push(`${key} ${label}=${rank.pct}`)
+      // A scope that is not this listing's own subject would rank it against strangers.
+      if (rank.scope != null && rank.scope !== subject) bad.push(`${key} ${label} scoped to ${rank.scope}`)
     }
   }
   check('every score in 1-5, every n a positive integer, every percentile in 1-100', bad)
@@ -421,7 +465,13 @@ info(`${rated.length} rated classes; ` + RATING_CATEGORIES.map(k =>
   // A percentile that is not a strict function of the displayed score is a visible
   // weirdism: two courses showing the same number with different ranks.
   const bad: string[] = []
-  const verify = (label: string, pairs: { id: string; score: number; pct: number }[]) => {
+  /**
+   * `population` is the set the percentile was measured against, which is NOT `pairs`
+   * for the Stanford-wide fallback: those listings are ranked against every rated
+   * listing, small departments and large ones alike, and checking them against only
+   * their fellow fallbacks would demand a share of the wrong denominator.
+   */
+  const verify = (label: string, pairs: { id: string; score: number; pct: number }[], population?: number[]) => {
     const byScore = new Map<number, Set<number>>()
     for (const p of pairs) {
       if (!byScore.has(p.score)) byScore.set(p.score, new Set())
@@ -435,7 +485,7 @@ info(`${rated.length} rated classes; ` + RATING_CATEGORIES.map(k =>
       if (sorted[i].pct < sorted[i - 1].pct) bad.push(`${label}: ${sorted[i].id} not monotonic`)
     }
     // And it must be a real percentile: the share at or below must round to it.
-    const scores = sorted.map(p => p.score)
+    const scores = population ?? sorted.map(p => p.score)
     for (const p of pairs) {
       let atOrBelow = 0
       for (const s of scores) if (s <= p.score) atOrBelow++
@@ -443,12 +493,54 @@ info(`${rated.length} rated classes; ` + RATING_CATEGORIES.map(k =>
       if (want !== p.pct) { bad.push(`${label}: score ${p.score} pct ${p.pct}, true share ${atOrBelow}/${scores.length} -> ${want}`); break }
     }
   }
-  verify('overall', rated.map(id => ({ id, score: overallScore.get(id)!, pct: overallPct.get(id)! })))
-  for (const key of RATING_CATEGORIES) {
-    verify(key, rated.filter(id => breakdown.get(id)![key])
-      .map(id => ({ id, score: breakdown.get(id)![key]!.score, pct: breakdown.get(id)![key]!.pct })))
+  const FALLBACK = '(all Stanford)'
+  // Each peer group is its own population, so the checks run once per scope: a CS rank
+  // and a Stanford-wide rank are not comparable and pooling them would fail spuriously.
+  const byScope = (ranks: Map<string, Rank>, scoreOf: (canonical: string) => number | undefined) => {
+    const groupsOfPairs = new Map<string, { id: string; score: number; pct: number }[]>()
+    for (const l of listings) {
+      const rank = ranks.get(l.key)
+      const score = scoreOf(l.canonical)
+      if (!rank || score == null) continue
+      const bucket = rank.scope ?? FALLBACK
+      if (!groupsOfPairs.has(bucket)) groupsOfPairs.set(bucket, [])
+      groupsOfPairs.get(bucket)!.push({ id: l.key, score, pct: rank.pct })
+    }
+    return groupsOfPairs
   }
-  check('percentile is a monotonic, tie-consistent, true share of the displayed score', bad)
+  const everyScore = (buckets: Map<string, { score: number }[]>) =>
+    [...buckets.values()].flat().map(p => p.score)
+  {
+    const buckets = byScope(overallPct, id => overallScore.get(id))
+    const corpus = everyScore(buckets)
+    for (const [scope, pairs] of buckets) verify(`overall/${scope}`, pairs, scope === FALLBACK ? corpus : undefined)
+  }
+  for (const key of RATING_CATEGORIES) {
+    const buckets = byScope(catPct.get(key)!, id => breakdown.get(id)?.[key]?.score)
+    const corpus = everyScore(buckets)
+    for (const [scope, pairs] of buckets) verify(`${key}/${scope}`, pairs, scope === FALLBACK ? corpus : undefined)
+  }
+  check('percentile is a monotonic, tie-consistent, true share within its own peer group', bad)
+
+  {
+    // The floor is what keeps a two-course department from handing out 50th and 100th
+    // percentiles, so it has to hold in the output and not just in the helper.
+    const floorBad: string[] = []
+    const sizes = new Map<string, number>()
+    for (const l of listings) {
+      if (overallPct.get(l.key) == null) continue
+      sizes.set(l.subject ?? '', (sizes.get(l.subject ?? '') || 0) + 1)
+    }
+    for (const l of listings) {
+      const rank = overallPct.get(l.key)
+      if (!rank) continue
+      const size = sizes.get(l.subject ?? '') || 0
+      if (rank.scope == null && size >= DEPARTMENT_RANK_MIN) floorBad.push(`${l.key} fell back with ${size} rated listings`)
+      if (rank.scope != null && size < DEPARTMENT_RANK_MIN) floorBad.push(`${l.key} ranked in a department of ${size}`)
+    }
+    check(`departments with ${DEPARTMENT_RANK_MIN}+ rated listings rank in-department, smaller ones fall back`,
+      floorBad, `${[...sizes.values()].filter(n => n >= DEPARTMENT_RANK_MIN).length} departments qualify`)
+  }
 }
 
 {
@@ -486,8 +578,10 @@ for (const c of courses) {
   const canonical = groupOfCourse.get(c.id) ?? c.id
   c.quality = overallScore.get(canonical)
   c.qualityN = overallN.get(canonical)
-  c.qualityPct = overallPct.get(canonical)
-  c.ratingBreakdown = breakdown.get(canonical) as Course['ratingBreakdown']
+  const key = pairKey(c.subject || null, canonical)
+  c.qualityPct = overallPct.get(key)?.pct
+  c.rankScope = overallPct.get(key)?.scope ?? undefined
+  c.ratingBreakdown = breakdownFor(key, canonical) as Course['ratingBreakdown']
 }
 const groupMembers = (id: string) => groups.get(groupOfCourse.get(id) ?? id) ?? [id]
 
@@ -508,13 +602,28 @@ const groupMembers = (id: string) => groups.get(groupOfCourse.get(id) ?? id) ?? 
 }
 
 {
+  // A cross-listed class has ONE set of scores and one rank per department it is listed
+  // in, so the scores must match across listings while the ranks are allowed to differ
+  // -- but only where the departments do.
+  const scoresOnly = (bd: Course['ratingBreakdown']) => stableJson(Object.fromEntries(
+    Object.entries(bd || {}).map(([cat, s]) => [cat, { score: s!.score, n: s!.n }])))
   const bad: string[] = []
+  const rankBad: string[] = []
   for (const [canonical, members] of groups) {
-    const prints = new Set(members.filter(id => courseById.get(id)?.quality != null)
-      .map(id => stableJson(courseById.get(id)!.ratingBreakdown)))
-    if (prints.size > 1) bad.push(`${canonical}: ${prints.size} different breakdowns`)
+    const rated = members.filter(id => courseById.get(id)?.quality != null).map(id => courseById.get(id)!)
+    if (new Set(rated.map(c => scoresOnly(c.ratingBreakdown))).size > 1) bad.push(`${canonical}: differing scores`)
+    const bySubject = new Map<string, Set<string>>()
+    for (const c of rated) {
+      const print = `${c.qualityPct}|${c.rankScope ?? null}|${stableJson(c.ratingBreakdown)}`
+      if (!bySubject.has(c.subject)) bySubject.set(c.subject, new Set())
+      bySubject.get(c.subject)!.add(print)
+    }
+    for (const [subject, prints] of bySubject) {
+      if (prints.size > 1) rankBad.push(`${canonical}/${subject}: ${prints.size} different ranks in one department`)
+    }
   }
-  check('all rated listings within a group hold identical breakdowns', bad)
+  check('all rated listings within a group hold identical scores', bad)
+  check('two listings of one class in the same department hold identical ranks', rankBad)
 }
 
 {
@@ -689,8 +798,11 @@ section('5. Prebuilt catalog dump')
       checked++
       if (Number(row.quality) !== wantQ) bad.push(`${id} dump quality=${row.quality} want ${wantQ}`)
       if (Number(row.quality_n) !== overallN.get(canonical)) bad.push(`${id} dump quality_n=${row.quality_n} want ${overallN.get(canonical)}`)
-      if (Number(row.quality_pct) !== overallPct.get(canonical)) bad.push(`${id} dump quality_pct=${row.quality_pct} want ${overallPct.get(canonical)}`)
-      if (stableJson(row.rating_breakdown) !== stableJson(breakdown.get(canonical))) bad.push(`${id} dump breakdown differs`)
+      const key = pairKey(row.subject || null, canonical)
+      const rank = overallPct.get(key)
+      if (Number(row.quality_pct) !== rank?.pct) bad.push(`${id} dump quality_pct=${row.quality_pct} want ${rank?.pct}`)
+      if ((row.rank_scope ?? null) !== (rank?.scope ?? null)) bad.push(`${id} dump rank_scope=${row.rank_scope} want ${rank?.scope}`)
+      if (stableJson(row.rating_breakdown) !== stableJson(breakdownFor(key, canonical))) bad.push(`${id} dump breakdown differs`)
     }
   } catch (e) {
     bad.push(`could not read dump: ${(e as Error).message}`)
@@ -707,7 +819,8 @@ section('5. Prebuilt catalog dump')
       if (row.quality != null && row.quality_n == null) bad.push(`${row.course_id} quality without quality_n`)
       if (row.quality_pct != null && row.quality == null) bad.push(`${row.course_id} percentile without a score`)
       if (row.rating_breakdown && row.quality == null) bad.push(`${row.course_id} breakdown without a score`)
-      if (row.quality == null && (row.quality_n != null || row.quality_pct != null)) bad.push(`${row.course_id} orphaned rating fields`)
+      if (row.quality == null && (row.quality_n != null || row.quality_pct != null || row.rank_scope != null)) bad.push(`${row.course_id} orphaned rating fields`)
+      if (row.rank_scope != null && row.rank_scope !== row.subject) bad.push(`${row.course_id} rank_scope=${row.rank_scope} is not its own subject`)
     }
   } catch { /* reported above */ }
   check('dump rows have no half-populated rating fields', bad)

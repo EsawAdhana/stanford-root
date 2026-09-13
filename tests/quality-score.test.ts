@@ -1,7 +1,8 @@
 import { describe, it, expect } from 'vitest'
 import {
-  pooledMean, addRatingCounts, percentileRanks, rankLabel, rankShare,
+  pooledMean, addRatingCounts, percentileRanks, rankLabel, rankShare, rankScopeLabel,
   estimatePrior, shrinkToPrior, adjustAndRank, headlineSampleSize,
+  scopedPercentileRanks, DEPARTMENT_RANK_MIN,
 } from '@/lib/quality-score.mjs'
 
 describe('pooledMean', () => {
@@ -128,25 +129,25 @@ describe('percentileRanks', () => {
 
 describe('rankLabel', () => {
   it('reads in one fixed direction that tracks the rating', () => {
-    expect(rankLabel(71)).toBe('Ranks higher than 71% of courses')
-    expect(rankLabel(16)).toBe('Ranks higher than 16% of courses')
-    expect(rankLabel(2)).toBe('Ranks higher than 2% of courses')
+    expect(rankLabel(71)).toBe('Ranks higher than 71% of all Stanford courses')
+    expect(rankLabel(16)).toBe('Ranks higher than 16% of all Stanford courses')
+    expect(rankLabel(2)).toBe('Ranks higher than 2% of all Stanford courses')
   })
 
   it('does not flip framing across the median', () => {
     // The old label called these "Top 50%" and "Bottom 49%" -- opposite-sounding
     // descriptions of two nearly identical courses.
-    expect(rankLabel(50)).toBe('Ranks higher than 50% of courses')
-    expect(rankLabel(49)).toBe('Ranks higher than 49% of courses')
+    expect(rankLabel(50)).toBe('Ranks higher than 50% of all Stanford courses')
+    expect(rankLabel(49)).toBe('Ranks higher than 49% of all Stanford courses')
   })
 
   it('never claims a course ranks above every course, itself included', () => {
-    expect(rankLabel(100)).toBe('Ranks higher than 99% of courses')
+    expect(rankLabel(100)).toBe('Ranks higher than 99% of all Stanford courses')
   })
 
   it('never claims a course ranks above none of them', () => {
-    expect(rankLabel(0)).toBe('Ranks higher than 1% of courses')
-    expect(rankLabel(1)).toBe('Ranks higher than 1% of courses')
+    expect(rankLabel(0)).toBe('Ranks higher than 1% of all Stanford courses')
+    expect(rankLabel(1)).toBe('Ranks higher than 1% of all Stanford courses')
   })
 
   it('is monotonic and stays in 1..99 across the whole range', () => {
@@ -371,7 +372,7 @@ describe('rankShare', () => {
 
   it('stays in step with rankLabel', () => {
     for (let pct = 0; pct <= 100; pct++) {
-      expect(rankLabel(pct)).toBe(`Ranks higher than ${rankShare(pct)}% of courses`)
+      expect(rankLabel(pct)).toBe(`Ranks higher than ${rankShare(pct)}% of all Stanford courses`)
     }
   })
 
@@ -379,5 +380,106 @@ describe('rankShare', () => {
     expect(rankShare(null)).toBeNull()
     expect(rankShare(undefined)).toBeNull()
     expect(rankShare(NaN)).toBeNull()
+  })
+})
+
+describe('rankScopeLabel', () => {
+  it('names the department when the rank was measured inside one', () => {
+    expect(rankScopeLabel('CS')).toBe('CS courses')
+    expect(rankScopeLabel('AFRICAAM')).toBe('AFRICAAM courses')
+  })
+
+  it('says so out loud when the rank is Stanford-wide, rather than going vague', () => {
+    // "of courses" was the old wording and is now ambiguous between the two peer groups.
+    expect(rankScopeLabel(null)).toBe('all Stanford courses')
+    expect(rankScopeLabel(undefined)).toBe('all Stanford courses')
+    expect(rankScopeLabel('')).toBe('all Stanford courses')
+  })
+
+  it('is what rankLabel renders, so the two can never disagree', () => {
+    expect(rankLabel(71, 'CS')).toBe('Ranks higher than 71% of CS courses')
+    expect(rankLabel(71, null)).toBe(`Ranks higher than 71% of ${rankScopeLabel(null)}`)
+  })
+})
+
+describe('scopedPercentileRanks', () => {
+  /** n courses in one department, scores 1..n so every rank is distinct. */
+  const dept = (scope: string, n: number, offset = 0) =>
+    Array.from({ length: n }, (_, i) => ({ scope, score: offset + i + 1 }))
+
+  it('ranks a course against its own department, not the corpus', () => {
+    // BIG's worst course beats every SMALL course on raw score, but it is still last
+    // in BIG -- which is the whole point of the change.
+    const items = [...dept('BIG', 10, 100), ...dept('OTHER', 10)]
+    const out = scopedPercentileRanks(items)
+    expect(out[0]).toEqual({ pct: 10, scope: 'BIG' })
+    expect(out[9]).toEqual({ pct: 100, scope: 'BIG' })
+    expect(out[10]).toEqual({ pct: 10, scope: 'OTHER' })
+  })
+
+  it('falls back to the corpus for a department below the floor, and says so', () => {
+    const items = [...dept('BIG', 10), { scope: 'TINY', score: 0.5 }, { scope: 'TINY', score: 99 }]
+    const out = scopedPercentileRanks(items)
+    expect(out.at(-2)).toEqual({ pct: 8, scope: null })   // 1 of 12 at or below
+    expect(out.at(-1)).toEqual({ pct: 100, scope: null }) // 12 of 12
+    // A two-course department would otherwise have handed these 50 and 100.
+    expect(out.at(-2)!.pct).not.toBe(50)
+  })
+
+  it('treats the floor as inclusive, so exactly DEPARTMENT_RANK_MIN qualifies', () => {
+    const at = scopedPercentileRanks(dept('EDGE', DEPARTMENT_RANK_MIN))
+    const below = scopedPercentileRanks(dept('EDGE', DEPARTMENT_RANK_MIN - 1))
+    expect(at.every(r => r.scope === 'EDGE')).toBe(true)
+    expect(below.every(r => r.scope === null)).toBe(true)
+  })
+
+  it('counts the fallback courses in the corpus ranking they fall back to', () => {
+    // The corpus is every item, small departments included -- dropping them would make
+    // the fallback rank describe a population the reader was never shown.
+    const items = [...dept('BIG', 10, 10), { scope: 'TINY', score: 0 }]
+    const out = scopedPercentileRanks(items)
+    expect(out.at(-1)).toEqual({ pct: 9, scope: null }) // 1 of 11, not 1 of 10
+  })
+
+  it('gives tied scores in the same department the same rank', () => {
+    const items = Array.from({ length: 12 }, () => ({ scope: 'TIE', score: 4.2 }))
+    expect(new Set(scopedPercentileRanks(items).map(r => r.pct))).toEqual(new Set([100]))
+  })
+
+  it('ranks the same score differently in two departments, which is the point', () => {
+    const items = [
+      ...dept('STRONG', 10, 10),                 // 11..20
+      { scope: 'STRONG', score: 15.5 },
+      ...dept('WEAK', 10),                       // 1..10
+      { scope: 'WEAK', score: 15.5 },
+    ]
+    const out = scopedPercentileRanks(items)
+    expect(out[10].scope).toBe('STRONG')
+    expect(out[21].scope).toBe('WEAK')
+    expect(out[21].pct).toBeGreaterThan(out[10].pct)
+    expect(out[21].pct).toBe(100)
+  })
+
+  it('does not let a null scope be grouped as its own department', () => {
+    const items = [...dept('BIG', 10), ...Array.from({ length: 20 }, () => ({ scope: null as unknown as string, score: 50 }))]
+    const out = scopedPercentileRanks(items)
+    expect(out.slice(10).every(r => r.scope === null)).toBe(true)
+    expect(out.slice(0, 10).every(r => r.scope === 'BIG')).toBe(true)
+  })
+
+  it('returns one entry per input, in input order, for an empty and a single input', () => {
+    expect(scopedPercentileRanks([])).toEqual([])
+    expect(scopedPercentileRanks([{ scope: 'X', score: 3 }])).toEqual([{ pct: 100, scope: null }])
+  })
+
+  it('matches percentileRanks exactly when nothing clears the floor', () => {
+    const items = [{ scope: 'A', score: 3 }, { scope: 'B', score: 5 }, { scope: 'A', score: 4 }]
+    const flat = percentileRanks(items.map(i => i.score))
+    expect(scopedPercentileRanks(items).map(r => r.pct)).toEqual(flat)
+  })
+
+  it('honours an explicit floor of 1 so a caller can force department ranking', () => {
+    const out = scopedPercentileRanks([{ scope: 'TINY', score: 1 }, { scope: 'TINY', score: 2 }], 1)
+    expect(out).toEqual([{ pct: 50, scope: 'TINY' }, { pct: 100, scope: 'TINY' }])
   })
 })

@@ -17,10 +17,14 @@ import { rowToCourse } from '@/lib/course-mapper'
 // per-category scores, so a v16 cache holds both a stale number and no breakdown.
 // v18 added crossListWith, which the browser needs to group paired undergrad/grad
 // listings; without it a v17 cache groups them wrongly and shows the wrong rating.
-const CACHED_COURSE_FIELDS_AT_V18 = [
+// v19 added rankScope and redefined every percentile: qualityPct and each
+// ratingBreakdown pct are now ranked within the course's own department where that
+// department is big enough. A v18 cache holds Stanford-wide percentiles with no scope,
+// which the label would then describe as department ranks.
+const CACHED_COURSE_FIELDS_AT_V19 = [
   'id', 'subject', 'code', 'title', 'description', 'units', 'grading',
   'instructors', 'terms', 'sections', 'hours', 'quality', 'qualityPct',
-  'qualityN', 'ratingBreakdown', 'crossListWith', 'isNew',
+  'rankScope', 'qualityN', 'ratingBreakdown', 'crossListWith', 'isNew',
 ].sort()
 
 describe('catalog cache version', () => {
@@ -29,7 +33,7 @@ describe('catalog cache version', () => {
       course_id: 'CS106B', subject: 'CS', code: '106B', title: 'Programming Abstractions',
       description: 'x', units: '5', grading: 'Letter (ABCD/NP)', instructors: [], terms: [],
       sections: [], hours: 10, quality: 4.32, quality_pct: 61, quality_n: 840,
-      rating_breakdown: { quality: { score: 4.4, n: 840, pct: 66 } },
+      rating_breakdown: { quality: { score: 4.4, n: 840, pct: 66, scope: 'CS' } }, rank_scope: 'CS',
       cross_list_with: ['CS106X'], difficulty: 2, isNew: false,
     })).sort()
 
@@ -37,7 +41,7 @@ describe('catalog cache version', () => {
       shape,
       `Course gained or lost a field. Bump CACHE_VERSION (currently ${CACHE_VERSION}) ` +
       'and update this list, or returning visitors keep a catalog without it.',
-    ).toEqual(CACHED_COURSE_FIELDS_AT_V18)
-    expect(CACHE_VERSION).toBeGreaterThanOrEqual(18)
+    ).toEqual(CACHED_COURSE_FIELDS_AT_V19)
+    expect(CACHE_VERSION).toBeGreaterThanOrEqual(19)
   })
 })

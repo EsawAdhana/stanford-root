@@ -18,7 +18,7 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs'
 import { chromium } from '@playwright/test'
 import { createClient } from '@supabase/supabase-js'
-import { addRatingCounts, pooledMean, percentileRanks, adjustAndRank, round3, headlineSampleSize } from '../src/lib/quality-score.mjs'
+import { addRatingCounts, pooledMean, estimatePrior, shrinkToPrior, scopedPercentileRanks, round3, headlineSampleSize } from '../src/lib/quality-score.mjs'
 import { buildCrossListGroups, deriveEvalPairings, normalizeCourseId } from '../src/lib/cross-list.mjs'
 import { courseLevelSignature, normalizeTerm, reportIdentity } from '../src/lib/eval-reports.mjs'
 
@@ -383,7 +383,7 @@ async function refreshMetrics(supabase) {
     console.log('Recomputing course metrics...')
     const [evaluations, courses] = await Promise.all([
         loadAll(supabase, 'evaluations', 'course_id,course_code,term,instructor,questions'),
-        loadAll(supabase, 'courses', 'course_id,title,units,quality,quality_n,quality_pct,rating_breakdown'),
+        loadAll(supabase, 'courses', 'course_id,subject,title,units,quality,quality_n,quality_pct,rank_scope,rating_breakdown'),
     ])
     const courseUnits = new Map(courses.map(course => [course.course_id, units(course.units)]))
 
@@ -456,11 +456,38 @@ async function refreshMetrics(supabase) {
         }
     }
 
+    // Every (department, class) pair that carries a score, in a fixed order. Ranking is
+    // per LISTING because a course is ranked against its own department, and a
+    // cross-listed class belongs to one department per listing -- CSRE 10 is ranked
+    // against CSRE while its TAPS 10 listing is ranked against TAPS, off the same score.
+    // De-duplicated per department so a class listed twice inside one department (an
+    // undergrad/grad pair) is still one entry in that department's distribution.
+    const pairsWithScore = (hasScore) => {
+        const pairs = []
+        const seen = new Set()
+        for (const course of courses) {
+            const canonical = groupOfCourse.get(course.course_id) ?? course.course_id
+            const subject = course.subject || null
+            if (!hasScore(canonical)) continue
+            const key = `${subject}||${canonical}`
+            if (seen.has(key)) continue
+            seen.add(key)
+            pairs.push({ subject, canonical, key })
+        }
+        return pairs
+    }
+
     // Adjust and rank each category against its own corpus, one class = one entry.
+    //
+    // The SHRINKAGE prior stays Stanford-wide while the RANK is per department: the
+    // prior answers "how much should I distrust 4 responses", which is a property of
+    // the question and not of the department, and re-estimating it inside a 12-course
+    // department would fit the corpus average to twelve classes.
     const breakdown = new Map()
     for (const key of RATING_CATEGORIES) {
-        const ids = []
+        const scoreOf = new Map()
         const observations = []
+        const ids = []
         for (const [canonical, counts] of pooledByCategory.get(key)) {
             const pooled = pooledMean(counts)
             if (!pooled) continue
@@ -468,14 +495,30 @@ async function refreshMetrics(supabase) {
             observations.push(pooled)
         }
         if (ids.length === 0) continue
-        const { prior, scores, percentiles } = adjustAndRank(observations)
-        console.log(`  ${key}: mean ${prior.grandMean.toFixed(3)}, shrinkage weight ${prior.weight.toFixed(1)} responses, ${ids.length} classes`)
+        const prior = estimatePrior(observations)
+        // Round BEFORE ranking -- the rounded value is what gets stored and shown, so
+        // ranking the unrounded one let two courses display an identical score and a
+        // different percentile. See adjustAndRank in quality-score.mjs.
         ids.forEach((canonical, index) => {
-            if (!breakdown.has(canonical)) breakdown.set(canonical, {})
-            breakdown.get(canonical)[key] = {
-                score: scores[index],
+            scoreOf.set(canonical, {
+                score: round3(shrinkToPrior(observations[index].mean, observations[index].n, prior)),
                 n: observations[index].n,
-                pct: percentiles[index],
+            })
+        })
+        const pairs = pairsWithScore(canonical => scoreOf.has(canonical))
+        const ranks = scopedPercentileRanks(pairs.map(pair => ({
+            scope: pair.subject,
+            score: scoreOf.get(pair.canonical).score,
+        })))
+        const inDept = ranks.filter(rank => rank.scope != null).length
+        console.log(`  ${key}: mean ${prior.grandMean.toFixed(3)}, shrinkage weight ${prior.weight.toFixed(1)} responses, ${ids.length} classes, ${inDept}/${pairs.length} listings ranked in-department`)
+        pairs.forEach((pair, index) => {
+            if (!breakdown.has(pair.key)) breakdown.set(pair.key, {})
+            breakdown.get(pair.key)[key] = {
+                score: scoreOf.get(pair.canonical).score,
+                n: scoreOf.get(pair.canonical).n,
+                pct: ranks[index].pct,
+                scope: ranks[index].scope,
             }
         })
     }
@@ -483,21 +526,30 @@ async function refreshMetrics(supabase) {
     // The overall rating averages the adjusted category scores rather than pooling the
     // raw responses together: the categories sit ~0.19 apart on average, so pooling let
     // a class's score depend on which questions its evaluations happened to include.
-    const perGroup = new Map()
-    for (const canonical of new Set([...breakdown.keys(), ...hoursByGroup.keys()])) {
-        const parts = Object.values(breakdown.get(canonical) || {})
-        perGroup.set(canonical, {
-            hoursMedian: median(hoursByGroup.get(canonical) || []),
-            ...(parts.length > 0 && {
-                quality: round3(parts.reduce((sum, p) => sum + p.score, 0) / parts.length),
-                quality_n: headlineSampleSize(breakdown.get(canonical)),
-                rating_breakdown: breakdown.get(canonical),
-            }),
+    //
+    // Keyed per (department, class) like the categories above: the score is the same for
+    // every listing of a class, only the peer group it is ranked against differs.
+    const perPair = new Map()
+    for (const [pairKey, parts] of breakdown) {
+        const values = Object.values(parts)
+        perPair.set(pairKey, {
+            quality: round3(values.reduce((sum, p) => sum + p.score, 0) / values.length),
+            quality_n: headlineSampleSize(parts),
+            rating_breakdown: parts,
         })
     }
-    const scored = [...perGroup.entries()].filter(([, value]) => value.quality != null)
-    const overallRanks = percentileRanks(scored.map(([, value]) => value.quality))
-    scored.forEach(([, value], index) => { value.quality_pct = overallRanks[index] })
+    const overallPairs = pairsWithScore(() => true).filter(pair => perPair.has(pair.key))
+    const overallRanks = scopedPercentileRanks(overallPairs.map(pair => ({
+        scope: pair.subject,
+        score: perPair.get(pair.key).quality,
+    })))
+    overallPairs.forEach((pair, index) => {
+        const value = perPair.get(pair.key)
+        value.quality_pct = overallRanks[index].pct
+        value.rank_scope = overallRanks[index].scope
+    })
+    const inDept = overallRanks.filter(rank => rank.scope != null).length
+    console.log(`  overall: ${overallPairs.length} listings, ${inDept} ranked within their department`)
 
     // Write the class's figures to every code it is listed under, so the rating never
     // depends on which listing the student opened. hrs/unit stays per-listing because
@@ -505,18 +557,19 @@ async function refreshMetrics(supabase) {
     const updates = []
     for (const course of courses) {
         const canonical = groupOfCourse.get(course.course_id) ?? course.course_id
-        const value = perGroup.get(canonical)
-        if (!value) continue
-        const hours = value.hoursMedian
+        const value = perPair.get(`${course.subject || null}||${canonical}`)
+        const hours = median(hoursByGroup.get(canonical) || [])
+        if (!value && hours == null) continue
         const update = { course_id: course.course_id }
         if (hours != null) {
             update.hours = hours
             update.difficulty = hours / (courseUnits.get(course.course_id) || 1)
         }
-        if (value.quality != null) {
+        if (value) {
             update.quality = value.quality
             update.quality_n = value.quality_n
             update.quality_pct = value.quality_pct
+            update.rank_scope = value.rank_scope
             update.rating_breakdown = value.rating_breakdown
         }
         // The browser rebuilds the same groups from this, so it must be stored.
@@ -534,11 +587,11 @@ async function refreshMetrics(supabase) {
     for (const course of courses) {
         if (written.has(course.course_id)) continue
         const hasStale = course.quality != null || course.quality_n != null
-            || course.quality_pct != null || course.rating_breakdown != null
+            || course.quality_pct != null || course.rank_scope != null || course.rating_breakdown != null
         if (!hasStale) continue
         cleared++
         const existing = updates.find(update => update.course_id === course.course_id)
-        const nulls = { quality: null, quality_n: null, quality_pct: null, rating_breakdown: null }
+        const nulls = { quality: null, quality_n: null, quality_pct: null, rank_scope: null, rating_breakdown: null }
         if (existing) Object.assign(existing, nulls)
         else updates.push({ course_id: course.course_id, ...nulls })
     }

@@ -49,8 +49,13 @@ export interface Course {
   hours?: number;
   /** Precomputed from evaluations: pooled mean of every 1-5 rating response */
   quality?: number;
-  /** Precomputed: percentile rank (1-100) of `quality` across all rated Stanford courses */
+  /** Precomputed: percentile rank (1-100) of `quality` within `rankScope` */
   qualityPct?: number;
+  /**
+   * Subject `qualityPct` was ranked within, or undefined when the subject had too few
+   * rated classes and the rank fell back to every rated course at Stanford.
+   */
+  rankScope?: string;
   /** Precomputed: how many individual 1-5 responses `quality` is based on */
   qualityN?: number;
   /** Precomputed per-category adjusted score, sample size and percentile */
@@ -71,8 +76,10 @@ export interface RatingStat {
   score: number;
   /** Individual responses behind `score` */
   n: number;
-  /** Percentile rank (1-100) of `score` within this category. 100 = highest rated. */
+  /** Percentile rank (1-100) of `score` within this category and `scope`. 100 = highest. */
   pct: number;
+  /** Subject `pct` was ranked within; null/undefined means all rated Stanford courses. */
+  scope?: string | null;
 }
 
 // --- Course Evaluation Types ---

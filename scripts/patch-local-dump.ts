@@ -6,7 +6,7 @@
 import { createClient } from '@supabase/supabase-js'
 import { readFileSync, writeFileSync } from 'node:fs'
 import { buildCrossListGroups, deriveEvalPairings, normalizeCourseId } from '../src/lib/utils'
-import { addRatingCounts, pooledMean, percentileRanks, adjustAndRank, round3, headlineSampleSize } from '../src/lib/quality-score.mjs'
+import { addRatingCounts, pooledMean, estimatePrior, shrinkToPrior, scopedPercentileRanks, round3, headlineSampleSize } from '../src/lib/quality-score.mjs'
 import { categorizeQuestion, courseLevelSignature } from '../src/lib/eval-reports.mjs'
 
 const env = Object.fromEntries(readFileSync('.env.local', 'utf8').split('\n').filter(l => l.includes('=')).map(l => {
@@ -41,7 +41,7 @@ const units = (v: unknown) => {
 
 const [evalRows, courseRows] = await Promise.all([
   loadAll<any>('evaluations', 'course_id,course_code,term,instructor,questions'),
-  loadAll<any>('courses', 'course_id,title,units'),
+  loadAll<any>('courses', 'course_id,subject,title,units'),
 ])
 const catalogIds = new Set(courseRows.map(r => normalizeCourseId(String(r.course_id))))
 const pairings: Map<string, string[]> = deriveEvalPairings(evalRows, catalogIds)
@@ -88,59 +88,86 @@ for (const [canonical, questions] of questionsByGroup) {
   }
 }
 
-const breakdown = new Map<string, Partial<Record<Cat, { score: number; n: number; pct: number }>>>()
+// Scores are per class; ranks are per LISTING, against the listing's own department.
+// Same rule as refreshMetrics -- see scrape-evaluations.mjs.
+type Pair = { subject: string | null; canonical: string; key: string }
+const listings = (() => {
+  const seen = new Set<string>(); const out: Pair[] = []
+  for (const r of courseRows) {
+    const id = String(r.course_id)
+    const canonical = groupOf.get(id) ?? id
+    const subject = (r.subject as string) || null
+    const key = `${subject}||${canonical}`
+    if (seen.has(key)) continue
+    seen.add(key); out.push({ subject, canonical, key })
+  }
+  return out
+})()
+
+const breakdown = new Map<string, Partial<Record<Cat, { score: number; n: number; pct: number; scope: string | null }>>>()
 for (const key of RATING_CATEGORIES) {
+  const scoreOf = new Map<string, { score: number; n: number }>()
   const ids: string[] = []; const obs: any[] = []
   for (const [canonical, counts] of pooledByCategory.get(key)!) {
     const p = pooledMean(counts); if (!p) continue
     ids.push(canonical); obs.push(p)
   }
-  const { prior, scores, percentiles } = adjustAndRank(obs)
-  console.log(`  ${key.padEnd(13)} mean ${prior.grandMean.toFixed(3)} weight ${prior.weight.toFixed(2)} ${ids.length} classes`)
-  ids.forEach((canonical, i) => {
-    if (!breakdown.has(canonical)) breakdown.set(canonical, {})
-    breakdown.get(canonical)![key] = { score: scores[i], n: obs[i].n, pct: percentiles[i] }
+  const prior = estimatePrior(obs)
+  ids.forEach((canonical, i) => scoreOf.set(canonical, {
+    score: round3(shrinkToPrior(obs[i].mean, obs[i].n, prior)), n: obs[i].n,
+  }))
+  const pairs = listings.filter(l => scoreOf.has(l.canonical))
+  const ranks = scopedPercentileRanks(pairs.map(l => ({ scope: l.subject, score: scoreOf.get(l.canonical)!.score })))
+  const inDept = ranks.filter(r => r.scope != null).length
+  console.log(`  ${key.padEnd(13)} mean ${prior.grandMean.toFixed(3)} weight ${prior.weight.toFixed(2)} ${ids.length} classes, ${inDept}/${pairs.length} listings in-department`)
+  pairs.forEach((l, i) => {
+    if (!breakdown.has(l.key)) breakdown.set(l.key, {})
+    breakdown.get(l.key)![key] = { ...scoreOf.get(l.canonical)!, pct: ranks[i].pct, scope: ranks[i].scope }
   })
 }
 
-const perGroup = new Map<string, any>()
-for (const canonical of new Set([...breakdown.keys(), ...hoursByGroup.keys()])) {
-  const parts = Object.values(breakdown.get(canonical) || {}) as { score: number; n: number }[]
-  perGroup.set(canonical, {
-    hoursMedian: median(hoursByGroup.get(canonical) || []),
-    ...(parts.length > 0 && {
-      quality: round3(parts.reduce((s, p) => s + p.score, 0) / parts.length),
-      quality_n: headlineSampleSize(breakdown.get(canonical)!),
-      rating_breakdown: breakdown.get(canonical),
-    }),
+const perPair = new Map<string, any>()
+for (const [key, parts] of breakdown) {
+  const values = Object.values(parts) as { score: number; n: number }[]
+  perPair.set(key, {
+    quality: round3(values.reduce((s, p) => s + p.score, 0) / values.length),
+    quality_n: headlineSampleSize(parts as any),
+    rating_breakdown: parts,
   })
 }
-const scored = [...perGroup.values()].filter(v => v.quality != null)
-const ranks = percentileRanks(scored.map(v => v.quality))
-scored.forEach((v, i) => { v.quality_pct = ranks[i] })
+const overallPairs = listings.filter(l => perPair.has(l.key))
+const overallRanks = scopedPercentileRanks(overallPairs.map(l => ({ scope: l.subject, score: perPair.get(l.key).quality })))
+overallPairs.forEach((l, i) => {
+  perPair.get(l.key).quality_pct = overallRanks[i].pct
+  perPair.get(l.key).rank_scope = overallRanks[i].scope
+})
+console.log(`  overall       ${overallPairs.length} listings, ${overallRanks.filter(r => r.scope != null).length} ranked within their department`)
 
 for (const file of ['light.json', 'full.json']) {
   const path = `data/catalog/${file}`
   const rows = JSON.parse(readFileSync(path, 'utf8')) as any[]
   let rated = 0
   for (const row of rows) {
-    const value = perGroup.get(groupOf.get(String(row.course_id)) ?? String(row.course_id))
-    delete row.quality_pct; delete row.quality_n; delete row.rating_breakdown; delete row.cross_list_with
+    const id = String(row.course_id)
+    const canonical = groupOf.get(id) ?? id
+    const value = perPair.get(`${(row.subject as string) || null}||${canonical}`)
+    const hours = median(hoursByGroup.get(canonical) || [])
+    delete row.quality_pct; delete row.quality_n; delete row.rank_scope
+    delete row.rating_breakdown; delete row.cross_list_with
     row.quality = null
-    const pairs = pairings.get(normalizeCourseId(String(row.course_id)))
+    const pairs = pairings.get(normalizeCourseId(id))
     if (pairs && pairs.length > 0) row.cross_list_with = pairs
+    if (hours != null) {
+      row.hours = hours
+      row.difficulty = hours / (courseUnits.get(id) || 1)
+    }
     if (!value) continue
-    if (value.hoursMedian != null) {
-      row.hours = value.hoursMedian
-      row.difficulty = value.hoursMedian / (courseUnits.get(String(row.course_id)) || 1)
-    }
-    if (value.quality != null) {
-      row.quality = value.quality
-      row.quality_n = value.quality_n
-      row.quality_pct = value.quality_pct
-      row.rating_breakdown = value.rating_breakdown
-      rated++
-    }
+    row.quality = value.quality
+    row.quality_n = value.quality_n
+    row.quality_pct = value.quality_pct
+    row.rank_scope = value.rank_scope
+    row.rating_breakdown = value.rating_breakdown
+    rated++
   }
   writeFileSync(path, JSON.stringify(rows))
   console.log(`${file}: ${rows.length} rows, ${rated} rated`)

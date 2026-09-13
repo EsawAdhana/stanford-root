@@ -14,9 +14,10 @@ import { cn, decodeHtmlEntities } from '@/lib/utils'
 import { formatInstructorName, instructorSlug } from '@/lib/instructors'
 import { isDevEvalsUnlocked } from '@/lib/dev-flags'
 import { compareTerms } from '@/lib/terms'
+import { splitLinkSegments } from '@/lib/linkify'
 import { CLASS_YEAR_BUCKETS, optionStats } from '@/lib/class-years'
 import type { ClassYearBreakdown, Course, CourseEvaluation, EvalQuestion, EvalOption } from '@/types/course'
-import { addRatingCounts, pooledMean, rankShare } from '@/lib/quality-score.mjs'
+import { addRatingCounts, pooledMean, rankShare, rankScopeLabel } from '@/lib/quality-score.mjs'
 import { categorizeQuestion, dedupeCourseLevelReports } from '@/lib/eval-reports.mjs'
 
 // --- Color helpers (green=good, yellow/orange=mid, red=bad) ---
@@ -50,16 +51,39 @@ function rankColor(pct: number): string {
   return 'text-red-600'
 }
 
-/** "Ranks higher than 71% of courses", with the share sized and coloured to be read first. */
-function RankLine({ percentile, className }: { percentile: number, className?: string }) {
-  const share = rankShare(percentile) as number
+/**
+ * "Ranks higher than 71% of CS courses", with the share sized and coloured to be read
+ * first.
+ *
+ * The peer group is always spelled out. A rank inside a department and a rank against
+ * all of Stanford are different numbers on the same 1-99 scale, and which one a course
+ * got depends on how many rated classes its department has -- so a bare "71%" would
+ * leave the reader unable to tell the two apart.
+ */
+function RankSentence({ percentile, scope, shareClass }: {
+  percentile: number
+  scope?: string | null
+  shareClass: string
+}) {
+  return (
+    <>
+      Ranks higher than{' '}
+      <span className={cn('font-bold tabular-nums', shareClass, rankColor(percentile))}>
+        {rankShare(percentile) as number}%
+      </span>{' '}
+      of {rankScopeLabel(scope)}
+    </>
+  )
+}
+
+function RankLine({ percentile, scope, className }: {
+  percentile: number
+  scope?: string | null
+  className?: string
+}) {
   return (
     <div className={cn('text-[11px] text-muted-foreground', className)}>
-      Ranks higher than{' '}
-      <span className={cn('text-[15px] font-bold tabular-nums', rankColor(percentile))}>
-        {share}%
-      </span>{' '}
-      of courses
+      <RankSentence percentile={percentile} scope={scope} shareClass="text-[15px]" />
     </div>
   )
 }
@@ -209,9 +233,10 @@ export function ScoreBadge({ score, size = 'md' }: { score: number, size?: 'sm' 
  * `score` is courses.quality, which is already shrunk toward the Stanford average by
  * sample size, so the number and the rank always agree.
  */
-export function QualityRank({ score, percentile }: {
+export function QualityRank({ score, percentile, rankScope }: {
   score: number
   percentile?: number | null
+  rankScope?: string | null
 }) {
 
   return (
@@ -223,7 +248,7 @@ export function QualityRank({ score, percentile }: {
         </div>
         <ScoreBadge score={score} size="sm" />
       </div>
-      {percentile != null && <RankLine percentile={percentile} className="mt-1.5" />}
+      {percentile != null && <RankLine percentile={percentile} scope={rankScope} className="mt-1.5" />}
     </div>
   )
 }
@@ -475,7 +500,7 @@ function InlineEval({ evaluation, disableComments }: { evaluation: CourseEvaluat
         <div className="border-t border-border/30 px-3 py-2 space-y-1.5 max-h-40 overflow-y-auto">
           {evaluation.comments.map((c, i) => (
             <p key={i} className="text-[11px] text-muted-foreground leading-relaxed">
-              &ldquo;{decodeHtmlEntities(c)}&rdquo;
+              &ldquo;<CommentText text={c} />&rdquo;
             </p>
           ))}
         </div>
@@ -484,6 +509,29 @@ function InlineEval({ evaluation, disableComments }: { evaluation: CourseEvaluat
   )
 }
 
+
+/** A comment's prose, with any URL in it clickable. Comments are plain text, never markup. */
+function CommentText({ text }: { text: string }) {
+  return (
+    <>
+      {splitLinkSegments(decodeHtmlEntities(text)).map((seg, i) =>
+        seg.href ? (
+          <a
+            key={i}
+            href={seg.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-primary font-medium underline underline-offset-2 hover:opacity-80 break-words"
+          >
+            {seg.text}
+          </a>
+        ) : (
+          <React.Fragment key={i}>{seg.text}</React.Fragment>
+        )
+      )}
+    </>
+  )
+}
 
 // --- Comments panel ---
 
@@ -560,7 +608,7 @@ export function CommentsPanel({ comments }: { comments: CommentEntry[] }) {
               {comment.label && (
                 <div className="text-[11px] font-bold text-destructive mb-1">{comment.label}</div>
               )}
-              &ldquo;{decodeHtmlEntities(comment.text)}&rdquo;
+              &ldquo;<CommentText text={comment.text} />&rdquo;
             </div>
           ))
         })()}
@@ -632,7 +680,7 @@ function AggregatedRatingBreakdown({ questions, aggregateScore }: { questions: E
 }
 
 /** Median score per category with an expandable response breakdown for each. */
-export function EvaluationOverview({ evaluations: rawEvaluations, quality, qualityPct, breakdown, classYears, termFiltered }: {
+export function EvaluationOverview({ evaluations: rawEvaluations, quality, qualityPct, rankScope, breakdown, classYears, termFiltered }: {
   evaluations: CourseEvaluation[]
   /**
    * courses.quality / quality_pct / rating_breakdown -- precomputed over the course's
@@ -642,6 +690,8 @@ export function EvaluationOverview({ evaluations: rawEvaluations, quality, quali
    */
   quality?: number | null
   qualityPct?: number | null
+  /** courses.rank_scope: the subject `qualityPct` was ranked within, null = all of Stanford. */
+  rankScope?: string | null
   breakdown?: Course['ratingBreakdown'] | null
   /**
    * Carta's class-level breakdown, summed across the cross-list group. Pooled over
@@ -733,7 +783,7 @@ export function EvaluationOverview({ evaluations: rawEvaluations, quality, quali
     <div className="space-y-4">
       <PanelSection label="Student ratings">
         {quality != null && (
-          <ScoreRow label="Overall rating" score={quality} percentile={qualityPct} emphasis showRank={hasRanks} />
+          <ScoreRow label="Overall rating" score={quality} percentile={qualityPct} rankScope={rankScope} emphasis showRank={hasRanks} />
         )}
         {RATING_CATEGORIES.filter(cat => cat !== 'hours').map(cat => {
           if (metrics[cat] === undefined) return null
@@ -746,6 +796,7 @@ export function EvaluationOverview({ evaluations: rawEvaluations, quality, quali
                 label={CATEGORY_LABELS[cat]}
                 score={score}
                 percentile={stat?.pct}
+                rankScope={stat?.scope}
                 questions={questionsByCategory[cat]}
                 isOpen={isOpen}
                 onToggle={() => setOpenCat(isOpen ? null : cat)}
@@ -810,11 +861,13 @@ function PanelSection({ label, value, note, children, className }: {
  * measured three times, so they read as rows of one table rather than as three cards --
  * which is also what frees the full width for the two charts below.
  */
-function ScoreRow({ label, score, percentile, valueLabel, questions, isOpen, onToggle, emphasis, showRank = true }: {
+function ScoreRow({ label, score, percentile, rankScope, valueLabel, questions, isOpen, onToggle, emphasis, showRank = true }: {
   label: string
   /** Drives the bar and the badge. Omitted for rows that are not on the 1-5 scale. */
   score?: number
   percentile?: number | null
+  /** Peer group `percentile` was measured in. Null/undefined = all rated Stanford courses. */
+  rankScope?: string | null
   /** Replaces the score badge, e.g. "10.0 hrs/wk". */
   valueLabel?: string
   questions?: EvalQuestion[]
@@ -836,15 +889,9 @@ function ScoreRow({ label, score, percentile, valueLabel, questions, isOpen, onT
       {/* Dropped entirely, not left blank: a term filter withholds every percentile, and
           the reserved column left each row as a label and a number with a void between. */}
       {showRank && (
-      <span className="hidden sm:block text-[11px] text-muted-foreground w-52 text-right shrink-0 whitespace-nowrap">
+      <span className="hidden sm:block text-[11px] text-muted-foreground w-72 text-right shrink-0 whitespace-nowrap">
         {percentile != null && (
-          <>
-            Ranks higher than{' '}
-            <span className={cn('text-[13px] font-bold tabular-nums', rankColor(percentile))}>
-              {rankShare(percentile) as number}%
-            </span>{' '}
-            of courses
-          </>
+          <RankSentence percentile={percentile} scope={rankScope} shareClass="text-[13px]" />
         )}
       </span>
       )}
@@ -931,9 +978,10 @@ interface CourseEvaluationsProps {
    * unresolved by accident and hang the empty state on a spinner.
    */
   isNew: boolean | undefined
-  /** courses.quality / quality_pct -- the overall rating row. */
+  /** courses.quality / quality_pct / rank_scope -- the overall rating row. */
   quality?: number | null
   qualityPct?: number | null
+  rankScope?: string | null
   ratingBreakdown?: Course['ratingBreakdown'] | null
   /**
    * Term filter, lifted out so it survives a tab switch. The Charts and Comments tabs
@@ -944,7 +992,7 @@ interface CourseEvaluationsProps {
   onTermFilterChange?: (term: string) => void
 }
 
-export function CourseEvaluations({ courseIds, subject, code, forcedTab, isNew, quality, qualityPct, ratingBreakdown, termFilter, onTermFilterChange }: CourseEvaluationsProps) {
+export function CourseEvaluations({ courseIds, subject, code, forcedTab, isNew, quality, qualityPct, rankScope, ratingBreakdown, termFilter, onTermFilterChange }: CourseEvaluationsProps) {
   const fetchBulkEvaluations = useEvaluationStore(state => state.fetchBulkEvaluations)
   const fetchBulkClassYears = useEvaluationStore(state => state.fetchBulkClassYears)
   const getMergedClassYears = useEvaluationStore(state => state.getMergedClassYears)
@@ -1194,6 +1242,7 @@ export function CourseEvaluations({ courseIds, subject, code, forcedTab, isNew, 
             // breakdown beside it once a single term is selected.
             quality={activeTermFilter === 'all' ? quality : null}
             qualityPct={activeTermFilter === 'all' ? qualityPct : null}
+            rankScope={rankScope}
             breakdown={activeTermFilter === 'all' ? ratingBreakdown : null}
             classYears={activeTermFilter === 'all' ? classYears : null}
             termFiltered={activeTermFilter !== 'all'}
