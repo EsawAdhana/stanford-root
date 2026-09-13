@@ -9,7 +9,7 @@ import { useAuthStore } from '@/lib/auth-store';
 import { promptLoginToSyncOnce } from '@/lib/login-nudge';
 import { track } from '@/lib/analytics';
 import { Section } from '@/types/course';
-import { cn, getSyllabusUrl, parseUnitsOptions, formatLevel, abbreviateGer, unitsLabel, compareCourseCodes, formatComponent, isAllowedGer, decodeHtmlEntities, getCrossListGroupIds, aggregateCrossListedSectionEnrollment, resolveCrossListRating } from '@/lib/utils';
+import { cn, getSyllabusUrl, parseUnitsOptions, formatLevel, abbreviateGer, unitsLabel, compareCourseCodes, formatComponent, isAllowedGer, decodeHtmlEntities, getCrossListGroupIds, aggregateCrossListedSectionEnrollment, crossListedSectionPeers, resolveCrossListRating } from '@/lib/utils';
 import { isDevEvalsUnlocked } from '@/lib/dev-flags';
 import { InstructorList } from './instructor-list';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -47,7 +47,7 @@ export function CourseDetailContent({ course }: CourseDetailContentProps) {
     const rating = useMemo(() => {
         const byId = new Map(courses.map(c => [c.id, c]));
         const members = crossListIds.map(id => byId.get(id)).filter((c): c is Course => c != null);
-        return resolveCrossListRating(members.length > 0 ? members : [course]);
+        return resolveCrossListRating(members.length > 0 ? members : [course], course);
     }, [crossListIds, courses, course]);
 
     // `isNew` comes from the catalog dump (unscheduled in the three prior
@@ -73,6 +73,15 @@ export function CourseDetailContent({ course }: CourseDetailContentProps) {
 
     // Subscribe to only this course's cart entry so unrelated cart changes don't re-render the page
     const cartItem = useCartStore(s => s.items.find(i => i.id === course.id));
+
+    /**
+     * Another listing of this same class already on the schedule. The schedule search
+     * offers every listing ("Decision Making under Uncertainty" returns both AA 228 and
+     * CS 238), and this page is reached through the canonical id, so without this the
+     * student can put the same meeting on the calendar twice and have the term's units
+     * counted twice.
+     */
+    const scheduledSibling = useCartStore(s => s.items.find(i => i.id !== course.id && crossListIds.includes(i.id)));
 
     /** Sections the user picked, but only for the term being shown. */
     const selectedIdsForTerm = (term: string) =>
@@ -422,6 +431,7 @@ export function CourseDetailContent({ course }: CourseDetailContentProps) {
                                 onTermFilterChange={setEvalTermFilter}
                                 quality={rating.quality ?? null}
                                 qualityPct={rating.qualityPct ?? null}
+                                rankScope={rating.rankScope ?? null}
                                 ratingBreakdown={rating.ratingBreakdown ?? null}
                             />
                         </TabsContent>
@@ -522,6 +532,8 @@ export function CourseDetailContent({ course }: CourseDetailContentProps) {
 
                                             return termSections.map((section) => {
                                                 const isSelected = selectedIds.includes(section.classId);
+                                                // Only the term on screen: the same class in another quarter is a real choice.
+                                                const blockedBySibling = !isSelected && scheduledSibling?.selectedTerm === term;
                                                 const enrollAgg = enrollmentBySectionId.get(section.classId) ?? aggregateCrossListedSectionEnrollment(section, crossListIds, courses, term === activeTerm ? liveSeats : undefined);
                                                 const liveSeat = term === activeTerm ? liveSeats.get(section.classId) : undefined;
                                                 const sectionStatus = liveSeat?.status || section.status;
@@ -550,7 +562,15 @@ export function CourseDetailContent({ course }: CourseDetailContentProps) {
                                                                         </span>
                                                                     )}
                                                                 </div>
-                                                                <div className="text-[15px] text-muted-foreground mt-0.5 font-medium tracking-tight">ID: {section.classId}</div>
+                                                                <div className="text-[15px] text-muted-foreground mt-0.5 font-medium tracking-tight">
+                                                                    ID: {section.classId}
+                                                                    {/* The same meeting enrols under a different number per listing. */}
+                                                                    {crossListedSectionPeers(section, course.id, crossListIds, courses).map(peer => (
+                                                                        <span key={peer.courseId} className="text-[13px] font-normal">
+                                                                            {' · '}{peer.subject} {peer.code}: {peer.classId}
+                                                                        </span>
+                                                                    ))}
+                                                                </div>
                                                                 {enrollAgg.capacity > 0 && (
                                                                     <div className="text-[13px] text-muted-foreground mt-0.5">
                                                                         {enrollAgg.enrolled} / {enrollAgg.capacity} enrolled
@@ -673,11 +693,14 @@ export function CourseDetailContent({ course }: CourseDetailContentProps) {
                                                             <Button
                                                                 size="sm"
                                                                 variant={isSelected ? "default" : "outline"}
+                                                                disabled={blockedBySibling}
+                                                                title={blockedBySibling ? `This class is already on your ${term} schedule as ${scheduledSibling!.subject} ${scheduledSibling!.code}.` : undefined}
                                                                 className={cn(
                                                                     "h-10 text-[16px] px-5 rounded-lg font-bold transition-all whitespace-nowrap",
                                                                     isSelected
                                                                         ? "bg-emerald-600 hover:bg-emerald-700 text-white border-emerald-600 shadow-sm"
-                                                                        : "hover:bg-primary/5 hover:text-primary hover:border-primary/30"
+                                                                        : "hover:bg-primary/5 hover:text-primary hover:border-primary/30",
+                                                                    blockedBySibling && "opacity-60"
                                                                 )}
                                                                 onClick={() =>
                                                                     isSelected
@@ -690,7 +713,11 @@ export function CourseDetailContent({ course }: CourseDetailContentProps) {
                                                                 ) : (
                                                                     <Calendar size={12} className="mr-1.5" />
                                                                 )}
-                                                                {isSelected ? "Added" : "View on Calendar"}
+                                                                {isSelected
+                                                                    ? "Added"
+                                                                    : blockedBySibling
+                                                                        ? `Added as ${scheduledSibling!.subject} ${scheduledSibling!.code}`
+                                                                        : "View on Calendar"}
                                                             </Button>
                                                         </div>
                                                     </div>

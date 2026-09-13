@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
-import { deriveEvalPairings, getCrossListGroupIds, buildCrossListGroups, normalizeCourseId } from '@/lib/utils'
+import { deriveEvalPairings, getCrossListGroupIds, buildCrossListGroups, normalizeCourseId, crossListedSectionPeers } from '@/lib/utils'
+import type { Course, Section } from '@/types/course'
 
 const catalog = (...ids: string[]) => new Set(ids.map(normalizeCourseId))
 
@@ -119,4 +120,47 @@ describe('grouping with evaluation pairings', () => {
     const rows = [{ id: 'A1', title: 'x', crossListWith: ['NOTINCATALOG9'] }]
     expect(getCrossListGroupIds('A1', rows)).toEqual(['A1'])
   })
+})
+
+describe('crossListedSectionPeers — the class number under each other listing', () => {
+    const sec = (over: Partial<Section>): Section => ({
+        term: 'Winter 2027', classId: 0, sectionNumber: '1', component: 'LEC',
+        status: 'Open', units: '4-5', grading: '', instructionalMode: 'In Person',
+        enrolled: 0, capacity: 0, openSeats: 0, waitlist: 0, waitlistMax: 0,
+        startDate: '', endDate: '', meetings: [],
+        ...over,
+    } as unknown as Section)
+
+    const anchor = sec({ classId: 12292 })
+    const sibling = sec({ classId: 12515 })
+    const courses = [
+        { id: 'COMM172', subject: 'COMM', code: '172', title: 'Media Psychology (COMM 272)', sections: [anchor] },
+        { id: 'COMM272', subject: 'COMM', code: '272', title: 'Media Psychology (COMM 172)', sections: [sibling] },
+    ] as unknown as Course[]
+
+    it('reports the sibling listing and its own class number', () => {
+        expect(crossListedSectionPeers(anchor, 'COMM172', ['COMM172', 'COMM272'], courses))
+            .toEqual([{ courseId: 'COMM272', subject: 'COMM', code: '272', classId: 12515 }])
+    })
+
+    it('says nothing for a class with one listing', () => {
+        expect(crossListedSectionPeers(anchor, 'COMM172', ['COMM172'], courses)).toEqual([])
+    })
+
+    it('does not repeat a shared class number', () => {
+        const shared = [
+            { id: 'A1', subject: 'A', code: '1', title: 'X (B 1)', sections: [anchor] },
+            { id: 'B1', subject: 'B', code: '1', title: 'X (A 1)', sections: [anchor] },
+        ] as unknown as Course[]
+        expect(crossListedSectionPeers(anchor, 'A1', ['A1', 'B1'], shared)).toEqual([])
+    })
+
+    it('ignores a sibling section from another term', () => {
+        const springSibling = sec({ classId: 999, term: 'Spring 2027' })
+        const other = [
+            courses[0],
+            { id: 'COMM272', subject: 'COMM', code: '272', title: 'Media Psychology (COMM 172)', sections: [springSibling] },
+        ] as unknown as Course[]
+        expect(crossListedSectionPeers(anchor, 'COMM172', ['COMM172', 'COMM272'], other)).toEqual([])
+    })
 })

@@ -4,6 +4,7 @@ import { useCourseStore } from './store'
 import { cartHydrated } from './cart-hydration'
 import { track } from './analytics'
 import { useUnresolvedSchedule } from './unresolved-schedule'
+import { dedupeCrossListedItems } from './schedule-utils'
 
 // Minimal payload stored server-side — no full Course catalog data
 export type ScheduleItem = {
@@ -112,7 +113,7 @@ function hydrateItems(scheduleItems: ScheduleItem[], logPrefix = '') {
       'courses'
     )
   }
-  return result
+  return dedupeCrossListedItems(result, courses)
 }
 
 /**
@@ -357,7 +358,12 @@ async function _pullSchedule(userId: string): Promise<void> {
         await waitForCourses()
         const hydratedServerOnly = hydrateItems(serverOnly)
         if (hydratedServerOnly.length > 0) {
-          useCartStore.setState((state) => ({ items: [...state.items, ...hydratedServerOnly] }))
+          useCartStore.setState((state) => ({
+            items: dedupeCrossListedItems(
+              [...state.items, ...hydratedServerOnly],
+              useCourseStore.getState().courses,
+            ),
+          }))
           const syncedIds = new Set(serverOnly.map(s => s.id))
           useCourseStore.getState().fetchCourseDetails([...syncedIds])
           reHydrateOnEnrichment(syncedIds)

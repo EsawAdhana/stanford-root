@@ -1,7 +1,9 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import type { Course } from '@/types/course'
-import { makeMeetingKey, mergeSectionSelection } from '@/lib/schedule-utils'
+import { dedupeCrossListedItems, makeMeetingKey, mergeSectionSelection } from '@/lib/schedule-utils'
+import { getCrossListGroupIds } from '@/lib/cross-list.mjs'
+import { useCourseStore } from '@/lib/store'
 import { setCartHydrated } from '@/lib/cart-hydration'
 
 export type CartItem = Course & {
@@ -64,9 +66,30 @@ export const useCartStore = create<CartStore>()(
           color: existingColor || course.color // Keep existing or use provided
         }
 
+        // One listing per class per term. A cross-listed class is one meeting under
+        // several catalog ids (COMM 172 / COMM 272), and items reach the cart from three
+        // places -- the schedule search, the course page, and an .ics import carrying
+        // whichever code the student enrolled under. Without this, two of them stack:
+        // two blocks in the same slot and the term's units counted twice. Last write
+        // wins, keeping the earlier listing's colour so the calendar doesn't jump.
+        const groupIds = getCrossListGroupIds(course.id, useCourseStore.getState().courses)
+        const siblingIndex = groupIds.length > 1
+          ? currentItems.findIndex(c =>
+              c.id !== course.id &&
+              groupIds.includes(c.id) &&
+              (c.selectedTerm ?? c.terms?.[0]) === resolvedTerm)
+          : -1
+
         if (existingIndex >= 0) {
           const newItems = [...currentItems]
           newItems[existingIndex] = { ...newItems[existingIndex], ...courseWithTerm }
+          set({ items: siblingIndex >= 0 ? newItems.filter((_, i) => i !== siblingIndex) : newItems })
+          return
+        }
+
+        if (siblingIndex >= 0) {
+          const newItems = [...currentItems]
+          newItems[siblingIndex] = { ...courseWithTerm, color: currentItems[siblingIndex].color || courseWithTerm.color }
           set({ items: newItems })
           return
         }
@@ -161,3 +184,23 @@ export const useCartStore = create<CartStore>()(
     }
   )
 )
+
+/**
+ * Repair a cart that already holds two listings of one class.
+ *
+ * `addItem` can only recognise a cross-listing once the catalog is in memory, so an add
+ * made during the first load -- or a schedule persisted by a build that predates the
+ * check -- can still carry both.
+ */
+export function repairCrossListedCart(courses: { id: string; title: string }[]): void {
+  const { items } = useCartStore.getState()
+  const deduped = dedupeCrossListedItems(items, courses)
+  if (deduped.length !== items.length) useCartStore.setState({ items: deduped })
+}
+
+/** Run that repair once, the first time the catalog is known. */
+const stopWatchingCatalog = useCourseStore.subscribe(state => {
+  if (state.courses.length === 0) return
+  stopWatchingCatalog()
+  repairCrossListedCart(state.courses)
+})

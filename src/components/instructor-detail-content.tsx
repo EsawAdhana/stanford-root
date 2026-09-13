@@ -6,7 +6,7 @@ import { Loader2, MessageSquare } from 'lucide-react'
 import { useAuthStore } from '@/lib/auth-store'
 import { useCourseStore } from '@/lib/store'
 import { isDevEvalsUnlocked } from '@/lib/dev-flags'
-import { cn, decodeHtmlEntities } from '@/lib/utils'
+import { cn, decodeHtmlEntities, getCrossListPrimaryMap, normalizeCourseId, resolveToCanonicalPrimary } from '@/lib/utils'
 import { compareTerms } from '@/lib/terms'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
@@ -70,6 +70,20 @@ export function InstructorDetailContent({ slug, name, upcoming }: InstructorDeta
   const canViewEvals = Boolean(user) || isDevEvalsUnlocked()
   const courses = useCourseStore(s => s.courses)
 
+  /**
+   * Evaluations are filed per code, so a cross-listed class arrives as several course
+   * ids -- COMM 172 and COMM 272 are one class Reeves teaches once. Pool them under the
+   * listing the rest of the site renders, the way the course page pools its own charts.
+   */
+  const canonicalCourseId = useMemo(() => {
+    const primaryMap = getCrossListPrimaryMap(courses)
+    const byNormalized = new Map(courses.map(c => [normalizeCourseId(c.id), c.id]))
+    return (courseId: string) => {
+      const canonical = resolveToCanonicalPrimary(normalizeCourseId(courseId), primaryMap)
+      return byNormalized.get(canonical) ?? courseId
+    }
+  }, [courses])
+
   const [activeTermFilter, setActiveTermFilter] = useState('all')
 
   const { evaluations, hasError } = useInstructorEvaluations(slug, canViewEvals)
@@ -90,9 +104,10 @@ export function InstructorDetailContent({ slug, name, upcoming }: InstructorDeta
   const qualityByCourse = useMemo(() => {
     const byCourse = new Map<string, InstructorEvaluation[]>()
     for (const ev of evaluations ?? []) {
-      const list = byCourse.get(ev.courseId)
+      const id = canonicalCourseId(ev.courseId)
+      const list = byCourse.get(id)
       if (list) list.push(ev)
-      else byCourse.set(ev.courseId, [ev])
+      else byCourse.set(id, [ev])
     }
     const out = new Map<string, number>()
     for (const [courseId, evals] of byCourse) {
@@ -100,15 +115,16 @@ export function InstructorDetailContent({ slug, name, upcoming }: InstructorDeta
       if (quality !== undefined) out.set(courseId, quality)
     }
     return out
-  }, [evaluations])
+  }, [evaluations, canonicalCourseId])
 
   const courseStats = useMemo<CourseStat[]>(() => {
     const titleById = new Map(courses.map(c => [c.id, c]))
     const byCourse = new Map<string, InstructorEvaluation[]>()
     for (const ev of filtered) {
-      const list = byCourse.get(ev.courseId)
+      const id = canonicalCourseId(ev.courseId)
+      const list = byCourse.get(id)
       if (list) list.push(ev)
-      else byCourse.set(ev.courseId, [ev])
+      else byCourse.set(id, [ev])
     }
 
     return Array.from(byCourse.entries())
@@ -129,7 +145,7 @@ export function InstructorDetailContent({ slug, name, upcoming }: InstructorDeta
       .sort((a, b) =>
         compareTerms(b.terms[b.terms.length - 1] ?? '', a.terms[a.terms.length - 1] ?? '') ||
         `${a.subject}${a.code}`.localeCompare(`${b.subject}${b.code}`))
-  }, [filtered, courses])
+  }, [filtered, courses, canonicalCourseId])
 
   const comments = useMemo(() => {
     // Unlike a course page, this list mixes every class the instructor has
@@ -140,8 +156,9 @@ export function InstructorDetailContent({ slug, name, upcoming }: InstructorDeta
     // Newest term first, so one prolific course doesn't bury the rest.
     const byRecency = [...filtered].sort((a, b) => compareTerms(b.term, a.term))
     for (const ev of byRecency) {
-      const catalog = titleById.get(ev.courseId)
-      const { subject, code } = splitCourseId(ev.courseId)
+      const id = canonicalCourseId(ev.courseId)
+      const catalog = titleById.get(id)
+      const { subject, code } = splitCourseId(id)
       const label = `${catalog?.subject || subject} ${catalog?.code || code}`.trim()
       for (const comment of ev.comments) {
         const key = decodeHtmlEntities(comment).trim().toLowerCase()
@@ -152,7 +169,7 @@ export function InstructorDetailContent({ slug, name, upcoming }: InstructorDeta
       }
     }
     return out
-  }, [filtered, courses])
+  }, [filtered, courses, canonicalCourseId])
 
   /** Sample size behind the ratings: students who answered the quality question. */
   const responseCount = useMemo(() => {
@@ -169,7 +186,7 @@ export function InstructorDetailContent({ slug, name, upcoming }: InstructorDeta
   const headerStats = useMemo(() => {
     if (!evaluations || evaluations.length === 0) return []
     return [
-      { label: 'COURSES', value: new Set(evaluations.map(e => e.courseId)).size },
+      { label: 'COURSES', value: new Set(evaluations.map(e => canonicalCourseId(e.courseId))).size },
       { label: 'TERMS', value: terms.length },
       { label: 'EVALS', value: evaluations.length },
       { label: 'RESPONSES', value: responseCount },

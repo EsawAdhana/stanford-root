@@ -2,6 +2,7 @@ import type { MetadataRoute } from 'next'
 import { readFile } from 'fs/promises'
 import { SITE_URL } from '@/lib/site'
 import { serverCatalogPath } from '@/lib/catalog-paths'
+import { getCanonicalCourseIdsFromDump } from '@/lib/catalog-dump'
 
 // Rebuild the sitemap at most once a day rather than per request.
 export const revalidate = 86400
@@ -52,7 +53,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }))
 
-  const courseRoutes: MetadataRoute.Sitemap = ids.map((id) => ({
+  // One URL per class, not per listing. A cross-listed class is served from its
+  // canonical id and the other codes canonical-link there, so offering all 8,625
+  // listings meant 1,841 URLs that render a different course than they advertise.
+  const canonicalIds = await getCanonicalCourseIdsFromDump().catch(() => null)
+  const courseIds = canonicalIds ? ids.filter(id => canonicalIds.has(id)) : ids
+
+  const courseRoutes: MetadataRoute.Sitemap = courseIds.map((id) => ({
     url: `${SITE_URL}/${encodeURIComponent(id)}`,
     lastModified: now,
     changeFrequency: 'weekly',

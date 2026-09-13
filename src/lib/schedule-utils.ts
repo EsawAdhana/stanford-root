@@ -1,4 +1,5 @@
 import type { Course, Section } from '@/types/course'
+import { getCrossListPrimaryMap, normalizeCourseId, resolveToCanonicalPrimary } from '@/lib/cross-list.mjs'
 
 type ParsedMeeting = {
   days: string[]
@@ -360,3 +361,52 @@ export function parseMeetingTimes(course: Course, term?: string): ParsedMeeting[
   return parsed
 }
 
+
+/**
+ * The listing of `courseId`'s class that is already on the schedule, if any.
+ *
+ * A cross-listed class has one meeting but several catalog ids, and the schedule
+ * search matches on title text -- searching "COMM 172" turns up COMM 272, whose
+ * title is "Media Psychology (COMM 172)". Comparing ids alone let both listings
+ * onto the same calendar: two blocks in the same slot, and the term's units
+ * counted twice (COMM 172 + COMM 272 read as 8-10 units for one 4-5 unit class).
+ *
+ * Returns the scheduled listing rather than a boolean so the caller can name it
+ * ("Added as COMM 172") instead of claiming the course itself is on the schedule.
+ */
+export function scheduledCrossListMember<T extends { id: string }>(
+  courseId: string,
+  scheduled: T[],
+  primaryMap: Map<string, string>,
+): T | undefined {
+  const canonical = resolveToCanonicalPrimary(normalizeCourseId(courseId), primaryMap)
+  return scheduled.find(c => resolveToCanonicalPrimary(normalizeCourseId(c.id), primaryMap) === canonical)
+}
+
+/**
+ * Collapse a schedule to one listing per cross-listed class per term, keeping the
+ * first occurrence.
+ *
+ * `addItem` enforces this as things are added, but the sync path writes the cart with
+ * `setState` -- a pull hydrates the server's list wholesale, and a merge concatenates
+ * server-only items onto the local ones. A schedule built on a phone as CS 238 and on a
+ * laptop as AA 228 would otherwise land both listings on one calendar. First wins so the
+ * merge keeps the local item, matching the rest of that path.
+ */
+export function dedupeCrossListedItems<T extends { id: string; selectedTerm?: string; terms?: string[] }>(
+  items: T[],
+  courses: { id: string; title: string }[],
+): T[] {
+  if (items.length < 2) return items
+  const primaryMap = getCrossListPrimaryMap(courses)
+  const seen = new Set<string>()
+  const kept: T[] = []
+  for (const item of items) {
+    const canonical = resolveToCanonicalPrimary(normalizeCourseId(item.id), primaryMap)
+    const key = `${canonical}|${item.selectedTerm ?? item.terms?.[0] ?? ''}`
+    if (seen.has(key)) continue
+    seen.add(key)
+    kept.push(item)
+  }
+  return kept
+}

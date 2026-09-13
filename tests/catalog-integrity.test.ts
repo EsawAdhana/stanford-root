@@ -225,8 +225,12 @@ describe('sections and meetings', () => {
                 if (capacity < 0 || enrolled < 0) bad.push(`${c.course_id}/${classId}: negative seats`)
                 if (typeof openSeats === 'number' && openSeats !== Math.max(0, capacity - enrolled))
                     bad.push(`${c.course_id}/${classId}: openSeats ${openSeats} != ${capacity}-${enrolled}`)
-                if (typeof waitlist === 'number' && typeof waitlistMax === 'number' && waitlistMax > 0 && waitlist > waitlistMax)
-                    bad.push(`${c.course_id}/${classId}: waitlist ${waitlist} > max ${waitlistMax}`)
+                // No waitlist-vs-cap check: the registrar itself publishes sections past
+                // both caps. ASLLANG 1 section 02 (Autumn 2026) reads waitTot 8 / waitCap 5
+                // straight from Navigator, and 47 sections in this dump are enrolled over
+                // capacity. Only our own arithmetic is an invariant here.
+                if (typeof waitlist === 'number' && waitlist < 0)
+                    bad.push(`${c.course_id}/${classId}: negative waitlist`)
             }
         }
         expect(show(bad)).toEqual([])

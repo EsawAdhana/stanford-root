@@ -4,6 +4,7 @@ import { rowToCourse } from '@/lib/course-mapper'
 import { compareTerms, getDefaultTerm } from '@/lib/terms'
 import {
   aggregateCrossListMetrics,
+  buildCrossListGroups,
   compareCourseCodes,
   decodeHtmlEntities,
   getCrossListPrimaryMap,
@@ -182,10 +183,41 @@ export async function getInstructorCoursesFromDump(entry: {
         hours: row.hours != null && row.hours !== '' ? Number(row.hours) : null,
       })
     }
-    return out
+    return collapseCrossListings(out, rows)
   } catch {
     return []
   }
+}
+
+/**
+ * One row per class, not per listing.
+ *
+ * Reeves teaches one Media Psychology, and the instructor page listed it twice --
+ * once as COMM 172 and once as COMM 272 -- while browse and the course page both
+ * show a cross-listed class once. Keeps the canonical listing when the instructor
+ * teaches it, otherwise the listing they do teach, and unions the quarters.
+ */
+function collapseCrossListings(
+  found: DumpInstructorCourse[],
+  rows: DumpRow[],
+): DumpInstructorCourse[] {
+  if (found.length < 2) return found
+  const primaryMap = getCrossListPrimaryMap(
+    rows.map(r => ({ id: String(r.course_id || r.id || ''), title: String(r.title ?? '') }))
+  )
+  const kept = new Map<string, DumpInstructorCourse>()
+  for (const course of found) {
+    const canonical = resolveToCanonicalPrimary(normalizeCourseId(course.id), primaryMap)
+    const existing = kept.get(canonical)
+    if (!existing) {
+      kept.set(canonical, course)
+      continue
+    }
+    const terms = [...new Set([...existing.terms, ...course.terms])]
+    const winner = normalizeCourseId(course.id) === canonical ? course : existing
+    kept.set(canonical, { ...winner, terms })
+  }
+  return [...kept.values()]
 }
 
 /** Light dump rows for one department (dept pages + SEO related links). */
@@ -253,6 +285,44 @@ export async function resolveCourseIdFromDump(raw: string): Promise<string | nul
   } catch {
     return null
   }
+}
+
+let canonicalById: Map<string, string> | null = null
+
+/**
+ * The catalog id whose page actually renders this class.
+ *
+ * A cross-listed class is served from one listing -- COMM 272's URL loads COMM 172 --
+ * so `/COMM272` must point its canonical link there rather than at itself. Without it
+ * the sitemap offered 1,841 URLs that each claimed to be canonical and then rendered a
+ * different course.
+ */
+export async function getCanonicalCourseIdFromDump(courseId: string): Promise<string> {
+  try {
+    if (!canonicalById) {
+      const rows = await loadLightRows()
+      const courses = rows.map(r => ({ id: String(r.course_id || r.id || ''), title: String(r.title ?? '') }))
+      const primaryMap = getCrossListPrimaryMap(courses)
+      const byNormalized = new Map(courses.map(c => [normalizeCourseId(c.id), c.id]))
+      const map = new Map<string, string>()
+      for (const c of courses) {
+        const canonical = resolveToCanonicalPrimary(normalizeCourseId(c.id), primaryMap)
+        map.set(c.id, byNormalized.get(canonical) ?? c.id)
+      }
+      canonicalById = map
+    }
+    return canonicalById.get(courseId) ?? courseId
+  } catch {
+    return courseId
+  }
+}
+
+/** Ids whose own page is the one that renders, i.e. the sitemap-worthy listings. */
+export async function getCanonicalCourseIdsFromDump(): Promise<Set<string>> {
+  const ids = await getAllCourseIdsFromDump()
+  const canonical = new Set<string>()
+  for (const id of ids) canonical.add(await getCanonicalCourseIdFromDump(id))
+  return canonical
 }
 
 /**
@@ -354,9 +424,17 @@ export async function getDefaultViewFromDump(limit = 4): Promise<DefaultCatalogV
     )
 
     // Same facet pass the sidebar counts with: every filter except the term.
+    // A class counts for every quarter ANY of its listings is offered in, matching
+    // the group-aware term filter -- ME 350 runs all three quarters while its
+    // canonical AA 296 runs one, and counting the canonical alone left the term
+    // pill two short of the results bar it sits next to.
+    const byId = new Map(courses.map(c => [normalizeCourseId(c.id), c]))
+    const groupIds = buildCrossListGroups(courses)
     const perTerm = new Map<string, number>()
     for (const course of filterCoursesForFacets(courses, criteria, primaryMap, []).terms) {
-      for (const t of course.terms ?? []) perTerm.set(t, (perTerm.get(t) ?? 0) + 1)
+      const ids = groupIds.get(normalizeCourseId(course.id)) ?? [course.id]
+      const groupTerms = new Set(ids.flatMap(id => byId.get(normalizeCourseId(id))?.terms ?? []))
+      for (const t of groupTerms) perTerm.set(t, (perTerm.get(t) ?? 0) + 1)
     }
 
     // Pooled across each cross-list group, so the numbers match the real card.

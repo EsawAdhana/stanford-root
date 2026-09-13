@@ -7,6 +7,7 @@ import { SITE_URL } from '@/lib/site';
 import {
     getAllCourseIdsFromDump,
     getAllSubjectsFromDump,
+    getCanonicalCourseIdFromDump,
     getCourseFromDump,
     getDepartmentFromDump,
     resolveCourseIdFromDump,
@@ -77,7 +78,9 @@ export async function generateMetadata({
     const { code } = await params;
     const resolved = await resolveCode(code);
 
-    if (resolved.kind === 'course') return courseMetadata(resolved.course);
+    if (resolved.kind === 'course') {
+        return courseMetadata(resolved.course, await getCanonicalCourseIdFromDump(resolved.course.id));
+    }
 
     const { subject, courses } = resolved;
     const title = `${subject} Courses at Stanford (${courses.length}) — Stanford Root`;

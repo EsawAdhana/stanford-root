@@ -6,8 +6,8 @@ import { useCartStore } from '@/lib/cart-store';
 import { useAuthStore } from '@/lib/auth-store';
 import { promptLoginToSyncOnce } from '@/lib/login-nudge';
 import { track } from '@/lib/analytics';
-import { isMeetingOptional, parseMeetingTimes, timeToMinutes, stripSeconds } from '@/lib/schedule-utils';
-import { cn, unitsLabel, decodeHtmlEntities } from '@/lib/utils';
+import { isMeetingOptional, parseMeetingTimes, timeToMinutes, stripSeconds, scheduledCrossListMember } from '@/lib/schedule-utils';
+import { cn, unitsLabel, decodeHtmlEntities, getCrossListPrimaryMap } from '@/lib/utils';
 import { ChevronLeft, ChevronRight, Trash2, EyeOff, Eye, Calendar, Search, AlertTriangle, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -105,6 +105,10 @@ export function CalendarView({ currentTerm, onPrevTerm, onNextTerm, canPrevTerm 
       return item
     })
   }, [items, currentTerm, courseMap])
+
+  // Cross-list groups, so a class already on the schedule under one listing is not
+  // offered again under another. Searching "COMM 172" matches COMM 272 on its title.
+  const primaryMap = useMemo(() => getCrossListPrimaryMap(courses), [courses])
 
   // Debounce so we don't scan the full catalog on every keystroke
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('')
@@ -378,7 +382,13 @@ export function CalendarView({ currentTerm, onPrevTerm, onNextTerm, canPrevTerm 
                     <div className="p-3 text-sm text-center text-muted-foreground">{isLoading ? 'Loading courses...' : `No courses found matching "${searchQuery}"`}</div>
                   ) : (
                     searchResults.map(course => {
-                      const isAdded = currentTermCourses.some(c => c.id === course.id);
+                      const scheduled = scheduledCrossListMember(course.id, currentTermCourses, primaryMap);
+                      const isAdded = Boolean(scheduled);
+                      // Name the listing that blocks it, so "Added" next to a course the
+                      // student never added reads as the cross-listing it is.
+                      const addedLabel = !scheduled || scheduled.id === course.id
+                        ? 'Added'
+                        : `Added as ${scheduled.subject} ${scheduled.code}`;
                       return (
                         <div
                           key={course.id}
@@ -403,7 +413,7 @@ export function CalendarView({ currentTerm, onPrevTerm, onNextTerm, canPrevTerm 
                             <div className="text-xs text-muted-foreground truncate">{decodeHtmlEntities(course.title)}</div>
                           </div>
                           {isAdded && (
-                            <span className="text-[10px] font-medium text-muted-foreground px-1.5 py-0.5 border rounded-sm bg-muted/30 shrink-0">Added</span>
+                            <span className="text-[10px] font-medium text-muted-foreground px-1.5 py-0.5 border rounded-sm bg-muted/30 shrink-0">{addedLabel}</span>
                           )}
                         </div>
                       )

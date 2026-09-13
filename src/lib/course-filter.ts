@@ -69,7 +69,12 @@ type FilterChecks = {
  * facet counts (filterCoursesForFacets) are composed from these, so the two
  * can never disagree on semantics.
  */
-function buildChecks(criteria: CourseFilterCriteria, cartItems: CartItem[], newCanonicals: Set<string>): FilterChecks {
+function buildChecks(
+  criteria: CourseFilterCriteria,
+  cartItems: CartItem[],
+  newCanonicals: Set<string>,
+  primaryMap: Map<string, string>,
+): FilterChecks {
   const {
     excludedWords, selectedDepts, selectedTerms, selectedFormats, selectedLevels,
     selectedGers, selectedSchools, unitMin, unitMax, timeMin, timeMax,
@@ -182,6 +187,10 @@ function buildChecks(criteria: CourseFilterCriteria, cartItems: CartItem[], newC
     // Parse each cart item's meetings once, not once per candidate section.
     const cartParsed = cartItems.map(item => ({
       item,
+      // Group, not id: a cross-listed class in the cart under one code must not read
+      // as a conflict against its own other code. With CS 238 scheduled, comparing ids
+      // hid AA 228 -- the same meeting -- from the list as though it clashed.
+      canonical: resolveToCanonicalPrimary(normalizeCourseId(item.id), primaryMap),
       meetings: parseMeetingTimes(item, item.selectedTerm).map(m => ({
         days: m.days,
         startTime: m.startTime,
@@ -192,6 +201,7 @@ function buildChecks(criteria: CourseFilterCriteria, cartItems: CartItem[], newC
     }))
     conflicts = (c) => {
       if (!c.sections || c.sections.length === 0) return true
+      const candidateCanonical = resolveToCanonicalPrimary(normalizeCourseId(c.id), primaryMap)
       let sectionsToCheck = c.sections
       // hasTermFilter, not termsSet.size: the "any term" selection is the
       // sentinel ['any'], which no section's term equals, so gating on size
@@ -206,7 +216,7 @@ function buildChecks(criteria: CourseFilterCriteria, cartItems: CartItem[], newC
         const sectionMeetings = conflictMeetings(section)
         if (sectionMeetings.length === 0) return true
         const isOverlapping = cartForTerm.some(cp => {
-          if (cp.item.id === c.id) return false
+          if (cp.canonical === candidateCanonical) return false
           return cp.meetings.some(cm => sectionMeetings.some(sm => hasOverlap(sm, cm, cp.item)))
         })
         return !isOverlapping
@@ -294,6 +304,67 @@ function getValidCanonical(courses: Course[], primaryMap: Map<string, string>): 
 }
 
 /**
+ * Every listing of each class, keyed by the canonical id the list renders.
+ *
+ * Memoized on catalog identity like the other prefixes of the pipeline.
+ */
+const groupMembersCache = new WeakMap<Course[], Map<string, Course[]>>()
+function getGroupMembers(courses: Course[], primaryMap: Map<string, string>): Map<string, Course[]> {
+  let result = groupMembersCache.get(courses)
+  if (!result) {
+    result = new Map<string, Course[]>()
+    for (const c of courses) {
+      const canonical = resolveToCanonicalPrimary(normalizeCourseId(c.id), primaryMap)
+      const bucket = result.get(canonical)
+      if (bucket) bucket.push(c)
+      else result.set(canonical, [c])
+    }
+    groupMembersCache.set(courses, result)
+  }
+  return result
+}
+
+/**
+ * Filters a cross-listed class matches if ANY of its listings matches.
+ *
+ * The list renders one row per class, under the canonical id, so testing that row
+ * alone asked the wrong question: CS 238 is listed under CS but its group's canonical
+ * is AA 228, and "Departments: CS" dropped it -- 1,841 of the catalog's 8,625 listings
+ * (ESS 39 of 58) never appeared under their own subject. The same held for a grad-only
+ * listing under "Graduate", a quarter only a sibling is offered in, and a sibling whose
+ * section is open while the canonical's is closed.
+ *
+ * Left on the canonical row deliberately:
+ *  - `exclude` and `studyAbroad` are hide rules, so "any listing matches" would invert
+ *    them -- a keyword or an OSP listing anywhere in the group should still hide it.
+ *  - `newOnly` already resolves through the group (getNewCanonicals).
+ */
+const GROUPED_CHECKS = [
+  'depts', 'terms', 'formats', 'levels', 'gers', 'schools', 'units', 'times', 'conflicts', 'unavailable',
+] as const satisfies readonly (keyof FilterChecks)[]
+
+function buildGroupChecks(
+  courses: Course[],
+  criteria: CourseFilterCriteria,
+  cartItems: CartItem[],
+  primaryMap: Map<string, string>,
+): FilterChecks {
+  const k = buildChecks(criteria, cartItems, getNewCanonicals(courses, primaryMap), primaryMap)
+  const members = getGroupMembers(courses, primaryMap)
+  const lifted: FilterChecks = { ...k }
+  for (const key of GROUPED_CHECKS) {
+    const check = k[key]
+    if (!check) continue
+    lifted[key] = (c: Course) => {
+      const group = members.get(normalizeCourseId(c.id))
+      if (!group || group.length < 2) return check(c)
+      return group.some(check)
+    }
+  }
+  return lifted
+}
+
+/**
  * Single source of truth for course filtering, shared by the visible list
  * (use-filtered-courses) and the sidebar facet counts. Applies every filter
  * EXCEPT the free-text search query, which callers apply themselves (the list
@@ -309,7 +380,7 @@ export function filterCourses(
   cartItems: CartItem[],
   exclude?: FacetKey,
 ): Course[] {
-  const k = buildChecks(criteria, cartItems, getNewCanonicals(courses, primaryMap))
+  const k = buildGroupChecks(courses, criteria, cartItems, primaryMap)
   return getValidCanonical(courses, primaryMap).filter(c =>
     (exclude === 'exclude' || !k.exclude || k.exclude(c)) &&
     (exclude === 'depts' || !k.depts || k.depts(c)) &&
@@ -345,7 +416,7 @@ export function filterCoursesForFacets(
   primaryMap: Map<string, string>,
   cartItems: CartItem[],
 ): Record<CountedFacetKey, Course[]> {
-  const k = buildChecks(criteria, cartItems, getNewCanonicals(courses, primaryMap))
+  const k = buildGroupChecks(courses, criteria, cartItems, primaryMap)
   const restChecks = [k.exclude, k.units, k.times, k.conflicts, k.unavailable, k.studyAbroad, k.newOnly]
     .filter((f): f is CourseCheck => f !== null)
   const dims: [CountedFacetKey, CourseCheck | null][] = [

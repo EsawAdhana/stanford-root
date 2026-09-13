@@ -160,12 +160,13 @@ describe('aggregateCrossListedSectionEnrollment with live seats', () => {
     { id: 'B', subject: 'B', code: '1', title: '', description: '', units: '3', grading: '', instructors: [], sections: [sibling] },
   ]
 
-  it('is unchanged when there is no live reading', () => {
+  it('sums both the people and the seats when there is no live reading', () => {
+    // Each listing is capped separately, so the class seats 60, not 30.
     expect(aggregateCrossListedSectionEnrollment(anchor, ['A', 'B'], courses)).toEqual({
       enrolled: 8,
-      capacity: 30,
+      capacity: 60,
       waitlist: 1,
-      waitlistMax: 10,
+      waitlistMax: 20,
     })
   })
 
@@ -176,9 +177,9 @@ describe('aggregateCrossListedSectionEnrollment with live seats', () => {
     ])
     expect(aggregateCrossListedSectionEnrollment(anchor, ['A', 'B'], courses, live)).toEqual({
       enrolled: 29,
-      capacity: 30,
+      capacity: 60,
       waitlist: 6,
-      waitlistMax: 10,
+      waitlistMax: 20,
     })
   })
 
@@ -269,5 +270,31 @@ describe('navigatorClassUrl', () => {
   it('never silently drops the class number', () => {
     process.env.NAVIGATOR_BASE_URL = 'http://localhost:3300'
     expect(navigatorClassUrl(1276, 1878)).toContain('/1276/1878')
+  })
+})
+
+describe('cross-listed capacity never reads under the people in it', () => {
+  const mk = (classId: number, enrolled: number, capacity: number) =>
+    section({ classId, enrolled, capacity, waitlist: 0, waitlistMax: 0 })
+
+  it('reports the real pooled cap for CEE 121 / CEE 221 rather than one listing of it', () => {
+    const a = mk(1, 44, 60)
+    const b = mk(2, 40, 60)
+    const courses: Course[] = [
+      { id: 'CEE121', subject: 'CEE', code: '121', title: '', description: '', units: '3', grading: '', instructors: [], sections: [a] },
+      { id: 'CEE221', subject: 'CEE', code: '221', title: '', description: '', units: '3', grading: '', instructors: [], sections: [b] },
+    ]
+    const agg = aggregateCrossListedSectionEnrollment(a, ['CEE121', 'CEE221'], courses)
+    expect(agg).toMatchObject({ enrolled: 84, capacity: 120 })
+    expect(agg.enrolled).toBeLessThanOrEqual(agg.capacity)
+  })
+
+  it('leaves a class with one listing exactly as the registrar reports it', () => {
+    const only = mk(9, 30, 25)
+    const courses: Course[] = [
+      { id: 'X1', subject: 'X', code: '1', title: '', description: '', units: '3', grading: '', instructors: [], sections: [only] },
+    ]
+    // Over-enrolled single sections are real; the aggregate must not paper over them.
+    expect(aggregateCrossListedSectionEnrollment(only, ['X1'], courses)).toMatchObject({ enrolled: 30, capacity: 25 })
   })
 })

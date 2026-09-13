@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
-import { pickSectionsForTerm, parseMeetingTimes, stripSeconds, standInSectionChanged, parseDays } from '@/lib/schedule-utils'
+import { pickSectionsForTerm, parseMeetingTimes, stripSeconds, standInSectionChanged, parseDays, scheduledCrossListMember } from '@/lib/schedule-utils'
+import { getCrossListPrimaryMap } from '@/lib/utils'
 import type { Course, Section } from '@/types/course'
 
 const TERM = 'Autumn 2026'
@@ -206,4 +207,43 @@ describe('parseDays — weekend meetings', () => {
     expect(parseDays('TBA')).toEqual([])
     expect(parseDays('Not Applicable')).toEqual([])
   })
+})
+
+describe('scheduledCrossListMember — one class, one slot on the schedule', () => {
+    /** COMM 172 / COMM 272 are the same Winter class; CS 106A is unrelated. */
+    const catalog = [
+        { id: 'COMM172', subject: 'COMM', code: '172', title: 'Media Psychology (COMM 272)' },
+        { id: 'COMM272', subject: 'COMM', code: '272', title: 'Media Psychology (COMM 172)' },
+        { id: 'CS106A', subject: 'CS', code: '106A', title: 'Programming Methodology' },
+    ]
+    const primaryMap = getCrossListPrimaryMap(catalog)
+
+    it('reports the sibling already on the schedule', () => {
+        const scheduled = [{ id: 'COMM172', subject: 'COMM', code: '172' }]
+        expect(scheduledCrossListMember('COMM272', scheduled, primaryMap)?.id).toBe('COMM172')
+    })
+
+    it('works from either listing', () => {
+        const scheduled = [{ id: 'COMM272', subject: 'COMM', code: '272' }]
+        expect(scheduledCrossListMember('COMM172', scheduled, primaryMap)?.id).toBe('COMM272')
+    })
+
+    it('still reports the course itself when it is the one scheduled', () => {
+        const scheduled = [{ id: 'COMM172', subject: 'COMM', code: '172' }]
+        expect(scheduledCrossListMember('COMM172', scheduled, primaryMap)?.id).toBe('COMM172')
+    })
+
+    it('does not block an unrelated course', () => {
+        const scheduled = [{ id: 'COMM172', subject: 'COMM', code: '172' }]
+        expect(scheduledCrossListMember('CS106A', scheduled, primaryMap)).toBeUndefined()
+    })
+
+    it('matches regardless of id casing or spacing', () => {
+        const scheduled = [{ id: 'comm 172', subject: 'COMM', code: '172' }]
+        expect(scheduledCrossListMember('COMM272', scheduled, primaryMap)?.id).toBe('comm 172')
+    })
+
+    it('finds nothing on an empty schedule', () => {
+        expect(scheduledCrossListMember('COMM272', [], primaryMap)).toBeUndefined()
+    })
 })

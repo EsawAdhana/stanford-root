@@ -187,8 +187,13 @@ async function RelatedCourses({ course }: { course: Course }) {
     );
 }
 
-/** Title, description and canonical for one course, served at `/<COURSEID>`. */
-export function courseMetadata(course: Course): Metadata {
+/**
+ * Title, description and canonical for one course, served at `/<COURSEID>`.
+ *
+ * `canonicalId` is the listing whose page actually renders -- a cross-listed class is
+ * served from one of its codes, so the other codes point their canonical link there.
+ */
+export function courseMetadata(course: Course, canonicalId = course.id): Metadata {
     const code = `${course.subject} ${course.code}`;
     const title = `${code}: ${decodeHtmlEntities(course.title)} — Stanford Root`;
     const blurb = plainText(course.description);
@@ -196,7 +201,7 @@ export function courseMetadata(course: Course): Metadata {
         `Student reviews, ratings, hours/week, sections, and syllabus for ${code} at Stanford. ` +
         blurb
     ).slice(0, 300);
-    const path = `/${encodeURIComponent(course.id)}`;
+    const path = `/${encodeURIComponent(canonicalId)}`;
 
     return {
         title,

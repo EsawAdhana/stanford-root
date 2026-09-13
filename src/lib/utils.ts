@@ -89,8 +89,43 @@ export {
 /**
  * Aggregate enrollment for the same logical section across cross-listed catalog entries.
  * Matches per sibling course by classId first, then component + sectionNumber within the anchor term.
- * Enrolled and waitlist counts are summed (total people); capacity and waitlistMax use max (shared cap, not summed department quotas).
+ * Every field is summed across the group, because the registrar caps each listing
+ * separately: CEE 121 and CEE 221 each seat 60, and the class holds 120. Taking the
+ * max while summing the enrolled counts made 24 sections in the current dump render
+ * over capacity -- CEE 121 read "86 / 60" for a class that was 86 of 120.
  */
+/**
+ * The same logical section as it is numbered under the group's other listings.
+ *
+ * A cross-listed class has one meeting but a class number per listing, and only the
+ * canonical listing's number reached the page -- a grad student reading COMM 172 never
+ * saw that their own listing, COMM 272, enrols under 12515. Matched exactly as the
+ * enrollment aggregate matches: classId first, then component + section number in the
+ * anchor's term.
+ */
+export function crossListedSectionPeers(
+  anchor: Section,
+  anchorCourseId: string,
+  crossListCourseIds: string[],
+  courses: Course[]
+): Array<{ courseId: string; subject: string; code: string; classId: number }> {
+  const byId = new Map(courses.map(c => [c.id, c]))
+  const peers: Array<{ courseId: string; subject: string; code: string; classId: number }> = []
+  for (const cid of crossListCourseIds) {
+    if (cid === anchorCourseId) continue
+    const c = byId.get(cid)
+    if (!c?.sections?.length) continue
+    const sameTerm = c.sections.filter(s => s.term === anchor.term)
+    const hit =
+      sameTerm.find(s => s.classId === anchor.classId) ??
+      sameTerm.find(s => s.component === anchor.component && s.sectionNumber === anchor.sectionNumber)
+    if (hit && hit.classId && hit.classId !== anchor.classId) {
+      peers.push({ courseId: c.id, subject: c.subject, code: c.code, classId: hit.classId })
+    }
+  }
+  return peers
+}
+
 export function aggregateCrossListedSectionEnrollment(
   anchor: Section,
   crossListCourseIds: string[],
@@ -135,13 +170,12 @@ export function aggregateCrossListedSectionEnrollment(
       waitlistMax: anchor.waitlistMax,
     }
   }
-  const caps = matches.map(s => s.capacity ?? 0)
-  const waitCaps = matches.map(s => s.waitlistMax ?? 0)
+  const sum = (pick: (s: Section) => number | undefined) => matches.reduce((a, s) => a + (pick(s) ?? 0), 0)
   return {
-    enrolled: matches.reduce((a, s) => a + (s.enrolled ?? 0), 0),
-    capacity: Math.max(0, ...caps),
-    waitlist: matches.reduce((a, s) => a + (s.waitlist ?? 0), 0),
-    waitlistMax: Math.max(0, ...waitCaps),
+    enrolled: sum(s => s.enrolled),
+    capacity: sum(s => s.capacity),
+    waitlist: sum(s => s.waitlist),
+    waitlistMax: sum(s => s.waitlistMax),
   }
 }
 
@@ -325,20 +359,47 @@ export function aggregateCrossListMetrics(
  * not be safe even so: it is a rank, not a quantity, so the mean of the 95th and 4th
  * percentiles is a number that no course's score maps to.
  */
+type RatingFields = Pick<Course, 'quality' | 'qualityN' | 'qualityPct' | 'rankScope' | 'ratingBreakdown'>
+
 export function resolveCrossListRating(
-  members: Array<Pick<Course, 'quality' | 'qualityN' | 'qualityPct' | 'ratingBreakdown'>>,
-): Pick<Course, 'quality' | 'qualityN' | 'qualityPct' | 'ratingBreakdown'> {
+  members: Array<RatingFields>,
+  /**
+   * The listing being displayed. The SCORE is shared by the whole group, but the RANK is
+   * per department -- CSRE 10 is ranked against CSRE and its TAPS 10 listing against
+   * TAPS off the same score -- so the rank has to come from this listing's own row, not
+   * from whichever sibling happens to hold the most responses. Omitted, or with no rank
+   * of its own, the sibling's rank is used and the label names that sibling's peer group.
+   */
+  self?: RatingFields,
+): RatingFields {
   let best: (typeof members)[number] | undefined
   for (const member of members) {
     if (member?.quality == null) continue
     if (!best || (member.qualityN ?? 0) > (best.qualityN ?? 0)) best = member
   }
+  const ranked = self?.qualityPct != null ? self : best
   return {
     quality: best?.quality,
     qualityN: best?.qualityN,
-    qualityPct: best?.qualityPct,
-    ratingBreakdown: best?.ratingBreakdown,
+    qualityPct: ranked?.qualityPct,
+    rankScope: ranked?.rankScope,
+    ratingBreakdown: mergeRatingRanks(best?.ratingBreakdown, ranked?.ratingBreakdown),
   }
+}
+
+/** Scores and sample sizes from the listing that has the data, ranks from this listing. */
+function mergeRatingRanks(
+  scores: Course['ratingBreakdown'],
+  ranks: Course['ratingBreakdown'],
+): Course['ratingBreakdown'] {
+  if (!scores || !ranks || scores === ranks) return scores
+  const out: NonNullable<Course['ratingBreakdown']> = {}
+  for (const [category, stat] of Object.entries(scores) as Array<[keyof typeof scores, NonNullable<typeof scores>[keyof typeof scores]]>) {
+    if (!stat) continue
+    const rank = ranks[category]
+    out[category] = rank ? { ...stat, pct: rank.pct, scope: rank.scope } : stat
+  }
+  return out
 }
 
 /** Use "unit" only when value is exactly 1; otherwise "units". Ranges (e.g. "1-3") and "1+" always use "units". */
