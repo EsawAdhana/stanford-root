@@ -112,3 +112,55 @@ describe('bare links to courses that left the catalog', () => {
         expect(segs.filter(s => s.courseId)).toEqual([])
     })
 })
+
+describe('subject codes that are longer than four letters, or contain "&"', () => {
+    /** Catalog knows the two subjects the old 2-4 letter class could not express. */
+    const wide = (subject: string, code: string) =>
+        ({ 'MS&E|240': 'MS&E240', 'BIOMEDIN|210': 'BIOMEDIN210' } as Record<string, string>)[`${subject}|${code}`]
+
+    it('links the whole "MS&E 240" reference, not just the number', () => {
+        const text = 'Pre-requisite or Co-requisite: a college-level financial accounting course (e.g., MS&E 240) or equivalent.'
+        const segs = buildDescriptionSegments('MS&E276', text, wide, new Map())
+        expect(segs.filter(s => s.courseId)).toEqual([{ text: 'MS&E 240', courseId: 'MS&E240' }])
+        expect(segs.map(s => s.text).join('')).toBe(text)
+    })
+
+    it('links an eight-letter subject', () => {
+        const segs = buildDescriptionSegments('BIOE212', 'Prerequisites: BIOMEDIN 210 or 214.', wide, new Map())
+        expect(segs.filter(s => s.courseId)).toEqual([{ text: 'BIOMEDIN 210', courseId: 'BIOMEDIN210' }])
+    })
+
+    it('falls back to the reviewed verdict when the named subject was renamed away', () => {
+        // BIOMEDIN is now BMDS, so the live resolver returns nothing; the review still knows.
+        const text = 'Prerequisites: BIOMEDIN 210 or 214.'
+        const bare = new Map<number, [number, string]>([[text.indexOf('210'), [3, 'BMDS210']]])
+        const segs = buildDescriptionSegments('BIOE212', text, resolve, bare)
+        expect(segs.filter(s => s.courseId)).toEqual([{ text: 'BIOMEDIN 210', courseId: 'BMDS210' }])
+        expect(segs.map(s => s.text).join('')).toBe(text)
+    })
+
+    it('does not link a reviewed number when the review span covers different characters', () => {
+        const text = 'Prerequisites: BIOMEDIN 210 or 214.'
+        const bare = new Map<number, [number, string]>([[text.indexOf('210'), [2, 'BMDS21']]])
+        expect(buildDescriptionSegments('BIOE212', text, resolve, bare).filter(s => s.courseId)).toEqual([])
+    })
+
+    it('still requires prereq context for a long subject', () => {
+        const text = 'Students present at the BIOMEDIN 210 symposium.'
+        const segs = buildDescriptionSegments('BIOE212', text, wide, new Map())
+        expect(segs.filter(s => s.courseId)).toEqual([])
+        expect(segs.map(s => s.text).join('')).toBe(text)
+    })
+
+    it('leaves an uppercase word followed by a number alone when it is not a subject', () => {
+        const text = 'Prerequisites: ROOM 240 attendance and SECTION 30 sign-up.'
+        expect(render(text)).toBe(text)
+        expect(buildDescriptionSegments('CEE107D', text, resolve, new Map()).filter(s => s.courseId)).toEqual([])
+    })
+
+    it('does not read a course number out of an email address', () => {
+        const text = 'Prerequisites: consent. Email asheen21@stanford.edu for the 30 seat waitlist.'
+        const bare = new Map<number, [number, string]>([[text.indexOf('21@'), [2, 'CEE30']]])
+        expect(buildDescriptionSegments('CEE107D', text, resolve, bare).filter(s => s.courseId)).toEqual([])
+    })
+})

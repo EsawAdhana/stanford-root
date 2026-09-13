@@ -56,9 +56,12 @@ describe('reviewed bare-number links, against the real catalog', () => {
     it('re-points prereqs to the subject the sentence names', () => {
         // "Prerequisites: BIOMEDIN 210 or 214 or 215 or 217 or 260" on a BIOE page.
         // BIOMEDIN is now BMDS; nothing here should resolve to BIOE.
-        const bioe = linksIn('BIOE212').filter(l => /^\d/.test(l))
+        const bioe = linksIn('BIOE212')
         expect(bioe.every(l => l.includes('->BMDS'))).toBe(true)
         expect(bioe.length).toBeGreaterThan(0)
+        // The sentence says BIOMEDIN, a subject the catalog has renamed; the reviewed
+        // verdict still supplies the target, and the link covers the subject too.
+        expect(bioe).toContain('BIOMEDIN 210->BMDS210')
 
         // "Recommended prerequisites: Medicine 300A, Pediatrics 300A, or Surgery 300A"
         expect(linksIn('MED295')).toContain('300A->PEDS300A')
@@ -69,7 +72,8 @@ describe('reviewed bare-number links, against the real catalog', () => {
 
         // Shared quantitative-methods boilerplate reused across departments.
         expect(linksIn('MS&E134')).toContain('108->ECON108')
-        expect(linksIn('EARTHSYS153')).toContain('112->DATASCI112')
+        // "DATASCI 112" names its subject, so the whole reference is the link text.
+        expect(linksIn('EARTHSYS153')).toContain('DATASCI 112->DATASCI112')
 
         // "Concurrent enrollment in MATH 19, 20, 52, or 53" on an ENGR page.
         expect(linksIn('ENGR199A')).toContain('20->MATH20')

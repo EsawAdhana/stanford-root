@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useCourseStore } from '@/lib/store';
 import { decodeHtmlEntities } from '@/lib/utils';
 import { bareLinksFor } from '@/lib/course-bare-links';
+import { findLinkSpans, splitLinkSegments } from '@/lib/linkify';
 
 /** Only auto-link course codes when nearby preceding text looks like a prereq / requirement list (not e.g. lab fees like "$MUSIC 80"). */
 const COURSE_REF_CONTEXT_RE =
@@ -29,6 +30,10 @@ function hasCourseReferenceContext(fullText: string, matchIndex: number): boolea
  *  - "Prerequisite: 240" — subject is absent, so the target comes from the
  *    reviewed list in course-bare-links.json. No entry means no link; the
  *    renderer never guesses a subject for a bare number.
+ *
+ * URLs in the prose become `href` segments. Digits inside a URL are never treated
+ * as a course reference — "goto.stanford.edu/stanfordengr306" is one link, not a
+ * link wrapped around a link.
  */
 export function buildDescriptionSegments(
     courseId: string,
@@ -45,18 +50,26 @@ export function buildDescriptionSegments(
      * unit tests that pass a stub resolver working.
      */
     courseExists?: (courseId: string) => boolean,
-): Array<{ text: string; courseId?: string }> {
+): Array<{ text: string; courseId?: string; href?: string }> {
     if (!description) return [];
 
     const decodedText = decodeHtmlEntities(description);
     const bareLinks = bareLinksOverride ?? bareLinksFor(courseId, decodedText);
-    const courseRegex = /\b(?:([A-Z]{2,4})\s*(\d{1,3}[A-Z]?)|(\d{2,3}[A-Z]?))\b/g;
+    // Subjects run 2-8 letters and one of them ("MS&E") contains an ampersand, so a
+    // narrower class silently demoted "MS&E 240" and "BIOMEDIN 210" to the bare-number
+    // path, which highlights the number alone and hides the subject from the link.
+    const courseRegex = /\b(?:([A-Z][A-Z&]{1,8})\s*(\d{1,3}[A-Z]?)|(\d{2,3}[A-Z]?))\b/g;
+
+    const urlSpans = findLinkSpans(decodedText);
+    const insideUrl = (index: number) => urlSpans.some(s => index >= s.start && index < s.end);
 
     const segments: Array<{ text: string; courseId?: string }> = [];
     let lastIndex = 0;
     let match: RegExpExecArray | null;
 
     while ((match = courseRegex.exec(decodedText)) !== null) {
+        if (insideUrl(match.index)) continue;
+
         const precedingText = decodedText.substring(0, match.index);
         if (precedingText.endsWith('&#') || (match[3] && precedingText.match(/&#\d*$/))) {
             continue;
@@ -71,6 +84,16 @@ export function buildDescriptionSegments(
         } else {
             const resolved = resolveCourseId(match[1], match[2]);
             courseId = resolved && hasCourseReferenceContext(decodedText, match.index) ? resolved : undefined;
+            // The subject in the text can be one the catalog has since renamed --
+            // "BIOMEDIN 210" is BMDS 210, "BIOHOPK 290H" is OCEANS 290H. The reviewed
+            // list already resolved those numbers by hand, so fall back to its verdict
+            // rather than dropping the reference; the link still covers both words.
+            if (!courseId) {
+                const numberIndex = match.index + match[0].length - match[2].length;
+                const reviewed = bareLinks.get(numberIndex);
+                const spanMatches = reviewed && reviewed[0] === match[2].length;
+                if (spanMatches && (!courseExists || courseExists(reviewed[1]))) courseId = reviewed[1];
+            }
         }
         if (!courseId) continue;
 
@@ -85,7 +108,8 @@ export function buildDescriptionSegments(
         segments.push({ text: decodedText.substring(lastIndex) });
     }
 
-    return segments;
+    // Course links are resolved first, so a URL only ever splits plain prose.
+    return segments.flatMap(seg => (seg.courseId ? [seg] : splitLinkSegments(seg.text)));
 }
 
 interface CourseDescriptionProps {
@@ -117,8 +141,22 @@ export function CourseDescription({ courseId, description, className }: CourseDe
             undefined,
             id => courseIds.has(id),
         );
-        return segments.map((seg, i) =>
-            seg.courseId
+        return segments.map((seg, i) => {
+            if (seg.href) {
+                return (
+                    <a
+                        key={`${i}-${seg.text}`}
+                        href={seg.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary font-medium underline underline-offset-2 hover:opacity-80 break-words"
+                        onClick={(e) => { e.stopPropagation(); }}
+                    >
+                        {seg.text}
+                    </a>
+                );
+            }
+            return seg.courseId
                 ? (
                     <Link
                         key={`${i}-${seg.text}`}
@@ -129,8 +167,8 @@ export function CourseDescription({ courseId, description, className }: CourseDe
                         {seg.text}
                     </Link>
                 )
-                : seg.text
-        );
+                : seg.text;
+        });
     }, [courseId, description, courseMap, courseIds]);
 
     if (!renderedParts) return null;
