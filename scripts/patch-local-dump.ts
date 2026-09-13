@@ -7,7 +7,7 @@ import { createClient } from '@supabase/supabase-js'
 import { readFileSync, writeFileSync } from 'node:fs'
 import { buildCrossListGroups, deriveEvalPairings, normalizeCourseId } from '../src/lib/utils'
 import { addRatingCounts, pooledMean, estimatePrior, shrinkToPrior, scopedPercentileRanks, round3, headlineSampleSize } from '../src/lib/quality-score.mjs'
-import { categorizeQuestion, courseLevelSignature } from '../src/lib/eval-reports.mjs'
+import { categorizeQuestion, courseLevelSignature, normalizeTerm } from '../src/lib/eval-reports.mjs'
 
 const env = Object.fromEntries(readFileSync('.env.local', 'utf8').split('\n').filter(l => l.includes('=')).map(l => {
   const i = l.indexOf('='); return [l.slice(0, i).trim(), l.slice(i + 1).trim()]
@@ -61,7 +61,11 @@ const questionsByGroup = new Map<string, any[]>()
 const seen = new Set<string>(); let dupes = 0
 for (const r of evalRows) {
   const canonical = groupOf.get(r.course_id) ?? r.course_id
-  const key = `${canonical}||${r.course_code}||${r.term}||${courseLevelSignature(r)}`
+  // normalizeTerm, matching refreshMetrics(): the same report reaches us under two
+  // spellings of its term ("Autumn 2023-24" and "Autumn 2023", "1236 SLS" and
+  // "Winter 2024"), and keying on the raw string counted each of those twice. That
+  // inflated 19,714 reports out of 17,735 and pulled 1,686 scores off the real value.
+  const key = `${canonical}||${r.course_code}||${normalizeTerm(r.term)}||${courseLevelSignature(r)}`
   if (seen.has(key)) { dupes++; continue }
   seen.add(key)
   if (!questionsByGroup.has(canonical)) questionsByGroup.set(canonical, [])
