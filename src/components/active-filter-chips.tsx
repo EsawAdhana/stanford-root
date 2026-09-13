@@ -4,6 +4,7 @@ import React from 'react'
 import { X } from 'lucide-react'
 import { useResetFilters } from '@/hooks/use-reset-filters'
 import { useActiveFilterChips } from '@/hooks/use-active-filter-chips'
+import { ChipRows } from '@/components/ui/chip-rows'
 
 export function ActiveFilterChips() {
   const chips = useActiveFilterChips()
@@ -12,7 +13,18 @@ export function ActiveFilterChips() {
   if (chips.length === 0) return null
 
   return (
-    <div className="flex flex-wrap gap-2 items-center min-w-0">
+    <ChipRows
+      contentClassName="gap-2"
+      trailing={chips.length > 1 ? (
+        <button
+          type="button"
+          onClick={resetFilters}
+          className="inline-flex items-center h-8 sm:h-7 px-2.5 rounded-md text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+        >
+          Clear all
+        </button>
+      ) : null}
+    >
       {chips.map(({ id, label, onRemove }) => (
         <span
           key={id}
@@ -29,15 +41,6 @@ export function ActiveFilterChips() {
           </button>
         </span>
       ))}
-      {chips.length > 1 && (
-        <button
-          type="button"
-          onClick={resetFilters}
-          className="inline-flex items-center h-8 sm:h-7 px-2.5 rounded-md text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
-        >
-          Clear all
-        </button>
-      )}
-    </div>
+    </ChipRows>
   )
 }

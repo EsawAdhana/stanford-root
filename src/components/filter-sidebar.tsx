@@ -30,6 +30,7 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
+import { ChipRows } from "@/components/ui/chip-rows"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 
 
@@ -434,7 +435,7 @@ export function FilterSidebar() {
                             className="h-8 text-sm"
                         />
                         {excludedWords.length > 0 && (
-                            <div className="flex flex-wrap gap-1.5">
+                            <ChipRows contentClassName="gap-1.5" chipHeight={24} chipGap={6}>
                                 {excludedWords.map(word => (
                                     <span key={word} className="inline-flex items-center gap-1 px-2 py-1 rounded bg-destructive/10 text-destructive text-xs font-medium">
                                         {word}
@@ -446,7 +447,7 @@ export function FilterSidebar() {
                                         </button>
                                     </span>
                                 ))}
-                            </div>
+                            </ChipRows>
                         )}
                     </div>
                 </div>
