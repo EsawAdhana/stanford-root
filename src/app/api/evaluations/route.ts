@@ -4,6 +4,7 @@ import { rateLimit } from '@/lib/rate-limit'
 import { isDevEvalsUnlocked } from '@/lib/dev-flags'
 import { getStanfordUser } from '@/lib/stanford-auth'
 import { EVALUATION_COLUMNS, toCourseEvaluation, type EvaluationRow } from '@/lib/evaluation-row'
+import { readCachedEvaluations, writeCachedEvaluations } from '@/lib/evaluation-cache'
 import type { CourseEvaluation } from '@/types/course'
 
 const MAX_COURSE_IDS = 50
@@ -44,24 +45,34 @@ export async function POST(request: Request) {
       return NextResponse.json({}, { headers: { 'Cache-Control': 'private, no-store' } })
     }
 
-    const supabase = getPublicClient()
-    // Single query — Supabase supports .in() with many values (up to 1000+)
-    const { data, error } = await supabase
-      .from('evaluations')
-      .select(EVALUATION_COLUMNS)
-      .in('course_id', ids)
-
-    if (error) throw error
-
+    // Serve what this instance already holds and ask Postgres only for the rest.
+    // One course costs ~550KB to read, and the browser cache is per student, so
+    // without this every student shopping the same course pays for it again.
     const byCourse: Record<string, CourseEvaluation[]> = {}
+    const missing: string[] = []
     for (const id of ids) {
-      byCourse[id] = []
+      const cached = readCachedEvaluations(id)
+      byCourse[id] = cached ?? []
+      if (!cached) missing.push(id)
     }
-    for (const row of (data || []) as EvaluationRow[]) {
-      const courseId = row.course_id
-      if (!courseId) continue
-      if (!byCourse[courseId]) byCourse[courseId] = []
-      byCourse[courseId].push(toCourseEvaluation(row))
+
+    if (missing.length > 0) {
+      const supabase = getPublicClient()
+      // Single query — Supabase supports .in() with many values (up to 1000+)
+      const { data, error } = await supabase
+        .from('evaluations')
+        .select(EVALUATION_COLUMNS)
+        .in('course_id', missing)
+
+      if (error) throw error
+
+      for (const row of (data || []) as EvaluationRow[]) {
+        const courseId = row.course_id
+        if (!courseId) continue
+        if (!byCourse[courseId]) byCourse[courseId] = []
+        byCourse[courseId].push(toCourseEvaluation(row))
+      }
+      for (const id of missing) writeCachedEvaluations(id, byCourse[id])
     }
 
     return NextResponse.json(byCourse, {
