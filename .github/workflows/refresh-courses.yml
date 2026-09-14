@@ -44,13 +44,24 @@ jobs:
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      # Which courses actually have a syllabus posted, from Stanford's own
+      # syllabus service. Instructors publish mid-quarter, so this runs daily,
+      # but only over the four newest terms: past terms never gain syllabi and
+      # the script merges over the committed index rather than replacing it.
+      # Six attempts per subject because the service strips syllabus flags from
+      # a minority of responses; see the note at the top of the script. ~20
+      # minutes. A failure here leaves yesterday's index in place, which
+      # degrades to a disabled button rather than to a dead link.
+      - name: Refresh syllabus availability index
+        run: node scripts/scrape-syllabi.mjs --recent 4 --attempts 6
+        continue-on-error: true
       - name: Commit refreshed dumps
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add data/catalog/light.json data/catalog/full.json public/catalog/instructors.json scripts/prior-offerings.json
+          git add data/catalog/light.json data/catalog/full.json public/catalog/instructors.json public/syllabi/index.json scripts/prior-offerings.json
           if git diff --cached --quiet; then
-            echo "Catalog unchanged; nothing to deploy."
+            echo "Catalog and syllabus index unchanged; nothing to deploy."
           else
             git commit -m 'chore: refresh catalog dumps'
             git push

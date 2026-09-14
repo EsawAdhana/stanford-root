@@ -9,7 +9,7 @@ import { useAuthStore } from '@/lib/auth-store';
 import { promptLoginToSyncOnce } from '@/lib/login-nudge';
 import { track } from '@/lib/analytics';
 import { Section } from '@/types/course';
-import { cn, getSyllabusUrl, parseUnitsOptions, formatLevel, abbreviateGer, unitsLabel, compareCourseCodes, formatComponent, isAllowedGer, decodeHtmlEntities, getCrossListGroupIds, aggregateCrossListedSectionEnrollment, crossListedSectionPeers, resolveCrossListRating } from '@/lib/utils';
+import { cn, parseUnitsOptions, formatLevel, abbreviateGer, unitsLabel, compareCourseCodes, formatComponent, isAllowedGer, decodeHtmlEntities, getCrossListGroupIds, aggregateCrossListedSectionEnrollment, crossListedSectionPeers, resolveCrossListRating } from '@/lib/utils';
 import { isDevEvalsUnlocked } from '@/lib/dev-flags';
 import { InstructorList } from './instructor-list';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -25,6 +25,8 @@ import { unpickedComponents, stripSeconds } from '@/lib/schedule-utils';
 import { isWimCourse } from '@/lib/wim-courses';
 import { compareTerms, getDefaultTerm } from '@/lib/terms';
 import { useLiveSeats } from '@/hooks/use-seats';
+import { useSyllabusIndex } from '@/hooks/use-syllabus-index';
+import { resolveSyllabus } from '@/lib/syllabus';
 
 interface CourseDetailContentProps {
     course: Course;
@@ -204,15 +206,32 @@ export function CourseDetailContent({ course }: CourseDetailContentProps) {
         }
     }, [cartItem?.selectedUnits, unitOptions.join(',')]) // eslint-disable-line react-hooks/exhaustive-deps
 
-    // Get the first section with a valid sectionNumber for the active term to use in syllabus URL
+    // Representative section for the selected term, used for term-specific
+    // course facts like class level.
     const activeSections = sectionsByTerm[activeTerm] || []
     const activeSection = activeSections.find(s => s.sectionNumber && s.sectionNumber.trim() !== '') || activeSections[0]
-    const syllabusClassId = activeSection?.classId
-    const syllabusSectionNumber = activeSection?.sectionNumber
 
-    const syllabusUrl = course && activeTerm && syllabusSectionNumber
-        ? getSyllabusUrl(course.subject, course.code, syllabusClassId, activeTerm, syllabusSectionNumber)
-        : null
+    // The syllabus button links only where Stanford has actually published a
+    // syllabus. `doWebAuth` redirects to WebAuth for any identifier, so before
+    // this index existed a missing syllabus and a real one looked identical
+    // until after login -- and on 2026-09-13 only 378 of Autumn 2026's 3,734
+    // sections had one. See src/lib/syllabus.ts and scripts/scrape-syllabi.mjs.
+    const { index: syllabusIndex, loaded: syllabusLoaded } = useSyllabusIndex()
+    const activeSectionNumbers = useMemo(
+        () => activeSections
+            .map(s => s.sectionNumber)
+            .filter((n): n is string => Boolean(n && n.trim() !== '')),
+        [activeSections]
+    )
+    const syllabus = useMemo(
+        () => (course && activeTerm
+            ? resolveSyllabus(syllabusIndex, course.subject, course.code, activeTerm, activeSectionNumbers)
+            : { status: 'none' as const }),
+        [syllabusIndex, course, activeTerm, activeSectionNumbers]
+    )
+    // Held neutral until the index lands, so the button never flashes
+    // disabled-then-enabled on a course that does have one.
+    const syllabusPending = !syllabusLoaded
 
     // Which term the Sections panel shows, in priority order: the section the student
     // actually picked, then the term they were browsing when they clicked through, then
@@ -376,42 +395,40 @@ export function CourseDetailContent({ course }: CourseDetailContentProps) {
 
                                     {/* Syllabus */}
                                     <div className="pt-2 space-y-2 group/syllabus">
-                                        {activeTerm && syllabusSectionNumber ? (
+                                        {syllabus.status === 'current' || syllabus.status === 'fallback' ? (
                                             <>
                                                 <div className="text-sm text-muted-foreground flex items-center gap-2">
-                                                    Syllabus for selected term:
+                                                    {syllabus.status === 'fallback'
+                                                        ? `No syllabus posted for ${activeTerm} yet. Linked to ${syllabus.term}:`
+                                                        : 'Syllabus for selected term:'}
                                                 </div>
                                                 <Button
                                                     variant="outline"
                                                     size="sm"
                                                     asChild
-                                                    disabled={!syllabusUrl}
-                                                    className={cn(
-                                                        "gap-2 w-full sm:w-auto",
-                                                        !syllabusUrl && "opacity-50 cursor-not-allowed"
-                                                    )}
+                                                    className="gap-2 w-full sm:w-auto"
                                                 >
                                                     <a
-                                                        href={syllabusUrl || '#'}
+                                                        href={syllabus.url}
                                                         target="_blank"
                                                         rel="noopener noreferrer"
-                                                        onClick={(e) => {
-                                                            if (!syllabusUrl) {
-                                                                e.preventDefault()
-                                                            } else {
-                                                                e.stopPropagation()
-                                                            }
-                                                        }}
+                                                        onClick={(e) => e.stopPropagation()}
                                                     >
                                                         <FileText size={16} />
-                                                        View {activeTerm} Syllabus
+                                                        View {syllabus.term} Syllabus
                                                         <ExternalLink size={14} className="opacity-60" />
                                                     </a>
                                                 </Button>
                                             </>
                                         ) : (
+                                            // No button at all when there is nothing to open: a dimmed
+                                            // one still reads as something you failed to click.
                                             <div className="text-sm text-muted-foreground">
-                                                {!activeTerm ? "No terms available" : "Syllabus not available for this section"}
+                                                {!activeTerm
+                                                    ? 'No terms available'
+                                                    : syllabusPending
+                                                        ? 'Checking for a syllabus\u2026'
+                                                        : 'No syllabus available'}
                                             </div>
                                         )}
                                     </div>

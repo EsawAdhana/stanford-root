@@ -109,3 +109,38 @@ export function getApproxTermStart(term: string): Date {
       return new Date()
   }
 }
+
+/**
+ * Season codes used by Stanford's own syllabus service
+ * (syllabus.stanford.edu): Autumn -> F, Winter -> W, Spring -> Sp, Summer -> Su.
+ * Autumn is "F" (Fall) there even though the registrar says Autumn everywhere else.
+ */
+const SEASON_TO_CODE: Record<string, string> = {
+  Autumn: 'F',
+  Fall: 'F',
+  Winter: 'W',
+  Spring: 'Sp',
+  Summer: 'Su',
+}
+
+const CODE_TO_SEASON: Record<string, string> = {
+  F: 'Autumn',
+  W: 'Winter',
+  Sp: 'Spring',
+  Su: 'Summer',
+}
+
+/** "Winter 2026" -> "W26". Empty string when the term isn't parseable. */
+export function termToCode(term: string): string {
+  const { season, year } = parseTerm(term)
+  const seasonCode = SEASON_TO_CODE[season]
+  if (!seasonCode || !year) return ''
+  return `${seasonCode}${String(year).slice(-2)}`
+}
+
+/** "W26" -> "Winter 2026". Empty string when the code isn't parseable. */
+export function codeToTerm(code: string): string {
+  const m = /^(Sp|Su|W|F)(\d{2})$/.exec((code || '').trim())
+  if (!m) return ''
+  return `${CODE_TO_SEASON[m[1]]} 20${m[2]}`
+}

@@ -9,6 +9,7 @@
     "lint": "eslint . --max-warnings 0",
     "scrape:sections": "node --env-file=.env.local scripts/scrape-sections.mjs",
     "scrape:carta": "node --env-file=.env.local scripts/scrape-carta-class-years.mjs",
+    "scrape:syllabi": "node scripts/scrape-syllabi.mjs",
     "dump:catalog": "node --env-file=.env.local scripts/dump-catalog.mjs",
     "typecheck": "tsc --noEmit",
     "build": "next build",
