@@ -428,7 +428,7 @@ export function CourseDetailContent({ course }: CourseDetailContentProps) {
                                                     ? 'No terms available'
                                                     : syllabusPending
                                                         ? 'Checking for a syllabus\u2026'
-                                                        : 'No syllabus available'}
+                                                        : 'No syllabus available.'}
                                             </div>
                                         )}
                                     </div>
