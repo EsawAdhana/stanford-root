@@ -25,7 +25,19 @@
  * `/version` suffix is required so a substring like "shapbotter" in some real
  * browser string can never trip it.
  */
-const BLOCKED_CRAWLER_TOKENS = ['shapbot', 'shap-user'] as const
+/**
+ * Added 2026-09-17: `AIWebIndex/2.0 (+https://lyrenth.com/bot)`, running from
+ * Hetzner. Over Sep 10-17 it made 266,799 requests, the second-highest of any
+ * user agent on the site, and it was the largest single consumer of
+ * `/api/courses` — 4,605 calls against 3,323 from every student on Stanford's
+ * network combined. It runs a headless browser, so it also fired `/api/track`
+ * and minted a throwaway visitor per page.
+ *
+ * It fetched robots.txt six times, which is the whole reason it needed adding
+ * here: it is a compliant crawler, and until this commit robots.txt answered
+ * `allow: /`. The block and the robots.txt disallow now say the same thing.
+ */
+const BLOCKED_CRAWLER_TOKENS = ['shapbot', 'shap-user', 'aiwebindex'] as const
 
 const BLOCKED_CRAWLER_RE = new RegExp(
   `(?:^|[^a-z0-9-])(?:${BLOCKED_CRAWLER_TOKENS.join('|')})/[0-9]`,
