@@ -16,7 +16,6 @@ import {
   dismissAuthLoading,
   showAuthRedirectStalled,
 } from './auth-errors'
-import { identifyVisitor } from './humanbehavior'
 
 export type SignInSource = 'hero' | 'header' | 'eval_gate' | 'nudge'
 
@@ -60,21 +59,6 @@ interface AuthState {
   signOut: () => Promise<void>
 }
 
-/**
- * Hand the signed-in student's identity to Human Behavior. Called for a fresh
- * sign-in and for a restored session, so returning students stop being recorded
- * as anonymous cookies from their next page load onward.
- */
-function identifyForAnalytics(user: { id: string; email?: string | null; user_metadata?: Record<string, unknown> | null }) {
-  if (!user.email) return
-  const fullName = user.user_metadata?.full_name
-  identifyVisitor({
-    email: user.email,
-    name: typeof fullName === 'string' ? fullName : undefined,
-    userId: user.id,
-  })
-}
-
 export const useAuthStore = create<AuthState>((set, get) => ({
   user: null,
   session: null,
@@ -94,7 +78,6 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       if (user) {
         // Returned signed-in (e.g. via OAuth callback): clear any leftover
         // "Redirecting…" loading state from before the redirect.
-        identifyForAnalytics(user)
         dismissAuthLoading()
         set({ user, session, isLoading: false, isSigningIn: false })
       } else {
@@ -118,7 +101,6 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       }
 
       if ((event === 'SIGNED_IN' || event === 'INITIAL_SESSION') && user) {
-        identifyForAnalytics(user)
         dismissAuthLoading()
         set({ user, session, isLoading: false, isSigningIn: false })
         pullSchedule(user.id)

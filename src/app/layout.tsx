@@ -9,7 +9,6 @@ import { DeferredShell } from '@/components/deferred-shell';
 import { NavProgress } from '@/components/nav-progress';
 import { ThemedToaster } from '@/components/themed-toaster';
 import { SITE_URL } from '@/lib/site';
-import { HumanBehaviorInit } from "./HumanBehaviorInit";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -55,13 +54,10 @@ export default function RootLayout({
         {supabaseOrigin ? <link rel="preconnect" href={supabaseOrigin} crossOrigin="anonymous" /> : null}
         <link rel="preconnect" href="https://accounts.google.com" />
         <link rel="preconnect" href="https://login.stanford.edu" />
-        {/* Recording loader is fetched from the CDN, not bundled — see HumanBehaviorInit */}
-        <link rel="preconnect" href="https://cdn.humanbehavior.co" />
         <link rel="dns-prefetch" href="https://accounts.google.com" />
         <link rel="dns-prefetch" href="https://login.stanford.edu" />
       </head>
       <body className={`${inter.className} ${instrumentSerif.variable}`}>
-        <HumanBehaviorInit />
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <NuqsAdapter>
             <Suspense fallback={null}>
