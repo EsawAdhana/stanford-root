@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { readFile } from 'fs/promises'
 import { getPublicClient, mergeCourseRows, FULL_COURSE_COLUMNS, LIGHT_COURSE_COLUMNS } from '@/lib/supabase-admin'
 import { serverCatalogPath } from '@/lib/catalog-paths'
+import { CATALOG_SHARD_COUNT, shardRange, isValidShard } from '@/lib/catalog-shards'
 
 // Keyset pages beat OFFSET ranges under load. Full (sections) stays small so
 // a sick DB can finish; light can be a bit larger.
@@ -24,6 +25,26 @@ const CACHE_TTL = 1000 * 60 * 60 * 24 // 24 h
 // In-flight promises so concurrent cold requests share one DB scan (stampede guard)
 let lightInFlight: Promise<string> | null = null
 let fullInFlight: Promise<string> | null = null
+
+// The full dump pre-sliced and pre-serialized, one string per shard. Built from
+// the dump's own row order and never sorted, so concatenating shard 0..n-1 gives
+// back exactly what ?full=1 returns -- tests/courses-route-cache.test.ts asserts
+// that, because any reordering here would silently reorder the browse list.
+let cachedShards: string[] | null = null
+let shardsTimestamp = 0
+let shardsInFlight: Promise<string[]> | null = null
+
+// Safe on every branch below: this route reads no cookie and no Authorization
+// header, calls nothing in @/lib/stanford-auth, and returns the same
+// deployment-pinned dump to every caller, so there is no "previously authorized
+// body" for a URL-keyed CDN entry to leak. /api/courses/[courseId] and
+// /api/courses/batch already serve these same columns with this same header. The
+// routes that DO read a user -- /api/evaluations, /api/class-years,
+// /api/instructors/[slug] -- must stay no-store.
+const CATALOG_CACHE_HEADERS = {
+  'Cache-Control': 'public, s-maxage=86400, stale-while-revalidate=86400',
+  'Content-Type': 'application/json',
+} as const
 
 // Allow one cold rebuild to finish after a catalog refresh (Vercel Pro / fluid).
 export const maxDuration = 300
@@ -169,27 +190,58 @@ async function getLight(): Promise<string> {
   return lightInFlight
 }
 
+/**
+ * Reads the dump straight through rather than via getFull(), so an instance that
+ * only ever serves shards holds ~35MB of shard strings instead of that plus the
+ * 35MB whole-dump string.
+ */
+async function getShards (): Promise<string[]> {
+  if (cachedShards && Date.now() - shardsTimestamp < CACHE_TTL) return cachedShards
+  if (!shardsInFlight) {
+    shardsInFlight = (async () => {
+      const raw = await readPrebuiltDump(true)
+      const rows: unknown[] = raw
+        ? JSON.parse(raw)
+        : mergeCourseRows(await fetchAllRows(FULL_COURSE_COLUMNS, FULL_PAGE_SIZE))
+      cachedShards = Array.from({ length: CATALOG_SHARD_COUNT }, (_, i) => {
+        const [from, to] = shardRange(i, rows.length)
+        return JSON.stringify(rows.slice(from, to))
+      })
+      shardsTimestamp = Date.now()
+      return cachedShards
+    })().finally(() => { shardsInFlight = null })
+  }
+  return shardsInFlight
+}
+
 export async function GET(request: Request) {
 
   const { searchParams } = new URL(request.url)
   const full = searchParams.get('full') === '1'
+  const shardParam = searchParams.get('shard')
 
   try {
+    if (shardParam !== null) {
+      // Number() is far too permissive for a cache key: '', '0x5', '1e0', ' 3' and
+      // '+3' all coerce to a valid shard index, which would both answer a malformed
+      // request and split one shard's CDN entry across several URLs.
+      // Canonical form only, so one shard has exactly one URL: '00' passes a bare
+      // \d+ check and coerces to 0, which would be a second CDN entry for shard 0.
+      const shard = /^(0|[1-9]\d*)$/.test(shardParam) ? Number(shardParam) : NaN
+      if (!full || !isValidShard(shard)) {
+        return NextResponse.json(
+          { error: `shard requires full=1 and an integer 0..${CATALOG_SHARD_COUNT - 1}` },
+          { status: 400 }
+        )
+      }
+      return new NextResponse((await getShards())[shard], { headers: CATALOG_CACHE_HEADERS })
+    }
+
     const json = full ? await getFull() : await getLight()
-    // Shared-cache headers are safe here and they are the difference between
-    // ~$17/mo of Fast Origin Transfer and ~$3. This route reads no cookie and no
-    // Authorization header, calls nothing in @/lib/stanford-auth, and returns the
-    // same deployment-pinned dump to every caller, so there is no "previously
-    // authorized body" for a URL-keyed CDN entry to leak. /api/courses/[courseId]
-    // and /api/courses/batch already serve these same columns with this same
-    // header. The routes that DO read a user -- /api/evaluations,
-    // /api/class-years, /api/instructors/[slug] -- must stay no-store.
-    return new NextResponse(json, {
-      headers: {
-        'Cache-Control': 'public, s-maxage=86400, stale-while-revalidate=86400',
-        'Content-Type': 'application/json',
-      },
-    })
+    // Unsharded ?full=1 is 4.15MB gzipped and will not fit the edge cache, so it
+    // stays a function hit on every request. Nothing in the app asks for it any
+    // more (store.ts fetches shards); it is kept for local tooling.
+    return new NextResponse(json, { headers: CATALOG_CACHE_HEADERS })
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : 'Failed to fetch courses'
     console.error('Failed to fetch courses:', err)

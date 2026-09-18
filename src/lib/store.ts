@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import type { Course } from '@/types/course'
 import { fetchCatalogJson } from './catalog-fetch'
+import { CATALOG_SHARD_COUNT } from './catalog-shards'
 import { rowToCourse } from '@/lib/course-mapper'
 
 type CourseStore = {
@@ -181,7 +182,19 @@ export const useCourseStore = create<CourseStore>((set, get) => ({
       }
 
       // ── Phase 2: full data with sections + description — enrich in background ──
-      const fullRows: any[] = await fetchCatalogJson('/api/courses?full=1')
+      // Eight cacheable pieces rather than one 4.15MB response the edge cache
+      // refuses to hold (see lib/catalog-shards). Fetched in parallel, so this is
+      // still one round trip of wall-clock, and after the first visitor of the day
+      // every piece is an edge hit instead of 4.15MB pulled out of the function.
+      // Concatenating in shard order reproduces the old ?full=1 array exactly,
+      // which is what keeps the browse order unchanged.
+      const fullRows: any[] = (
+        await Promise.all(
+          Array.from({ length: CATALOG_SHARD_COUNT }, (_, i) =>
+            fetchCatalogJson(`/api/courses?full=1&shard=${i}`)
+          )
+        )
+      ).flat()
       const fullCourses = fullRows.map(rowToCourse)
 
       await writeCache(fullCourses)
