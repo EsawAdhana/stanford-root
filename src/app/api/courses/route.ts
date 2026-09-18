@@ -99,8 +99,10 @@ async function fetchAllRows(columns: string, pageSize: number) {
 }
 
 // This route returns the whole catalog — 8,614 courses with every rating — in a
-// single response. Nothing in the app calls it (the browser uses
-// /api/courses/[courseId] and /api/courses/batch); it exists for local tooling.
+// single response, and it is the hot path, not a tooling endpoint: src/lib/store.ts
+// fetches the light dump on first load and then the full dump unconditionally to
+// enrich it. An earlier version of this comment said nothing in the app called it;
+// store.ts:170 and store.ts:184 say otherwise.
 // Left open it is the cheapest possible way to take the entire corpus, so it is
 // Deliberately not gated and not rate limited.
 //
@@ -115,10 +117,19 @@ async function fetchAllRows(columns: string, pageSize: number) {
 // enough to slow a scraper is low enough to break browse for everyone behind it. A
 // 30/min limit throttled a single developer refreshing the page.
 //
-// What moving the dumps out of public/ still buys, and what this keeps: the catalog
-// is no longer a permanently addressable, CDN-cached file at a guessable URL. It is
-// served per-request with no-store, so it is not a static artifact a scraper can
-// bookmark or a CDN can hand out.
+// What moving the dumps out of public/ still buys: the catalog is no longer a
+// *static file* at a guessable path that Google will index and that ships in the
+// build output. That part holds.
+//
+// What no-store was also meant to buy, and did not: scraper resistance.
+// /api/courses?full=1 is itself a permanently addressable, guessable URL that hands
+// any caller the full 33MB, and no-store never changed that -- it only stopped the
+// CDN from being the thing that served it, at a measured cost of 281.7GB of Fast
+// Origin Transfer in the Aug 17-Sep 16 cycle. A scraper pays one request either
+// way; with s-maxage we stop paying origin egress for every student who loads the
+// page. isBlockedCrawler in middleware.ts still runs on the edge request, so the
+// deny list is unaffected. If the corpus needs real protection, it needs to stop
+// being one response -- that is the /api/courses/batch shape, not a cache header.
 
 async function getFull(): Promise<string> {
   if (cachedFull && Date.now() - fullTimestamp < CACHE_TTL) return cachedFull
@@ -165,10 +176,19 @@ export async function GET(request: Request) {
 
   try {
     const json = full ? await getFull() : await getLight()
-    // No shared-cache headers here: a CDN entry keyed only on the URL would let
-    // an unauthenticated request collect a previously authorized body.
+    // Shared-cache headers are safe here and they are the difference between
+    // ~$17/mo of Fast Origin Transfer and ~$3. This route reads no cookie and no
+    // Authorization header, calls nothing in @/lib/stanford-auth, and returns the
+    // same deployment-pinned dump to every caller, so there is no "previously
+    // authorized body" for a URL-keyed CDN entry to leak. /api/courses/[courseId]
+    // and /api/courses/batch already serve these same columns with this same
+    // header. The routes that DO read a user -- /api/evaluations,
+    // /api/class-years, /api/instructors/[slug] -- must stay no-store.
     return new NextResponse(json, {
-      headers: { 'Cache-Control': 'private, no-store', 'Content-Type': 'application/json' },
+      headers: {
+        'Cache-Control': 'public, s-maxage=86400, stale-while-revalidate=86400',
+        'Content-Type': 'application/json',
+      },
     })
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : 'Failed to fetch courses'

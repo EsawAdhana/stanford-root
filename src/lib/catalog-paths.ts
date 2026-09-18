@@ -11,8 +11,11 @@ import { join } from 'path'
 // It does NOT make the catalog private, and this comment used to claim it did.
 // the catalog at / is a client component and src/lib/store.ts fetches /api/courses from
 // the browser for both dumps, so the data is still reachable by anyone who loads
-// the site. What changed is that it now comes per-request, no-store and rate
-// limited, instead of as a static file a scraper can bookmark.
+// the site. What changed is that it is no longer a static file in the build output
+// at a guessable path that Google will index. It is not per-request and not rate
+// limited: the no-store went back to a shared-cache header (see the route) because
+// it was costing 281.7GB of origin transfer a cycle and buying no real protection,
+// and the per-IP limit never shipped -- campus NAT made it unworkable.
 //
 // instructors.json stays under public/ because the browser really does fetch it
 // (src/hooks/use-instructor-search.ts) — it is 600KB of instructor names with no
