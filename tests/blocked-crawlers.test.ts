@@ -45,6 +45,30 @@ describe('blocks the catalog scraper', () => {
   })
 })
 
+describe('blocks the AI catalog crawler added 2026-09-17', () => {
+  // The exact string from Vercel's request log; 266,799 requests over Sep 10-17.
+  const AIWEBINDEX = 'AIWebIndex/2.0 (+https://lyrenth.com/bot; AI-readable web index)'
+
+  it('blocks the exact user agent seen in the logs', () => {
+    expect(isBlockedCrawler(AIWEBINDEX)).toBe(true)
+  })
+
+  it('still blocks it after a version bump and ignores casing', () => {
+    expect(isBlockedCrawler('AIWebIndex/3.0')).toBe(true)
+    expect(isBlockedCrawler(AIWEBINDEX.toLowerCase())).toBe(true)
+    expect(isBlockedCrawler(AIWEBINDEX.toUpperCase())).toBe(true)
+  })
+
+  it('does not match the token inside a longer word', () => {
+    expect(isBlockedCrawler('Mozilla/5.0 AIWebIndexer/1.0')).toBe(false)
+    expect(isBlockedCrawler('Mozilla/5.0 MyAIWebIndex/1.0')).toBe(false)
+  })
+
+  it('does not match it unversioned, which is too loose to be a signature', () => {
+    expect(isBlockedCrawler('aiwebindex')).toBe(false)
+  })
+})
+
 describe('does not block anyone real', () => {
   // Top real user agents by session count over the month.
   const humans = [

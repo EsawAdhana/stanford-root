@@ -3,7 +3,7 @@
 import Script from "next/script";
 import { useCallback } from "react";
 
-import { registerHumanBehaviorTracker } from "@/lib/humanbehavior";
+import { startRecorder, type HumanBehaviorLoader } from "@/lib/humanbehavior";
 
 /**
  * Human Behavior recording, loaded from the CDN rather than bundled from npm.
@@ -22,19 +22,6 @@ import { registerHumanBehaviorTracker } from "@/lib/humanbehavior";
  * path had.
  */
 
-/** What `v1/loader.js` puts on `window` once it has run. */
-interface HumanBehaviorLoader {
-  init: (
-    apiKey: string,
-    options?: {
-      /** Override the ingestion host (local stack or reverse proxy). */
-      ingestionUrl?: string;
-      /** Pin a recorder version. Leave unset — pinning is what caused the drift. */
-      version?: string;
-    },
-  ) => unknown;
-}
-
 declare global {
   interface Window {
     HumanBehaviorTracker?: HumanBehaviorLoader;
@@ -50,18 +37,12 @@ export function HumanBehaviorInit() {
   // window.HumanBehaviorTracker as it executes, so an effect racing the script
   // would have to poll for it.
   const start = useCallback(() => {
-    const tracker = window.HumanBehaviorTracker;
-    if (!apiKey || !tracker) return;
-
-    // Deliberately no `version` — omitting it is what keeps this app on the
-    // channel's current recorder instead of pinning it again.
-    // Keep the handle: it is the only way to tell Human Behavior who the
-    // signed-in visitor is, and auth may have resolved before this ran.
-    registerHumanBehaviorTracker(
-      tracker.init(apiKey, {
-        ingestionUrl: process.env.NEXT_PUBLIC_HUMANBEHAVIOR_INGESTION_URL,
-      }),
-    );
+    // The bot guard and `init` call live in lib/humanbehavior so the policy is
+    // unit-testable without a DOM. Returns false when it declined to start,
+    // which is either a missing key or a crawler.
+    startRecorder(apiKey, window.HumanBehaviorTracker, {
+      ingestionUrl: process.env.NEXT_PUBLIC_HUMANBEHAVIOR_INGESTION_URL,
+    });
   }, [apiKey]);
 
   // No key configured (local checkouts, CI): render nothing rather than

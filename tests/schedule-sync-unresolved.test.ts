@@ -23,7 +23,7 @@ vi.mock('@/lib/supabase', () => ({
   },
 }))
 
-vi.mock('@/lib/analytics', () => ({ track: vi.fn() }))
+vi.mock('@/lib/analytics', () => ({ track: vi.fn(), trackOnce: vi.fn() }))
 vi.mock('@/lib/cart-hydration', () => ({ cartHydrated: Promise.resolve(), setCartHydrated: vi.fn() }))
 
 const catalog = [{ id: 'CS106A', subject: 'CS', code: '106A', title: 'Programming Methodology', terms: ['Autumn 2026'], sections: [{ classId: 1801 }] }]

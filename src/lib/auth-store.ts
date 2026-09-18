@@ -9,7 +9,7 @@ import {
 } from './schedule-sync'
 import { useCartStore } from './cart-store'
 import { useEvaluationStore } from './evaluation-store'
-import { track } from './analytics'
+import { track, markLoginPending, consumeLoginPending } from './analytics'
 import {
   showAuthError,
   showAuthLoading,
@@ -126,7 +126,11 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         set({ user, session, isLoading: false })
       }
 
-      if (event === 'SIGNED_IN' && user) {
+      // Only for a sign-in this tab actually started. `SIGNED_IN` also fires
+      // for token refreshes and restored sessions, and Supabase broadcasts it
+      // to every open tab, so tracking it directly counted one login dozens to
+      // hundreds of times. See `consumeLoginPending`.
+      if (event === 'SIGNED_IN' && user && consumeLoginPending()) {
         track('login_completed')
       }
     })
@@ -165,6 +169,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     if (get().isSigningIn) return
 
     const returnPath = options?.returnPath
+    // Claimed by the `SIGNED_IN` handler when this tab comes back signed in,
+    // so `login_completed` counts completed logins rather than auth events.
+    markLoginPending()
     if (options?.source) {
       track('login_started', { source: options.source })
     }

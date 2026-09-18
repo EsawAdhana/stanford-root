@@ -2,7 +2,7 @@ import { supabase } from './supabase'
 import { useCartStore } from './cart-store'
 import { useCourseStore } from './store'
 import { cartHydrated } from './cart-hydration'
-import { track } from './analytics'
+import { trackOnce } from './analytics'
 import { useUnresolvedSchedule } from './unresolved-schedule'
 import { dedupeCrossListedItems } from './schedule-utils'
 
@@ -385,8 +385,17 @@ async function _pullSchedule(userId: string): Promise<void> {
       useCartStore.setState({ items: [] })
     }
 
-    track('schedule_synced', { items: toScheduleItems().length })
+    // Set before the track call, never after. This block is inside the try, so
+    // an analytics call that throws would otherwise land in the catch below and
+    // roll back a pull that had already completed — losing the user's schedule
+    // edit to a telemetry bug.
     success = true
+
+    // Once per user per 5 minutes per device. A student with a dozen course
+    // tabs open has a dozen AuthProviders all pulling on sign-in, which is one
+    // sync happening, not a dozen: this event was recorded 14,825 times across
+    // 879 sessions over Sep 15-17, peaking at 294 in one session.
+    trackOnce('schedule_synced', userId, 5 * 60 * 1000, { items: toScheduleItems().length })
   } catch (err) {
     console.error('pullSchedule error:', err)
   } finally {
