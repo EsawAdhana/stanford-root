@@ -1,5 +1,5 @@
-import { describe, expect, it } from 'vitest'
-import { isKnownBot } from '@/lib/bot-agents'
+import { afterEach, describe, expect, it, vi } from 'vitest'
+import { isKnownBot, isBotClient } from '@/lib/bot-agents'
 import { isBlockedCrawler } from '@/lib/blocked-crawlers'
 
 /**
@@ -81,6 +81,9 @@ const REAL_HUMANS = [
   'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Whale/4.39.410.13 Safari/537.36',
   'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 Vivaldi/7.5.3735',
 ]
+
+const STUDENT_UA =
+  'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36'
 
 describe('counts no bot as a visitor', () => {
   it.each(REAL_BOTS_FROM_OUR_LOGS)('suppresses %s', (ua) => {
@@ -186,5 +189,55 @@ describe('the two policies stay separate', () => {
   it.each(REAL_HUMANS)('never 403s or uncounts a real student: %s', (ua) => {
     expect(isBlockedCrawler(ua)).toBe(false)
     expect(isKnownBot(ua)).toBe(false)
+  })
+})
+
+describe('isBotClient: the browser-side guard for Human Behavior', () => {
+  afterEach(() => {
+    vi.unstubAllGlobals()
+  })
+
+  const stub = (nav: unknown) => vi.stubGlobal('navigator', nav)
+
+  it('catches a headless scraper impersonating a real student, which the server cannot', () => {
+    // This is the whole reason the check exists client-side. The user agent is
+    // byte-identical to a real student's, so /api/track's server-side filter
+    // has nothing to go on; only navigator.webdriver gives it away.
+    stub({ webdriver: true, userAgent: STUDENT_UA })
+    expect(isKnownBot(STUDENT_UA)).toBe(false)
+    expect(isBotClient()).toBe(true)
+  })
+
+  it('leaves a real student alone', () => {
+    stub({ webdriver: false, userAgent: STUDENT_UA })
+    expect(isBotClient()).toBe(false)
+  })
+
+  it('treats a missing webdriver property as a real browser', () => {
+    // Older browsers do not define it at all; absence is not evidence.
+    stub({ userAgent: STUDENT_UA })
+    expect(isBotClient()).toBe(false)
+  })
+
+  it('still catches a self-identifying crawler by user agent', () => {
+    stub({ webdriver: false, userAgent: 'AIWebIndex/2.0 (+https://lyrenth.com/bot)' })
+    expect(isBotClient()).toBe(true)
+  })
+
+  it('falls back to the user agent if reading webdriver throws', () => {
+    stub({
+      get webdriver(): boolean {
+        throw new Error('blocked by a hardening extension')
+      },
+      userAgent: 'AIWebIndex/2.0 (+https://lyrenth.com/bot)',
+    })
+    expect(isBotClient()).toBe(true)
+  })
+
+  it('does not throw and does not claim bot when there is no navigator at all', () => {
+    // Server render and prerender. Must never report a bot, or a static build
+    // could bake in the wrong behaviour.
+    stub(undefined)
+    expect(isBotClient()).toBe(false)
   })
 })

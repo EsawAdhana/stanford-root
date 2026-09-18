@@ -215,3 +215,38 @@ export function isKnownBot(userAgent: string | null | undefined): boolean {
 
 /** The tokens themselves, for tests and for any future robots.txt use. */
 export const botTokens = BOT_TOKENS
+
+/**
+ * The same question asked in the browser, for the trackers that only exist
+ * client-side: Human Behavior's recorder and the `track()` beacon.
+ *
+ * Two reasons this is not just a duplicate of the server check.
+ *
+ * First, Human Behavior loads from a CDN and initialises in the browser, so
+ * `/api/track`'s server-side filter never sees it. Nothing in this repo can
+ * clean up HB's numbers after the fact; the only lever is refusing to start the
+ * recorder.
+ *
+ * Second, `navigator.webdriver` catches what a user-agent string cannot. It is
+ * set by Playwright, Puppeteer and Selenium and is false in every real browser,
+ * so it identifies a headless scraper that is deliberately impersonating
+ * Chrome. Vercel classified 17,426 requests to this site as
+ * `browser_impersonation` in a single week — traffic whose UA is a perfect
+ * match for a real student's.
+ *
+ * Deliberately NOT done here: a server-side check in the root layout. Reading
+ * `headers()` there would make the layout dynamic and drop static generation
+ * for every prerendered course and instructor page, which is a real cost to
+ * real students to save a script request for a crawler.
+ */
+export function isBotClient(): boolean {
+  if (typeof navigator === 'undefined') return false
+  // `webdriver` is a standard property, but guard the read anyway: this runs
+  // before anything else on the page and must never throw.
+  try {
+    if (navigator.webdriver === true) return true
+  } catch {
+    // Ignore and fall through to the user-agent check.
+  }
+  return isKnownBot(navigator.userAgent)
+}

@@ -1,4 +1,5 @@
 import type { AnalyticsEvent } from './analytics-events'
+import { isBotClient } from './bot-agents'
 
 const SESSION_KEY = 'root_session_id'
 const LOGIN_PENDING_KEY = 'root_login_pending'
@@ -26,6 +27,12 @@ function getSessionId(): string {
  */
 export function track(event: AnalyticsEvent, props: Record<string, unknown> = {}): void {
   if (typeof window === 'undefined') return
+  // /api/track already refuses known bots by user agent, so this is not that
+  // check repeated. It is here for `navigator.webdriver`, which the server
+  // cannot see: a headless scraper impersonating Chrome sends a user agent
+  // identical to a real student's, and Vercel flagged 17,426 requests a week as
+  // exactly that. Cheaper to skip the beacon than to send it and drop it.
+  if (isBotClient()) return
   try {
     const body = JSON.stringify({
       event,
