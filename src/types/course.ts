@@ -101,6 +101,19 @@ export interface EvalQuestion {
   options: EvalOption[];
 }
 
+/**
+ * How a student comment reads.
+ *
+ * `advice` is the residual, and it is the one worth explaining: the comment
+ * scored low on both praise and blame, meaning the student never passed a
+ * verdict on the course. In this corpus that is overwhelmingly practical
+ * instruction -- "start every PSET early", "go to lecture" -- because Carta
+ * asks what you would tell a student considering the course, so advice is the
+ * default register. Low on both is not the same as balanced between them;
+ * that case is `mixed`.
+ */
+export type CommentSentiment = 'positive' | 'negative' | 'mixed' | 'advice';
+
 export interface CourseEvaluation {
   term: string;
   instructor: string;
@@ -108,6 +121,13 @@ export interface CourseEvaluation {
   respondents: string;
   questions: EvalQuestion[];
   comments: string[];
+  /**
+   * Sentiment for each entry of `comments`, index-aligned and the same length.
+   * `null` where that comment has not been scored yet, which is not the same as
+   * neutral. Kept parallel rather than folded into `comments` so the existing
+   * string[] consumers are untouched.
+   */
+  commentSentiment?: (CommentSentiment | null)[];
   /** Median % of class sessions attended online (from eval survey) */
   onlineAttendancePct?: number;
   /** Median % of class sessions attended in person (from eval survey) */

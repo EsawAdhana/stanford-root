@@ -6,6 +6,7 @@ import { getStanfordUser } from '@/lib/stanford-auth'
 import { getInstructorDirectory } from '@/lib/catalog-dump'
 import { resolveInstructorSlug } from '@/lib/instructors'
 import { EVALUATION_COLUMNS, toCourseEvaluation, type EvaluationRow } from '@/lib/evaluation-row'
+import { attachSentiment } from '@/lib/comment-sentiment'
 import type { CourseEvaluation } from '@/types/course'
 
 export type InstructorEvaluation = CourseEvaluation & { courseId: string }
@@ -63,6 +64,8 @@ export async function GET(
       seen.add(key)
       evaluations.push({ ...evaluation, courseId: row.course_id })
     }
+
+    await attachSentiment(evaluations)
 
     return NextResponse.json(
       { slug: resolved.entry.slug, name: resolved.entry.name, evaluations },

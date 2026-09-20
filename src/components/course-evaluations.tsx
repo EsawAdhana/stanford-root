@@ -16,7 +16,7 @@ import { isDevEvalsUnlocked } from '@/lib/dev-flags'
 import { compareTerms } from '@/lib/terms'
 import { splitLinkSegments } from '@/lib/linkify'
 import { CLASS_YEAR_BUCKETS, optionStats } from '@/lib/class-years'
-import type { ClassYearBreakdown, Course, CourseEvaluation, EvalQuestion, EvalOption } from '@/types/course'
+import type { ClassYearBreakdown, CommentSentiment, Course, CourseEvaluation, EvalQuestion, EvalOption } from '@/types/course'
 import { addRatingCounts, pooledMean, rankShare, rankScopeLabel } from '@/lib/quality-score.mjs'
 import { categorizeQuestion, dedupeCourseLevelReports } from '@/lib/eval-reports.mjs'
 
@@ -539,20 +539,52 @@ export interface CommentEntry {
   text: string
   /** Where the comment came from, e.g. "CS 106A". Shown when one list mixes courses. */
   label?: string
+  /** Undefined when this comment has not been scored; the filter treats that as unknown, not neutral. */
+  sentiment?: CommentSentiment | null
 }
+
+/**
+ * "Advice" is the residual: low on both praise and blame, so the student told
+ * you how to handle the course instead of judging it. "Mixed" is the opposite
+ * shape -- high on both.
+ */
+const SENTIMENT_FILTERS = ['positive', 'mixed', 'advice', 'negative'] as const
+const SENTIMENT_LABELS: Record<(typeof SENTIMENT_FILTERS)[number], string> = {
+  positive: 'Positive',
+  mixed: 'Mixed',
+  advice: 'Advice',
+  negative: 'Negative',
+}
+type SentimentFilter = 'all' | (typeof SENTIMENT_FILTERS)[number]
 
 export function CommentsPanel({ comments }: { comments: CommentEntry[] }) {
   const [searchQuery, setSearchQuery] = useState('')
+  const [sentimentFilter, setSentimentFilter] = useState<SentimentFilter>('all')
   const [visibleCount, setVisibleCount] = useState(10)
 
-  const filtered = useMemo(() => {
-    if (!searchQuery.trim()) return comments
+  const sentimentCounts = useMemo(() => {
+    const counts = { positive: 0, mixed: 0, advice: 0, negative: 0 }
+    for (const c of comments) {
+      if (c.sentiment) counts[c.sentiment]++
+    }
+    return counts
+  }, [comments])
 
-    const q = searchQuery.toLowerCase()
-    return comments.filter(c =>
-      decodeHtmlEntities(c.text).toLowerCase().includes(q) ||
-      c.label?.toLowerCase().includes(q))
-  }, [comments, searchQuery])
+  // Older cached payloads predate the scores, so hide the control rather than
+  // offer four filters that would all come back empty.
+  const hasSentiment = SENTIMENT_FILTERS.some(k => sentimentCounts[k] > 0)
+
+  const filtered = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase()
+    if (!q && sentimentFilter === 'all') return comments
+
+    return comments.filter(c => {
+      if (sentimentFilter !== 'all' && c.sentiment !== sentimentFilter) return false
+      if (!q) return true
+      return decodeHtmlEntities(c.text).toLowerCase().includes(q) ||
+        Boolean(c.label?.toLowerCase().includes(q))
+    })
+  }, [comments, searchQuery, sentimentFilter])
 
   if (comments.length === 0) {
     return (
@@ -564,6 +596,28 @@ export function CommentsPanel({ comments }: { comments: CommentEntry[] }) {
 
   return (
     <div className="space-y-3">
+      {hasSentiment && (
+        <div className="flex flex-wrap gap-1.5">
+          {([['all', 'All', comments.length],
+             ...SENTIMENT_FILTERS.map(k => [k, SENTIMENT_LABELS[k], sentimentCounts[k]] as const),
+            ] as readonly (readonly [SentimentFilter, string, number])[]).map(([key, label, count]) => (
+            <button
+              key={key}
+              type="button"
+              onClick={() => { setSentimentFilter(key); setVisibleCount(10) }}
+              className={cn(
+                'px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
+                sentimentFilter === key
+                  ? 'bg-foreground text-background'
+                  : 'bg-secondary/50 hover:bg-secondary text-muted-foreground'
+              )}
+            >
+              {label} ({count})
+            </button>
+          ))}
+        </div>
+      )}
+
       <div className="space-y-2">
         <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider pl-1">Search Keywords</div>
         <div className="relative">
@@ -588,7 +642,9 @@ export function CommentsPanel({ comments }: { comments: CommentEntry[] }) {
       </div>
 
       <div className="text-[11px] text-muted-foreground">
-        {searchQuery ? `${filtered.length} of ${comments.length} comments` : `${comments.length} comments`}
+        {searchQuery || sentimentFilter !== 'all'
+          ? `${filtered.length} of ${comments.length} comments`
+          : `${comments.length} comments`}
       </div>
 
       <div className="space-y-2 pr-1">
@@ -1067,13 +1123,13 @@ export function CourseEvaluations({ courseIds, subject, code, forcedTab, isNew, 
     const seen = new Set<string>()
     const out: CommentEntry[] = []
     for (const e of filteredEvals) {
-      for (const c of e.comments) {
+      e.comments.forEach((c, i) => {
         const key = decodeHtmlEntities(c).trim().toLowerCase()
         if (key && !seen.has(key)) {
           seen.add(key)
-          out.push({ text: c })
+          out.push({ text: c, sentiment: e.commentSentiment?.[i] ?? null })
         }
-      }
+      })
     }
     return out
   }, [filteredEvals])
