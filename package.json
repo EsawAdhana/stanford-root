@@ -17,7 +17,8 @@
     "build:course-links": "esbuild scripts/build-course-links.ts --bundle --platform=node --format=esm --outfile=.tmp-pages/build-course-links.mjs --log-level=error && node .tmp-pages/build-course-links.mjs",
     "audit:ratings": "esbuild scripts/audit-ratings.ts --bundle --platform=node --format=esm --outfile=.tmp-pages/audit-ratings.mjs --log-level=error --external:@supabase/supabase-js && node .tmp-pages/audit-ratings.mjs",
     "dump:local-ratings": "esbuild scripts/patch-local-dump.ts --bundle --platform=node --format=esm --outfile=.tmp-pages/patch-local-dump.mjs --log-level=error --external:@supabase/supabase-js && node .tmp-pages/patch-local-dump.mjs",
-    "label:traffic-class": "node --env-file=.env.local scripts/label-traffic-class.mjs"
+    "label:traffic-class": "node --env-file=.env.local scripts/label-traffic-class.mjs",
+    "label:sentiment": "node --env-file=.env.local scripts/label-comment-sentiment.mjs"
   },
   "keywords": [],
   "author": "",

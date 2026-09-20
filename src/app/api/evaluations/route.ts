@@ -5,6 +5,7 @@ import { isDevEvalsUnlocked } from '@/lib/dev-flags'
 import { getStanfordUser } from '@/lib/stanford-auth'
 import { EVALUATION_COLUMNS, toCourseEvaluation, type EvaluationRow } from '@/lib/evaluation-row'
 import { readCachedEvaluations, writeCachedEvaluations } from '@/lib/evaluation-cache'
+import { attachSentiment } from '@/lib/comment-sentiment'
 import type { CourseEvaluation } from '@/types/course'
 
 const MAX_COURSE_IDS = 50
@@ -66,12 +67,17 @@ export async function POST(request: Request) {
 
       if (error) throw error
 
+      const fetched: CourseEvaluation[] = []
       for (const row of (data || []) as EvaluationRow[]) {
         const courseId = row.course_id
         if (!courseId) continue
         if (!byCourse[courseId]) byCourse[courseId] = []
-        byCourse[courseId].push(toCourseEvaluation(row))
+        const evaluation = toCourseEvaluation(row)
+        byCourse[courseId].push(evaluation)
+        fetched.push(evaluation)
       }
+      // Before writing the cache, so the scores are cached with the comments.
+      await attachSentiment(fetched)
       for (const id of missing) writeCachedEvaluations(id, byCourse[id])
     }
 
