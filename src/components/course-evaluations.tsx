@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect, useMemo, useCallback } from 'react'
+import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react'
 import Link from 'next/link'
 import { useEvaluationStore } from '@/lib/evaluation-store'
 import { useAuthStore } from '@/lib/auth-store'
@@ -19,6 +19,7 @@ import { CLASS_YEAR_BUCKETS, optionStats } from '@/lib/class-years'
 import type { ClassYearBreakdown, CommentSentiment, Course, CourseEvaluation, EvalQuestion, EvalOption } from '@/types/course'
 import { addRatingCounts, pooledMean, rankShare, rankScopeLabel } from '@/lib/quality-score.mjs'
 import { categorizeQuestion, dedupeCourseLevelReports } from '@/lib/eval-reports.mjs'
+import { useFindShortcut } from '@/hooks/use-find-shortcut'
 
 // --- Color helpers (green=good, yellow/orange=mid, red=bad) ---
 
@@ -561,6 +562,12 @@ export function CommentsPanel({ comments }: { comments: CommentEntry[] }) {
   const [searchQuery, setSearchQuery] = useState('')
   const [sentimentFilter, setSentimentFilter] = useState<SentimentFilter>('all')
   const [visibleCount, setVisibleCount] = useState(10)
+  const searchInputRef = useRef<HTMLInputElement>(null)
+
+  // Only mounted while the Comments tab is open, so Ctrl-F lands here exactly
+  // when comments are on screen. The browser's find bar would only search the
+  // first ten comments rendered, which is the wrong answer every time.
+  useFindShortcut(searchInputRef)
 
   const sentimentCounts = useMemo(() => {
     const counts = { positive: 0, mixed: 0, advice: 0, negative: 0 }
@@ -623,6 +630,7 @@ export function CommentsPanel({ comments }: { comments: CommentEntry[] }) {
         <div className="relative">
           <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
           <input
+            ref={searchInputRef}
             type="text"
             value={searchQuery}
             onChange={e => { setSearchQuery(e.target.value); setVisibleCount(10) }}

@@ -17,6 +17,7 @@ import { startNavProgress } from '@/components/nav-progress';
 import { searchCourses } from '@/lib/search-utils';
 import { compareCourseCodes } from '@/lib/utils';
 import { DAYS, ALL_DAYS, visibleDays, HOUR_HEIGHT, DEFAULT_START_MINUTES, DEFAULT_END_MINUTES, getCalendarColorClasses, layoutDayEvents, type CalendarDay } from '@/lib/calendar-utils';
+import { useFindShortcut } from '@/hooks/use-find-shortcut';
 
 type CalendarEvent = {
   id: string
@@ -72,6 +73,11 @@ export function CalendarView({ currentTerm, onPrevTerm, onNextTerm, canPrevTerm 
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const searchInputRef = useRef<HTMLInputElement>(null)
   const dropdownRef = useRef<HTMLDivElement>(null)
+
+  // Ctrl-F on the schedule means "find me a class to add", not "find text on
+  // this grid" — the grid only holds what is already scheduled. This view is
+  // only ever mounted on /schedule, so the shortcut needs no route check.
+  useFindShortcut(searchInputRef)
 
   // Handle click outside to close dropdown
   useEffect(() => {

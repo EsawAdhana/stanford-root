@@ -6,6 +6,7 @@ import { Search } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { track } from '@/lib/analytics';
+import { useFindShortcut } from '@/hooks/use-find-shortcut';
 
 export function SearchBar() {
   const pathname = usePathname();
@@ -42,13 +43,16 @@ export function SearchBar() {
     }
   }
 
+  // Ctrl-F/Cmd-F is shared with the schedule and comment search boxes, so it
+  // lives in one hook; "/" and Cmd-K stay here because only this bar has them.
+  useFindShortcut(inputRef, pathname === '/');
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       const isInput = ['INPUT', 'TEXTAREA'].includes((e.target as HTMLElement).tagName);
       if (
         (e.key === '/' && !isInput) ||
-        (e.key === 'k' && (e.metaKey || e.ctrlKey)) ||
-        (pathname === '/' && e.key === 'f' && (e.ctrlKey || e.metaKey))
+        (e.key === 'k' && (e.metaKey || e.ctrlKey))
       ) {
         e.preventDefault();
         inputRef.current?.focus();
@@ -57,7 +61,7 @@ export function SearchBar() {
 
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [pathname]);
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setLocalValue(e.target.value);
