@@ -51,12 +51,20 @@ export default function PrivacyPage() {
             <p>When you sign in with your Stanford Google account, we receive:</p>
             <ul className="list-disc pl-5 space-y-1 mt-2">
               <li><strong>Email address</strong> — used to verify you are a Stanford student (@stanford.edu).</li>
-              <li><strong>Name</strong> — shown in the app interface and used to address you in emails you send us.</li>
+              <li><strong>Name</strong> — Google sends it with your sign-in. It is not displayed anywhere in the
+                app; it is passed to our analytics provider so your sessions can be linked to one person (see
+                &quot;Usage Analytics&quot; below).</li>
               <li><strong>Profile photo</strong> — shown in the app interface.</li>
             </ul>
             <p className="mt-2">
               We do not request access to your Google Drive, Gmail, Calendar, or any other Google services
               beyond basic profile information.
+            </p>
+            <p className="mt-2">
+              Feedback you send through the in-app feedback form is stored as the message text and its category
+              and nothing else, even when you are signed in: your account, name, and email are deliberately not
+              attached to it. Your IP address is used for a moment to rate-limit submissions and is not stored
+              with the feedback.
             </p>
           </section>
 
@@ -66,7 +74,7 @@ export default function PrivacyPage() {
               <li>To authenticate your identity and restrict access to Stanford students.</li>
               <li>To associate your course schedule and preferences with your account.</li>
               <li>To gate published Stanford course evaluations to the Stanford community, as Stanford requires.</li>
-              <li>To answer you if you contact us or send feedback through the Service.</li>
+              <li>To reply to you if you email us.</li>
             </ul>
             <p className="mt-2">
               We do not use your information for advertising, we do not build advertising profiles, and we do not
@@ -134,6 +142,7 @@ export default function PrivacyPage() {
               <li><strong>Supabase</strong> — authentication and database hosting.</li>
               <li><strong>Vercel</strong> — website hosting and request logs.</li>
               <li><strong>Human Behavior</strong> — product analytics (see &quot;Usage Analytics&quot; below).</li>
+              <li><strong>Resend</strong> — delivers the notification email we get when someone submits feedback.</li>
             </ul>
             <p className="mt-2">
               We may also disclose information if we are legally required to do so.
@@ -161,7 +170,10 @@ export default function PrivacyPage() {
               kept in your browser&apos;s localStorage. Second, we use Human Behavior, a
               third-party product analytics provider, which records how users interact with the
               Service (such as clicks, navigation, and session activity) and sends this data to
-              Human Behavior&apos;s servers on our behalf. We do not use advertising trackers,
+              Human Behavior&apos;s servers on our behalf. When you are signed in, we also send
+              Human Behavior your email address, the name on your Google account, and your
+              Stanford Root account ID, so that sessions from the same person are recognised as
+              one person rather than a series of strangers. We do not use advertising trackers,
               and we never sell this data. This information is used only to measure engagement
               and improve the Service.
             </p>
