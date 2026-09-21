@@ -5,7 +5,7 @@
  */
 export function BrowsePageShell() {
   return (
-    <div className="flex flex-col h-full min-h-0 overflow-hidden bg-background">
+    <div className="flex flex-col h-screen overflow-hidden bg-background">
       <header className="flex-none h-14 sm:h-16 md:h-16 border-b border-border/50 flex items-center gap-2 md:gap-4 bg-background/90 backdrop-blur-xl justify-between px-2 sm:px-0">
         <div className="flex items-center gap-2 md:gap-4 shrink-0 md:w-[270px] pl-2 sm:pl-4 md:pl-0 md:justify-center">
           <div className="h-9 w-9 sm:h-10 sm:w-10 rounded-full bg-muted/40 shrink-0 md:hidden" />
