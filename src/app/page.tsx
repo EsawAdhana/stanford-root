@@ -4,6 +4,7 @@ import { CourseList } from '@/components/course-list';
 import { SiteHeader } from '@/components/site-header';
 import { FilterSidebar } from '@/components/filter-sidebar';
 import { BrowsePageShell } from '@/components/browse-page-shell';
+import { SiteFooter } from '@/components/site-footer';
 
 // Canonicalize every filtered catalog URL (?depts=..., ?q=...) to the bare
 // origin, so search engines don't index thousands of filter permutations.
@@ -17,19 +18,27 @@ export const metadata: Metadata = {
 /** The catalog is the site: `/` is the search, not a page about the search. */
 export default function CatalogPage() {
   return (
-    <Suspense fallback={<BrowsePageShell />}>
-      <div className="flex flex-col h-screen overflow-hidden bg-background">
-        <SiteHeader />
+    // The footer is deliberately outside the Suspense boundary. Everything
+    // inside it reads the query string, which makes React drop the boundary
+    // from the prerendered HTML and render it on the client instead, so the
+    // footer is the only copy on this page a crawler can read without JS.
+    <div className="flex flex-col h-screen overflow-hidden bg-background">
+      <Suspense fallback={<BrowsePageShell />}>
+        <div className="flex flex-col flex-1 min-h-0 overflow-hidden">
+          <SiteHeader />
 
-        <div className="flex flex-1 overflow-hidden">
-          <aside className="w-[280px] border-r border-border/40 bg-background hidden md:block overflow-y-auto custom-scrollbar shrink-0">
-            <FilterSidebar />
-          </aside>
-          <main className="flex-1 flex flex-col min-w-0 overflow-hidden bg-secondary/20 relative">
-            <CourseList />
-          </main>
+          <div className="flex flex-1 overflow-hidden">
+            <aside className="w-[280px] border-r border-border/40 bg-background hidden md:block overflow-y-auto custom-scrollbar shrink-0">
+              <FilterSidebar />
+            </aside>
+            <main className="flex-1 flex flex-col min-w-0 overflow-hidden bg-secondary/20 relative">
+              <CourseList />
+            </main>
+          </div>
         </div>
-      </div>
-    </Suspense>
+      </Suspense>
+
+      <SiteFooter />
+    </div>
   );
 }

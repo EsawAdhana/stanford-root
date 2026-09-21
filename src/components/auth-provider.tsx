@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect } from 'react'
+import React, { Suspense, useEffect } from 'react'
 import { useSearchParams, useRouter, usePathname } from 'next/navigation'
 import { useAuthStore } from '@/lib/auth-store'
 import { useSyncSchedule } from '@/hooks/use-sync-schedule'
@@ -12,12 +12,16 @@ import { track } from '@/lib/analytics'
  * always renders children. Unlike the old AuthGate, this never blocks the UI —
  * anonymous users browse and build schedules locally; login only enables
  * cross-device sync.
+ *
+ * Nothing here may call useSearchParams(): this component wraps every page, and
+ * a prerender that hits useSearchParams() bails its nearest Suspense boundary
+ * out to client rendering, which would strip the whole page out of the static
+ * HTML (crawlers and link previews would see an empty shell). The query-string
+ * work lives in AuthQueryEffects below, behind its own boundary that renders
+ * null, so only that nothing-shaped subtree bails.
  */
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const initialize = useAuthStore(state => state.initialize)
-  const searchParams = useSearchParams()
-  const router = useRouter()
-  const pathname = usePathname()
   useSyncSchedule()
 
   useEffect(() => {
@@ -26,6 +30,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       unsubscribe()
     }
   }, [initialize])
+
+  return (
+    <>
+      <Suspense fallback={null}>
+        <AuthQueryEffects />
+      </Suspense>
+      {children}
+    </>
+  )
+}
+
+/** Query-string side effects for auth: surfacing callback errors and catching a
+ *  stray ?code= that landed somewhere other than /auth/callback. Renders null. */
+function AuthQueryEffects() {
+  const searchParams = useSearchParams()
+  const router = useRouter()
+  const pathname = usePathname()
 
   useEffect(() => {
     const authError = searchParams.get('auth_error')
@@ -68,5 +89,5 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     router.replace(callback)
   }, [pathname, searchParams, router])
 
-  return <>{children}</>
+  return null
 }
