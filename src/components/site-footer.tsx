@@ -10,7 +10,7 @@ import Link from 'next/link'
  */
 export function SiteFooter() {
   return (
-    <footer className="flex-none border-t border-border/50 bg-background px-3 py-2 sm:px-4">
+    <footer className="mt-auto flex-none border-t border-border/50 bg-background px-3 py-2 sm:px-4">
       <div className="mx-auto flex max-w-[1600px] flex-col gap-1 text-[11px] leading-relaxed text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:gap-4">
         <p>
           <span className="font-medium text-foreground">Stanford Root</span> is a free course search and
