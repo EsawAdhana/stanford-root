@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { Suspense } from 'react'
 import { Metadata } from 'next'
 import { SiteHeader } from '@/components/site-header'
+import { SITE_URL } from '@/lib/site'
 
 export const metadata: Metadata = {
   title: 'About Stanford Root',
@@ -66,9 +67,11 @@ export default function AboutPage() {
             </p>
             <p className="mt-2">
               The{' '}
-              <Link href="/privacy" className="text-primary hover:underline">
+              {/* Absolute canonical URL on purpose: Google checks that the privacy link on the
+                  home page is the same string as the one in the consent screen config. */}
+              <a href={`${SITE_URL}/privacy`} className="text-primary hover:underline">
                 privacy policy
-              </Link>{' '}
+              </a>{' '}
               spells out what we store, who processes it, how long it is kept, and how to have it deleted.
             </p>
           </section>
@@ -100,9 +103,9 @@ export default function AboutPage() {
             </p>
             <p className="mt-2">
               See also the{' '}
-              <Link href="/terms" className="text-primary hover:underline">
+              <a href={`${SITE_URL}/terms`} className="text-primary hover:underline">
                 terms of service
-              </Link>
+              </a>
               .
             </p>
           </section>
