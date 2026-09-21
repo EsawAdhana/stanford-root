@@ -64,10 +64,13 @@ export function useFilteredCourses() {
     const [unitMax] = useQueryState('unitMax', parseAsInteger.withDefault(5));
     const [timeMin] = useQueryState('timeMin', parseAsInteger.withDefault(420));
     const [timeMax] = useQueryState('timeMax', parseAsInteger.withDefault(1320));
-    const [hideConflicts, setHideConflicts] = useQueryState('hideConflicts', parseAsBoolean.withDefault(true));
-    // Closed/waitlisted and study abroad (BOSP) courses are hidden by default.
-    const [hideUnavailable, setHideUnavailable] = useQueryState('hideUnavailable', parseAsBoolean.withDefault(true));
-    const [hideStudyAbroad, setHideStudyAbroad] = useQueryState('hideStudyAbroad', parseAsBoolean.withDefault(true));
+    // Every hide toggle starts off: the term is the only filter a fresh load
+    // applies. Hiding conflicting, closed/waitlisted and study abroad (BOSP)
+    // sections by default made the catalog quietly smaller than the registrar's
+    // (2,969 of 3,968 in Autumn 2026), with no clue as to why.
+    const [hideConflicts, setHideConflicts] = useQueryState('hideConflicts', parseAsBoolean.withDefault(false));
+    const [hideUnavailable, setHideUnavailable] = useQueryState('hideUnavailable', parseAsBoolean.withDefault(false));
+    const [hideStudyAbroad, setHideStudyAbroad] = useQueryState('hideStudyAbroad', parseAsBoolean.withDefault(false));
     const [newOnly, setNewOnly] = useQueryState('newOnly', parseAsBoolean.withDefault(false));
     const [excludedWords] = useQueryState('exclude', parseAsArrayOf(parseAsString).withDefault([]));
     const [sortBy, setSortBy] = useQueryState('sort', parseAsString.withDefault('az'));

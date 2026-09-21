@@ -387,9 +387,9 @@ const DEFAULT_CRITERIA = {
   unitMax: 5,
   timeMin: 420,
   timeMax: 1320,
-  hideConflicts: true,
-  hideUnavailable: true,
-  hideStudyAbroad: true,
+  hideConflicts: false,
+  hideUnavailable: false,
+  hideStudyAbroad: false,
   newOnly: false,
 }
 
@@ -397,12 +397,12 @@ const DEFAULT_CRITERIA = {
  * The catalog exactly as it opens, for the share card.
  *
  * The card draws the real interface, so every figure on it has to be the one a
- * visitor will actually see. That rules out counting the dump: the light dump
- * says 3,968 classes in Autumn 2026 where the app says 2,969, because the app
- * hides closed, conflicting and study-abroad sections first. So this runs the
- * same filterCourses the browse view runs, over the same dump, and sorts with
- * the same comparator. Build time only, and the image is static, so the cost is
- * one pass per deploy.
+ * visitor will actually see. Counting the dump is not the same thing: the dump
+ * holds every term, while the view opens on one. So this runs the same
+ * filterCourses the browse view runs, over the same dump, and sorts with the
+ * same comparator — and it has to keep tracking the browse defaults above, or
+ * the card advertises a count the page never shows. Build time only, and the
+ * image is static, so the cost is one pass per deploy.
  */
 export async function getDefaultViewFromDump(limit = 4): Promise<DefaultCatalogView | null> {
   try {
