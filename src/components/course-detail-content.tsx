@@ -96,6 +96,16 @@ export function CourseDetailContent({ course }: CourseDetailContentProps) {
     const selectedIdsForTerm = (term: string) =>
         scheduledSectionIds(course, cartItem, term);
 
+    /**
+     * The term this class sits on the schedule for, under whichever listing holds
+     * it. The sibling matters because the schedule search offers every listing but
+     * this page is reached through the canonical id: adding ANTHRO 443 for Winter
+     * and clicking its own calendar block lands on /ANTHRO143, where the cart entry
+     * is the sibling. Consulting only `cartItem` opened the default tab (Autumn)
+     * instead, so the class looked unadded on the only tab the student ever saw.
+     */
+    const scheduledTerm = cartItem?.selectedTerm ?? scheduledSibling?.selectedTerm;
+
     // Group sections by term (dedup by classId), sort sections + terms — memoized so this
     // doesn't re-run on every render (e.g. tab switches, hover state).
     const sectionsByTerm = useMemo(() => {
@@ -118,8 +128,8 @@ export function CourseDetailContent({ course }: CourseDetailContentProps) {
     // offers it, instead of defaulting to the latest offered term.
     // State for active tab
     const [activeTerm, setActiveTerm] = useState<string>(() => {
-        if (cartItem?.selectedTerm && terms.includes(cartItem.selectedTerm)) {
-            return cartItem.selectedTerm;
+        if (scheduledTerm && terms.includes(scheduledTerm)) {
+            return scheduledTerm;
         }
         return getDefaultTerm(terms);
     });
@@ -240,8 +250,8 @@ export function CourseDetailContent({ course }: CourseDetailContentProps) {
     // disabled-then-enabled on a course that does have one.
     const syllabusPending = !syllabusLoaded
 
-    // Which term the Sections panel shows, in priority order: the section the student
-    // actually picked, then the term they were browsing when they clicked through, then
+    // Which term the Sections panel shows, in priority order: the term this class is
+    // scheduled for, then the term they were browsing when they clicked through, then
     // the default. One effect rather than two, because two writing the same state on the
     // same `terms` change race -- the second reads the pre-update value and clobbers it.
     //
@@ -250,8 +260,8 @@ export function CourseDetailContent({ course }: CourseDetailContentProps) {
     // server-rendered and a render-time read would desync hydration, and consumed once so
     // a later direct visit gets the default instead of a stale term.
     useEffect(() => {
-        if (cartItem?.selectedTerm && terms.includes(cartItem.selectedTerm)) {
-            setActiveTerm(cartItem.selectedTerm);
+        if (scheduledTerm && terms.includes(scheduledTerm)) {
+            setActiveTerm(scheduledTerm);
             return;
         }
         if (terms.length === 0) return;
@@ -264,7 +274,7 @@ export function CourseDetailContent({ course }: CourseDetailContentProps) {
             }
         }
         if (!terms.includes(activeTerm)) setActiveTerm(getDefaultTerm(terms));
-    }, [course.id, cartItem?.selectedTerm, terms.length]); // eslint-disable-line react-hooks/exhaustive-deps -- activeTerm omitted to avoid loop; setActiveTerm is stable
+    }, [course.id, scheduledTerm, terms.length]); // eslint-disable-line react-hooks/exhaustive-deps -- activeTerm omitted to avoid loop; setActiveTerm is stable
 
     // GER (General Education Requirements / WAYS) from sections — dedupe by display abbreviation
     // so e.g. "Writing in the Major (WIM)" (injected in store) and "WIM" do not both show as WIM.
