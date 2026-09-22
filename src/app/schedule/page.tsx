@@ -22,7 +22,7 @@ import { ThemeToggle } from '@/components/theme-toggle';
 import { SchedulePageShell } from '@/components/schedule-page-shell';
 import { ScheduleTimesNotice } from '@/components/schedule-times-notice';
 import { ScheduleSourceNotice } from '@/components/schedule-source-notice';
-import { parseMeetingTimes, timeToMinutes, parseDays } from '@/lib/schedule-utils';
+import { parseMeetingTimes, timeToMinutes, parseDays, isScheduledForTerm } from '@/lib/schedule-utils';
 import { getDefaultTerm, getApproxTermStart } from '@/lib/terms';
 import { useAvailableTerms } from '@/hooks/use-selected-terms';
 import { cn, parseUnitsOptions } from '@/lib/utils';
@@ -136,10 +136,7 @@ function ScheduleContent() {
 
   // Merge cart items with full course data (cart may have light data without sections)
   const currentTermCourses = useMemo(() => {
-    const filtered = items.filter(c =>
-      c.selectedTerm ? c.selectedTerm === currentTerm :
-        (c.terms && currentTerm && c.terms.includes(currentTerm))
-    )
+    const filtered = items.filter(c => currentTerm && isScheduledForTerm(c, currentTerm))
     return filtered.map(item => {
       const fullCourse = courseMap.get(item.id)
       if (fullCourse?.sections && fullCourse.sections.length > 0) {

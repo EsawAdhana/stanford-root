@@ -5,7 +5,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import { Button } from '@/components/ui/button';
 import { useCartStore } from '@/lib/cart-store';
 import { useCourseStore, getCoursesById } from '@/lib/store';
-import { parseMeetingTimes, parseTimeRange, timeToMinutes, isMeetingOptional, stripSeconds, parseDays } from '@/lib/schedule-utils';
+import { parseMeetingTimes, parseTimeRange, timeToMinutes, isMeetingOptional, stripSeconds, parseDays, isScheduledForTerm } from '@/lib/schedule-utils';
 import { cn, decodeHtmlEntities, parseUnitsOptions } from '@/lib/utils';
 import { AlertTriangle, CalendarPlus, Calendar, Clock, MapPin } from 'lucide-react';
 import type { Course, Section } from '@/types/course';
@@ -81,12 +81,7 @@ export function CalendarPreviewModal({
 
     // Existing cart items for this term (excluding this course), merged with full course data for sections
     const existingItems = useMemo(() => {
-        const filtered = items.filter(c => {
-            const forTerm = c.selectedTerm
-                ? c.selectedTerm === term
-                : ((c.terms && c.terms.includes(term)));
-            return forTerm && c.id !== course.id;
-        });
+        const filtered = items.filter(c => isScheduledForTerm(c, term) && c.id !== course.id);
         const byId = getCoursesById(courses);
         return filtered.map(item => {
             const fullCourse = byId.get(item.id);

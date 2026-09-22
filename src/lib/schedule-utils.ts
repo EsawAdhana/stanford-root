@@ -239,6 +239,48 @@ export function pickSectionsForTerm(course: Course, term?: string): Section[] {
   return [standInSection(sectionsForTerm)]
 }
 
+/** The parts of a cart entry that decide where it lands on the calendar. */
+type ScheduleEntry = {
+  selectedTerm?: string
+  terms?: string[]
+  selectedSectionIds?: number[]
+}
+
+/**
+ * True when a saved entry belongs on `term`'s calendar.
+ *
+ * An entry saved without a term -- an .ics import whose course carried none --
+ * shows in every term it is offered in. That is the schedule view's own filter,
+ * so anything else asking "is this on my calendar?" has to apply the same one.
+ */
+export function isScheduledForTerm(entry: ScheduleEntry, term: string): boolean {
+  return entry.selectedTerm
+    ? entry.selectedTerm === term
+    : (entry.terms?.includes(term) ?? false)
+}
+
+/**
+ * The classIds the calendar actually draws for a saved entry, or [] when the
+ * entry is not on that term's calendar at all.
+ *
+ * `pickSectionsForTerm` stands in the primary component whenever the entry
+ * carries no usable pick: a quick-add from the schedule search passes no
+ * section, and a catalog refresh can reissue classIds that a saved pick no
+ * longer matches. Reading `selectedSectionIds` directly instead of asking here
+ * makes the course page disagree with the calendar -- a class plainly sitting on
+ * the schedule offers "View on Calendar" on every one of its sections, with
+ * nothing marked Added.
+ */
+export function scheduledSectionIds(
+  course: Course,
+  entry: ScheduleEntry | undefined,
+  term: string,
+): number[] {
+  if (!entry || !isScheduledForTerm(entry, term)) return []
+  const scheduled = { ...course, selectedSectionIds: entry.selectedSectionIds }
+  return pickSectionsForTerm(scheduled, term).map(s => s.classId)
+}
+
 /**
  * True when the stand-in section for an unpicked course differs from the one
  * the old index-0 fallback showed — i.e. this course's time visibly moved on

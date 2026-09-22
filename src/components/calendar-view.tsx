@@ -6,7 +6,7 @@ import { useCartStore } from '@/lib/cart-store';
 import { useAuthStore } from '@/lib/auth-store';
 import { promptLoginToSyncOnce } from '@/lib/login-nudge';
 import { track } from '@/lib/analytics';
-import { isMeetingOptional, parseMeetingTimes, timeToMinutes, stripSeconds, scheduledCrossListMember } from '@/lib/schedule-utils';
+import { isMeetingOptional, parseMeetingTimes, timeToMinutes, stripSeconds, scheduledCrossListMember, isScheduledForTerm } from '@/lib/schedule-utils';
 import { cn, unitsLabel, decodeHtmlEntities, getCrossListPrimaryMap } from '@/lib/utils';
 import { ChevronLeft, ChevronRight, Trash2, EyeOff, Eye, Calendar, Search, AlertTriangle, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -99,10 +99,7 @@ export function CalendarView({ currentTerm, onPrevTerm, onNextTerm, canPrevTerm 
   const courseMap = useMemo(() => new Map(courses.map(c => [c.id, c])), [courses])
 
   const currentTermCourses = useMemo(() => {
-    const filtered = items.filter(c =>
-      c.selectedTerm ? c.selectedTerm === currentTerm :
-        (c.terms && currentTerm && c.terms.includes(currentTerm))
-    )
+    const filtered = items.filter(c => currentTerm && isScheduledForTerm(c, currentTerm))
     return filtered.map(item => {
       const fullCourse = courseMap.get(item.id)
       if (fullCourse?.sections && fullCourse.sections.length > 0) {

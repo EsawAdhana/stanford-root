@@ -21,7 +21,7 @@ import { useEvaluationStore } from '@/lib/evaluation-store';
 import { useMemo, useRef } from 'react';
 import { takePreferredTerms } from '@/lib/preferred-term';
 import { CalendarPreviewModal } from './calendar-preview-modal';
-import { unpickedComponents, stripSeconds } from '@/lib/schedule-utils';
+import { unpickedComponents, stripSeconds, isScheduledForTerm, scheduledSectionIds } from '@/lib/schedule-utils';
 import { isWimCourse } from '@/lib/wim-courses';
 import { compareTerms, getDefaultTerm } from '@/lib/terms';
 import { useLiveSeats } from '@/hooks/use-seats';
@@ -85,9 +85,16 @@ export function CourseDetailContent({ course }: CourseDetailContentProps) {
      */
     const scheduledSibling = useCartStore(s => s.items.find(i => i.id !== course.id && crossListIds.includes(i.id)));
 
-    /** Sections the user picked, but only for the term being shown. */
+    /**
+     * Sections of this course on the term being shown, by classId.
+     *
+     * Not `cartItem.selectedSectionIds` — an entry added from the schedule search
+     * carries no pick, and the calendar draws it under a stand-in section. Reading
+     * the raw picks left that class showing "View on Calendar" on every section of
+     * a course the student was looking at on their own calendar a click earlier.
+     */
     const selectedIdsForTerm = (term: string) =>
-        cartItem?.selectedTerm === term ? (cartItem.selectedSectionIds ?? []) : [];
+        scheduledSectionIds(course, cartItem, term);
 
     // Group sections by term (dedup by classId), sort sections + terms — memoized so this
     // doesn't re-run on every render (e.g. tab switches, hover state).
@@ -550,7 +557,7 @@ export function CourseDetailContent({ course }: CourseDetailContentProps) {
                                             return termSections.map((section) => {
                                                 const isSelected = selectedIds.includes(section.classId);
                                                 // Only the term on screen: the same class in another quarter is a real choice.
-                                                const blockedBySibling = !isSelected && scheduledSibling?.selectedTerm === term;
+                                                const blockedBySibling = !isSelected && Boolean(scheduledSibling) && isScheduledForTerm(scheduledSibling!, term);
                                                 const enrollAgg = enrollmentBySectionId.get(section.classId) ?? aggregateCrossListedSectionEnrollment(section, crossListIds, courses, term === activeTerm ? liveSeats : undefined);
                                                 const liveSeat = term === activeTerm ? liveSeats.get(section.classId) : undefined;
                                                 const sectionStatus = liveSeat?.status || section.status;
