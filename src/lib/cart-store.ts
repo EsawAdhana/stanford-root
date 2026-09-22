@@ -15,6 +15,7 @@ type CartStore = {
   items: CartItem[]
   addItem: (course: Course, term?: string, sectionId?: number, selectedUnits?: number) => void
   removeSection: (courseId: string, sectionId: number) => void
+  setSelectedUnits: (courseId: string, units: number | undefined) => void
   removeItem: (courseId: string) => void
   hasItem: (courseId: string) => boolean
   getItem: (courseId: string) => CartItem | undefined
@@ -95,6 +96,23 @@ export const useCartStore = create<CartStore>()(
         }
 
         set(state => ({ items: [...state.items, courseWithTerm] }))
+      },
+      /**
+       * Set -- or clear -- the units on a course already on the schedule.
+       *
+       * `addItem` deliberately never overwrites with undefined, because most of
+       * its callers pass undefined to mean "leave this alone". That left the
+       * units chips unable to express the one thing their own toggle computes:
+       * clicking the lit chip cleared the local state and wrote nothing, so the
+       * pick came straight back on the next render and the term's total never
+       * moved.
+       */
+      setSelectedUnits: (courseId, units) => {
+        set(state => ({
+          items: state.items.map(item =>
+            item.id === courseId ? { ...item, selectedUnits: units } : item
+          ),
+        }))
       },
       removeSection: (courseId, sectionId) => {
         const currentItems = get().items

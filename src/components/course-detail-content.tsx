@@ -35,6 +35,7 @@ interface CourseDetailContentProps {
 export function CourseDetailContent({ course }: CourseDetailContentProps) {
     const addItem = useCartStore(s => s.addItem);
     const removeSection = useCartStore(s => s.removeSection);
+    const setCartUnits = useCartStore(s => s.setSelectedUnits);
     const courses = useCourseStore(s => s.courses);
     const hasLoadedCatalog = useCourseStore(s => s.hasLoaded);
     const fetchBulkEvaluations = useEvaluationStore(s => s.fetchBulkEvaluations);
@@ -104,7 +105,8 @@ export function CourseDetailContent({ course }: CourseDetailContentProps) {
      * is the sibling. Consulting only `cartItem` opened the default tab (Autumn)
      * instead, so the class looked unadded on the only tab the student ever saw.
      */
-    const scheduledTerm = cartItem?.selectedTerm ?? scheduledSibling?.selectedTerm;
+    const scheduledEntry = cartItem ?? scheduledSibling;
+    const scheduledTerm = scheduledEntry?.selectedTerm;
 
     // Group sections by term (dedup by classId), sort sections + terms — memoized so this
     // doesn't re-run on every render (e.g. tab switches, hover state).
@@ -212,16 +214,16 @@ export function CourseDetailContent({ course }: CourseDetailContentProps) {
     const unitOptions = course ? parseUnitsOptions(unitsSource ?? course.units) : []
     const hasVariable = unitOptions.length > 1
     const [selectedUnits, setSelectedUnits] = useState<number | undefined>(() => {
-        if (cartItem?.selectedUnits !== undefined && unitOptions.includes(cartItem.selectedUnits)) return cartItem.selectedUnits
+        if (scheduledEntry?.selectedUnits !== undefined && unitOptions.includes(scheduledEntry.selectedUnits)) return scheduledEntry.selectedUnits
         return undefined
     })
 
     // Sync selectedUnits when cart item changes
     useEffect(() => {
-        if (cartItem?.selectedUnits !== undefined && unitOptions.includes(cartItem.selectedUnits)) {
-            setSelectedUnits(cartItem.selectedUnits)
+        if (scheduledEntry?.selectedUnits !== undefined && unitOptions.includes(scheduledEntry.selectedUnits)) {
+            setSelectedUnits(scheduledEntry.selectedUnits)
         }
-    }, [cartItem?.selectedUnits, unitOptions.join(',')]) // eslint-disable-line react-hooks/exhaustive-deps
+    }, [scheduledEntry?.selectedUnits, unitOptions.join(',')]) // eslint-disable-line react-hooks/exhaustive-deps
 
     // Representative section for the selected term, used for term-specific
     // course facts like class level.
@@ -321,11 +323,17 @@ export function CourseDetailContent({ course }: CourseDetailContentProps) {
         // that normally keeps them equal both bail when the cart's value is not
         // among this term's options — so a lit chip could be "re-selected",
         // producing an identical render and a click that appeared to do nothing.
-        const effectiveUnits = selectedUnits ?? cartItem?.selectedUnits;
+        const effectiveUnits = selectedUnits ?? scheduledEntry?.selectedUnits;
         const newValue = effectiveUnits === u ? undefined : u;
         setSelectedUnits(newValue);
-        if (cartItem?.selectedTerm === activeTerm) {
-            addItem(course, activeTerm, undefined, newValue);
+        // Write to the listing that actually holds the class. On a cross-listed
+        // page that is usually the sibling -- the schedule says COMM 272 and this
+        // page is COMM 172 -- and keying off `cartItem` meant the chip lit up
+        // while the term's unit total never moved. By id rather than through
+        // addItem, so clearing a pick works and so the listing on the calendar
+        // stays the one the student added.
+        if (scheduledEntry && isScheduledForTerm(scheduledEntry, activeTerm)) {
+            setCartUnits(scheduledEntry.id, newValue);
         }
     };
 
@@ -692,7 +700,7 @@ export function CourseDetailContent({ course }: CourseDetailContentProps) {
                                                                                             className={cn(
                                                                                                 "flex items-center justify-center font-bold rounded-md transition-all",
                                                                                                 opts.length > 6 ? "w-7 h-6 text-[11px]" : "w-8 h-7 text-[13px]",
-                                                                                                (selectedUnits === u || (selectedUnits === undefined && cartItem?.selectedUnits === u))
+                                                                                                (selectedUnits === u || (selectedUnits === undefined && scheduledEntry?.selectedUnits === u))
                                                                                                     ? "bg-primary text-primary-foreground shadow-sm"
                                                                                                     : "text-muted-foreground hover:bg-secondary hover:text-foreground"
                                                                                             )}
