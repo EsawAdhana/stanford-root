@@ -62,8 +62,24 @@ describe('hide closed & waitlisted', () => {
         expect(run(one([section({ status: 'Closed' }), section({ component: 'LBS' })]))).toEqual([])
     })
 
-    it('hides a section flagged Open that already has a waitlist', () => {
-        expect(run(one([section({ waitlist: 3, waitlistMax: 20 })]))).toEqual([])
+    it('hides a section flagged Open whose waitlist is at least the seats left: CS 312 at 96/99 with 85 waiting', () => {
+        expect(run(one([section({ enrolled: 96, capacity: 99, waitlist: 85, waitlistMax: 100 })]))).toEqual([])
+        expect(run(one([section({ enrolled: 47, capacity: 50, waitlist: 3, waitlistMax: 20 })]))).toEqual([])
+    })
+
+    it('keeps a class with seats and a short line: EARTHSYS 10 at 163/300 with one waiting', () => {
+        expect(run(one([section({ enrolled: 163, capacity: 300, waitlist: 1, waitlistMax: 50 })]))).toEqual(['CS999'])
+        expect(run(one([section({ enrolled: 47, capacity: 50, waitlist: 2, waitlistMax: 20 })]))).toEqual(['CS999'])
+    })
+
+    it('hides a section flagged Open that is already full or over', () => {
+        expect(run(one([section({ enrolled: 50, capacity: 50 })]))).toEqual([])
+        expect(run(one([section({ enrolled: 52, capacity: 50 })]))).toEqual([])
+    })
+
+    it('lets the status decide when the cap is missing', () => {
+        expect(run(one([section({ enrolled: 4, capacity: 0, waitlist: 2 })]))).toEqual(['CS999'])
+        expect(run(one([section({ enrolled: 4, capacity: 0, status: 'Closed' })]))).toEqual([])
     })
 
     it('keeps a class whose lecture and lab are both open', () => {

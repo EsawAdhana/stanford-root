@@ -237,8 +237,13 @@ describe('hide closed & waitlisted reads the room', () => {
         expect(visible([course('CS1', 'CS', '1', 'X', [section({ capacity: 60, enrolled: 10, combined: room })])])).toEqual([])
     })
 
-    it('hides a room with a waitlist even if its count still shows a seat', () => {
+    it('hides a room whose line is at least its seats left, even if its count still shows a seat', () => {
         const room = { enrolled: 49, capacity: 50, waitlist: 2, waitlistMax: 10 }
         expect(visible([course('CS1', 'CS', '1', 'X', [section({ capacity: 60, enrolled: 10, combined: room })])])).toEqual([])
+    })
+
+    it('keeps a room with seats to spare and a short line', () => {
+        const room = { enrolled: 20, capacity: 50, waitlist: 1, waitlistMax: 10 }
+        expect(visible([course('CS1', 'CS', '1', 'X', [section({ capacity: 60, enrolled: 10, combined: room })])])).toEqual(['CS1'])
     })
 })

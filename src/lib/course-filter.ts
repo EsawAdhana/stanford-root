@@ -64,6 +64,19 @@ type FilterChecks = {
 }
 
 /**
+ * Whether a new student gets a seat rather than a place in line. A waitlist
+ * alone does not decide it: EARTHSYS 10 reads 163/300 with one person waiting,
+ * most likely for a full discussion, and has 137 seats. A line at least as
+ * long as the seats left does: CS 312 at 96/99 with 85 waiting is full. A
+ * missing cap (0) says nothing, so the status flag decides on its own.
+ */
+function hasSeat(seats: { enrolled: number; capacity: number; waitlist: number }): boolean {
+  if (!(seats.capacity > 0)) return true
+  const left = Math.max(0, seats.capacity - seats.enrolled)
+  return left > 0 && !(seats.waitlist >= left)
+}
+
+/**
  * Builds one predicate per filter dimension (null when that filter is
  * inactive). Both the visible-list filter (filterCourses) and the sidebar
  * facet counts (filterCoursesForFacets) are composed from these, so the two
@@ -237,15 +250,13 @@ function buildChecks(
         // has a section you can get into. "Any section open" let CS 140M through on
         // its sibling's 999-seat lab while the lecture was full. A listing flagged
         // "Open" is still full when the room it shares is: EE 186 reads Open at 39/50
-        // while its lecture with CS 140M is 50/50. A waitlist means full too, and
-        // covers dumps written before `combined` existed.
+        // while its lecture with CS 140M is 50/50.
         const byTerm = new Map<string, Map<string, boolean>>()
         for (const s of sectionsToCheck) {
           const components = byTerm.get(s.term) ?? new Map<string, boolean>()
           byTerm.set(s.term, components)
           const room = s.combined
-          const enrollable = s.status?.toLowerCase() === 'open' && !(s.waitlist > 0) &&
-            (!room || (room.enrolled < room.capacity && !(room.waitlist > 0)))
+          const enrollable = s.status?.toLowerCase() === 'open' && hasSeat(s) && (!room || hasSeat(room))
           components.set(s.component, (components.get(s.component) ?? false) || enrollable)
         }
         return [...byTerm.values()].some(components => [...components.values()].every(Boolean))
