@@ -30,7 +30,7 @@ export const useUnresolvedSchedule = create<UnresolvedState>((set) => ({
 type CatalogCourse = {
   id: string
   terms?: string[]
-  sections?: { classId: number }[]
+  sections?: { classId: number; term?: string }[]
 }
 
 type SavedItem = {
@@ -38,6 +38,7 @@ type SavedItem = {
   subject?: string
   code?: string
   selectedSectionIds?: number[]
+  selectedTerm?: string
 }
 
 /** "CS224U" -> "CS 224U", so the notice reads like a course code. */
@@ -82,7 +83,13 @@ export function findAffectedSchedule(
     const full = byId.get(item.id)
     // No sections yet means the catalog has not been enriched, not a change.
     if (!full?.sections?.length) continue
-    const live = new Set(full.sections.map(section => section.classId))
+    // Only the entry's term: a class number is reused across terms, so a pick
+    // that moved in Winter could otherwise match an Autumn section.
+    const live = new Set(
+      full.sections
+        .filter(section => !item.selectedTerm || !section.term || section.term === item.selectedTerm)
+        .map(section => section.classId)
+    )
     if (picked.some(classId => !live.has(classId))) {
       movedSections.add(item.subject && item.code ? `${item.subject} ${item.code}` : courseLabel(item.id))
     }

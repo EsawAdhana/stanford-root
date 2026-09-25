@@ -160,8 +160,10 @@ export function CourseDetailContent({ course }: CourseDetailContentProps) {
     const { seats: liveSeats, fetchedAt: seatsFetchedAt } = useLiveSeats(activeTerm, liveClassNbrs);
 
     // Precompute cross-listed enrollment per section so it isn't recomputed for every render/tab switch
+    // Keyed by term and classId: a class number is reused across terms, even within
+    // one course (MATH 53's #7154 is the 9:30 Autumn and the 10:30 Spring lecture).
     const enrollmentBySectionId = useMemo(() => {
-        const map = new Map<number, ReturnType<typeof aggregateCrossListedSectionEnrollment>>();
+        const map = new Map<string, ReturnType<typeof aggregateCrossListedSectionEnrollment>>();
         for (const term of Object.keys(sectionsByTerm)) {
             for (const section of sectionsByTerm[term]) {
                 // Live readings are fetched per term, and a classNbr is only unique
@@ -169,7 +171,7 @@ export function CourseDetailContent({ course }: CourseDetailContentProps) {
                 // Spring 2027), so they may only be applied to the term they
                 // were fetched for.
                 const live = term === activeTerm ? liveSeats : undefined;
-                map.set(section.classId, aggregateCrossListedSectionEnrollment(section, crossListIds, courses, live));
+                map.set(`${term}|${section.classId}`, aggregateCrossListedSectionEnrollment(section, crossListIds, courses, live));
             }
         }
         return map;
@@ -577,7 +579,7 @@ export function CourseDetailContent({ course }: CourseDetailContentProps) {
                                                 const isSelected = selectedIds.includes(section.classId);
                                                 // Only the term on screen: the same class in another quarter is a real choice.
                                                 const blockedBySibling = !isSelected && Boolean(scheduledSibling) && isScheduledForTerm(scheduledSibling!, term);
-                                                const enrollAgg = enrollmentBySectionId.get(section.classId) ?? aggregateCrossListedSectionEnrollment(section, crossListIds, courses, term === activeTerm ? liveSeats : undefined);
+                                                const enrollAgg = enrollmentBySectionId.get(`${term}|${section.classId}`) ?? aggregateCrossListedSectionEnrollment(section, crossListIds, courses, term === activeTerm ? liveSeats : undefined);
                                                 const liveSeat = term === activeTerm ? liveSeats.get(section.classId) : undefined;
                                                 // A live reading replaces the snapshot's seats, room included.
                                                 const sectionStatus = displayedStatus(

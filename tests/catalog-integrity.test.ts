@@ -251,9 +251,9 @@ describe('sections and meetings', () => {
 
     /**
      * Class ids are Stanford's per-term class numbers: reused freely across
-     * terms (24,143 of them are), unique within a term. Live-seat lookups and
-     * the per-course enrollment map key on classId, so both invariants below
-     * are load-bearing.
+     * terms (24,143 of them are), unique within a term, and reused even inside
+     * one course (MATH 53's #7154 is its 9:30 Autumn and its 10:30 Spring
+     * lecture). Everything that looks a section up keys on term and classId.
      */
     it('gives each class id one owner within a term', () => {
         const owner = new Map<string, string>()
@@ -270,17 +270,15 @@ describe('sections and meetings', () => {
         expect(show(bad)).toEqual([])
     })
 
-    it('never repeats a class id across terms within one course', () => {
-        // course-detail-content keys enrollmentBySectionId by classId across all
-        // of a course's terms; a repeat there would show one term's seats in another.
+    it('lists each class once per term within a course', () => {
         const bad: string[] = []
         for (const c of full) {
-            const seen = new Map<number, string>()
+            const seen = new Set<string>()
             for (const s of c.sections || []) {
                 if (typeof s.classId !== 'number') continue
-                const prev = seen.get(s.classId)
-                if (prev && prev !== s.term) bad.push(`${c.course_id} classId ${s.classId}: ${prev} and ${s.term}`)
-                seen.set(s.classId, s.term || '')
+                const key = `${s.term}|${s.classId}`
+                if (seen.has(key)) bad.push(`${c.course_id} ${key}`)
+                seen.add(key)
             }
         }
         expect(show(bad)).toEqual([])

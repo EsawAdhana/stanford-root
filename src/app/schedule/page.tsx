@@ -161,7 +161,9 @@ function ScheduleContent() {
       // leaves DIS rows blank, so read them off the first picked section that
       // has them rather than summing across LEC + DIS.
       if (c.selectedSectionIds?.length && c.sections) {
-        const picked = c.sections.filter(s => c.selectedSectionIds!.includes(s.classId))
+        // Only the entry's own term: class numbers are reused across terms.
+        const term = c.selectedTerm ?? currentTerm
+        const picked = c.sections.filter(s => s.term === term && c.selectedSectionIds!.includes(s.classId))
         const withUnits = picked
           .map(s => parseUnitsOptions(s.units))
           .find(opts => opts.length > 0 && Math.max(0, ...opts) > 0)
@@ -409,15 +411,19 @@ END:VEVENT
           const importedSection = imported.sections?.[0]
           const importedMeeting = importedSection?.meetings?.[0] // Assuming one meeting pattern for simplicity
 
-          let bestSectionId = realCourse.sections?.[0]?.classId // Default to first section
+          // Only sections of the imported term: class numbers are reused across terms,
+          // and a Spring pick read against Autumn sections is a different class.
+          const importedTerm = imported.selectedTerm ?? imported.terms?.[0]
+          const termSections = (realCourse.sections ?? []).filter(s => !importedTerm || s.term === importedTerm)
+          let bestSectionId = termSections[0]?.classId // Default to first section
 
-          if (importedMeeting && realCourse.sections) {
+          if (importedMeeting && termSections.length) {
             const impDays = parseDays(importedMeeting.days || '').join(',')
             const impTimeParts = (importedMeeting.time || '').split(/\s*[-–]\s*/)
             const impStart = timeToMinutes(impTimeParts[0] || '')
             const impEnd = timeToMinutes(impTimeParts[1] || '')
 
-            const match = realCourse.sections.find(sec => {
+            const match = termSections.find(sec => {
               return sec.meetings?.some(m => {
                 const catDays = parseDays(m.days || '').join(',')
                 if (catDays !== impDays) return false

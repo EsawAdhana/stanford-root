@@ -586,7 +586,10 @@ export function buildCourses(hits, relatedByClass = new Map(), { instructorOverr
                 primarySection(hit, instructorOverrides, combinedByClass),
                 ...(relatedByClass.get(`${hit.strm}|${hit.classNbr}`) || []).map(r => relatedSection(hit, r, instructorOverrides)),
             ]) {
-                const key = section.classId || `${section.term}:${section.sectionNumber}:${section.component}`
+                // Class numbers are per term: MATH 53's 10:30 Spring lecture is #7154, the
+                // number its 9:30 Autumn lecture uses too, and keying on the number alone
+                // dropped it along with 3,983 other sections of 2026-2027.
+                const key = section.classId ? `${section.term}:${section.classId}` : `${section.term}:${section.sectionNumber}:${section.component}`
                 if (seen.has(key)) continue
                 seen.add(key)
                 sections.push(section)

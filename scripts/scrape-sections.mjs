@@ -333,7 +333,8 @@ function parseCourseNode(courseNode) {
     const uniqueSections = []
     const seen = new Set()
     for (const section of sections) {
-        const key = section.classId || `${section.term}:${section.sectionNumber}:${section.component}`
+        // Class numbers are per term; see buildCourses in navigator-catalog.mjs.
+        const key = section.classId ? `${section.term}:${section.classId}` : `${section.term}:${section.sectionNumber}:${section.component}`
         if (seen.has(key)) continue
         seen.add(key)
         uniqueSections.push(section)
@@ -371,7 +372,7 @@ function mergeCatalogCourse(existing, incoming) {
     const sections = [...existing.sections, ...incoming.sections]
     const seen = new Set()
     const uniqueSections = sections.filter(section => {
-        const key = section.classId || `${section.term}:${section.sectionNumber}:${section.component}`
+        const key = section.classId ? `${section.term}:${section.classId}` : `${section.term}:${section.sectionNumber}:${section.component}`
         if (seen.has(key)) return false
         seen.add(key)
         return true
@@ -864,8 +865,8 @@ async function compareSources(opts) {
     for (const [id, nav] of navById) {
         const ec = ecById.get(id)
         if (!ec) continue
-        const navSections = new Set(nav.sections.map(s => s.classId))
-        const ecSections = new Set(ec.sections.map(s => s.classId))
+        const navSections = new Set(nav.sections.map(s => `${s.term}:${s.classId}`))
+        const ecSections = new Set(ec.sections.map(s => `${s.term}:${s.classId}`))
         const missing = [...ecSections].filter(x => !navSections.has(x)).length
         const extra = [...navSections].filter(x => !ecSections.has(x)).length
         if (missing || extra) sectionDiffs.push({ course_id: id, navOnlySections: extra, ecOnlySections: missing })
@@ -923,11 +924,12 @@ function mergeExploreCoursesGaps(navCourses, ecCourses) {
             addedCrossLists++
         }
 
-        const byClassId = new Map(nav.sections.map(section => [section.classId, section]))
+        // Keyed by term too: a class number is reused across terms.
+        const byClassId = new Map(nav.sections.map(section => [`${section.term}:${section.classId}`, section]))
         const extra = []
         for (const ecSection of ecCourse.sections) {
             if (!ecSection.classId) continue
-            const navSection = byClassId.get(ecSection.classId)
+            const navSection = byClassId.get(`${ecSection.term}:${ecSection.classId}`)
             if (!navSection) {
                 extra.push(ecSection)
                 continue

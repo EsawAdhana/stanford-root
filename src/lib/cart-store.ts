@@ -54,7 +54,12 @@ export const useCartStore = create<CartStore>()(
         // replaces only a same-component pick. Never overwrite with undefined.
         const resolvedSectionIds =
           sectionId !== undefined
-            ? mergeSectionSelection(priorIds, sectionId, course.sections ?? existing?.sections ?? [])
+            ? mergeSectionSelection(
+                priorIds,
+                sectionId,
+                // Picks belong to one term, and a class number is reused across terms.
+                (course.sections ?? existing?.sections ?? []).filter(s => !resolvedTerm || s.term === resolvedTerm),
+              )
             : course.selectedSectionIds?.length
               ? course.selectedSectionIds
               : priorIds.length > 0 ? priorIds : undefined
