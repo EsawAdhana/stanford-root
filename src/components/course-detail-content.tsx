@@ -624,7 +624,10 @@ export function CourseDetailContent({ course }: CourseDetailContentProps) {
                                                                 {enrollAgg.capacity > 0 && (
                                                                     <div className="text-[13px] text-muted-foreground mt-0.5">
                                                                         {enrollAgg.enrolled} / {enrollAgg.capacity} enrolled
-                                                                        {enrollAgg.waitlist > 0 && ` · ${enrollAgg.waitlist} / ${enrollAgg.waitlistMax} on waitlist`}
+                                                                        {/* Navigator sends a waitlist with no cap on some classes (MATH 53: 1 waiting, cap 0). */}
+                                                                        {enrollAgg.waitlist > 0 && (enrollAgg.waitlistMax > 0
+                                                                            ? ` · ${enrollAgg.waitlist} / ${enrollAgg.waitlistMax} on waitlist`
+                                                                            : ` · ${enrollAgg.waitlist} on waitlist`)}
                                                                     </div>
                                                                 )}
                                                             </div>

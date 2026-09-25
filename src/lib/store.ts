@@ -27,7 +27,10 @@ type CourseStore = {
 // is the ExploreCourses -> Navigator switch, which reshaped every meeting day
 // ("\n\tMon\n\tWed" -> "Monday, Wednesday") and time ("1:30:00 PM-2:50:00 PM"
 // -> "1:30 PM - 2:50 PM"), and is what makes weekend sections visible at all.
-export const CACHE_VERSION = 19
+//
+// v20: sections whose class number is reused in another term (MATH 53's Spring
+// #7154), `combined` room seats on cross-listed sections.
+export const CACHE_VERSION = 20
 const CACHE_TTL = 1000 * 60 * 30 // 30 minutes
 const STALE_MAX_AGE = 1000 * 60 * 60 * 24 // 24 hours
 const IDB_DB = 'root-cache'

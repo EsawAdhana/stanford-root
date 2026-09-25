@@ -21,7 +21,10 @@ import { rowToCourse } from '@/lib/course-mapper'
 // ratingBreakdown pct are now ranked within the course's own department where that
 // department is big enough. A v18 cache holds Stanford-wide percentiles with no scope,
 // which the label would then describe as department ranks.
-const CACHED_COURSE_FIELDS_AT_V19 = [
+// v20 changed the sections, not the Course fields: sections whose class number is
+// reused in another term are no longer dropped (MATH 53's Spring #7154), and
+// cross-listed sections carry `combined` room seats. A v19 cache lacks both.
+const CACHED_COURSE_FIELDS_AT_V20 = [
   'id', 'subject', 'code', 'title', 'description', 'units', 'grading',
   'instructors', 'terms', 'sections', 'hours', 'quality', 'qualityPct',
   'rankScope', 'qualityN', 'ratingBreakdown', 'crossListWith', 'isNew',
@@ -41,7 +44,7 @@ describe('catalog cache version', () => {
       shape,
       `Course gained or lost a field. Bump CACHE_VERSION (currently ${CACHE_VERSION}) ` +
       'and update this list, or returning visitors keep a catalog without it.',
-    ).toEqual(CACHED_COURSE_FIELDS_AT_V19)
-    expect(CACHE_VERSION).toBeGreaterThanOrEqual(19)
+    ).toEqual(CACHED_COURSE_FIELDS_AT_V20)
+    expect(CACHE_VERSION).toBeGreaterThanOrEqual(20)
   })
 })
