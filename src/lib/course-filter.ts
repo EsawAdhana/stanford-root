@@ -235,14 +235,17 @@ function buildChecks(
         if (sectionsToCheck.length === 0) return true
         // Enrollable in a term only if every component (lecture, lab, discussion...)
         // has a section you can get into. "Any section open" let CS 140M through on
-        // its sibling's 999-seat lab while the lecture was full. A section Navigator
-        // flags "Open" that already has a waitlist is full too: EE 186 reads Open at
-        // 40/50 with 17 waitlisted because the combined section is 50/50.
+        // its sibling's 999-seat lab while the lecture was full. A listing flagged
+        // "Open" is still full when the room it shares is: EE 186 reads Open at 39/50
+        // while its lecture with CS 140M is 50/50. A waitlist means full too, and
+        // covers dumps written before `combined` existed.
         const byTerm = new Map<string, Map<string, boolean>>()
         for (const s of sectionsToCheck) {
           const components = byTerm.get(s.term) ?? new Map<string, boolean>()
           byTerm.set(s.term, components)
-          const enrollable = s.status?.toLowerCase() === 'open' && !(s.waitlist > 0)
+          const room = s.combined
+          const enrollable = s.status?.toLowerCase() === 'open' && !(s.waitlist > 0) &&
+            (!room || (room.enrolled < room.capacity && !(room.waitlist > 0)))
           components.set(s.component, (components.get(s.component) ?? false) || enrollable)
         }
         return [...byTerm.values()].some(components => [...components.values()].every(Boolean))

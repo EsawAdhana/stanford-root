@@ -248,37 +248,108 @@ export async function fetchClassDetail(strm, classNbr) {
 }
 
 /**
- * Discussions/labs for one primary class. Public, unauthenticated, ~4KB each.
- * Returns [] rather than throwing on a miss: a class the detail API does not
- * know still has its primary section from the index.
+ * Seats for a cross-listed meeting, keyed `${strm}|${classNbr}` for every listing
+ * in it. Each listing has its own cap, but the room has one: CS 140M (11/30) and
+ * EE 186 (39/50) share a lecture capped at 50, which is full with 24 waitlisted
+ * while EE 186 still reads "Open". Enrolled and waitlist add across listings,
+ * caps do not, so only this record says whether the class has a seat.
+ * Kept in sync with parseNavigatorSeat in src/lib/seats.ts.
  */
-export async function fetchRelatedClasses(strm, classNbr) {
-    const detail = await fetchClassDetail(strm, classNbr)
-    return Array.isArray(detail?.relatedClasses) ? detail.relatedClasses : []
+export function combinedSeatsFrom(strm, detail) {
+    const out = new Map()
+    for (const group of Array.isArray(detail?.combinedSections) ? detail.combinedSections : []) {
+        const members = Array.isArray(group?.sections) ? group.sections : []
+        const capacity = parseInt(group.combinedEnrlCap, 10) || 0
+        if (members.length < 2 || capacity <= 0) continue
+        const combined = {
+            enrolled: parseInt(group.combinedEnrlTot, 10) || 0,
+            capacity,
+            waitlist: parseInt(group.combinedWaitTot, 10) || 0,
+            waitlistMax: parseInt(group.combinedWaitCap, 10) || 0,
+        }
+        for (const member of members) {
+            const classNbr = parseInt(member?.cmbndclassClassNbr, 10)
+            if (classNbr) out.set(`${strm}|${classNbr}`, combined)
+        }
+    }
+    return out
 }
 
-/** Related classes for every hit that lists more than one component. */
+async function eachWithConcurrency(targets, concurrency, fn) {
+    let next = 0
+    async function worker() {
+        while (next < targets.length) await fn(targets[next++])
+    }
+    await Promise.all(Array.from({ length: Math.min(concurrency, targets.length) }, worker))
+}
+
+/**
+ * Discussions/labs for every hit that lists more than one component. Public,
+ * unauthenticated, ~4KB each; a class the detail API does not know gets [] and
+ * keeps its primary section from the index. The same record carries the
+ * combined-section seats, so those are kept too.
+ */
 export async function fetchAllRelatedClasses(hits, { onProgress, warn, concurrency = DETAIL_CONCURRENCY } = {}) {
     const targets = hits.filter(hit => (hit.components || []).length > 1)
     const byClass = new Map()
-    let next = 0
+    const combinedByClass = new Map()
     let done = 0
 
-    async function worker() {
-        while (next < targets.length) {
-            const hit = targets[next++]
-            try {
-                byClass.set(`${hit.strm}|${hit.classNbr}`, await fetchRelatedClasses(hit.strm, hit.classNbr))
-            } catch (err) {
-                warn?.(`related classes failed for ${hit.courseCode} ${hit.termOffered}: ${err.message}`)
-            }
-            done++
-            if (done % 50 === 0 || done === targets.length) onProgress?.({ done, total: targets.length })
+    await eachWithConcurrency(targets, concurrency, async hit => {
+        try {
+            const detail = await fetchClassDetail(hit.strm, hit.classNbr)
+            byClass.set(`${hit.strm}|${hit.classNbr}`, Array.isArray(detail?.relatedClasses) ? detail.relatedClasses : [])
+            for (const [key, combined] of combinedSeatsFrom(hit.strm, detail)) combinedByClass.set(key, combined)
+        } catch (err) {
+            warn?.(`related classes failed for ${hit.courseCode} ${hit.termOffered}: ${err.message}`)
         }
-    }
+        done++
+        if (done % 50 === 0 || done === targets.length) onProgress?.({ done, total: targets.length })
+    })
+    return { relatedByClass: byClass, combinedByClass, targets: targets.length }
+}
 
-    await Promise.all(Array.from({ length: Math.min(concurrency, targets.length) }, worker))
-    return { relatedByClass: byClass, targets: targets.length }
+/**
+ * Combined-section seats for cross-listed classes the related-class pass did not
+ * already read. One record names every listing in the meeting, so a class whose
+ * sibling was read is skipped: about one request per shared meeting, not per
+ * listing. Cross-listed here means sharing a crseId, which is what PeopleSoft
+ * combines; the undergrad/grad twins ExploreCourses pairs by title come along
+ * whenever either twin is read.
+ */
+export async function fetchCombinedSeats(hits, combinedByClass = new Map(), { onProgress, warn, concurrency = DETAIL_CONCURRENCY } = {}) {
+    const listings = new Map()
+    for (const hit of hits) {
+        const id = courseIdFor(hit.subject, hit.catalogNbr)
+        if (!id || !hit.crseId) continue
+        const key = `${hit.strm}|${hit.crseId}`
+        if (!listings.has(key)) listings.set(key, new Set())
+        listings.get(key).add(id)
+    }
+    const read = new Set()
+    const targets = hits.filter(hit =>
+        (listings.get(`${hit.strm}|${hit.crseId}`)?.size ?? 0) > 1 &&
+        !combinedByClass.has(`${hit.strm}|${hit.classNbr}`)
+    )
+    let done = 0
+    let requests = 0
+
+    await eachWithConcurrency(targets, concurrency, async hit => {
+        const key = `${hit.strm}|${hit.classNbr}`
+        if (!combinedByClass.has(key) && !read.has(key)) {
+            read.add(key)
+            requests++
+            try {
+                const detail = await fetchClassDetail(hit.strm, hit.classNbr)
+                for (const [member, combined] of combinedSeatsFrom(hit.strm, detail)) combinedByClass.set(member, combined)
+            } catch (err) {
+                warn?.(`combined seats failed for ${hit.courseCode} ${hit.termOffered}: ${err.message}`)
+            }
+        }
+        done++
+        if (done % 50 === 0 || done === targets.length) onProgress?.({ done, total: targets.length })
+    })
+    return { combinedByClass, requests }
 }
 
 // ── Shaping into catalog rows ────────────────────────────────────────────────
@@ -382,9 +453,10 @@ function relatedMeetings(related, overrides) {
     }))
 }
 
-function primarySection(hit, overrides) {
+function primarySection(hit, overrides, combinedByClass) {
     const capacity = parseInt(hit.enrlCap, 10) || 0
     const enrolled = parseInt(hit.enrlTot, 10) || 0
+    const combined = combinedByClass.get(`${hit.strm}|${hit.classNbr}`)
     return {
         term: hit.termOffered || '',
         classId: parseInt(hit.classNbr, 10) || 0,
@@ -402,6 +474,7 @@ function primarySection(hit, overrides) {
         endDate: hit.endDt || '',
         meetings: primaryMeetings(hit, overrides),
         ...(gerCodes(hit.geRequirements).length ? { gers: gerCodes(hit.geRequirements) } : {}),
+        ...(combined ? { combined } : {}),
     }
 }
 
@@ -473,7 +546,7 @@ export function decodeEntities(text) {
         .replace(/&amp;/g, "&")
 }
 
-export function buildCourses(hits, relatedByClass = new Map(), { instructorOverrides = {}, sortTerms = t => t } = {}) {
+export function buildCourses(hits, relatedByClass = new Map(), { instructorOverrides = {}, sortTerms = t => t, combinedByClass = new Map() } = {}) {
     const byCourse = new Map()
     const displayCode = new Map()
     for (const hit of hits) {
@@ -502,7 +575,7 @@ export function buildCourses(hits, relatedByClass = new Map(), { instructorOverr
         const seen = new Set()
         for (const hit of courseHits) {
             for (const section of [
-                primarySection(hit, instructorOverrides),
+                primarySection(hit, instructorOverrides, combinedByClass),
                 ...(relatedByClass.get(`${hit.strm}|${hit.classNbr}`) || []).map(r => relatedSection(hit, r, instructorOverrides)),
             ]) {
                 const key = section.classId || `${section.term}:${section.sectionNumber}:${section.component}`

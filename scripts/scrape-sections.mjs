@@ -27,11 +27,14 @@ import { XMLParser } from 'fast-xml-parser'
 import {
     backfillMissingGrading,
     buildCourses,
+    combinedSeatsFrom,
     mergeCrossListTitle,
     createNavigatorClient,
     crossListsByCrseId,
     decodeEntities,
     fetchAllRelatedClasses,
+    fetchClassDetail,
+    fetchCombinedSeats,
     fetchYearClasses,
 } from './navigator-catalog.mjs'
 import { existsSync, readFileSync, writeFileSync } from 'fs'
@@ -784,7 +787,7 @@ async function fetchNavigatorCatalog(academicYear) {
     })
     console.log(`Navigator: ${classes.length} primary classes (facet count ${expected}), ${client.queryCount} queries`)
 
-    const { relatedByClass, targets } = await fetchAllRelatedClasses(classes, {
+    const { relatedByClass, combinedByClass: relatedCombined, targets } = await fetchAllRelatedClasses(classes, {
         warn,
         onProgress: ({ done, total }) => {
             process.stdout.write(`\rNavigator related sections: ${done}/${total} classes`)
@@ -794,9 +797,19 @@ async function fetchNavigatorCatalog(academicYear) {
     const relatedCount = [...relatedByClass.values()].reduce((n, list) => n + list.length, 0)
     console.log(`Navigator: ${relatedCount} non-primary sections from ${targets} multi-component classes`)
 
+    const { combinedByClass, requests: combinedRequests } = await fetchCombinedSeats(classes, relatedCombined, {
+        warn,
+        onProgress: ({ done, total }) => {
+            process.stdout.write(`\rNavigator combined seats: ${done}/${total} cross-listed classes`)
+            if (done === total) process.stdout.write('\n')
+        },
+    })
+    console.log(`Navigator: shared seats for ${combinedByClass.size} cross-listed classes, ${combinedRequests} extra detail reads`)
+
     const courses = buildCourses(classes, relatedByClass, {
         instructorOverrides: INSTRUCTOR_OVERRIDES,
         sortTerms,
+        combinedByClass,
     })
     const filled = await backfillMissingGrading(courses, classes, { warn })
     if (filled) console.log(`Navigator: filled grading for ${filled} courses from the class detail API`)
@@ -821,8 +834,15 @@ async function fetchNavigatorCourse(subject, code, academicYear) {
         `${hit.subject}${hit.catalogNbr}`.replace(/\s+/g, '').toUpperCase() === target
     )
     if (!hits.length) return null
-    const { relatedByClass } = await fetchAllRelatedClasses(hits)
-    const [course] = buildCourses(hits, relatedByClass, { instructorOverrides: INSTRUCTOR_OVERRIDES, sortTerms })
+    const { relatedByClass, combinedByClass } = await fetchAllRelatedClasses(hits)
+    // The search returned only this code's classes, so read each one's record
+    // for its shared seats rather than looking for siblings in the hits.
+    for (const hit of hits) {
+        if (combinedByClass.has(`${hit.strm}|${hit.classNbr}`)) continue
+        const detail = await fetchClassDetail(hit.strm, hit.classNbr)
+        for (const [key, combined] of combinedSeatsFrom(hit.strm, detail)) combinedByClass.set(key, combined)
+    }
+    const [course] = buildCourses(hits, relatedByClass, { instructorOverrides: INSTRUCTOR_OVERRIDES, sortTerms, combinedByClass })
     return course || null
 }
 

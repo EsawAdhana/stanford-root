@@ -146,9 +146,14 @@ export function aggregateCrossListedSectionEnrollment(
       capacity: live.capacity > 0 ? live.capacity : s.capacity,
       waitlist: live.waitlist,
       waitlistMax: live.waitlistMax > 0 ? live.waitlistMax : s.waitlistMax,
+      combined: live.combined,
     }
   }
   anchor = withLive(anchor)
+  // The room's own numbers, when Navigator has them, beat any sum: enrolled and
+  // waitlist add across listings but caps do not, so CS 140M (30) + EE 186 (50)
+  // read "50 / 80" for a lecture capped at 50.
+  const combinedOf = (sections: Section[]) => sections.find(s => s.combined)?.combined
   const byId = new Map(courses.map(c => [c.id, c]))
   const matches: Section[] = []
   for (const cid of crossListCourseIds) {
@@ -161,6 +166,15 @@ export function aggregateCrossListedSectionEnrollment(
         s => s.component === anchor.component && s.sectionNumber === anchor.sectionNumber
       )
     if (hit) matches.push(withLive(hit))
+  }
+  const combined = combinedOf([anchor, ...matches])
+  if (combined) {
+    return {
+      enrolled: combined.enrolled,
+      capacity: combined.capacity,
+      waitlist: combined.waitlist,
+      waitlistMax: combined.waitlistMax,
+    }
   }
   if (matches.length === 0) {
     return {

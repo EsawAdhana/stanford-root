@@ -1,3 +1,5 @@
+import type { CombinedSeats } from '@/types/course'
+
 /**
  * Live enrollment ("seats") for a section, read from Stanford Navigator on
  * demand. The daily catalog dump carries a snapshot; during enrollment week
@@ -18,6 +20,8 @@ export interface LiveSeat {
   waitlistMax: number
   /** e.g. "Open", "Closed", "Wait List" — Navigator's own wording. */
   status: string
+  /** Shared seats when the section is cross-listed; see Section.combined. */
+  combined?: CombinedSeats
 }
 
 export interface SeatsResponse {
@@ -98,6 +102,7 @@ export function parseNavigatorSeat(json: unknown): LiveSeat | null {
     (typeof r.sectionEnrollmentStatusDescr === 'string' && r.sectionEnrollmentStatusDescr) ||
     (typeof r.sectionClassStatusDescr === 'string' && r.sectionClassStatusDescr) ||
     ''
+  const combined = combinedSeatsFor(r.combinedSections, classNbr)
   return {
     classNbr,
     enrolled: asCount(r.sectionTotalEnrollment),
@@ -105,7 +110,32 @@ export function parseNavigatorSeat(json: unknown): LiveSeat | null {
     waitlist: asCount(r.sectionTotalWaitlist),
     waitlistMax: asCount(r.sectionCapacityWaitlist),
     status,
+    ...(combined ? { combined } : {}),
   }
+}
+
+/**
+ * The shared seats of the combined section this class belongs to. Kept in sync
+ * with combinedSeatsFrom in scripts/navigator-catalog.mjs: a group of one, or
+ * one with no cap, is not a cross-listed meeting and carries nothing.
+ */
+function combinedSeatsFor(groups: unknown, classNbr: number): CombinedSeats | null {
+  if (!Array.isArray(groups)) return null
+  for (const group of groups) {
+    if (!group || typeof group !== 'object') continue
+    const g = group as Record<string, unknown>
+    const members = Array.isArray(g.sections) ? (g.sections as Record<string, unknown>[]) : []
+    const capacity = asCount(g.combinedEnrlCap)
+    if (members.length < 2 || capacity <= 0) continue
+    if (!members.some(m => asCount(m?.cmbndclassClassNbr) === classNbr)) continue
+    return {
+      enrolled: asCount(g.combinedEnrlTot),
+      capacity,
+      waitlist: asCount(g.combinedWaitTot),
+      waitlistMax: asCount(g.combinedWaitCap),
+    }
+  }
+  return null
 }
 
 /** Most requests are one course's sections; the cap stops a crafted URL fanning out. */
