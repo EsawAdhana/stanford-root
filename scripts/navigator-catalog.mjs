@@ -283,6 +283,62 @@ export function combinedSeatsFrom(strm, detail) {
     return out
 }
 
+/**
+ * A class record's own seat numbers. The search index lags the record: on
+ * 2026-09-24 they disagreed on enrolled for 617 of 1,600 Autumn classes and on
+ * Open/Closed for 115 (EE 349: index 32/80 Open, record 30/30 Closed). Every
+ * class the scrape already reads a record for takes its seats from it, so a
+ * listing and its room come from the same moment. A zero cap or waitlist cap is
+ * treated as a gap in the reading, as the live overlay does.
+ */
+export function seatsFromDetail(detail) {
+    if (!detail || typeof detail !== 'object') return null
+    if (detail.sectionTotalEnrollment === undefined && detail.sectionCapacityEnrollment === undefined) return null
+    return {
+        enrolled: parseInt(detail.sectionTotalEnrollment, 10) || 0,
+        capacity: parseInt(detail.sectionCapacityEnrollment, 10) || 0,
+        waitlist: parseInt(detail.sectionTotalWaitlist, 10) || 0,
+        waitlistMax: parseInt(detail.sectionCapacityWaitlist, 10) || 0,
+        status: detail.sectionEnrollmentStatusDescr || '',
+    }
+}
+
+/**
+ * Each listing's own seats as the room record lists them, keyed like
+ * combinedSeatsFrom. It carries no status, so the index's flag stays; it is used
+ * for a sibling whose own record the scrape never reads, because one record
+ * already named it. A class's own record wins over this.
+ */
+export function memberSeatsFrom(strm, detail) {
+    const out = new Map()
+    for (const group of Array.isArray(detail?.combinedSections) ? detail.combinedSections : []) {
+        const members = Array.isArray(group?.sections) ? group.sections : []
+        if (members.length < 2) continue
+        for (const member of members) {
+            const classNbr = parseInt(member?.cmbndclassClassNbr, 10)
+            if (!classNbr) continue
+            out.set(`${strm}|${classNbr}`, {
+                enrolled: parseInt(member.cmbndclassEnrlTot, 10) || 0,
+                capacity: parseInt(member.cmbndclassEnrlCap, 10) || 0,
+                waitlist: parseInt(member.cmbndclassWaitTot, 10) || 0,
+                waitlistMax: parseInt(member.cmbndclassWaitCap, 10) || 0,
+                status: '',
+            })
+        }
+    }
+    return out
+}
+
+/** Record what one class record says about seats: its own, then its room's members'. */
+export function collectSeats(strm, classNbr, detail, seatsByClass) {
+    const own = seatsFromDetail(detail)
+    if (own) seatsByClass.set(`${strm}|${classNbr}`, own)
+    for (const [key, seats] of memberSeatsFrom(strm, detail)) {
+        const existing = seatsByClass.get(key)
+        if (!existing || !existing.status) seatsByClass.set(key, seats)
+    }
+}
+
 async function eachWithConcurrency(targets, concurrency, fn) {
     let next = 0
     async function worker() {
@@ -301,6 +357,7 @@ export async function fetchAllRelatedClasses(hits, { onProgress, warn, concurren
     const targets = hits.filter(hit => (hit.components || []).length > 1)
     const byClass = new Map()
     const combinedByClass = new Map()
+    const seatsByClass = new Map()
     let done = 0
 
     await eachWithConcurrency(targets, concurrency, async hit => {
@@ -308,13 +365,14 @@ export async function fetchAllRelatedClasses(hits, { onProgress, warn, concurren
             const detail = await fetchClassDetail(hit.strm, hit.classNbr)
             byClass.set(`${hit.strm}|${hit.classNbr}`, Array.isArray(detail?.relatedClasses) ? detail.relatedClasses : [])
             for (const [key, combined] of combinedSeatsFrom(hit.strm, detail)) combinedByClass.set(key, combined)
+            collectSeats(hit.strm, hit.classNbr, detail, seatsByClass)
         } catch (err) {
             warn?.(`related classes failed for ${hit.courseCode} ${hit.termOffered}: ${err.message}`)
         }
         done++
         if (done % 50 === 0 || done === targets.length) onProgress?.({ done, total: targets.length })
     })
-    return { relatedByClass: byClass, combinedByClass, targets: targets.length }
+    return { relatedByClass: byClass, combinedByClass, seatsByClass, targets: targets.length }
 }
 
 /**
@@ -325,7 +383,7 @@ export async function fetchAllRelatedClasses(hits, { onProgress, warn, concurren
  * combines; the undergrad/grad twins ExploreCourses pairs by title come along
  * whenever either twin is read.
  */
-export async function fetchCombinedSeats(hits, combinedByClass = new Map(), { onProgress, warn, concurrency = DETAIL_CONCURRENCY } = {}) {
+export async function fetchCombinedSeats(hits, combinedByClass = new Map(), { onProgress, warn, concurrency = DETAIL_CONCURRENCY, seatsByClass = new Map() } = {}) {
     const listings = new Map()
     for (const hit of hits) {
         const id = courseIdFor(hit.subject, hit.catalogNbr)
@@ -350,6 +408,7 @@ export async function fetchCombinedSeats(hits, combinedByClass = new Map(), { on
             try {
                 const detail = await fetchClassDetail(hit.strm, hit.classNbr)
                 for (const [member, combined] of combinedSeatsFrom(hit.strm, detail)) combinedByClass.set(member, combined)
+                collectSeats(hit.strm, hit.classNbr, detail, seatsByClass)
             } catch (err) {
                 warn?.(`combined seats failed for ${hit.courseCode} ${hit.termOffered}: ${err.message}`)
             }
@@ -357,7 +416,7 @@ export async function fetchCombinedSeats(hits, combinedByClass = new Map(), { on
         done++
         if (done % 50 === 0 || done === targets.length) onProgress?.({ done, total: targets.length })
     })
-    return { combinedByClass, requests }
+    return { combinedByClass, seatsByClass, requests }
 }
 
 // ── Shaping into catalog rows ────────────────────────────────────────────────
@@ -461,10 +520,14 @@ function relatedMeetings(related, overrides) {
     }))
 }
 
-function primarySection(hit, overrides, combinedByClass) {
-    const capacity = parseInt(hit.enrlCap, 10) || 0
-    const enrolled = parseInt(hit.enrlTot, 10) || 0
-    const combined = combinedByClass.get(`${hit.strm}|${hit.classNbr}`)
+function primarySection(hit, overrides, combinedByClass, seatsByClass) {
+    const key = `${hit.strm}|${hit.classNbr}`
+    const seats = seatsByClass.get(key)
+    const indexCap = parseInt(hit.enrlCap, 10) || 0
+    const indexWaitCap = parseInt(hit.waitCap, 10) || 0
+    const capacity = seats && seats.capacity > 0 ? seats.capacity : indexCap
+    const enrolled = seats ? seats.enrolled : parseInt(hit.enrlTot, 10) || 0
+    const combined = combinedByClass.get(key)
     return {
         term: hit.termOffered || '',
         classId: parseInt(hit.classNbr, 10) || 0,
@@ -473,11 +536,11 @@ function primarySection(hit, overrides, combinedByClass) {
         units: unitsLabel(hit.units),
         grading: hit.gradingBasisDescr || '',
         instructionalMode: hit.instructionModeDescr || '',
-        status: hit.enrlStatDescr || hit.classStatDescr || '',
+        status: seats?.status || hit.enrlStatDescr || hit.classStatDescr || '',
         enrolled,
         capacity,
-        waitlist: parseInt(hit.waitTot, 10) || 0,
-        waitlistMax: parseInt(hit.waitCap, 10) || 0,
+        waitlist: seats ? seats.waitlist : parseInt(hit.waitTot, 10) || 0,
+        waitlistMax: seats && seats.waitlistMax > 0 ? seats.waitlistMax : indexWaitCap,
         startDate: hit.startDt || '',
         endDate: hit.endDt || '',
         meetings: primaryMeetings(hit, overrides),
@@ -554,7 +617,7 @@ export function decodeEntities(text) {
         .replace(/&amp;/g, "&")
 }
 
-export function buildCourses(hits, relatedByClass = new Map(), { instructorOverrides = {}, sortTerms = t => t, combinedByClass = new Map() } = {}) {
+export function buildCourses(hits, relatedByClass = new Map(), { instructorOverrides = {}, sortTerms = t => t, combinedByClass = new Map(), seatsByClass = new Map() } = {}) {
     const byCourse = new Map()
     const displayCode = new Map()
     for (const hit of hits) {
@@ -583,7 +646,7 @@ export function buildCourses(hits, relatedByClass = new Map(), { instructorOverr
         const seen = new Set()
         for (const hit of courseHits) {
             for (const section of [
-                primarySection(hit, instructorOverrides, combinedByClass),
+                primarySection(hit, instructorOverrides, combinedByClass, seatsByClass),
                 ...(relatedByClass.get(`${hit.strm}|${hit.classNbr}`) || []).map(r => relatedSection(hit, r, instructorOverrides)),
             ]) {
                 // Class numbers are per term: MATH 53's 10:30 Spring lecture is #7154, the
