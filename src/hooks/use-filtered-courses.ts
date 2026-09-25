@@ -14,21 +14,19 @@ import { useSelectedTerms } from '@/hooks/use-selected-terms';
  * visible list and the empty-state "hidden by" counts run the identical
  * pipeline — a second inlined copy is how those two drift apart.
  */
-function applyQuery(result: Course[], query: string, courses: Course[], primaryMap: Map<string, string>): Course[] {
+export function applyQuery(result: Course[], query: string, primaryMap: Map<string, string>): Course[] {
     if (!query) return result;
     const beforeSearch = result;
     result = searchCourses(result, query);
-    // If the user searched for an alternate course code (e.g. "cs 238v"), include the primary course so it shows up
+    // If the user searched for an alternate course code (e.g. "cs 238v"), include the primary course so it shows up.
+    // Only from the filtered list: taking it from the full catalog let "EE 186" bring back CS 140M with
+    // Hide closed & waitlisted on, while "CS 140M" itself found nothing. Filters already match any listing
+    // of the class, so a primary missing here was hidden on purpose, and the empty state names the toggle.
     const queryNorm = normalizeCourseId(query.trim().replace(/\s+/g, ''));
     if (queryNorm && primaryMap.has(queryNorm)) {
         const canonicalNorm = resolveToCanonicalPrimary(queryNorm, primaryMap);
-        // Prefer primary from beforeSearch (so it passed term/dept etc.); fallback to full list so search always finds the course
-        let primary = beforeSearch.find(c => normalizeCourseId(c.id) === canonicalNorm);
-        if (!primary) {
-            const withGrading = courses.filter(c => c.grading && c.grading.trim() !== '' && c.grading !== 'TBD');
-            primary = withGrading.find(c => normalizeCourseId(c.id) === canonicalNorm);
-        }
-        if (primary && !result.some(c => c.id === primary!.id)) result = [...result, primary];
+        const primary = beforeSearch.find(c => normalizeCourseId(c.id) === canonicalNorm);
+        if (primary && !result.some(c => c.id === primary.id)) result = [...result, primary];
     }
     return result;
 }
@@ -104,7 +102,7 @@ export function useFilteredCourses() {
             newOnly,
         }, primaryMap, cartItems);
 
-        result = applyQuery(result, query, courses, primaryMap);
+        result = applyQuery(result, query, primaryMap);
 
         // All filtering is done; this is the set we will sort (sort is the last step)
         return result;
@@ -130,7 +128,7 @@ export function useFilteredCourses() {
             if (!c.active) continue;
             const count = applyQuery(
                 filterCourses(courses, { ...criteria, ...c.off }, primaryMap, cartItems),
-                query, courses, primaryMap,
+                query, primaryMap,
             ).length;
             if (count > 0) out.push({ key: c.key, label: c.label, count, disable: c.disable });
         }
