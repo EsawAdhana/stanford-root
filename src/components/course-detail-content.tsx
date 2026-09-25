@@ -621,9 +621,10 @@ export function CourseDetailContent({ course }: CourseDetailContentProps) {
                                                                         </span>
                                                                     ))}
                                                                 </div>
-                                                                {enrollAgg.capacity > 0 && (
+                                                                {/* No cap (0) is an unknown cap: shared listings with no room from Navigator. */}
+                                                                {(enrollAgg.capacity > 0 || enrollAgg.enrolled > 0 || enrollAgg.waitlist > 0) && (
                                                                     <div className="text-[13px] text-muted-foreground mt-0.5">
-                                                                        {enrollAgg.enrolled} / {enrollAgg.capacity} enrolled
+                                                                        {enrollAgg.capacity > 0 ? `${enrollAgg.enrolled} / ${enrollAgg.capacity}` : enrollAgg.enrolled} enrolled
                                                                         {/* Navigator sends a waitlist with no cap on some classes (MATH 53: 1 waiting, cap 0). */}
                                                                         {enrollAgg.waitlist > 0 && (enrollAgg.waitlistMax > 0
                                                                             ? ` · ${enrollAgg.waitlist} / ${enrollAgg.waitlistMax} on waitlist`

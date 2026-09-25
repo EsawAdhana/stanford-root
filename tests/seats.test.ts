@@ -160,11 +160,12 @@ describe('aggregateCrossListedSectionEnrollment with live seats', () => {
     { id: 'B', subject: 'B', code: '1', title: '', description: '', units: '3', grading: '', instructors: [], sections: [sibling] },
   ]
 
-  it('sums both the people and the seats when there is no live reading', () => {
-    // Each listing is capped separately, so the class seats 60, not 30.
+  it('adds the people but reports no cap when Navigator has no shared room', () => {
+    // Listing caps do not add (a room matched the sum in 22 of 379 Autumn rooms),
+    // so without a room the class's cap is unknown, not 60.
     expect(aggregateCrossListedSectionEnrollment(anchor, ['A', 'B'], courses)).toEqual({
       enrolled: 8,
-      capacity: 60,
+      capacity: 0,
       waitlist: 1,
       waitlistMax: 20,
     })
@@ -177,7 +178,7 @@ describe('aggregateCrossListedSectionEnrollment with live seats', () => {
     ])
     expect(aggregateCrossListedSectionEnrollment(anchor, ['A', 'B'], courses, live)).toEqual({
       enrolled: 29,
-      capacity: 60,
+      capacity: 0,
       waitlist: 6,
       waitlistMax: 20,
     })
@@ -277,9 +278,12 @@ describe('cross-listed capacity never reads under the people in it', () => {
   const mk = (classId: number, enrolled: number, capacity: number) =>
     section({ classId, enrolled, capacity, waitlist: 0, waitlistMax: 0 })
 
-  it('reports the real pooled cap for CEE 121 / CEE 221 rather than one listing of it', () => {
-    const a = mk(1, 44, 60)
-    const b = mk(2, 40, 60)
+  it("reports CEE 121 / CEE 221's shared room rather than one listing of it", () => {
+    // Navigator, 2026-09-25: Autumn room 120/120 over two listings of 60; Spring room
+    // 0/60 over listings of 60 and 120, where adding the caps would say 180.
+    const room = { enrolled: 84, capacity: 120, waitlist: 0, waitlistMax: 0 }
+    const a = { ...mk(1, 44, 60), combined: room }
+    const b = { ...mk(2, 40, 60), combined: room }
     const courses: Course[] = [
       { id: 'CEE121', subject: 'CEE', code: '121', title: '', description: '', units: '3', grading: '', instructors: [], sections: [a] },
       { id: 'CEE221', subject: 'CEE', code: '221', title: '', description: '', units: '3', grading: '', instructors: [], sections: [b] },
@@ -287,6 +291,16 @@ describe('cross-listed capacity never reads under the people in it', () => {
     const agg = aggregateCrossListedSectionEnrollment(a, ['CEE121', 'CEE221'], courses)
     expect(agg).toMatchObject({ enrolled: 84, capacity: 120 })
     expect(agg.enrolled).toBeLessThanOrEqual(agg.capacity)
+  })
+
+  it('never reports a cap under the people in it when there is no room: it reports none', () => {
+    const a = mk(1, 44, 60)
+    const b = mk(2, 40, 30)
+    const courses: Course[] = [
+      { id: 'CEE121', subject: 'CEE', code: '121', title: '', description: '', units: '3', grading: '', instructors: [], sections: [a] },
+      { id: 'CEE221', subject: 'CEE', code: '221', title: '', description: '', units: '3', grading: '', instructors: [], sections: [b] },
+    ]
+    expect(aggregateCrossListedSectionEnrollment(a, ['CEE121', 'CEE221'], courses)).toMatchObject({ enrolled: 84, capacity: 0 })
   })
 
   it('leaves a class with one listing exactly as the registrar reports it', () => {

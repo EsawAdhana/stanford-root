@@ -146,7 +146,6 @@ export function aggregateCrossListedSectionEnrollment(
       capacity: live.capacity > 0 ? live.capacity : s.capacity,
       waitlist: live.waitlist,
       waitlistMax: live.waitlistMax > 0 ? live.waitlistMax : s.waitlistMax,
-      status: live.status || s.status,
       combined: live.combined,
     }
   }
@@ -187,17 +186,14 @@ export function aggregateCrossListedSectionEnrollment(
     }
   }
   const sum = (pick: (s: Section) => number | undefined) => matches.reduce((a, s) => a + (pick(s) ?? 0), 0)
-  // With no room from Navigator (it publishes none for discussions and labs), a
-  // listing that is not Open takes no one new, so it counts only the people in
-  // it. Adding every cap read SYMSYS 1's discussion as "18 / 1233": one open
-  // SYMSYS 1 listing at 15/18 plus five closed ones capped at 150, 15 and 999.
-  const seatsHeld = (s: Section) =>
-    matches.length < 2 || (s.status || '').toLowerCase() === 'open'
-      ? s.capacity
-      : Math.min(s.capacity, s.enrolled)
+  // People add across listings; caps do not (a room's cap matched the sum of its
+  // listings' caps in 22 of 379 Autumn 2026 rooms). With no room from Navigator,
+  // which publishes none for discussions and labs, the class's cap is unknown, so
+  // report none rather than a sum: SYMSYS 1's third discussion read "16 / 353"
+  // from six listings each flagged Open with caps of 150, 15, 15, 150, 18 and 5.
   return {
     enrolled: sum(s => s.enrolled),
-    capacity: sum(seatsHeld),
+    capacity: matches.length < 2 ? sum(s => s.capacity) : 0,
     waitlist: sum(s => s.waitlist),
     waitlistMax: sum(s => s.waitlistMax),
   }
