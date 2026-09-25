@@ -25,6 +25,7 @@ import { unpickedComponents, stripSeconds, isScheduledForTerm, scheduledSectionI
 import { isWimCourse } from '@/lib/wim-courses';
 import { compareTerms, getDefaultTerm } from '@/lib/terms';
 import { useLiveSeats } from '@/hooks/use-seats';
+import { displayedStatus } from '@/lib/seats';
 import { useSyllabusIndex } from '@/hooks/use-syllabus-index';
 import { resolveSyllabus } from '@/lib/syllabus';
 
@@ -578,7 +579,12 @@ export function CourseDetailContent({ course }: CourseDetailContentProps) {
                                                 const blockedBySibling = !isSelected && Boolean(scheduledSibling) && isScheduledForTerm(scheduledSibling!, term);
                                                 const enrollAgg = enrollmentBySectionId.get(section.classId) ?? aggregateCrossListedSectionEnrollment(section, crossListIds, courses, term === activeTerm ? liveSeats : undefined);
                                                 const liveSeat = term === activeTerm ? liveSeats.get(section.classId) : undefined;
-                                                const sectionStatus = liveSeat?.status || section.status;
+                                                // A live reading replaces the snapshot's seats, room included.
+                                                const sectionStatus = displayedStatus(
+                                                    liveSeat?.status || section.status || '',
+                                                    liveSeat ?? section,
+                                                    liveSeat ? liveSeat.combined : section.combined,
+                                                );
                                                 const isIndependent = INDEPENDENT_COMPONENTS.has(section.component);
                                                 const tbdLabel = isIndependent ? 'Not Applicable' : 'TBD';
                                                 const compLabel = formatComponent(section.component);

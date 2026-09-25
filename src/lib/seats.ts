@@ -142,6 +142,38 @@ function combinedSeatsFor(groups: unknown, classNbr: number): CombinedSeats | nu
   return null
 }
 
+/**
+ * Whether a new student gets a seat rather than a place in line. A waitlist
+ * alone does not decide it: EARTHSYS 10 reads 163/300 with one person waiting,
+ * most likely for a full discussion, and has 137 seats. A line at least as
+ * long as the seats left does: CS 312 at 96/99 with 85 waiting is full. A
+ * missing cap (0) says nothing, so the status flag decides on its own.
+ */
+export function hasSeat(seats: { enrolled: number; capacity: number; waitlist: number }): boolean {
+  if (!(seats.capacity > 0)) return true
+  const left = Math.max(0, seats.capacity - seats.enrolled)
+  return left > 0 && !(seats.waitlist >= left)
+}
+
+/**
+ * The status to show for a section. Navigator's flag is per listing and can say
+ * "Open" for a class with no seat: AA 174A reads Open while its room with CS 137A
+ * and EE 160A is 90/90 with 20/20 waiting. When the flag says Open but there is
+ * no seat, show what a student would actually get, in Navigator's own words:
+ * "Wait List" while the line has room, "Closed" once it does not. Any other flag
+ * is shown as-is. The same rule hides the class under "Hide closed & waitlisted".
+ */
+export function displayedStatus(
+  status: string,
+  own: { enrolled: number; capacity: number; waitlist: number; waitlistMax: number },
+  room?: CombinedSeats,
+): string {
+  if (status.toLowerCase() !== 'open') return status
+  if (hasSeat(own) && (!room || hasSeat(room))) return status
+  const line = room && !hasSeat(room) ? room : own
+  return line.waitlistMax > line.waitlist ? 'Wait List' : 'Closed'
+}
+
 /** Most requests are one course's sections; the cap stops a crafted URL fanning out. */
 export const MAX_CLASS_NBRS_PER_REQUEST = 24
 

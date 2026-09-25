@@ -2,6 +2,7 @@ import type { Course } from '@/types/course'
 import type { CartItem } from '@/lib/cart-store'
 import { getSchoolFromSubject, formatLevel, parseUnitsOptions, normalizeCourseId, resolveToCanonicalPrimary } from '@/lib/utils'
 import { parseMeetingTimes, timeToMinutes, isMeetingOptional, getParsedSectionMeetings } from '@/lib/schedule-utils'
+import { hasSeat } from '@/lib/seats'
 
 export type CourseFilterCriteria = {
   excludedWords: string[]
@@ -61,19 +62,6 @@ type FilterChecks = {
   unavailable: CourseCheck | null
   studyAbroad: CourseCheck | null
   newOnly: CourseCheck | null
-}
-
-/**
- * Whether a new student gets a seat rather than a place in line. A waitlist
- * alone does not decide it: EARTHSYS 10 reads 163/300 with one person waiting,
- * most likely for a full discussion, and has 137 seats. A line at least as
- * long as the seats left does: CS 312 at 96/99 with 85 waiting is full. A
- * missing cap (0) says nothing, so the status flag decides on its own.
- */
-function hasSeat(seats: { enrolled: number; capacity: number; waitlist: number }): boolean {
-  if (!(seats.capacity > 0)) return true
-  const left = Math.max(0, seats.capacity - seats.enrolled)
-  return left > 0 && !(seats.waitlist >= left)
 }
 
 /**
