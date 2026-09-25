@@ -22,6 +22,19 @@ export type CourseFilterCriteria = {
   newOnly: boolean
 }
 
+/**
+ * Whether the active filters need sections to give a right answer. The list
+ * renders from the light catalog first, which has none, and these checks have
+ * no fallback: with sections missing, format and GER hide every course, and
+ * time, conflicts and "Hide closed & waitlisted" wave every course through, so
+ * CS 140M showed with the toggle on until the full catalog landed.
+ */
+export function needsSections(criteria: Pick<CourseFilterCriteria,
+  'selectedFormats' | 'selectedGers' | 'timeMin' | 'timeMax' | 'hideConflicts' | 'hideUnavailable'>): boolean {
+  return criteria.selectedFormats.length > 0 || criteria.selectedGers.length > 0 ||
+    criteria.timeMin > 420 || criteria.timeMax < 1320 || criteria.hideConflicts || criteria.hideUnavailable
+}
+
 /** When computing facet counts, the facet whose own filter should be omitted. */
 export type FacetKey = 'exclude' | 'depts' | 'terms' | 'formats' | 'levels' | 'gers' | 'schools' | 'units' | 'times'
 

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { applyQuery } from '@/hooks/use-filtered-courses'
-import { filterCourses, type CourseFilterCriteria } from '@/lib/course-filter'
+import { filterCourses, needsSections, type CourseFilterCriteria } from '@/lib/course-filter'
 import { getCrossListPrimaryMap } from '@/lib/utils'
 import type { Course, Section } from '@/types/course'
 
@@ -54,5 +54,28 @@ describe('searching a cross-listed code', () => {
 
     it('does not bring back a class from a term that is not selected', () => {
         expect(search('EE 186', { selectedTerms: ['Winter 2027'] })).toEqual([])
+    })
+})
+
+describe('holding the list until sections arrive', () => {
+    const none = { selectedFormats: [], selectedGers: [], timeMin: 420, timeMax: 1320, hideConflicts: false, hideUnavailable: false }
+
+    it('waits when a filter that reads sections is on', () => {
+        expect(needsSections({ ...none, hideUnavailable: true })).toBe(true)
+        expect(needsSections({ ...none, hideConflicts: true })).toBe(true)
+        expect(needsSections({ ...none, selectedFormats: ['LEC'] })).toBe(true)
+        expect(needsSections({ ...none, selectedGers: ['WAY-FR'] })).toBe(true)
+        expect(needsSections({ ...none, timeMin: 600 })).toBe(true)
+        expect(needsSections({ ...none, timeMax: 1080 })).toBe(true)
+    })
+
+    it('does not wait on a fresh load, where every toggle is off', () => {
+        expect(needsSections(none)).toBe(false)
+    })
+
+    it('shows every course passing "Hide closed" without sections, which is why it has to wait', () => {
+        const light = catalog.map(c => ({ ...c, sections: [] }))
+        const lightPm = getCrossListPrimaryMap(light)
+        expect(filterCourses(light, { ...CRITERIA, hideUnavailable: true }, lightPm, []).map(c => c.id)).toContain('CS140M')
     })
 })

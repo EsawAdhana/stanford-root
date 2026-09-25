@@ -5,7 +5,7 @@ import { useQueryState, parseAsArrayOf, parseAsString, parseAsBoolean, parseAsIn
 import { aggregateCrossListMetrics, compareCourseCodes, getCrossListPrimaryMap, normalizeCourseId, resolveToCanonicalPrimary, parseUnitsOptions } from '@/lib/utils';
 import type { Course } from '@/types/course';
 import { searchCourses } from '@/lib/search-utils';
-import { filterCourses } from '@/lib/course-filter';
+import { filterCourses, needsSections } from '@/lib/course-filter';
 import { useSelectedTerms } from '@/hooks/use-selected-terms';
 
 /**
@@ -259,11 +259,15 @@ export function useFilteredCourses() {
     }, [metricsByCourseId]);
 
     const isEnriching = useCourseStore(state => state.isEnriching);
+    // Hold the list on its loading state rather than show a wrong one while the
+    // sections these filters read are still on the way. Only while they are on
+    // the way: if the full catalog fails, the light list is better than nothing.
+    const waitingForSections = isEnriching && needsSections({ selectedFormats, selectedGers, timeMin, timeMax, hideConflicts, hideUnavailable });
 
     const handleSetSortBy = useCallback((v: string) => {
         setSortBy(v);
         setSortOrder(getDefaultOrderForSort(v));
     }, [setSortBy, setSortOrder, getDefaultOrderForSort]);
 
-    return { courses: displayCourses, hiddenByToggles, isLoading, isEnriching, getSortDisplayValue, getRatingForCourse, sortBy, setSortBy: handleSetSortBy, sortOrder: effectiveSortOrder, setSortOrder };
+    return { courses: displayCourses, hiddenByToggles, isLoading: isLoading || waitingForSections, isEnriching, getSortDisplayValue, getRatingForCourse, sortBy, setSortBy: handleSetSortBy, sortOrder: effectiveSortOrder, setSortOrder };
 }
