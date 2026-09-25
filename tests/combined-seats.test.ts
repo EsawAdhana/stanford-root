@@ -202,8 +202,35 @@ describe('course page totals use the room, not the sum of allotments', () => {
         expect(aggregateCrossListedSectionEnrollment(a, ['X1', 'Y1'], cat)).toEqual({ enrolled: 12, capacity: 40, waitlist: 0, waitlistMax: 0 })
     })
 
-    it('still sums when Navigator has no room for it', () => {
-        expect(aggregateCrossListedSectionEnrollment(cs, ['CS140M', 'EE186'], catalog)).toEqual({ enrolled: 50, capacity: 80, waitlist: 24, waitlistMax: 50 })
+    it('with no room, counts a closed listing as holding only the people in it', () => {
+        // CS 140M reads Closed at 11/30, so it adds 11 seats, not 30.
+        expect(aggregateCrossListedSectionEnrollment(cs, ['CS140M', 'EE186'], catalog)).toEqual({ enrolled: 50, capacity: 61, waitlist: 24, waitlistMax: 50 })
+    })
+
+    it('reads SYMSYS 1 discussion 1 as 18 / 21, where adding every cap read 18 / 1233', () => {
+        const dis = (classId: number, status: string, enrolled: number, capacity: number, waitlist = 0) =>
+            section({ classId, component: 'DIS', sectionNumber: '1', status, enrolled, capacity, waitlist })
+        const listings: [string, string, string, Section][] = [
+            ['SYMSYS1', 'SYMSYS', '1', dis(7177, 'Open', 15, 18, 3)],
+            ['CS24', 'CS', '24', dis(28586, 'Closed', 0, 150)],
+            ['LINGUIST35', 'LINGUIST', '35', dis(24729, 'Closed', 1, 999)],
+            ['PHIL99', 'PHIL', '99', dis(28689, 'Closed', 0, 15)],
+            ['PSYCH35', 'PSYCH', '35', dis(28726, 'Closed', 1, 150)],
+            ['SYMSYS200', 'SYMSYS', '200', dis(7179, 'Closed', 1, 1)],
+        ]
+        const cat = listings.map(([id, subject, code, s]) => course(id, subject, code, 'Minds and Machines', [s]))
+        const ids = listings.map(l => l[0])
+        expect(aggregateCrossListedSectionEnrollment(listings[1][3], ids, cat)).toMatchObject({ enrolled: 18, capacity: 21, waitlist: 3 })
+    })
+
+    it('takes a closed flag from the live reading too', () => {
+        const live = new Map([[6325, seat({ ...ee, status: 'Closed' })]])
+        expect(aggregateCrossListedSectionEnrollment(cs, ['CS140M', 'EE186'], catalog, live).capacity).toBe(11 + 39)
+    })
+
+    it('leaves a class listed once exactly as Navigator reads it, closed or not', () => {
+        const alone = course('CS1', 'CS', '1', 'X', [section({ classId: 9, status: 'Closed', enrolled: 11, capacity: 30 })])
+        expect(aggregateCrossListedSectionEnrollment(alone.sections![0], ['CS1'], [alone])).toMatchObject({ enrolled: 11, capacity: 30 })
     })
 })
 
