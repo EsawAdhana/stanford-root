@@ -116,8 +116,9 @@ export function parseNavigatorSeat(json: unknown): LiveSeat | null {
 
 /**
  * The shared seats of the combined section this class belongs to. Kept in sync
- * with combinedSeatsFrom in scripts/navigator-catalog.mjs: a group of one, or
- * one with no cap, is not a cross-listed meeting and carries nothing.
+ * with combinedSeatsFrom in scripts/navigator-catalog.mjs, which explains why
+ * `capacity` is the room's cap limited by the listings' own seats left: a group
+ * of one, or one with no cap, is not a cross-listed meeting and carries nothing.
  */
 function combinedSeatsFor(groups: unknown, classNbr: number): CombinedSeats | null {
   if (!Array.isArray(groups)) return null
@@ -125,12 +126,15 @@ function combinedSeatsFor(groups: unknown, classNbr: number): CombinedSeats | nu
     if (!group || typeof group !== 'object') continue
     const g = group as Record<string, unknown>
     const members = Array.isArray(g.sections) ? (g.sections as Record<string, unknown>[]) : []
-    const capacity = asCount(g.combinedEnrlCap)
-    if (members.length < 2 || capacity <= 0) continue
+    const roomCap = asCount(g.combinedEnrlCap)
+    if (members.length < 2 || roomCap <= 0) continue
     if (!members.some(m => asCount(m?.cmbndclassClassNbr) === classNbr)) continue
+    const enrolled = asCount(g.combinedEnrlTot)
+    const listingSeatsLeft = members.reduce(
+      (sum, m) => sum + Math.max(0, asCount(m?.cmbndclassEnrlCap) - asCount(m?.cmbndclassEnrlTot)), 0)
     return {
-      enrolled: asCount(g.combinedEnrlTot),
-      capacity,
+      enrolled,
+      capacity: enrolled >= roomCap ? roomCap : enrolled + Math.min(roomCap - enrolled, listingSeatsLeft),
       waitlist: asCount(g.combinedWaitTot),
       waitlistMax: asCount(g.combinedWaitCap),
     }

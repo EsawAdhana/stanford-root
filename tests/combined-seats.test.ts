@@ -57,6 +57,37 @@ describe('reading the shared seats out of Navigator', () => {
         expect(seats.has('1274|6325')).toBe(false)
     })
 
+    const room = (cap: number, tot: number, wait: number, listings: [number, number, number][]) => ({
+        combinedSections: [{
+            combinedEnrlCap: cap, combinedEnrlTot: tot, combinedWaitCap: 50, combinedWaitTot: wait,
+            sections: listings.map(([nbr, c, t]) => ({ cmbndclassClassNbr: nbr, cmbndclassEnrlCap: c, cmbndclassEnrlTot: t })),
+        }],
+    })
+
+    it('caps the class at what its listings can still take: CEE 141A/241A are 18/18 and 30/30 in a room of 65', () => {
+        const detail = room(65, 48, 20, [[1, 30, 30], [2, 18, 18]])
+        expect(combinedSeatsFrom('1272', detail).get('1272|1')).toMatchObject({ enrolled: 48, capacity: 48 })
+        expect(parseNavigatorSeat({ ...detail, classNbr: 1, sectionTotalEnrollment: 30, sectionCapacityEnrollment: 30 })?.combined)
+            .toMatchObject({ enrolled: 48, capacity: 48 })
+    })
+
+    it('keeps the room cap when the listings have more seats than the room: AA 228 / CS 238', () => {
+        const detail = room(700, 676, 0, [[1, 700, 176], [2, 500, 500]])
+        expect(combinedSeatsFrom('1272', detail).get('1272|2')).toMatchObject({ enrolled: 676, capacity: 700 })
+    })
+
+    it('stops at the listings when the room is far bigger: MUSIC 154A / ARTSTUDI 131 in a room of 999', () => {
+        const detail = room(999, 5, 0, [[1, 10, 1], [2, 250, 4]])
+        expect(combinedSeatsFrom('1272', detail).get('1272|1')).toMatchObject({ enrolled: 5, capacity: 260 })
+    })
+
+    it('reports an over-enrolled room against its own cap', () => {
+        const detail = room(50, 52, 0, [[1, 30, 31], [2, 30, 21]])
+        expect(combinedSeatsFrom('1272', detail).get('1272|1')).toMatchObject({ enrolled: 52, capacity: 50 })
+        expect(parseNavigatorSeat({ ...detail, classNbr: 1, sectionTotalEnrollment: 31, sectionCapacityEnrollment: 30 })?.combined)
+            .toMatchObject({ enrolled: 52, capacity: 50 })
+    })
+
     it('ignores a group of one and a group with no cap', () => {
         const lone = { combinedSections: [{ ...EE186_DETAIL.combinedSections[0], sections: [EE186_DETAIL.combinedSections[0].sections[0]] }] }
         const uncapped = { combinedSections: [{ ...EE186_DETAIL.combinedSections[0], combinedEnrlCap: 0 }] }
@@ -163,6 +194,14 @@ describe('course page totals use the room, not the sum of allotments', () => {
         expect(aggregateCrossListedSectionEnrollment(csWithRoom, ['CS140M', 'EE186'], withRoom, live)).toEqual(EE186_ROOM)
     })
 
+    it("does not borrow a room from a sibling matched only by section number", () => {
+        const other = { enrolled: 90, capacity: 90, waitlist: 5, waitlistMax: 10 }
+        const a = section({ classId: 1, enrolled: 5, capacity: 20 })
+        const b = section({ classId: 2, enrolled: 7, capacity: 20, combined: other })
+        const cat = [course('X1', 'X', '1', 'X (Y 1)', [a]), course('Y1', 'Y', '1', 'X (X 1)', [b])]
+        expect(aggregateCrossListedSectionEnrollment(a, ['X1', 'Y1'], cat)).toEqual({ enrolled: 12, capacity: 40, waitlist: 0, waitlistMax: 0 })
+    })
+
     it('still sums when Navigator has no room for it', () => {
         expect(aggregateCrossListedSectionEnrollment(cs, ['CS140M', 'EE186'], catalog)).toEqual({ enrolled: 50, capacity: 80, waitlist: 24, waitlistMax: 50 })
     })
@@ -183,6 +222,14 @@ describe('hide closed & waitlisted reads the room', () => {
             course('AA228', 'AA', '228', 'Decisions (CS 238)', [section({ classId: 1, enrolled: 176, capacity: 700, combined: room })]),
             course('CS238', 'CS', '238', 'Decisions (AA 228)', [section({ classId: 2, status: 'Closed', enrolled: 500, capacity: 500, combined: room })]),
         ])).toEqual(['AA228'])
+    })
+
+    it('hides CEE 141A / 241A: the room has space on paper, but both listings are full', () => {
+        const r = { enrolled: 48, capacity: 48, waitlist: 20, waitlistMax: 40 }
+        expect(visible([
+            course('CEE141A', 'CEE', '141A', 'Infra (CEE 241A)', [section({ classId: 1, status: 'Closed', enrolled: 18, capacity: 18, combined: r })]),
+            course('CEE241A', 'CEE', '241A', 'Infra (CEE 141A)', [section({ classId: 2, status: 'Closed', enrolled: 30, capacity: 30, combined: r })]),
+        ])).toEqual([])
     })
 
     it('hides an over-enrolled room', () => {

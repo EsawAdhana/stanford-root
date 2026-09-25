@@ -29,9 +29,10 @@ export interface Section {
   gers?: string[];
   /**
    * The meeting's shared seats, present only when it is cross-listed. Each
-   * listing's own `capacity` is an allotment; this cap is the room, and it is
-   * the one that says whether the class has a seat. Absent in dumps written
-   * before the scraper read it.
+   * listing's own `capacity` is an allotment; this `capacity` is what the class
+   * holds (the room's cap, or less when the listings fill first), and it is the
+   * one that says whether the class has a seat. Absent in dumps written before
+   * the scraper read it.
    */
   combined?: CombinedSeats;
 }

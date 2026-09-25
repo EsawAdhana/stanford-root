@@ -251,19 +251,27 @@ export async function fetchClassDetail(strm, classNbr) {
  * Seats for a cross-listed meeting, keyed `${strm}|${classNbr}` for every listing
  * in it. Each listing has its own cap, but the room has one: CS 140M (11/30) and
  * EE 186 (39/50) share a lecture capped at 50, which is full with 24 waitlisted
- * while EE 186 still reads "Open". Enrolled and waitlist add across listings,
- * caps do not, so only this record says whether the class has a seat.
- * Kept in sync with parseNavigatorSeat in src/lib/seats.ts.
+ * while EE 186 still reads "Open". Enrolled and waitlist add across listings
+ * (all 379 shared rooms in Autumn 2026), caps do not, so only this record says
+ * whether the class has a seat.
+ *
+ * `capacity` is what the class can actually hold: the room's cap, unless the
+ * listings' own caps run out first. CEE 141A (18/18) and CEE 241A (30/30) share
+ * a room capped at 65 with 20 waitlisted; that class holds 48, not 65.
+ * Kept in sync with combinedSeatsFor in src/lib/seats.ts.
  */
 export function combinedSeatsFrom(strm, detail) {
     const out = new Map()
     for (const group of Array.isArray(detail?.combinedSections) ? detail.combinedSections : []) {
         const members = Array.isArray(group?.sections) ? group.sections : []
-        const capacity = parseInt(group.combinedEnrlCap, 10) || 0
-        if (members.length < 2 || capacity <= 0) continue
+        const roomCap = parseInt(group.combinedEnrlCap, 10) || 0
+        if (members.length < 2 || roomCap <= 0) continue
+        const enrolled = parseInt(group.combinedEnrlTot, 10) || 0
+        const listingSeatsLeft = members.reduce((sum, member) =>
+            sum + Math.max(0, (parseInt(member?.cmbndclassEnrlCap, 10) || 0) - (parseInt(member?.cmbndclassEnrlTot, 10) || 0)), 0)
         const combined = {
-            enrolled: parseInt(group.combinedEnrlTot, 10) || 0,
-            capacity,
+            enrolled,
+            capacity: enrolled >= roomCap ? roomCap : enrolled + Math.min(roomCap - enrolled, listingSeatsLeft),
             waitlist: parseInt(group.combinedWaitTot, 10) || 0,
             waitlistMax: parseInt(group.combinedWaitCap, 10) || 0,
         }
