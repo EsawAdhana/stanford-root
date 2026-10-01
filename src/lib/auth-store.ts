@@ -18,7 +18,7 @@ import {
 } from './auth-errors'
 import { identifyVisitor } from './humanbehavior'
 
-export type SignInSource = 'hero' | 'header' | 'eval_gate' | 'nudge'
+export type SignInSource = 'hero' | 'header' | 'eval_gate' | 'nudge' | 'oauth_consent'
 
 /** Delay before the "Redirecting…" toast so a fast hop doesn't flash it. */
 const SIGN_IN_TOAST_DELAY_MS = 150
