@@ -27,7 +27,7 @@ export default function PrivacyPage() {
         <div className="space-y-12">
           <section>
             <h1 className="text-4xl font-bold tracking-tight mb-4">Privacy Policy</h1>
-            <p className="text-muted-foreground">Last Updated: September 21, 2026</p>
+            <p className="text-muted-foreground">Last Updated: October 1, 2026</p>
           </section>
 
           <section className="prose prose-neutral dark:prose-invert max-w-none">
@@ -144,6 +144,11 @@ export default function PrivacyPage() {
               <li><strong>Human Behavior</strong> — product analytics (see &quot;Usage Analytics&quot; below).</li>
               <li><strong>Resend</strong> — delivers the notification email we get when someone submits feedback.</li>
             </ul>
+            <p className="mt-2">
+              If you connect an app to your account, such as the Stanford Root MCP server for Claude, it gets
+              access only after you approve it on our consent screen. It can then see your email address, see and
+              change your saved schedule, and read evaluations as you.
+            </p>
             <p className="mt-2">
               We may also disclose information if we are legally required to do so.
             </p>
