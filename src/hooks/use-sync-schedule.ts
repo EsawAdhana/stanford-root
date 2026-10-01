@@ -28,14 +28,21 @@ export function useSyncSchedule() {
       // devices, so without this re-read the stale list survives until reload.
       void pullSchedule(id, { force: true })
     }
+    // A tab left on screen beside another app never goes hidden, so the re-read
+    // above never runs, and the next edit here would push a list missing what
+    // that app saved (the Stanford Root MCP writes the same row). Clicking back
+    // into the window is the moment before any such edit.
+    const handleFocus = () => void pullSchedule(id, { force: true })
     const handleBeforeUnload = () => flushPendingPush(id)
     document.addEventListener('visibilitychange', handleVisibilityChange)
+    window.addEventListener('focus', handleFocus)
     window.addEventListener('beforeunload', handleBeforeUnload)
 
     return () => {
       unsub()
       cancelDebouncedPush()
       document.removeEventListener('visibilitychange', handleVisibilityChange)
+      window.removeEventListener('focus', handleFocus)
       window.removeEventListener('beforeunload', handleBeforeUnload)
     }
   }, [user?.id])
