@@ -198,6 +198,14 @@ describe('hosted MCP server', () => {
     expect(mine.ok.terms[0].entries[1].sections[0].meetings).toEqual(['Fri 1:30 PM-2:50 PM', 'Mon/Wed 1:30 PM-2:50 PM (marked optional)'])
   })
 
+  it('exports meetings marked optional, like the site', async () => {
+    const client = await connect()
+    schedule = [{ id: 'CS161', selectedTerm: W, selectedSectionIds: [1933], optionalMeetings: ['Mon|1:30 PM|2:50 PM', 'Wed|1:30 PM|2:50 PM', 'Fri|1:30 PM|2:50 PM'] }]
+    const cal = await call(client, 'export_calendar', { term: W })
+    expect(cal.ok.left_off).toEqual([])
+    expect(cal.ok.ics).toContain('RRULE:FREQ=WEEKLY;BYDAY=MO,WE,FR;')
+  })
+
   it('round-trips an export through import', async () => {
     const client = await connect()
     schedule = [{ id: 'CS161', selectedTerm: W, selectedSectionIds: [1933, 1934] }]

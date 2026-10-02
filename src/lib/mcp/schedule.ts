@@ -181,7 +181,8 @@ export function exportIcs(entries: Entry[], term: string): { ics: string; events
     for (const s of e.drawn) {
       const [m, d] = APPROX_START[season] ?? [0, 1]
       const start = s.startDate ? new Date(`${s.startDate}T00:00:00Z`) : new Date(Date.UTC(Number(year), m, d))
-      for (const slot of requiredSlots(s, e.item)) {
+      // Every meeting, optional ones too: the site's Export writes them all.
+      for (const slot of slotsOf(s)) {
         const first = new Date(start)
         while (!slot.days.includes(DAY_ORDER[(first.getUTCDay() + 6) % 7])) first.setUTCDate(first.getUTCDate() + 1)
         const rule = `RRULE:FREQ=WEEKLY;BYDAY=${slot.days.map(x => ICS_DAY[x]).join(',')}` + (s.endDate ? `;UNTIL=${s.endDate.replace(/-/g, '')}T235959Z` : ';COUNT=10')
