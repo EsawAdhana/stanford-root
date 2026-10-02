@@ -68,6 +68,11 @@ async function loadLightRows(): Promise<DumpRow[]> {
   return lightLoad
 }
 
+/** Every course in the prebuilt dump, as the browser maps them (WIM and Language added). */
+export async function getAllCoursesFromDump(): Promise<Course[]> {
+  return [...(await loadFullById()).values()]
+}
+
 /** Instant course lookup from the prebuilt dump (no Supabase). */
 export async function getCourseFromDump(courseId: string): Promise<Course | null> {
   try {

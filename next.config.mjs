@@ -17,6 +17,7 @@ const nextConfig = {
     '/api/courses': ['./data/catalog/full.json', './data/catalog/light.json'],
     '/api/courses/[courseId]': ['./data/catalog/full.json'],
     '/api/instructors/[slug]': ['./data/catalog/full.json', './data/catalog/light.json'],
+    '/api/mcp': ['./data/catalog/full.json', './public/catalog/instructors.json'],
     '/departments': ['./data/catalog/light.json'],
     '/instructors/[slug]': ['./data/catalog/full.json', './data/catalog/light.json'],
     // The share card draws the real browse view, so it runs filterCourses over
