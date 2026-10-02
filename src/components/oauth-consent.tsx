@@ -10,7 +10,7 @@ import { supabase } from '@/lib/supabase'
 
 type ConsentRequest =
   | { kind: 'loading' }
-  | { kind: 'ready'; clientName: string; email: string }
+  | { kind: 'ready'; clientName: string; email: string; returnTo: string }
   | { kind: 'redirecting' }
   | { kind: 'failed' }
 
@@ -43,7 +43,7 @@ export function OAuthConsent() {
         window.location.replace(data.redirect_url)
         return
       }
-      setRequest({ kind: 'ready', clientName: data.client.name, email: data.user.email })
+      setRequest({ kind: 'ready', clientName: data.client.name, email: data.user.email, returnTo: returnLabel(data.redirect_uri) })
     })
   }, [authorizationId, user])
 
@@ -113,6 +113,9 @@ export function OAuthConsent() {
         It will be able to see and change your saved schedule and read course evaluations, as{' '}
         <span className="text-foreground">{request.email}</span>.
       </p>
+      <p className="text-sm text-muted-foreground -mt-6 mb-8">
+        Allowing returns you to {request.returnTo}. Disconnect it any time from Connected apps.
+      </p>
       <div className="flex justify-center gap-3">
         <Button variant="outline" size="lg" disabled={deciding} onClick={() => void decide(false)}>
           Deny
@@ -123,6 +126,16 @@ export function OAuthConsent() {
       </div>
     </div>
   )
+}
+
+/** Where Allow sends the user, so a look-alike app name cannot hide its destination. */
+export function returnLabel(redirectUri: string): string {
+  try {
+    const { hostname } = new URL(redirectUri)
+    return hostname === '127.0.0.1' || hostname === 'localhost' ? 'an app on this computer' : hostname
+  } catch {
+    return 'the app'
+  }
 }
 
 function Message({ title, body, home }: { title?: string; body: string; home?: boolean }) {
