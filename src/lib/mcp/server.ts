@@ -70,7 +70,9 @@ get_my_schedule shows the calendar (sections, units, overlaps, sections still to
 pick); set_meetings_optional marks meetings the user skips. add_to_schedule saves
 a course or changes its quarter, sections or units. remove_from_schedule,
 import_calendar and send_feedback are two steps: a preview (the default) returns
-a confirm_token; show the user, then commit with dry_run=false and the token.
+a confirm_token; show the user and end your turn, then commit with dry_run=false
+and the token only after they say yes in a later message, even if they asked for
+the change.
 export_calendar makes an .ics file of a quarter.
 
 Quarters are spelled "${TERMS[0]}"; valid now: ${TERMS.join(', ')}. Omitted
@@ -112,6 +114,11 @@ function similarity(a: string, b: string): number {
 const notOffered = (c: { subject: string; code: string }, term: string, offered: string[]) => new ToolFailure('not_offered',
   `${c.subject} ${c.code} is not offered in ${term}.` + (offered.length ? ` It is offered in: ${offered.join(', ')}.` : ' It has no scheduled quarters.'),
   { retryable: false, hint: offered.length ? 'Ask the user which quarter they want, then pass it as term.' : undefined, details: { offered_terms: offered } })
+
+// Said on every preview. Without it the agent previewed and committed in the same
+// turn whenever the user had asked for the change (found filming; 3 of 3 removals).
+const waitForYes = (state: string, what: string, act: string) =>
+  `${state} yet. Show the user ${what} and end your turn. ${act} with dry_run=false and the confirm_token only after they say yes in a later message, even if they already asked for it.`
 
 const previewRequired = (what: string, stale: boolean) => new ToolFailure('preview_required',
   stale ? 'The schedule changed since that preview, so its confirm_token no longer applies.' : `${what} needs a confirm_token from a preview of the current schedule.`,
@@ -436,7 +443,7 @@ export function registerTools(server: McpServer) {
 
   server.registerTool('remove_from_schedule', {
     title: 'Remove from schedule',
-    description: "Remove a course, or some of its picked sections, from the user's Stanford Root schedule. Two steps: call with dry_run=true (the default) to preview exactly what goes and get a confirm_token; show the user; then call with dry_run=false and that token. A token is only good for the schedule it was previewed on.",
+    description: "Remove a course, or some of its picked sections, from the user's Stanford Root schedule. Two steps: call with dry_run=true (the default) to preview exactly what goes and get a confirm_token; show the user and end your turn. Only after they say yes in a later message, call with dry_run=false and that token, even if they asked for the removal. A token is only good for the schedule it was previewed on.",
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true, openWorldHint: true },
     inputSchema: z.object({
       course_id: z.string().min(2).max(32).describe('A course_id from get_my_schedule.'),
@@ -466,10 +473,10 @@ export function registerTools(server: McpServer) {
     if (args.dry_run) {
       const items = (await readSchedule(caller)) ?? []
       const p = plan(items)
-      return { dry_run: true, removed: entryOut(entryOf(cat, p.result.target)), removed_section_ids: p.result.removed, whole_course: p.result.whole, total_saved_after: p.items.length, confirm_token: tokenFor(items) }
+      return { dry_run: true, removed: entryOut(entryOf(cat, p.result.target)), removed_section_ids: p.result.removed, whole_course: p.result.whole, total_saved_after: p.items.length, confirm_token: tokenFor(items), note: waitForYes('Nothing is removed', 'what would go', 'Commit') }
     }
     const { result, saved } = await saveWithRetry(caller, plan)
-    return { dry_run: false, removed: entryOut(entryOf(cat, result.target)), removed_section_ids: result.removed, whole_course: result.whole, total_saved_after: saved.length, confirm_token: null }
+    return { dry_run: false, removed: entryOut(entryOf(cat, result.target)), removed_section_ids: result.removed, whole_course: result.whole, total_saved_after: saved.length, confirm_token: null, note: null }
   }))
 
   server.registerTool('set_meetings_optional', {
@@ -510,7 +517,7 @@ export function registerTools(server: McpServer) {
 
   server.registerTool('import_calendar', {
     title: 'Import calendar',
-    description: 'Add the classes in an .ics calendar to the user\'s Stanford Root schedule, like the site\'s Import: each event titled with a course code ("CS 106B ...") becomes that course, with the section whose days and times match. Two steps: preview (the default) shows what would be added, what didn\'t match and why, and returns a confirm_token; commit with dry_run=false and that token.',
+    description: 'Add the classes in an .ics calendar to the user\'s Stanford Root schedule, like the site\'s Import: each event titled with a course code ("CS 106B ...") becomes that course, with the section whose days and times match. Two steps: preview (the default) shows what would be added, what didn\'t match and why, and returns a confirm_token; show the user and end your turn. Only after they say yes in a later message, commit with dry_run=false and that token.',
     annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: true },
     inputSchema: z.object({
       ics: z.string().min(20).max(500_000).describe('The text of an .ics file (e.g. exported from Axess, Google Calendar or Stanford Root).'),
@@ -542,13 +549,13 @@ export function registerTools(server: McpServer) {
     if (args.dry_run) {
       const items = (await readSchedule(caller)) ?? []
       const p = plan(items)
-      return { dry_run: true, courses: p.result, confirm_token: tokenFor(items), total_saved_after: p.items.length }
+      return { dry_run: true, courses: p.result, confirm_token: tokenFor(items), total_saved_after: p.items.length, note: waitForYes('Nothing is saved', 'what would be added', 'Commit') }
     }
     const { result, saved } = await saveWithRetry(caller, items => {
       if (args.confirm_token !== tokenFor(items)) throw previewRequired('Importing', !!args.confirm_token)
       return plan(items)
     })
-    return { dry_run: false, courses: result, confirm_token: null, total_saved_after: saved.length }
+    return { dry_run: false, courses: result, confirm_token: null, total_saved_after: saved.length, note: null }
   }))
 
   server.registerTool('export_calendar', {
@@ -567,7 +574,7 @@ export function registerTools(server: McpServer) {
 
   server.registerTool('send_feedback', {
     title: 'Send feedback',
-    description: "Send feedback or a feature request to Stanford Root's maintainer, like the site's Feedback dialog. Anonymous, and it cannot be unsent: only when the user asks to send feedback. Two steps: preview (the default) returns a confirm_token; show the user the exact text, then send with dry_run=false and that token.",
+    description: "Send feedback or a feature request to Stanford Root's maintainer, like the site's Feedback dialog. Anonymous, and it cannot be unsent: only when the user asks to send feedback. Two steps: preview (the default) returns a confirm_token; show the user the exact text and end your turn. Only after they say yes in a later message, send with dry_run=false and that token.",
     annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: true },
     inputSchema: z.object({
       text: z.string().min(1).max(2000).describe("The message, in the user's words."),
@@ -578,7 +585,7 @@ export function registerTools(server: McpServer) {
   }, (args, ctx) => asTool(async () => {
     const body = args.text.trim()
     const t = token(body, args.kind)
-    if (args.dry_run) return { dry_run: true, sent: false, kind: args.kind, text: body, confirm_token: t, note: 'Not sent. Show the user this exact text; send with dry_run=false and the confirm_token.' }
+    if (args.dry_run) return { dry_run: true, sent: false, kind: args.kind, text: body, confirm_token: t, note: waitForYes('Not sent', 'this exact text', 'Send') }
     if (args.confirm_token !== t) throw new ToolFailure('preview_required', 'Sending needs the confirm_token from a preview of this exact text.', { retryable: false, hint: 'Call send_feedback with dry_run=true first and show the user the text.' })
     await sendFeedback(callerOf(ctx), body, args.kind)
     return { dry_run: false, sent: true, kind: args.kind, text: body, confirm_token: null, note: "Sent anonymously to the maintainer. It is not linked to the user's account." }

@@ -171,8 +171,10 @@ describe('hosted MCP server', () => {
     expect((await call(client, 'remove_from_schedule', { course_id: 'CS161', dry_run: false })).error?.code).toBe('preview_required')
     const preview = await call(client, 'remove_from_schedule', { course_id: 'CS161' })
     expect(schedule).toHaveLength(1)
+    expect(preview.ok.note).toMatch(/end your turn.*later message/)
     const done = await call(client, 'remove_from_schedule', { course_id: 'CS161', dry_run: false, confirm_token: preview.ok.confirm_token })
     expect(done.ok.whole_course).toBe(true)
+    expect(done.ok.note).toBeNull()
     expect(schedule).toEqual([])
   })
 
@@ -203,6 +205,7 @@ describe('hosted MCP server', () => {
     schedule = []
     const preview = await call(client, 'import_calendar', { ics: cal.ok.ics })
     expect(preview.ok.courses).toEqual([expect.objectContaining({ course_id: 'CS161', section_ids: [1933, 1934], action: 'add' })])
+    expect(preview.ok.note).toMatch(/end your turn.*later message/)
     await call(client, 'import_calendar', { ics: cal.ok.ics, dry_run: false, confirm_token: preview.ok.confirm_token })
     expect(schedule).toEqual([{ id: 'CS161', selectedTerm: W, selectedSectionIds: [1933, 1934] }])
   })
@@ -213,6 +216,7 @@ describe('hosted MCP server', () => {
     const client = await connect()
     const preview = await call(client, 'send_feedback', { text: 'Add dark mode' })
     expect(feedback).toEqual([])
+    expect(preview.ok.note).toMatch(/end your turn.*later message/)
     expect((await call(client, 'send_feedback', { text: 'Something else', dry_run: false, confirm_token: preview.ok.confirm_token })).error?.code).toBe('preview_required')
     await call(client, 'send_feedback', { text: 'Add dark mode', dry_run: false, confirm_token: preview.ok.confirm_token })
     expect(feedback).toEqual(['Add dark mode'])
