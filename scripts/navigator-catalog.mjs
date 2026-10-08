@@ -434,7 +434,10 @@ export async function fetchCombinedSeats(hits, combinedByClass = new Map(), { on
  * everything the index did, so the year is read one record per class instead,
  * from a list of class numbers that ExploreCourses and the last dump supply.
  */
-const RECORD_CONCURRENCY = 6
+// About 30 reads a second, so a whole year (~66k primary classes) takes ~40
+// minutes of the job's 120. Six at a time measured ~85 a second; this is a
+// site whose robots.txt asks bots to stay away, so the slower pace is on purpose.
+const RECORD_CONCURRENCY = 2
 
 /** Course attributes that are requirements: the WAYS, and COLLEGE / Writing under UGRQ. */
 const REQUIREMENT_ATTRIBUTES = new Set(['WAYS', 'UGRQ'])
