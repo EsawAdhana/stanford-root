@@ -241,6 +241,13 @@ export async function fetchClassDetail(strm, classNbr) {
                 signal: AbortSignal.timeout(30000),
             })
             if (res.status === 404) return null
+            if (res.status === 429) {
+                // Told to slow down: wait it out, rather than spend every retry in two seconds.
+                if (attempt === 4) throw new Error('HTTP 429')
+                const after = parseInt(res.headers.get('retry-after') || '', 10)
+                await sleep((Number.isFinite(after) && after > 0 ? after : 15 * attempt) * 1000)
+                continue
+            }
             if (!res.ok) throw new Error(`HTTP ${res.status}`)
             const text = await res.text()
             if (!text.trim()) return null
@@ -556,11 +563,13 @@ export function hitFromDetail(detail) {
  * shared-room seats and each class's own seats, which the search walk needed
  * separate passes for.
  *
- * A read that still fails after fetchClassDetail's retries is returned in
+ * A read that fails after fetchClassDetail's retries gets one more try at the
+ * end, alone and after a pause, so a burst of errors partway through ~66k reads
+ * does not cost the day's refresh. One that fails that too is returned in
  * `failed` rather than dropped, so the caller can refuse to publish a year with
  * classes silently missing from it.
  */
-export async function fetchClassesFromRecords(candidates, { onProgress, warn, concurrency = RECORD_CONCURRENCY, fetchDetail = fetchClassDetail } = {}) {
+export async function fetchClassesFromRecords(candidates, { onProgress, warn, concurrency = RECORD_CONCURRENCY, fetchDetail = fetchClassDetail, retryPauseMs = 10_000 } = {}) {
     const unique = new Map()
     for (const c of candidates) {
         const key = `${c.strm}|${c.classNbr}`
@@ -579,32 +588,46 @@ export async function fetchClassesFromRecords(candidates, { onProgress, warn, co
     let notFound = 0
     let done = 0
 
-    await eachWithConcurrency(ordered, concurrency, async ({ strm, classNbr }) => {
+    async function read({ strm, classNbr }) {
         const key = `${strm}|${classNbr}`
-        if (!named.has(key)) {
-            reads++
-            try {
-                const detail = await fetchDetail(strm, classNbr)
-                const hit = hitFromDetail(detail)
-                if (!hit) notFound++
-                else {
-                    hits.set(key, hit)
-                    const related = Array.isArray(detail.relatedClasses) ? detail.relatedClasses : []
-                    relatedByClass.set(key, related)
-                    for (const r of related) named.add(`${strm}|${parseInt(r?.relatedClassNbr, 10)}`)
-                    for (const [member, combined] of combinedSeatsFrom(hit.strm, detail)) combinedByClass.set(member, combined)
-                    collectSeats(hit.strm, hit.classNbr, detail, seatsByClass)
-                }
-            } catch (err) {
-                failed.push(key)
-                warn?.(`class record failed for ${key}: ${err.message}`)
+        if (named.has(key)) return
+        reads++
+        try {
+            const detail = await fetchDetail(strm, classNbr)
+            const hit = hitFromDetail(detail)
+            if (!hit) {
+                notFound++
+                return
             }
+            hits.set(key, hit)
+            const related = Array.isArray(detail.relatedClasses) ? detail.relatedClasses : []
+            relatedByClass.set(key, related)
+            for (const r of related) named.add(`${strm}|${parseInt(r?.relatedClassNbr, 10)}`)
+            for (const [member, combined] of combinedSeatsFrom(hit.strm, detail)) combinedByClass.set(member, combined)
+            collectSeats(hit.strm, hit.classNbr, detail, seatsByClass)
+        } catch (err) {
+            failed.push({ strm, classNbr })
+            warn?.(`class record failed for ${key}: ${err.message}`)
         }
+    }
+
+    await eachWithConcurrency(ordered, concurrency, async candidate => {
+        await read(candidate)
         done++
         if (done % 500 === 0 || done === ordered.length) onProgress?.({ done, total: ordered.length, reads, classes: hits.size })
     })
 
-    return { classes: [...hits.values()], relatedByClass, combinedByClass, seatsByClass, reads, notFound, failed }
+    if (failed.length) {
+        const again = failed.splice(0)
+        warn?.(`retrying ${again.length} failed class records one at a time`)
+        await sleep(retryPauseMs)
+        await eachWithConcurrency(again, 1, read)
+    }
+
+    return {
+        classes: [...hits.values()], relatedByClass, combinedByClass, seatsByClass, reads, notFound,
+        failed: failed.map(({ strm, classNbr }) => `${strm}|${classNbr}`),
+    }
 }
 
 // ── Shaping into catalog rows ────────────────────────────────────────────────

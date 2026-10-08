@@ -1,5 +1,5 @@
-import { describe, expect, it } from 'vitest'
-import { buildCourses, fetchClassesFromRecords, hitFromDetail, strmForTerm } from '../scripts/navigator-catalog.mjs'
+import { afterEach, describe, expect, it, vi } from 'vitest'
+import { buildCourses, fetchClassDetail, fetchClassesFromRecords, hitFromDetail, strmForTerm } from '../scripts/navigator-catalog.mjs'
 import { strmForTerm as appStrmForTerm } from '../src/lib/seats'
 
 /**
@@ -135,18 +135,21 @@ describe('reading the year one record at a time', () => {
             }],
         },
     }
+    // 5555 always fails; 6325 fails once, as a burst of errors partway through a run would.
     const fake = () => {
         const reads: string[] = []
         const fetchDetail = async (strm: string, classNbr: number) => {
             const key = `${strm}|${classNbr}`
             reads.push(key)
             if (classNbr === 5555) throw new Error('HTTP 500')
+            if (classNbr === 6325 && reads.filter(r => r === key).length === 1) throw new Error('HTTP 503')
             return records[key] ?? null
         }
         return { reads, fetchDetail }
     }
+    const opts = (fetchDetail: (strm: string, classNbr: number) => Promise<unknown>) => ({ concurrency: 1, fetchDetail, retryPauseMs: 0 })
 
-    it('reads a primary once, skips the discussion it names, and keeps a failed read', async () => {
+    it('reads a primary once, skips the discussion it names, and keeps a read that keeps failing', async () => {
         const { reads, fetchDetail } = fake()
         const result = await fetchClassesFromRecords([
             { strm: '1272', classNbr: 1834, primary: false },
@@ -154,19 +157,51 @@ describe('reading the year one record at a time', () => {
             { strm: '1272', classNbr: 1801, primary: false },
             { strm: '1272', classNbr: 9999, primary: false },
             { strm: '1272', classNbr: 5555, primary: true },
-        ], { concurrency: 1, fetchDetail })
-        expect(reads).toEqual(['1272|1801', '1272|5555', '1272|9999'])
+        ], opts(fetchDetail))
+        expect(reads).toEqual(['1272|1801', '1272|5555', '1272|9999', '1272|5555'])
         expect(result.classes.map((h: { classNbr: number }) => h.classNbr)).toEqual([1801])
         expect(result.relatedByClass.get('1272|1801')).toHaveLength(1)
         expect(result.notFound).toBe(1)
         expect(result.failed).toEqual(['1272|5555'])
     })
 
+    it('gets a class back that failed once', async () => {
+        const { reads, fetchDetail } = fake()
+        const result = await fetchClassesFromRecords([{ strm: '1272', classNbr: 6325, primary: true }], opts(fetchDetail))
+        expect(reads).toEqual(['1272|6325', '1272|6325'])
+        expect(result.failed).toEqual([])
+        expect(result.classes.map((h: { classNbr: number }) => h.classNbr)).toEqual([6325])
+    })
+
     it('takes seats and the shared room from the same read', async () => {
         const { fetchDetail } = fake()
-        const result = await fetchClassesFromRecords([{ strm: '1272', classNbr: 6325, primary: true }], { concurrency: 1, fetchDetail })
+        const result = await fetchClassesFromRecords([{ strm: '1272', classNbr: 6325, primary: true }], opts(fetchDetail))
         expect(result.seatsByClass.get('1272|6325')).toMatchObject({ enrolled: 440, capacity: 999, status: 'Open' })
         expect(result.combinedByClass.get('1272|28402')).toEqual({ enrolled: 50, capacity: 50, waitlist: 24, waitlistMax: 50 })
+    })
+})
+
+describe('when Navigator pushes back', () => {
+    afterEach(() => { vi.unstubAllGlobals() })
+
+    it('waits out a 429 for as long as it is told, then reads the record', async () => {
+        const answers = [
+            new Response('', { status: 429, headers: { 'retry-after': '1' } }),
+            new Response(JSON.stringify({ classNbr: 1801 }), { status: 200 }),
+        ]
+        const fetch = vi.fn(async () => answers.shift()!)
+        vi.stubGlobal('fetch', fetch)
+        const started = Date.now()
+        expect(await fetchClassDetail('1272', 1801)).toEqual({ classNbr: 1801 })
+        expect(fetch).toHaveBeenCalledTimes(2)
+        expect(Date.now() - started).toBeGreaterThanOrEqual(950)
+    })
+
+    it('treats a 404 as no record, without retrying', async () => {
+        const fetch = vi.fn(async () => new Response('', { status: 404 }))
+        vi.stubGlobal('fetch', fetch)
+        expect(await fetchClassDetail('1272', 1834)).toBeNull()
+        expect(fetch).toHaveBeenCalledTimes(1)
     })
 })
 
