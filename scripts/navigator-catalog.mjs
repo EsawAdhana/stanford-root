@@ -425,6 +425,185 @@ export async function fetchCombinedSeats(hits, combinedByClass = new Map(), { on
     return { combinedByClass, seatsByClass, requests }
 }
 
+// ── The year from class records ──────────────────────────────────────────────
+
+/**
+ * Since 2026-10-03 the search index answers `403 Method not allowed with this
+ * referer` to anything that is not Navigator's own page, so the year can no
+ * longer be listed through it. Each class's own record still answers and carries
+ * everything the index did, so the year is read one record per class instead,
+ * from a list of class numbers that ExploreCourses and the last dump supply.
+ */
+const RECORD_CONCURRENCY = 6
+
+/** Course attributes that are requirements: the WAYS, and COLLEGE / Writing under UGRQ. */
+const REQUIREMENT_ATTRIBUTES = new Set(['WAYS', 'UGRQ'])
+
+const RECORD_DAY_KEYS = [
+    ['sectionMeetingMon', 'Monday'],
+    ['sectionMeetingTues', 'Tuesday'],
+    ['sectionMeetingWed', 'Wednesday'],
+    ['sectionMeetingThur', 'Thursday'],
+    ['sectionMeetingFri', 'Friday'],
+    ['sectionMeetingSat', 'Saturday'],
+    ['sectionMeetingSun', 'Sunday'],
+]
+
+/**
+ * "Autumn 2026" -> 1272, the term code the class records are keyed by. Kept in
+ * sync with strmForTerm in src/lib/seats.ts (tests/navigator-records.test.ts
+ * checks the two agree).
+ */
+export function strmForTerm(term) {
+    const quarter = { Autumn: 2, Fall: 2, Winter: 4, Spring: 6, Summer: 8 }
+    const parts = String(term || '').trim().split(/\s+/)
+    const code = quarter[parts[0]]
+    const year = parseInt(parts[parts.length - 1], 10)
+    if (!code || !Number.isFinite(year) || year < 2000 || year > 2100) return null
+    const acadYearEnd = code === 2 ? year + 1 : year
+    return 1000 + (acadYearEnd % 100) * 10 + code
+}
+
+/**
+ * Roles the index never listed as instructors. "GP" is printed on every MATH 21
+ * and MATH 51 lecture (Taylor, Lucianovic) and was on none of them in the
+ * 2026-10-02 dump; it is the course's grading proxy, not a teacher.
+ */
+const HIDDEN_ROLES = new Set(['GP'])
+
+/** The record lists meetings and instructors in no fixed order; the index sorted both by sequence. */
+const bySeq = field => (a, b) => (Number(a?.[field]) || 0) - (Number(b?.[field]) || 0)
+
+/**
+ * One record meeting as an index meeting. A room the registrar has not assigned
+ * reads as a single space (CLASSICS 112), and some classes carry a meeting with
+ * nothing in it at all (ASLLANG 395); the index had neither, so neither is kept.
+ */
+function meetingFromRecord(meeting) {
+    if (!meeting || typeof meeting !== 'object') return null
+    const out = {
+        daysOfWeekList: RECORD_DAY_KEYS.filter(([key]) => meeting[key] === 'Y').map(([, day]) => day),
+        startTime: String(meeting.sectionMeetingStartTime || '').trim().replace(/^0/, ''),
+        endTime: String(meeting.sectionMeetingEndTime || '').trim().replace(/^0/, ''),
+        facilityDescr: String(meeting.sectionMeetingRoomDescr || '').trim(),
+        room: String(meeting.sectionMeetingRoom || '').trim(),
+        instructors: [...(meeting.sectionInstructors || [])]
+            .sort(bySeq('sectionInstructorSeq'))
+            .filter(i => String(i?.sectionInstructorPrint).toUpperCase() !== 'N' && !HIDDEN_ROLES.has(i?.sectionInstructorRole))
+            .map(i => ({ lastName: i.sectionInstructorLastName, firstName: i.sectionInstructorFirstName, sunetId: i.sectionInstructorSunet })),
+    }
+    const empty = !out.daysOfWeekList.length && !out.startTime && !out.endTime && !out.facilityDescr && !out.room && !out.instructors.length
+    return empty ? null : out
+}
+
+/**
+ * A class record in the shape of a search-index hit, so buildCourses and the
+ * section builders above read it unchanged. Null for anything that is not a
+ * primary class record: a 404 body, a discussion that somehow has one.
+ *
+ * Instructors are the printed ones only, as the index had them: CS 106A's
+ * record also lists its TAs, with sectionInstructorPrint "N". See HIDDEN_ROLES.
+ */
+export function hitFromDetail(detail) {
+    if (!detail || typeof detail !== 'object' || !detail.classNbr || !detail.strm) return null
+    if (String(detail.isPrimaryComponent).toUpperCase() === 'FALSE') return null
+    const subject = detail.sectionSubject || ''
+    const catalogNbr = detail.sectionCatalogNbr || ''
+    return {
+        subject,
+        catalogNbr,
+        courseCode: `${subject} ${catalogNbr}`.trim(),
+        courseTitle: detail.courseTitle || '',
+        courseDescr: detail.courseDescr || '',
+        crseId: detail.courseId ? String(detail.courseId) : '',
+        termOffered: detail.strmQuarter && detail.strmCalendarYear ? `${detail.strmQuarter} ${detail.strmCalendarYear}` : '',
+        strm: String(detail.strm),
+        acadYearLabel: String(detail.strmDescr || '').split(' ')[0],
+        classNbr: parseInt(detail.classNbr, 10),
+        classSection: detail.section || '',
+        componentPrimary: detail.sectionComponent || '',
+        components: (detail.courseComponents || []).map(c => c?.courseComponentDescr).filter(Boolean),
+        units: [detail.sectionUnitsMin, detail.sectionUnitsMax].filter(u => u != null && u !== ''),
+        gradingBasisDescr: detail.sectionGradingBasisDescr || '',
+        instructionModeDescr: detail.sectionInstructionModeDescr || '',
+        enrlCap: detail.sectionCapacityEnrollment,
+        enrlTot: detail.sectionTotalEnrollment,
+        waitCap: detail.sectionCapacityWaitlist,
+        waitTot: detail.sectionTotalWaitlist,
+        enrlStatDescr: detail.sectionEnrollmentStatusDescr || '',
+        classStatDescr: detail.sectionClassStatusDescr || '',
+        startDt: detail.sectionStartDate || '',
+        endDt: detail.sectionEndDate || '',
+        meetings: [...(detail.sectionMeetings || [])].sort(bySeq('sectionMeetingSeq')).map(meetingFromRecord).filter(Boolean),
+        geRequirements: (detail.courseAttributes || [])
+            .filter(a => REQUIREMENT_ATTRIBUTES.has(a?.courseAttribute))
+            .map(a => a.courseAttributeValueDescr)
+            .filter(Boolean),
+    }
+}
+
+/**
+ * Read the record of every candidate class and keep the primary ones as hits.
+ *
+ * Candidates are `{ strm, classNbr, primary }`; `primary` is a hint from the last
+ * dump. A discussion or lab has no record of its own (404) and is listed in its
+ * primary's relatedClasses instead, so known primaries are read first and any
+ * candidate a record has already named is skipped: about one read per primary
+ * class, not one per section. The same reads give the related sections, the
+ * shared-room seats and each class's own seats, which the search walk needed
+ * separate passes for.
+ *
+ * A read that still fails after fetchClassDetail's retries is returned in
+ * `failed` rather than dropped, so the caller can refuse to publish a year with
+ * classes silently missing from it.
+ */
+export async function fetchClassesFromRecords(candidates, { onProgress, warn, concurrency = RECORD_CONCURRENCY, fetchDetail = fetchClassDetail } = {}) {
+    const unique = new Map()
+    for (const c of candidates) {
+        const key = `${c.strm}|${c.classNbr}`
+        const seen = unique.get(key)
+        if (!seen || (c.primary && !seen.primary)) unique.set(key, c)
+    }
+    const ordered = [...unique.values()].sort((a, b) => Number(Boolean(b.primary)) - Number(Boolean(a.primary)))
+
+    const hits = new Map()
+    const named = new Set()
+    const relatedByClass = new Map()
+    const combinedByClass = new Map()
+    const seatsByClass = new Map()
+    const failed = []
+    let reads = 0
+    let notFound = 0
+    let done = 0
+
+    await eachWithConcurrency(ordered, concurrency, async ({ strm, classNbr }) => {
+        const key = `${strm}|${classNbr}`
+        if (!named.has(key)) {
+            reads++
+            try {
+                const detail = await fetchDetail(strm, classNbr)
+                const hit = hitFromDetail(detail)
+                if (!hit) notFound++
+                else {
+                    hits.set(key, hit)
+                    const related = Array.isArray(detail.relatedClasses) ? detail.relatedClasses : []
+                    relatedByClass.set(key, related)
+                    for (const r of related) named.add(`${strm}|${parseInt(r?.relatedClassNbr, 10)}`)
+                    for (const [member, combined] of combinedSeatsFrom(hit.strm, detail)) combinedByClass.set(member, combined)
+                    collectSeats(hit.strm, hit.classNbr, detail, seatsByClass)
+                }
+            } catch (err) {
+                failed.push(key)
+                warn?.(`class record failed for ${key}: ${err.message}`)
+            }
+        }
+        done++
+        if (done % 500 === 0 || done === ordered.length) onProgress?.({ done, total: ordered.length, reads, classes: hits.size })
+    })
+
+    return { classes: [...hits.values()], relatedByClass, combinedByClass, seatsByClass, reads, notFound, failed }
+}
+
 // ── Shaping into catalog rows ────────────────────────────────────────────────
 
 function courseIdFor(subject, catalogNbr) {

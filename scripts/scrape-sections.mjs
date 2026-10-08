@@ -1,18 +1,21 @@
 /**
- * Scrape section data from Stanford Navigator (PeopleSoft, via its public
- * Algolia index) and update Supabase.
+ * Scrape section data from Stanford Navigator (PeopleSoft, one public class
+ * record per class) and update Supabase.
  *
  * Navigator replaced ExploreCourses as the source on 2026-08-25: it is the same
- * PeopleSoft data Axess enrols from, it is ~4x faster to pull, and it carries
- * meeting days, times, dates, instruction mode and GERs that the XML either
- * mangles or leaves blank. The ExploreCourses walk is still here behind
- * --with-explorecourses, because EC publishes a few dozen catalog listings that
- * Navigator has no class record for (see --compare-sources).
+ * PeopleSoft data Axess enrols from, and it carries meeting days, times, dates,
+ * instruction mode and GERs that the XML either mangles or leaves blank. Until
+ * 2026-10-03 the year was listed through Navigator's search index; that index
+ * now refuses anything but Navigator's own pages, so the year is read one class
+ * record at a time from class numbers ExploreCourses and the last dump supply
+ * (see fetchClassesFromRecords). The ExploreCourses walk runs behind
+ * --with-explorecourses: it is how a run finds classes the last dump did not
+ * have, and EC still publishes a few dozen listings Navigator has no record for.
  *
  * Usage:
- *   node --env-file=.env.local scripts/scrape-sections.mjs                        # full run from Navigator
+ *   node --env-file=.env.local scripts/scrape-sections.mjs                        # the last dump's classes, from Navigator
  *   node --env-file=.env.local scripts/scrape-sections.mjs --dry-run              # fetch and compare only
- *   node --env-file=.env.local scripts/scrape-sections.mjs --with-explorecourses  # also merge EC-only courses
+ *   node --env-file=.env.local scripts/scrape-sections.mjs --with-explorecourses  # also find new classes and merge EC-only courses
  *   node --env-file=.env.local scripts/scrape-sections.mjs --compare-sources      # diff Navigator vs EC, no writes
  *   node --env-file=.env.local scripts/scrape-sections.mjs --out catalog.json      # write rows to a file, not Supabase
  *   node --env-file=.env.local scripts/scrape-sections.mjs --academic-year 20262027
@@ -27,16 +30,13 @@ import { XMLParser } from 'fast-xml-parser'
 import {
     backfillMissingGrading,
     buildCourses,
-    combinedSeatsFrom,
     mergeCrossListTitle,
     createNavigatorClient,
     crossListsByCrseId,
     decodeEntities,
-    fetchAllRelatedClasses,
-    fetchClassDetail,
-    fetchCombinedSeats,
+    fetchClassesFromRecords,
     fetchYearClasses,
-    collectSeats,
+    strmForTerm,
 } from './navigator-catalog.mjs'
 import { existsSync, readFileSync, writeFileSync } from 'fs'
 import { dirname, join } from 'path'
@@ -61,6 +61,10 @@ const BROWSE_URL = 'https://explorecourses.stanford.edu/browse'
 // dump-catalog.mjs reads this file to flag courses as new.
 const PRIOR_YEAR_COUNT = 3
 const PRIOR_OFFERINGS_PATH = join(__dirname, 'prior-offerings.json')
+
+// The dump the last successful refresh committed. Its class numbers are where a
+// run starts, so a class ExploreCourses misses is still read.
+const PREVIOUS_DUMP_PATH = join(__dirname, '../data/catalog/full.json')
 
 // NQTR attribute value → human-readable term.
 // Derived from the active academic year so it self-rolls every year and never
@@ -772,42 +776,60 @@ async function clearStaleCourses(supabase, courseIds) {
  * where discussions and labs come from — the index itself holds only primary
  * classes.
  */
-async function fetchNavigatorCatalog(academicYear) {
-    const yearLabel = academicYearLabel(academicYear)
+/** The last committed dump's courses, or none if it is missing or unreadable. */
+function loadPreviousDump() {
+    try {
+        return JSON.parse(readFileSync(PREVIOUS_DUMP_PATH, 'utf8'))
+    } catch (err) {
+        console.warn(`  \u26a0 no previous dump to start from (${err.message}); only ExploreCourses' classes will be read`)
+        return []
+    }
+}
+
+/**
+ * Every class number the year might hold, as fetchClassesFromRecords takes them:
+ * each section of the last dump and of ExploreCourses in this year's terms. A
+ * section with units is a primary class (relatedSection, like ExploreCourses,
+ * leaves a discussion's units blank), which is the hint that orders the reads.
+ */
+function classCandidates(terms, ...courseLists) {
+    const termSet = new Set(terms)
+    const candidates = []
+    const counts = courseLists.map(() => 0)
+    courseLists.forEach((courses, i) => {
+        for (const course of courses) {
+            for (const section of course.sections || []) {
+                const strm = termSet.has(section.term) && section.classId ? strmForTerm(section.term) : null
+                if (!strm) continue
+                candidates.push({ strm: String(strm), classNbr: section.classId, primary: Boolean(section.units) })
+                counts[i]++
+            }
+        }
+    })
+    return { candidates, counts }
+}
+
+async function fetchNavigatorCatalog(academicYear, { ecCourses = [] } = {}) {
     const terms = termsForAcademicYear(academicYear)
-    const client = createNavigatorClient()
     const warn = message => console.warn(`  \u26a0 ${message}`)
 
-    const { classes, expected } = await fetchYearClasses(client, {
-        yearLabel,
-        terms,
+    const { candidates, counts: [fromDump, fromEc] } = classCandidates(terms, loadPreviousDump(), ecCourses)
+    console.log(`Navigator: reading class records for ${fromDump} sections from the last dump and ${fromEc} from ExploreCourses`)
+    const { classes, relatedByClass, combinedByClass, seatsByClass, reads, notFound, failed } = await fetchClassesFromRecords(candidates, {
         warn,
-        onProgress: ({ term, done, total, collected }) => {
-            process.stdout.write(`\rNavigator ${term}: ${done}/${total} depts, ${collected} classes`)
-            if (done === total) process.stdout.write('\n')
-        },
-    })
-    console.log(`Navigator: ${classes.length} primary classes (facet count ${expected}), ${client.queryCount} queries`)
-
-    const { relatedByClass, combinedByClass: relatedCombined, seatsByClass, targets } = await fetchAllRelatedClasses(classes, {
-        warn,
-        onProgress: ({ done, total }) => {
-            process.stdout.write(`\rNavigator related sections: ${done}/${total} classes`)
+        onProgress: ({ done, total, reads, classes }) => {
+            process.stdout.write(`\rNavigator records: ${done}/${total} sections, ${reads} reads, ${classes} classes`)
             if (done === total) process.stdout.write('\n')
         },
     })
     const relatedCount = [...relatedByClass.values()].reduce((n, list) => n + list.length, 0)
-    console.log(`Navigator: ${relatedCount} non-primary sections from ${targets} multi-component classes`)
-
-    const { combinedByClass, requests: combinedRequests } = await fetchCombinedSeats(classes, relatedCombined, {
-        warn,
-        seatsByClass,
-        onProgress: ({ done, total }) => {
-            process.stdout.write(`\rNavigator combined seats: ${done}/${total} cross-listed classes`)
-            if (done === total) process.stdout.write('\n')
-        },
-    })
-    console.log(`Navigator: shared seats for ${combinedByClass.size} cross-listed classes, ${combinedRequests} extra detail reads; class-record seats for ${seatsByClass.size} classes`)
+    console.log(`Navigator: ${classes.length} primary classes and ${relatedCount} non-primary sections from ${reads} record reads (${notFound} had no record of their own); shared seats for ${combinedByClass.size} cross-listed classes`)
+    // The search walk refused a year that missed its own facet count; this is the
+    // same promise. A class whose read failed is not in `classes`, and a course
+    // missing all of them would have its schedule cleared below.
+    if (failed.length) {
+        throw new Error(`Navigator validation failed: ${failed.length} class records could not be read (${failed.slice(0, 5).join(', ')}); no database writes made`)
+    }
 
     const courses = buildCourses(classes, relatedByClass, {
         instructorOverrides: INSTRUCTOR_OVERRIDES,
@@ -823,31 +845,20 @@ async function fetchNavigatorCatalog(academicYear) {
     return { courses, classes, crossLists: crossListsByCrseId(classes) }
 }
 
-/** One course, straight from Navigator — the --course path. */
+/**
+ * One course, straight from Navigator: the --course path. Its class numbers come
+ * from ExploreCourses and the last dump, as for the whole year.
+ */
 async function fetchNavigatorCourse(subject, code, academicYear) {
-    const client = createNavigatorClient()
-    const yearLabel = academicYearLabel(academicYear)
     const target = `${subject}${code}`.replace(/\s+/g, '').toUpperCase()
-    const res = await client.search({
-        query: `${subject} ${code}`,
-        filters: `acadYearLabel:"${yearLabel}"`,
-        restrictSearchableAttributes: ['courseCode'],
-        hitsPerPage: 200,
-    })
-    const hits = (res.hits || []).filter(hit =>
-        `${hit.subject}${hit.catalogNbr}`.replace(/\s+/g, '').toUpperCase() === target
-    )
+    const terms = termsForAcademicYear(academicYear)
+    const previous = loadPreviousDump().filter(course => course.course_id === target)
+    const ec = await fetchSections(subject, code, academicYear).catch(() => null)
+    const { candidates } = classCandidates(terms, previous, ec ? [ec] : [])
+    const { classes, relatedByClass, combinedByClass, seatsByClass, failed } = await fetchClassesFromRecords(candidates, { concurrency: 2 })
+    if (failed.length) throw new Error(`class records could not be read: ${failed.join(', ')}`)
+    const hits = classes.filter(hit => `${hit.subject}${hit.catalogNbr}`.replace(/\s+/g, '').toUpperCase() === target)
     if (!hits.length) return null
-    const { relatedByClass, combinedByClass, seatsByClass } = await fetchAllRelatedClasses(hits)
-    // The search returned only this code's classes, so read each one's record
-    // for its shared seats rather than looking for siblings in the hits.
-    for (const hit of hits) {
-        const key = `${hit.strm}|${hit.classNbr}`
-        if (seatsByClass.has(key)) continue
-        const detail = await fetchClassDetail(hit.strm, hit.classNbr)
-        for (const [member, combined] of combinedSeatsFrom(hit.strm, detail)) combinedByClass.set(member, combined)
-        collectSeats(hit.strm, hit.classNbr, detail, seatsByClass)
-    }
     const [course] = buildCourses(hits, relatedByClass, { instructorOverrides: INSTRUCTOR_OVERRIDES, sortTerms, combinedByClass, seatsByClass })
     return course || null
 }
@@ -858,8 +869,8 @@ async function fetchNavigatorCourse(subject, code, academicYear) {
  * Navigator has no class for, and Navigator schedules courses EC never lists.
  */
 async function compareSources(opts) {
-    const { courses: navCourses } = await fetchNavigatorCatalog(opts.academicYear)
     const { courses: ecCourses } = await fetchCatalog(opts.academicYear)
+    const { courses: navCourses } = await fetchNavigatorCatalog(opts.academicYear, { ecCourses })
 
     const navById = new Map(navCourses.map(c => [c.course_id, c]))
     const ecById = new Map(ecCourses.map(c => [c.course_id, c]))
@@ -1027,22 +1038,29 @@ async function main() {
         return
     }
 
-    console.log(`Fetching Stanford catalog for ${opts.academicYear} from Navigator...`)
-    const { courses: navCourses } = await fetchNavigatorCatalog(opts.academicYear)
-    let courses = navCourses
+    // ExploreCourses goes first now: besides filling Navigator's holes, it is how
+    // the run learns about classes the last dump did not have.
+    let ecCourses = []
     let departmentCount = null
-
     if (opts.withExploreCourses) {
-        console.log('Filling Navigator holes from ExploreCourses...')
+        console.log('Fetching ExploreCourses...')
         try {
-            const { departments, courses: ecCourses } = await fetchCatalog(opts.academicYear)
+            const { departments, courses } = await fetchCatalog(opts.academicYear)
             departmentCount = departments.length
-            const gaps = mergeExploreCoursesGaps(navCourses, ecCourses)
-            courses = gaps.courses
-            console.log(`Merged ${gaps.addedCourses} ExploreCourses-only courses, ${gaps.addedSections} sections, ${gaps.addedMeetings} meeting patterns, ${gaps.addedGers} GER sets and ${gaps.addedCrossLists} cross-list titles`)
+            ecCourses = courses
         } catch (err) {
-            console.warn(`  ⚠ ExploreCourses gap-fill skipped: ${err.message}`)
+            console.warn(`  ⚠ ExploreCourses skipped, so only the last dump's classes are read and no gaps are filled: ${err.message}`)
         }
+    }
+
+    console.log(`Fetching Stanford catalog for ${opts.academicYear} from Navigator class records...`)
+    const { courses: navCourses } = await fetchNavigatorCatalog(opts.academicYear, { ecCourses })
+    let courses = navCourses
+
+    if (ecCourses.length) {
+        const gaps = mergeExploreCoursesGaps(navCourses, ecCourses)
+        courses = gaps.courses
+        console.log(`Merged ${gaps.addedCourses} ExploreCourses-only courses, ${gaps.addedSections} sections, ${gaps.addedMeetings} meeting patterns, ${gaps.addedGers} GER sets and ${gaps.addedCrossLists} cross-list titles`)
     }
 
     if (opts.out) {
