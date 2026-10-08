@@ -226,12 +226,18 @@ export async function fetchYearClasses(client, { yearLabel, terms, onProgress, w
 
 // ── Non-primary sections ─────────────────────────────────────────────────────
 
+/**
+ * Say who is asking, as /api/seats does. The class records answer without a
+ * referer, so the scrape no longer claims to be Navigator's own page.
+ */
+const USER_AGENT = 'StanfordRoot/1.0 (+https://www.stanfordroot.com)'
+
 /** One class's full detail record, or null when Navigator has no record for it. */
 export async function fetchClassDetail(strm, classNbr) {
     for (let attempt = 1; attempt <= 4; attempt++) {
         try {
             const res = await fetch(`${NAV_ORIGIN}/api/classes/${strm}/${classNbr}`, {
-                headers: { accept: 'application/json', referer: `${NAV_ORIGIN}/classes` },
+                headers: { accept: 'application/json', 'user-agent': USER_AGENT },
                 signal: AbortSignal.timeout(30000),
             })
             if (res.status === 404) return null
