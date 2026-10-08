@@ -441,8 +441,8 @@ export async function fetchCombinedSeats(hits, combinedByClass = new Map(), { on
  * everything the index did, so the year is read one record per class instead,
  * from a list of class numbers that ExploreCourses and the last dump supply.
  */
-// About 30 reads a second, so a whole year (~66k primary classes) takes ~40
-// minutes of the job's 120. Six at a time measured ~85 a second; this is a
+// About 30 reads a second, so a run (~31k reads, see INDEPENDENT_STUDY) takes
+// under 20 minutes of the job's 120. Six at a time measured ~85 a second; this is a
 // site whose robots.txt asks bots to stay away, so the slower pace is on purpose.
 const RECORD_CONCURRENCY = 2
 const MAX_FAILURES_IN_A_ROW = 25
@@ -638,6 +638,93 @@ export async function fetchClassesFromRecords(candidates, { onProgress, warn, co
         classes: [...hits.values()], relatedByClass, combinedByClass, seatsByClass, reads, notFound,
         failed: failed.map(({ strm, classNbr }) => `${strm}|${classNbr}`),
     }
+}
+
+// ── Independent study, read once a week ──────────────────────────────────────
+
+/**
+ * Independent-study listings (component INS) are 41,184 of the year's 66,470
+ * primary classes, and on 2026-10-02 only 2,464 of them had anyone enrolled.
+ * Reading them daily more than doubled a run's requests to Navigator for
+ * numbers that rarely move, so each course's INS sections are read one day in
+ * seven, on a day fixed by its course id, and carried from the last dump on
+ * the other six. A course's are read or carried together, so its title and
+ * units do not shift with which of its sections happened to be read.
+ */
+const INDEPENDENT_STUDY = 'INS'
+const ROTATION_DAYS = 7
+
+/** The fields scrape-sections writes for a course; the dump adds ratings and more on top. */
+const COURSE_ROW_FIELDS = ['course_id', 'subject', 'code', 'title', 'description', 'units', 'grading', 'instructors', 'sections', 'terms']
+
+function rotationDay(courseId) {
+    let hash = 0
+    for (const ch of String(courseId)) hash = (hash * 31 + ch.charCodeAt(0)) >>> 0
+    return hash % ROTATION_DAYS
+}
+
+/** Where a run falls in the rotation: whole UTC days since the epoch. */
+export function rotationToday(now = new Date()) {
+    return Math.floor(now.getTime() / 86_400_000) % ROTATION_DAYS
+}
+
+/**
+ * The last dump's INS sections in `terms` that are not read today, keyed
+ * `${strm}|${classId}` like the record reads, each with the course it is from.
+ */
+export function restingIndependentStudy(previousCourses, terms, today) {
+    const termSet = new Set(terms)
+    const resting = new Map()
+    for (const course of previousCourses) {
+        if (rotationDay(course.course_id) === today) continue
+        for (const section of course.sections || []) {
+            if (section.component !== INDEPENDENT_STUDY || !section.units || !section.classId || !termSet.has(section.term)) continue
+            const strm = strmForTerm(section.term)
+            if (strm) resting.set(`${strm}|${section.classId}`, { course, section })
+        }
+    }
+    return resting
+}
+
+/**
+ * Put the resting INS sections back into the year's courses, in place. A
+ * course read today gets them appended, with its units, instructors and terms
+ * widened to cover them, as buildCourses would have had it read them all. A
+ * course with nothing read today comes back as the last dump's row holding
+ * only those sections, so a lecture cancelled since is not carried with them.
+ */
+export function withRestingSections(courses, resting, { sortTerms = t => t } = {}) {
+    const byId = new Map(courses.map(course => [course.course_id, course]))
+    const restingByCourse = new Map()
+    for (const { course, section } of resting.values()) {
+        if (!restingByCourse.has(course.course_id)) restingByCourse.set(course.course_id, { previous: course, sections: [] })
+        restingByCourse.get(course.course_id).sections.push(section)
+    }
+
+    let carriedSections = 0
+    let carriedCourses = 0
+    for (const [id, { previous, sections }] of restingByCourse) {
+        let course = byId.get(id)
+        if (!course) {
+            course = Object.fromEntries(COURSE_ROW_FIELDS.map(field => [field, previous[field]]))
+            course.sections = []
+            course.units = previous.units
+        }
+        const seen = new Set(course.sections.map(s => `${s.term}:${s.classId}`))
+        const added = sections.filter(s => !seen.has(`${s.term}:${s.classId}`))
+        if (!added.length) continue
+        if (byId.has(id)) course.units = unitsLabel(...[course.units, ...added.map(s => s.units)].map(u => String(u || '').split('-')))
+        course.sections = [...course.sections, ...added]
+        course.terms = sortTerms(Array.from(new Set(course.sections.map(s => s.term).filter(Boolean))))
+        course.instructors = Array.from(new Set(course.sections.flatMap(s => (s.meetings || []).flatMap(m => m.instructors || []))))
+        if (!byId.has(id)) {
+            byId.set(id, course)
+            courses.push(course)
+            carriedCourses++
+        }
+        carriedSections += added.length
+    }
+    return { carriedSections, carriedCourses }
 }
 
 // ── Shaping into catalog rows ────────────────────────────────────────────────

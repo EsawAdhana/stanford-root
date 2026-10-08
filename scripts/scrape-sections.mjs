@@ -36,7 +36,10 @@ import {
     decodeEntities,
     fetchClassesFromRecords,
     fetchYearClasses,
+    restingIndependentStudy,
+    rotationToday,
     strmForTerm,
+    withRestingSections,
 } from './navigator-catalog.mjs'
 import { existsSync, readFileSync, realpathSync, writeFileSync } from 'fs'
 import { dirname, join } from 'path'
@@ -840,8 +843,11 @@ async function fetchNavigatorCatalog(academicYear, { ecCourses = [] } = {}) {
     const terms = termsForAcademicYear(academicYear)
     const warn = message => console.warn(`  \u26a0 ${message}`)
 
-    const { candidates, counts: [fromDump, fromEc] } = classCandidates(terms, loadPreviousDump(), ecCourses)
-    console.log(`Navigator: reading class records for ${fromDump} sections from the last dump and ${fromEc} from ExploreCourses`)
+    const previous = loadPreviousDump()
+    const resting = restingIndependentStudy(previous, terms, rotationToday())
+    const { candidates: all, counts: [fromDump, fromEc] } = classCandidates(terms, previous, ecCourses)
+    const candidates = all.filter(c => !resting.has(`${c.strm}|${c.classNbr}`))
+    console.log(`Navigator: reading class records for ${fromDump} sections from the last dump and ${fromEc} from ExploreCourses; ${resting.size} independent-study sections are carried from the last dump today (each course's are read one day in seven)`)
     const { classes, relatedByClass, combinedByClass, seatsByClass, reads, notFound, failed } = await fetchClassesFromRecords(candidates, {
         warn,
         onProgress: ({ done, total, reads, classes }) => {
@@ -864,6 +870,8 @@ async function fetchNavigatorCatalog(academicYear, { ecCourses = [] } = {}) {
         combinedByClass,
         seatsByClass,
     })
+    const { carriedSections, carriedCourses } = withRestingSections(courses, resting, { sortTerms })
+    console.log(`Navigator: carried ${carriedSections} independent-study sections from the last dump (${carriedCourses} courses with nothing else read today)`)
     const filled = await backfillMissingGrading(courses, classes, { warn })
     if (filled) console.log(`Navigator: filled grading for ${filled} courses from the class detail API`)
     if (courses.length < 5000) {
