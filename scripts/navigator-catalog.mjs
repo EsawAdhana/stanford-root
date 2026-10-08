@@ -445,6 +445,7 @@ export async function fetchCombinedSeats(hits, combinedByClass = new Map(), { on
 // minutes of the job's 120. Six at a time measured ~85 a second; this is a
 // site whose robots.txt asks bots to stay away, so the slower pace is on purpose.
 const RECORD_CONCURRENCY = 2
+const MAX_FAILURES_IN_A_ROW = 25
 
 /** Course attributes that are requirements: the WAYS, and COLLEGE / Writing under UGRQ. */
 const REQUIREMENT_ATTRIBUTES = new Set(['WAYS', 'UGRQ'])
@@ -587,13 +588,16 @@ export async function fetchClassesFromRecords(candidates, { onProgress, warn, co
     let reads = 0
     let notFound = 0
     let done = 0
+    let failuresInARow = 0
+    let refused = null
 
     async function read({ strm, classNbr }) {
         const key = `${strm}|${classNbr}`
-        if (named.has(key)) return
+        if (named.has(key) || refused) return
         reads++
         try {
             const detail = await fetchDetail(strm, classNbr)
+            failuresInARow = 0
             const hit = hitFromDetail(detail)
             if (!hit) {
                 notFound++
@@ -608,6 +612,9 @@ export async function fetchClassesFromRecords(candidates, { onProgress, warn, co
         } catch (err) {
             failed.push({ strm, classNbr })
             warn?.(`class record failed for ${key}: ${err.message}`)
+            // A block (every read refused) would otherwise retry its way through
+            // ~66k classes until the job's timeout; stop at the first long run.
+            if (++failuresInARow >= MAX_FAILURES_IN_A_ROW) refused = err
         }
     }
 
@@ -616,6 +623,9 @@ export async function fetchClassesFromRecords(candidates, { onProgress, warn, co
         done++
         if (done % 500 === 0 || done === ordered.length) onProgress?.({ done, total: ordered.length, reads, classes: hits.size })
     })
+    if (refused) {
+        throw new Error(`Navigator refused ${MAX_FAILURES_IN_A_ROW} class records in a row (last: ${refused.message}); stopped after ${reads} reads, no database writes made`)
+    }
 
     if (failed.length) {
         const again = failed.splice(0)

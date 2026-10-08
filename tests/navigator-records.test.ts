@@ -173,6 +173,28 @@ describe('reading the year one record at a time', () => {
         expect(result.classes.map((h: { classNbr: number }) => h.classNbr)).toEqual([6325])
     })
 
+    it('stops early, without writing, when Navigator refuses record after record', async () => {
+        let calls = 0
+        const blocked = async () => { calls++; throw new Error('HTTP 403') }
+        const many = Array.from({ length: 200 }, (_, i) => ({ strm: '1272', classNbr: 1000 + i, primary: true }))
+        await expect(fetchClassesFromRecords(many, opts(blocked))).rejects.toThrow(/refused 25 class records in a row \(last: HTTP 403\)/)
+        expect(calls).toBe(25)
+    })
+
+    it('does not stop for failures spread among good reads', async () => {
+        // Every other read of the first pass fails; the retry pass then gets them all.
+        let calls = 0
+        const flaky = async (strm: string, classNbr: number) => {
+            calls++
+            if (calls % 2 === 0 && calls <= 100) throw new Error('HTTP 502')
+            return { ...CS106A({ classNbr, relatedClasses: [] }), strm }
+        }
+        const many = Array.from({ length: 100 }, (_, i) => ({ strm: '1272', classNbr: 1000 + i, primary: true }))
+        const result = await fetchClassesFromRecords(many, opts(flaky))
+        expect(result.failed).toEqual([])
+        expect(result.classes).toHaveLength(100)
+    })
+
     it('takes seats and the shared room from the same read', async () => {
         const { fetchDetail } = fake()
         const result = await fetchClassesFromRecords([{ strm: '1272', classNbr: 6325, primary: true }], opts(fetchDetail))
