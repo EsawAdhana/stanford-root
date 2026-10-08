@@ -38,7 +38,7 @@ import {
     fetchYearClasses,
     strmForTerm,
 } from './navigator-catalog.mjs'
-import { existsSync, readFileSync, writeFileSync } from 'fs'
+import { existsSync, readFileSync, realpathSync, writeFileSync } from 'fs'
 import { dirname, join } from 'path'
 import { fileURLToPath } from 'url'
 
@@ -560,6 +560,22 @@ async function fetchCatalog(academicYear) {
  * the browse page, so a year is only ever added to, never replaced — even under
  * --rebuild-prior. That keeps isNew stable across the source switch.
  */
+/**
+ * Course ids the last dump schedules in `year`, with the cross-list codes their
+ * titles name, which is how a course taught under any of its codes counts as
+ * offered (see the note below). Empty when the dump is some other year's.
+ */
+export function offeringsFromDump(year, courses = loadPreviousDump()) {
+    const terms = new Set(termsForAcademicYear(year))
+    const ids = new Set()
+    for (const course of courses) {
+        if (!(course.sections || []).some(section => terms.has(section.term))) continue
+        ids.add(course.course_id)
+        for (const id of extractCrossListedIds(course.title)) ids.add(id)
+    }
+    return ids
+}
+
 async function recordPriorOfferings(opts) {
     const years = priorAcademicYears(opts.academicYear)
     const cached = existsSync(PRIOR_OFFERINGS_PATH)
@@ -572,6 +588,17 @@ async function recordPriorOfferings(opts) {
         if (known.size && !opts.rebuildPrior) {
             offerings[year] = [...known].sort()
             console.log(`${academicYearLabel(year)}: ${known.size} scheduled courses (cached)`)
+            continue
+        }
+        // When the catalog year rolls, the year that just ended is the one the
+        // last dump holds, and Navigator's search no longer answers outside
+        // callers. Read it from the dump instead; --rebuild-prior still asks
+        // Navigator, for when its search is reachable again.
+        const fromDump = opts.rebuildPrior ? new Set() : offeringsFromDump(year)
+        if (fromDump.size >= 5000) {
+            for (const id of known) fromDump.add(id)
+            offerings[year] = [...fromDump].sort()
+            console.log(`${academicYearLabel(year)}: ${offerings[year].length} scheduled courses (from the last dump)`)
             continue
         }
         console.log(`Fetching ${academicYearLabel(year)} catalog from Navigator...`)
@@ -792,7 +819,7 @@ function loadPreviousDump() {
  * section with units is a primary class (relatedSection, like ExploreCourses,
  * leaves a discussion's units blank), which is the hint that orders the reads.
  */
-function classCandidates(terms, ...courseLists) {
+export function classCandidates(terms, ...courseLists) {
     const termSet = new Set(terms)
     const candidates = []
     const counts = courseLists.map(() => 0)
@@ -1104,7 +1131,12 @@ async function main() {
     console.log(`Done. Refreshed ${courses.length} courses; cleared ${staleIds.length} stale schedules.`)
 }
 
-main().catch(err => {
-    console.error('Fatal error:', err)
-    process.exit(1)
-})
+// Only when run, so tests can import the helpers above without starting a scrape.
+// Compared by real path: run through a symlink, argv[1] is the link and
+// import.meta.url the target, and a plain compare would silently do nothing.
+if (process.argv[1] && realpathSync(process.argv[1]) === fileURLToPath(import.meta.url)) {
+    main().catch(err => {
+        console.error('Fatal error:', err)
+        process.exit(1)
+    })
+}
