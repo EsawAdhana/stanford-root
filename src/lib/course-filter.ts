@@ -224,7 +224,7 @@ function buildChecks(
         sectionsToCheck = sectionsToCheck.filter(s => termsSet.has(s.term))
       }
       if (sectionsToCheck.length === 0) return true
-      return sectionsToCheck.some(section => {
+      const fits = (section: (typeof sectionsToCheck)[number]) => {
         const cartForTerm = cartParsed.filter(cp => cp.item.selectedTerm === section.term)
         if (cartForTerm.length === 0) return true
         const sectionMeetings = conflictMeetings(section)
@@ -234,7 +234,18 @@ function buildChecks(
           return cp.meetings.some(cm => sectionMeetings.some(sm => hasOverlap(sm, cm, cp.item)))
         })
         return !isOverlapping
-      })
+      }
+      // Free in a term only if every component (lecture, discussion, lab...) has a
+      // section that fits. "Any section fits" let AI 360 through with CS 210A
+      // scheduled: its lecture clashes on Tue/Thu 1:30, but a discussion with no
+      // listed time counted as a way in.
+      const byTerm = new Map<string, Map<string, boolean>>()
+      for (const s of sectionsToCheck) {
+        const components = byTerm.get(s.term) ?? new Map<string, boolean>()
+        byTerm.set(s.term, components)
+        components.set(s.component, (components.get(s.component) ?? false) || fits(s))
+      }
+      return [...byTerm.values()].some(components => [...components.values()].every(Boolean))
     }
   }
 
