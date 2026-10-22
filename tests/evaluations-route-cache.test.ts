@@ -17,7 +17,7 @@ const ROWS: Record<string, { course_id: string; term: string; instructor: string
 }
 
 vi.mock('@/lib/supabase-admin', () => ({
-  getPublicClient: () => ({
+  getServiceClient: () => ({
     from: () => ({
       select: () => ({
         in: (_col: string, ids: string[]) => {

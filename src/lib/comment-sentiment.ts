@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto'
-import { getPublicClient } from '@/lib/supabase-admin'
+import { getServiceClient } from '@/lib/supabase-admin'
 import type { CommentSentiment, CourseEvaluation } from '@/types/course'
 
 /**
@@ -82,7 +82,9 @@ export async function fetchSentimentByHash(
   const hashes = [...new Set(texts.map(hashComment))]
   if (hashes.length === 0) return out
 
-  const supabase = getPublicClient()
+  // Only ever called from Stanford-gated code paths, and comment_sentiment has no
+  // anon policy, so this has to be the service-role client.
+  const supabase = getServiceClient()
   const chunks: string[][] = []
   for (let i = 0; i < hashes.length; i += CHUNK) chunks.push(hashes.slice(i, i + CHUNK))
 

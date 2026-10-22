@@ -1,7 +1,7 @@
 import { createClient, type SupabaseClient } from '@supabase/supabase-js'
 import type { ScheduleItem } from '@/lib/schedule-sync'
 import type { ClassYearBreakdown, CourseEvaluation } from '@/types/course'
-import { getPublicClient } from '@/lib/supabase-admin'
+import { getServiceClient } from '@/lib/supabase-admin'
 import { rateLimit } from '@/lib/rate-limit'
 import { EVALUATION_COLUMNS, toCourseEvaluation, type EvaluationRow } from '@/lib/evaluation-row'
 import { readCachedEvaluations, writeCachedEvaluations } from '@/lib/evaluation-cache'
@@ -71,7 +71,7 @@ export async function evaluations(caller: Caller, courseId: string): Promise<Cou
   limited(`evals:${caller.userId}`, 60, 60_000, 'evaluation')
   const cached = readCachedEvaluations(courseId)
   if (cached) return cached
-  const { data, error } = await getPublicClient().from('evaluations').select(EVALUATION_COLUMNS).in('course_id', [courseId])
+  const { data, error } = await getServiceClient().from('evaluations').select(EVALUATION_COLUMNS).in('course_id', [courseId])
   if (error) throw upstream('evaluations', error)
   const rows = ((data || []) as EvaluationRow[]).map(toCourseEvaluation)
   await attachSentiment(rows)
@@ -82,7 +82,7 @@ export async function evaluations(caller: Caller, courseId: string): Promise<Cou
 export async function classYears(caller: Caller, courseId: string): Promise<ClassYearBreakdown | null> {
   if (!isStanford(caller)) return null
   limited(`classyears:${caller.userId}`, 60, 60_000, 'class year')
-  const { data, error } = await getPublicClient().from('course_class_years').select('course_id, levels, total').eq('course_id', courseId).maybeSingle()
+  const { data, error } = await getServiceClient().from('course_class_years').select('course_id, levels, total').eq('course_id', courseId).maybeSingle()
   if (error || !data) return null
   return { levels: data.levels || {}, total: data.total || 0 }
 }
@@ -95,7 +95,7 @@ export async function instructorEvaluations(caller: Caller, slug: string): Promi
   limited(`instructor:${caller.userId}`, 60, 60_000, 'instructor')
   const resolved = resolveInstructorSlug(await getInstructorDirectory(), slug)
   if (resolved.kind !== 'found') return null
-  const { data, error } = await getPublicClient().from('evaluations').select(EVALUATION_COLUMNS).in('instructor', resolved.entry.aliases).order('course_id', { ascending: true })
+  const { data, error } = await getServiceClient().from('evaluations').select(EVALUATION_COLUMNS).in('instructor', resolved.entry.aliases).order('course_id', { ascending: true })
   if (error) throw upstream('instructor evaluations', error)
   const seen = new Set<string>()
   const out: InstructorEvaluation[] = []

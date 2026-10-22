@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { getPublicClient } from '@/lib/supabase-admin'
+import { getServiceClient } from '@/lib/supabase-admin'
 import { rateLimit } from '@/lib/rate-limit'
 import { isDevEvalsUnlocked } from '@/lib/dev-flags'
 import { getStanfordUser } from '@/lib/stanford-auth'
@@ -39,7 +39,7 @@ export async function GET(
       return NextResponse.json({ error: 'Instructor not found' }, { status: 404 })
     }
 
-    const supabase = getPublicClient()
+    const supabase = getServiceClient()
     const { data, error } = await supabase
       .from('evaluations')
       .select(EVALUATION_COLUMNS)

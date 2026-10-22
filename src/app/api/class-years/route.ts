@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { getPublicClient } from '@/lib/supabase-admin'
+import { getServiceClient } from '@/lib/supabase-admin'
 import { rateLimit } from '@/lib/rate-limit'
 import { isDevEvalsUnlocked } from '@/lib/dev-flags'
 import { getStanfordUser } from '@/lib/stanford-auth'
@@ -47,7 +47,7 @@ export async function POST(request: Request) {
       return NextResponse.json({}, { headers: { 'Cache-Control': 'private, no-store' } })
     }
 
-    const supabase = getPublicClient()
+    const supabase = getServiceClient()
     const { data, error } = await supabase
       .from('course_class_years')
       .select('course_id, levels, total')

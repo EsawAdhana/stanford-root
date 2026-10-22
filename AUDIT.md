@@ -26,12 +26,14 @@ Legend: **[FIXED]** done in this pass · **[FLAG]** needs a product/infra decisi
   `getUser()` may have written to refresh the session, causing intermittent
   logouts. Fix: copy `supabaseResponse` cookies onto the redirect.
 
-- **[FLAG]** `src/app/api/evaluations/route.ts:69` — Route checks for a Stanford
-  user, then queries with the **anon** client (`getPublicClient`). If RLS allows
-  `anon` SELECT on `evaluations` (the admin client doc says it must), the auth
-  gate is meaningless — anyone with the public anon key can read the table
-  directly. Fix needs a DB policy decision: query with the authenticated cookie
-  client and restrict the SELECT policy to `authenticated`.
+- **[FIXED 2026-10-22]** `src/app/api/evaluations/route.ts` — Route checked for a
+  Stanford user, then queried with the **anon** client, and RLS did allow `anon`
+  SELECT on `evaluations` (and later `course_class_years` and `comment_sentiment`),
+  so anyone with the public anon key could read the tables directly. Reported
+  privately by an outside reader of the repo. Fix: the Stanford-gated routes and
+  the MCP data layer now read through `getServiceClient()` (service role, server
+  only), and `supabase/migrations/20261022_stanford_only_tables_service_read.sql`
+  drops the anon/authenticated SELECT policies and grants on those three tables.
 
 - **[FLAG]** `src/app/api/test-lab/simulate-customer/route.ts:32` — `POST` has no
   auth / env guard / rate limit but creates **real Stripe** customers,
