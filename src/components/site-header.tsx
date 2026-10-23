@@ -9,7 +9,7 @@ import { StanfordLoginButton } from '@/components/stanford-login-button';
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/theme-toggle';
 import Link from 'next/link';
-import { CalendarDays, LogOut } from 'lucide-react';
+import { CalendarDays, ListChecks, LogOut } from 'lucide-react';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
@@ -65,6 +65,22 @@ export function SiteHeader() {
             {/* Right: Actions */}
             <div className="flex items-center justify-end gap-1.5 sm:gap-2 shrink-0 pr-2 sm:pr-4 md:pr-6">
                 <ThemeToggle />
+
+                {!isFaq && (
+                    <Button
+                        asChild
+                        variant="ghost"
+                        className={`relative rounded-lg h-9 w-9 px-0 xl:w-auto xl:px-4 text-sm font-medium gap-2 text-muted-foreground hover:text-foreground hover:bg-secondary/80 transition-all ${isCatalog ? 'hidden lg:inline-flex' : ''}`}
+                    >
+                        {/* Room comes out of the catalog's search bar: on a phone it would
+                            go from 93px to 58px, so the catalog shows the link from lg up,
+                            and the label only from xl. Other pages show it at every width. */}
+                        <Link href="/requirements" aria-label="Requirements">
+                            <ListChecks className="h-5 w-5 xl:h-4 xl:w-4" />
+                            <span className="hidden xl:inline">Requirements</span>
+                        </Link>
+                    </Button>
+                )}
 
                 {!isFaq && (
                     <Button

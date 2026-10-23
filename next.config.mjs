@@ -44,6 +44,13 @@ const nextConfig = {
   },
   async headers () {
     return [
+      // The audit asks for these with the data version (?v=) from
+      // public/requirements/index.json, so a versioned copy never changes.
+      {
+        source: '/requirements/:path+',
+        has: [{ type: 'query', key: 'v' }],
+        headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }],
+      },
       {
         source: '/:path*',
         headers: [
@@ -61,7 +68,10 @@ const nextConfig = {
               // bundled npm build only needed 'self', which is why this directive
               // did not list it before. connect-src already covers the ingestion
               // host via https://*.humanbehavior.co.
-              "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com https://cdn.humanbehavior.co; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://syllabus.stanford.edu https://*.humanbehavior.co; frame-ancestors 'none'; base-uri 'self'; form-action 'self'",
+              // worker-src: pdf.js reads an uploaded transcript in a worker, which
+              // the bundler may start from a blob: URL of our own script.
+              //
+              "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com https://cdn.humanbehavior.co; worker-src 'self' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://syllabus.stanford.edu https://*.humanbehavior.co; frame-ancestors 'none'; base-uri 'self'; form-action 'self'",
           }
         ]
       }
