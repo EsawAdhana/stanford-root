@@ -171,7 +171,8 @@ export function RequirementNode({ result, program, depth = 0 }: { result: NodeRe
             </p>
           ) : null}
 
-          {n.t === 'courses' && n.mode === 'atLeast' && (n.n ?? 0) > (n.items?.length ?? 0) && !n.match && (
+          {/* A pool takes any course in it, and one course asked for six times is a repeat ("MUSIC 323, six times"). */}
+          {n.t === 'courses' && n.mode === 'atLeast' && (n.n ?? 0) > (n.items?.length ?? 0) && !n.match && !n.pool && n.items?.length !== 1 && (
             <p className="text-xs text-muted-foreground">The Bulletin lists fewer courses here than it asks for. Move in the course your department approved.</p>
           )}
 
