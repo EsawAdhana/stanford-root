@@ -1,0 +1,99 @@
+{
+  "code": "BMDS-PHD",
+  "reviewed": "2026-10-23",
+  "summary": "The audit checks the 12 letter-graded units of core courses, 21 units of CS, statistics, math and engineering including CS 161, STATS 200 and STATS 315A or CS 229 (at most 9 units numbered 100-199, and at most 8 units taken S/NC), 4 units of social and ethical issues including MED 255, 6 units of domain biology or medicine, and 135 graduate units. The 3.0 GPA, two research rotations in the first year, regular seminar and colloquium attendance, the thesis pre-proposal seminar, two TA assignments, the qualifying exam by the end of the second year, candidacy, the oral exam, a publishable paper and the dissertation are checked by hand.",
+  "program": {
+    "unitsMin": 135,
+    "why": "Policies: \"The PhD program requires 135 units; 43 of those units should be formal coursework (classroom-based courses, not research units).\" The Bulletin's program minimum (43) is the formal coursework, which the course rules already add up to.",
+    "totals": [
+      { "label": "Satisfactory/No Credit CS, statistics, math and engineering units", "maxUnits": 8, "grading": "not-letter", "codes": ["APPPHYS 223", "APPPHYS 293", "BIO 223", "BIOE 285", "BIOS 234", "BMDS 205", "BMDS 219", "BMDS 221", "BMDS 222", "BMDS 237", "BMDS 241", "BMDS 250", "BMDS 270", "BMDS 271", "BMDS 273", "BMDS 280A", "BMDS 280B", "BMDS 280C", "BMDS 292", "CHEM 263", "CME 100", "CME 102", "CME 104", "CME 106", "CME 108", "CME 200", "CME 204", "CME 211", "CME 213", "CME 250", "CME 251", "CME 263", "CME 292", "CME 302", "CME 303", "CME 309", "CME 323", "CME 330", "CME 334", "CME 500", "CME 510", "CS 103", "CS 107", "CS 108", "CS 109", "CS 110", "CS 111", "CS 124", "CS 129", "CS 131", "CS 140", "CS 142", "CS 143", "CS 144", "CS 145", "CS 147", "CS 148", "CS 149", "CS 154", "CS 155", "CS 157", "CS 161", "CS 166", "CS 193C", "CS 193P", "CS 205L", "CS 221", "CS 223A", "CS 224N", "CS 224R", "CS 224S", "CS 224U", "CS 224W", "CS 225A", "CS 226", "CS 227B", "CS 228", "CS 229", "CS 230", "CS 231A", "CS 231N", "CS 232", "CS 236", "CS 236G", "CS 238", "CS 240", "CS 242", "CS 243", "CS 244", "CS 244B", "CS 245", "CS 246", "CS 248A", "CS 249I", "CS 254", "CS 255", "CS 261", "CS 263", "CS 265", "CS 272", "CS 273B", "CS 274", "CS 295", "CS 309A", "CS 315B", "CS 316", "CS 319", "CS 328", "CS 329A", "CS 329H", "CS 330", "CS 331B", "CS 341", "CS 344", "CS 345", "CS 348A", "CS 348B", "CS 348I", "CS 355", "CS 356", "CS 362", "CS 375", "CS 379C", "CS 431", "CS 448B", "CS 468", "CS 520", "CS 522", "CS 524", "CS 528", "CS 547", "DATASCI 211", "DATASCI 294B", "EE 101A", "EE 101B", "EE 102A", "EE 102B", "EE 108", "EE 168", "EE 169", "EE 178", "EE 179", "EE 256", "EE 261", "EE 263", "EE 264", "EE 276", "EE 279", "EE 282", "EE 284", "EE 364A", "EE 364B", "EE 368", "EE 369A", "EE 369B", "EE 369C", "EE 376C", "EE 378A", "EE 379", "EE 382A", "EE 382C", "EE 384A", "EE 384S", "EE 386", "EE 387", "ENGR 108", "ENGR 154", "ENGR 155A", "ENGR 155B", "ENGR 155C", "ENGR 205", "ENGR 209A", "EPI 206", "EPI 225", "EPI 226", "EPI 251", "EPI 258", "EPI 259", "EPI 262", "HRP 252", "HRP 255", "IMMUNOL 207", "MATH 104", "MATH 106", "MATH 107", "MATH 108", "MATH 109", "MATH 110", "MATH 113", "MATH 114", "MATH 115", "MATH 116", "MATH 118", "MATH 120", "MATH 121", "MATH 122", "MATH 131P", "MATH 136", "MATH 143", "MATH 144", "MATH 145", "MATH 147", "MATH 148", "MATH 151", "MATH 152", "MATH 154", "MATH 155", "MATH 159", "MATH 161", "MATH 171", "MATH 172", "MATH 173", "MATH 175", "MATH 193", "MATH 205A", "MATH 205B", "MATH 210A", "MATH 210B", "MATH 210C", "MATH 215A", "MATH 215B", "MATH 215C", "MATH 216A", "MATH 216B", "MATH 216C", "MATH 220A", "MATH 220B", "MATH 221B", "MATH 228", "MATH 230A", "MATH 230B", "MATH 230C", "MATH 232", "MATH 236", "MATH 243", "MATH 244", "MATH 245A", "MATH 245B", "MATH 245C", "MATH 249A", "MATH 249B", "MATH 249C", "MATH 256A", "MATH 256B", "MATH 257A", "MATH 257B", "MATH 257C", "MATH 258", "MATH 263A", "MATH 269", "MATH 270", "MATH 271", "MATH 272", "MATH 282A", "MATH 282B", "MATH 282C", "MATH 283A", "MATH 286", "ME 161", "ME 300B", "MED 206", "MED 252", "MGTECON 634", "MS&E 120", "MS&E 211", "MS&E 220", "MS&E 223", "MS&E 226", "MS&E 228", "MS&E 229", "MS&E 252", "MS&E 263", "MS&E 310", "MS&E 328", "MS&E 334", "MS&E 335", "MS&E 355", "MS&E 454", "MS&E 463", "NBIO 228", "NENS 230", "PSYCH 253", "STATS 110", "STATS 191", "STATS 200", "STATS 202", "STATS 203", "STATS 205", "STATS 206", "STATS 207", "STATS 208", "STATS 209", "STATS 211", "STATS 214", "STATS 215", "STATS 217", "STATS 218", "STATS 219", "STATS 260A", "STATS 260B", "STATS 260C", "STATS 261", "STATS 262", "STATS 263", "STATS 270", "STATS 285", "STATS 290", "STATS 300A", "STATS 300B", "STATS 300C", "STATS 305A", "STATS 305B", "STATS 305C", "STATS 310A", "STATS 310B", "STATS 310C", "STATS 314A", "STATS 315A", "STATS 315B", "STATS 317", "STATS 318", "STATS 319", "STATS 320", "STATS 322", "STATS 324", "STATS 325", "STATS 352", "STATS 361", "STATS 362", "STATS 363", "STATS 370", "STATS 375"], "why": "\"Up to eight units of this portion of the core curriculum may be taken on a Satisfactory/No Credit basis\". The codes are the CS/Stats/Math/Eng electives list, leaving out the courses also on the Domain Biology or Medicine list (\"Domain Biology courses can be taken as Credit/No Credit\") and HRP 263, also a Social and Ethical Issues course, with their cross-listings (\"These courses may be taken on a Satisfactory/No credit basis\")." }
+    ]
+  },
+  "blocks": {
+    "Pr0g0OuU": { "units": null },
+    "t1vHWX8N": { "kind": "required" }
+  },
+  "nodes": {
+    "aNZIrqA7": {
+      "why": "\"Core Biomedical Data Science Courses (12 units)\" (BMDS 214 is offered for 1-4 units) and \"These courses should be taken for a grade, when letter grades are offered.\"",
+      "patch": { "letter": true, "units": 12 }
+    },
+    "12k3tYM2": {
+      "why": "\"In addition to the 10-13 units students will earn through the Required Courses listed above, students should also choose courses from the electives list below to reach the total of 21 units needed for this requirement.\" The required courses are part of the 21 units (all are on the electives list), so this rule names them inside that total.",
+      "patch": { "shares": true }
+    },
+    "mElsB31r": {
+      "why": "\"Computer Science, Statistics, Mathematics & Engineering (21 units)\" ... \"to reach the total of 21 units needed for this requirement\" and \"No more than nine units in courses numbered 100-199\". \"Up to eight units ... may be taken on a Satisfactory/No Credit basis\" is a program cap on these courses.",
+      "patch": {
+        "mode": "units",
+        "units": 21,
+        "name": "CS/Stats/Math/Eng courses (21 units, including the required courses)",
+        "limits": [{ "label": "courses numbered 100-199", "maxUnits": 9, "pool": { "subjects": [], "anySubject": true, "maxNumber": 199 } }]
+      }
+    },
+    "CFZRLrhB": {
+      "why": "\"Social and Ethical Issues (4 units)\" with MED 255 required (\"Students should take ... The Responsible Conduct of Research in their first year\"): MED 255 counts toward the four units.",
+      "patch": { "shares": true }
+    },
+    "jF7oPjBx": {
+      "why": "\"Social and Ethical Issues (4 units)\": MED 255 and the elective courses together make four units. \"Courses that fulfill this requirement can be found by entering 'dbds::ethics' in the Explore Courses search box\": others are moved in by hand.",
+      "patch": { "mode": "units", "units": 4, "n": null, "addItems": [["MED 255"]], "name": "Social and Ethical Issues courses (4 units, MED 255 included)" }
+    },
+    "bO5ziVVY": {
+      "why": "\"Domain Biology or Medicine (6 units)\" ... \"Classes on the following list are pre-approved. Other classes can be used to fulfill this requirement with department approval.\"",
+      "patch": { "mode": "units", "units": 6 }
+    },
+    "g4PeMxAY": {
+      "why": "\"During the third year of training, each doctoral student must give a thesis pre-proposal seminar that describes evolving research plans.\"",
+      "patch": { "manual": "milestone" }
+    },
+    "u8nHVkMt": {
+      "why": "\"Each student must be a teaching assistant for two courses as assigned by the Biomedical Data Science Executive Committee; one should be completed in the first two years of study.\" A requirement, not information.",
+      "patch": { "info": null, "manual": "milestone" }
+    },
+    "sxyT4XYr": {
+      "why": "The section's text only says \"After applying for Terminal Graduate Registration (TGR) status and completing 135 units, the PhD candidate should register each quarter for BIOMEDIN 802 TGR PhD Dissertation\", which is registration, not a course requirement. Candidacy is in the Policies: \"Doctoral students generally advance to PhD candidacy after passing the qualifying exam, which takes place by the end of the second year of training ... The student must fulfill these requirements and apply for admission to candidacy for the PhD by the beginning of the third year.\"",
+      "replace": {
+        "t": "all",
+        "name": "Advancement to candidacy",
+        "children": [
+          { "id": "ov-qual-exam", "t": "text", "name": "Qualifying exam by the end of the second year", "manual": "exam" },
+          { "id": "ov-candidacy", "t": "text", "name": "Application for candidacy by the beginning of the third year", "manual": "milestone" }
+        ]
+      }
+    },
+    "Bkj52JS8": {
+      "why": "\"Each student must present and defend their dissertation work before a University Oral Examination Committee that includes at least one member of the DBDS Faculty.\"",
+      "patch": { "manual": "exam" }
+    },
+    "ivKHPIkl": {
+      "why": "\"Each student must secure the agreement of a member of the DBDS faculty to act as the doctoral dissertation advisor or obtain departmental approval\", \"Each student must write a paper suitable for publication ... The student's advisor must approve this paper as suitable for submission to a refereed journal\" and \"The dissertation must be accepted by a doctoral dissertation reading committee\". Registering for BMDS 802 during TGR is registration, not a requirement.",
+      "replace": {
+        "t": "all",
+        "name": "Dissertation",
+        "children": [
+          { "id": "ov-advisor", "t": "text", "name": "Dissertation advisor from the DBDS faculty (or approved)", "manual": "approval" },
+          { "id": "ov-paper", "t": "text", "name": "Paper suitable for a refereed journal, approved by the advisor", "manual": "milestone" },
+          { "id": "ov-dissertation", "t": "text", "name": "Dissertation accepted by the reading committee", "manual": "thesis" }
+        ]
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "Pr0g0OuU",
+      "why": "GPA: \"A cumulative GPA of 3.0 or greater to remain in good academic standing.\"",
+      "node": { "id": "ov-gpa", "t": "text", "name": "Cumulative GPA of 3.0 or higher", "manual": "gpa" }
+    },
+    {
+      "block": "Pr0g0OuU",
+      "why": "Policies: \"In the first year, at least two research rotations are required.\"",
+      "node": { "id": "ov-rotations", "t": "text", "name": "At least two research rotations in the first year", "manual": "milestone" }
+    },
+    {
+      "block": "Pr0g0OuU",
+      "why": "Policies: \"Students are expected to participate regularly in the Biomedical Data Science Student Seminar and a research colloquium which is listed as BMDS 201A, B and C in fall/winter/spring quarters. Regardless of their enrollment, they should attend all meetings throughout their graduate training\"",
+      "node": { "id": "ov-seminar", "t": "text", "name": "Regular participation in the student seminar (BMDS 201A-C) and a research colloquium", "manual": "milestone" }
+    }
+  ]
+}

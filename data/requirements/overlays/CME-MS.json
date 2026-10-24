@@ -1,0 +1,500 @@
+{
+  "code": "CME-MS",
+  "reviewed": "2026-10-23",
+  "summary": "Choose one of the four tracks: General CME, Data Science, Imaging Science, or Mathematical and Computational Finance. The audit checks the track's listed courses and unit counts, letter grades where the track asks for them, a C- or better in every letter-graded course, at least 36 letter-graded units and 45 units in all. You check by hand the 3.0 GPA, the advisor-approved electives, and for the distinction in research the thesis, symposium talk and 3.6 GPA.",
+  "program": {
+    "minGrade": "C-",
+    "totals": [
+      {
+        "label": "36 letter-graded units",
+        "minUnits": 36,
+        "grading": "letter",
+        "why": "Grading: \"At least 36 units must be taken for a letter grade, and all letter-graded units must be passed with a C- or better.\""
+      }
+    ],
+    "why": "Grading: \"all letter-graded units must be passed with a C- or better.\" The 45-unit minimum now comes from the Bulletin's Minimum Units."
+  },
+  "blocks": {
+    "mAbEGmbJ": {
+      "kind": "required"
+    },
+    "vGUKbrs9": {
+      "units": 45
+    }
+  },
+  "nodes": {
+    "VU8fbgDQ": {
+      "why": "Overview. \"a candidate must complete a program of 45 units of courses numbered 200 or above\" is the program's 45-unit minimum and the Depth in Discipline block floor; \"all letter-graded units must be passed with a C- or better\" is program.minGrade; \"At least 36 of these must be graded units\" is a program total, and the GPA is ov-gpa.",
+      "patch": {
+        "info": true
+      }
+    },
+    "T1PMIU58": {
+      "why": "\"Students must demonstrate foundational knowledge in the field by completing four of the six core courses. Courses in this area must be taken for letter grades.\"",
+      "patch": {
+        "mode": "atLeast",
+        "n": 4,
+        "letter": true
+      }
+    },
+    "UzlfvnGL": {
+      "why": "\"six units of computing and programming taken for a letter grade are required.\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "DMdyeHOa": {
+      "why": "\"six units of computing and programming taken for a letter grade are required.\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "zPowCPZ7": {
+      "why": "\"Nine units of focused graduate application electives, approved by the program advisor\". No list: the student moves the approved courses in.",
+      "patch": {
+        "manual": "approval",
+        "units": 9
+      }
+    },
+    "JRw63I4G": {
+      "why": "\"Students must complete a total of 3 Seminar units. 1 seminar unit must come from course [name missing in the Bulletin text; the rule lists CME 500] 2 units are up to the student's choice of ICME graduate seminars or other approved seminars.\" Repeated CME 500 units count toward the 3; other approved seminars are moved in by hand.",
+      "patch": {
+        "units": 3
+      }
+    },
+    "zldXCzvd": {
+      "why": "\"Students must demonstrate foundational knowledge in the field by completing the following courses. Courses in this area must be taken for letter grades.\" Each of the five listed slots is required.",
+      "patch": {
+        "mode": "all",
+        "letter": true
+      }
+    },
+    "FppywPXq": {
+      "why": "Heading \"Requirement 2: Computing and Programming (9 units)\" and \"Students must take nine units from Requirement 2 for a letter grade\". The data had 6.",
+      "patch": {
+        "units": 9
+      }
+    },
+    "x3BYqwp9": {
+      "why": "\"Students must take nine units from Requirement 2 for a letter grade\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "UxwOODQK": {
+      "why": "\"Students must take nine units from Requirement 2 for a letter grade\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "JoEjLJEl": {
+      "why": "\"The course chosen from this area must be taken for letter grades.\" A second experimentation course counting toward Requirement 4 (notes) is moved in by hand.",
+      "patch": {
+        "letter": true
+      }
+    },
+    "uj1AyebE": {
+      "why": "\"Nine units of coursework from this area are required for a letter grade.\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "9cNI0cH0": {
+      "why": "Notes: \"* course - Consulting Workshop may only be taken for up to 1 unit.\" Consulting Workshop is STATS 390.",
+      "patch": {
+        "limits": [
+          {
+            "label": "Consulting Workshop",
+            "maxUnits": 1,
+            "codes": [
+              "STATS 390"
+            ]
+          }
+        ]
+      }
+    },
+    "yIsUoEhX": {
+      "why": "\"with an additional six units from either Requirement 2 or 4, for a total of 24 units in the two areas. The other six units may be taken for a non-letter grade.\"",
+      "replace": {
+        "t": "courses",
+        "name": "Additional Units (6 units)",
+        "mode": "units",
+        "units": 6,
+        "items": [
+          [
+            "CME 212"
+          ],
+          [
+            "CME 310"
+          ],
+          [
+            "CME 213"
+          ],
+          [
+            "CS 246"
+          ],
+          [
+            "CS 295"
+          ],
+          [
+            "CS 315B"
+          ],
+          [
+            "CME 364A"
+          ],
+          [
+            "CS 221"
+          ],
+          [
+            "CS 224N"
+          ],
+          [
+            "CS 224W"
+          ],
+          [
+            "CS 229M"
+          ],
+          [
+            "CS 230"
+          ],
+          [
+            "CS 231N"
+          ],
+          [
+            "CS 234"
+          ],
+          [
+            "CS 236"
+          ],
+          [
+            "CS 330"
+          ],
+          [
+            "STATS 315B"
+          ]
+        ]
+      }
+    },
+    "9VCzzPXs": {
+      "why": "\"Students must demonstrate foundational knowledge in the field by completing four of the six core courses. Courses in this area must be taken for letter grades.\" \"The coursework follows the requirements of the general master's degree in the core course requirement\", so the six core courses are the General CME track's (T1PMIU58).",
+      "replace": {
+        "t": "courses",
+        "name": "Requirement 1: Foundational (12 units)",
+        "mode": "atLeast",
+        "n": 4,
+        "units": 12,
+        "letter": true,
+        "items": [
+          [
+            "CME 302"
+          ],
+          [
+            "CME 303"
+          ],
+          [
+            "CME 306"
+          ],
+          [
+            "CME 307",
+            "CME 364A"
+          ],
+          [
+            "CME 310"
+          ],
+          [
+            "MATH 236",
+            "CME 298",
+            "CME 308"
+          ]
+        ]
+      }
+    },
+    "sllG2Lqj": {
+      "why": "\"To ensure that students have a strong foundation in programming, three units of basic programming and computing algorithms and three units of advanced programming and computing algorithms for letter grades are required.\" The page lists the courses: \"Earn at least 3 credits in residence from the following: CME 212, CME 310, CS 106B, CS 161, CS 166, CS 168, CS 190\". The data stores them as an in-residence rule, which read as text.",
+      "replace": {
+        "t": "courses",
+        "name": "Requirement 2a: Basic Programming and Computing Algorithms (3 units)",
+        "mode": "units",
+        "units": 3,
+        "letter": true,
+        "items": [
+          [
+            "CME 212"
+          ],
+          [
+            "CME 310"
+          ],
+          [
+            "CS 106B"
+          ],
+          [
+            "CS 161"
+          ],
+          [
+            "CS 166"
+          ],
+          [
+            "CS 168"
+          ],
+          [
+            "CS 190"
+          ]
+        ]
+      }
+    },
+    "RZS9k0TR": {
+      "why": "\"three units of advanced programming and computing algorithms for letter grades are required.\" The page lists the courses: \"Earn at least 3 credits in residence from the following: CME 213, CS 149, CS 194, CS 246, CS 295, CS 315B\". The data stores them as an in-residence rule, which read as text.",
+      "replace": {
+        "t": "courses",
+        "name": "Requirement 2b: Advanced Programming and Computing Algorithms (3 units)",
+        "mode": "units",
+        "units": 3,
+        "letter": true,
+        "items": [
+          [
+            "CME 213"
+          ],
+          [
+            "CS 149"
+          ],
+          [
+            "CS 194"
+          ],
+          [
+            "CS 246"
+          ],
+          [
+            "CS 295"
+          ],
+          [
+            "CS 315B"
+          ]
+        ]
+      }
+    },
+    "jgroiZUw": {
+      "why": "\"Six units of focused graduate application electives, approved by the ICME graduate advisor\". No list: the student moves the approved courses in.",
+      "patch": {
+        "manual": "approval",
+        "units": 6
+      }
+    },
+    "LNGhLcgZ": {
+      "why": "\"Students must complete a total of 3 Seminar units. 1 seminar unit must come from course [name missing in the Bulletin text; the rule lists CME 500] 2 units are up to the student's choice of ICME graduate seminars or other approved seminars.\" Repeated CME 500 units count toward the 3; other approved seminars are moved in by hand.",
+      "patch": {
+        "units": 3
+      }
+    },
+    "b7qzDoXy": {
+      "why": "\"Courses in this area must be taken for letter grades.\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "Ll9VWmCY": {
+      "why": "\"Courses in this area must be taken for letter grades.\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "k7Hyrcoc": {
+      "why": "\"Courses in this area must be taken for letter grades.\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "3xbPlOt9": {
+      "why": "\"three units of basic programming and computing algorithms for a letter grade\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "e9YYShLW": {
+      "why": "\"three units of advanced programming and computing algorithms for a letter grade are required.\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "srM2ehRc": {
+      "why": "\"Choose three courses from the following list.\" Requirement 1: \"Additional courses taken from this list beyond 9 units may be applied to Requirements 3 and 4.\"",
+      "patch": {
+        "mode": "atLeast",
+        "n": 3,
+        "addItems": [
+          [
+            "CME 302"
+          ],
+          [
+            "CME 303"
+          ],
+          [
+            "CME 310"
+          ],
+          [
+            "CME 307"
+          ],
+          [
+            "CME 364A"
+          ],
+          [
+            "CME 308"
+          ],
+          [
+            "MATH 236"
+          ]
+        ]
+      }
+    },
+    "9Jik2BEr": {
+      "why": "Requirement 1: \"Additional courses taken from this list beyond 9 units may be applied to Requirements 3 and 4.\" Requirement 2: \"Students can take an additional course from this list for a letter grade or credit to fulfill Requirement 4.\"",
+      "patch": {
+        "addItems": [
+          [
+            "CME 302"
+          ],
+          [
+            "CME 303"
+          ],
+          [
+            "CME 310"
+          ],
+          [
+            "CME 307"
+          ],
+          [
+            "CME 364A"
+          ],
+          [
+            "CME 308"
+          ],
+          [
+            "MATH 236"
+          ],
+          [
+            "CME 212"
+          ],
+          [
+            "CS 106B"
+          ],
+          [
+            "CS 161"
+          ],
+          [
+            "CS 166"
+          ],
+          [
+            "CS 168"
+          ],
+          [
+            "CS 190"
+          ],
+          [
+            "CME 213"
+          ],
+          [
+            "CS 149"
+          ],
+          [
+            "CS 194"
+          ],
+          [
+            "CS 295"
+          ],
+          [
+            "CS 315B"
+          ]
+        ]
+      }
+    },
+    "WqUgn6Wb": {
+      "why": "\"Enroll in and complete a minimum of 9 research units (course) under their thesis advisor's supervision. Produce a thesis or substantial research report ... Present their thesis work at the ICME symposium ... Maintain a cumulative GPA of 3.6 or higher ... Enroll in the CME course or course seminar series.\" The listed research course is CME 291 and the seminar series CME 300 or CME 500. The research rule counts nine units across repeated CME 291 enrollments.",
+      "replace": {
+        "t": "all",
+        "name": "Requirements",
+        "children": [
+          {
+            "id": "ov-dist-research",
+            "t": "courses",
+            "name": "9 units of research (CME 291)",
+            "mode": "units",
+            "units": 9,
+            "items": [
+              [
+                "CME 291"
+              ]
+            ]
+          },
+          {
+            "id": "ov-dist-seminar",
+            "t": "courses",
+            "name": "Seminar series",
+            "mode": "all",
+            "items": [
+              [
+                "CME 300",
+                "CME 500"
+              ]
+            ]
+          },
+          {
+            "id": "ov-dist-thesis",
+            "t": "text",
+            "name": "Thesis approved by the advisor and the ICME faculty director",
+            "manual": "thesis"
+          },
+          {
+            "id": "ov-dist-symposium",
+            "t": "text",
+            "name": "Present the thesis at the ICME symposium",
+            "manual": "milestone"
+          },
+          {
+            "id": "ov-dist-gpa",
+            "t": "text",
+            "name": "Cumulative GPA of 3.6 or higher in ICME courses",
+            "manual": "gpa"
+          }
+        ]
+      }
+    },
+    "3Nrm7pr7": {
+      "why": "\"Six units of independent research (CME 291) can be used to fulfill this requirement with prior approval.\" At most 6 units of CME 291 count here; the prior approval is checked by hand.",
+      "patch": {
+        "limits": [
+          {
+            "label": "Independent research (CME 291)",
+            "maxUnits": 6,
+            "codes": [
+              "CME 291"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "alternatives": [
+    {
+      "id": "ov-track",
+      "name": "Track",
+      "of": [
+        "VRXsIzvh",
+        "5kE6V3Kd",
+        "dMIW3pue",
+        "v3PbqciV"
+      ],
+      "why": "\"There are four tracks in the master's program: General CME, Data Science, Imaging Science, Mathematical and Computational Finance\""
+    }
+  ],
+  "add": [
+    {
+      "block": "mAbEGmbJ",
+      "node": {
+        "id": "ov-gpa",
+        "t": "text",
+        "name": "GPA of 3.0 or better",
+        "manual": "gpa"
+      },
+      "why": "\"all letter-graded units must be passed with a C- or better and have a grade point average (GPA) of 3.0 (B) or better.\""
+    }
+  ]
+}

@@ -1,0 +1,775 @@
+{
+  "code": "PUBPO-MA",
+  "reviewed": "2026-10-23",
+  "summary": "You choose the coterminal MA (Path A, B or C) or the MA, and the audit checks that path's courses, the two-quarter colloquium, the 5-unit thesis where it applies, letter grades and the 45-unit total. Paths A and B need a subplan of 15 or more units; Path C and the MA need none, so you can pick No subplan. Path A's 29 subplan units, study plan approvals, the unit levels for coterminal students, your 3.0 GPA, your faculty advisor and the program proposal are checked by hand.",
+  "program": {
+    "letterGrade": true
+  },
+  "nodes": {
+    "cv5MZjeQ": {
+      "why": "\"Public Policy and Economics majors must have completed the required preparatory coursework before applying ... The only prerequisite requirements for non-Public Policy and Economics majors are course and course. These courses do not count toward the 45-unit MA requirement and must be completed by the time of application.\" An admission prerequisite that differs by major (and names two courses the text leaves blank), not a degree requirement.",
+      "replace": {
+        "t": "text",
+        "name": "Preparatory Coursework (before applying)",
+        "info": true
+      }
+    },
+    "8yKOg6On": {
+      "why": "\"Graduate students in Public Policy are expected to be literate in mathematics and microeconomics ... A no-credit refresher Bootcamp ... Attendance is strongly encouraged\": an expectation and advice, not a course requirement.",
+      "patch": {
+        "info": true
+      }
+    },
+    "xpVYMOx2": {
+      "why": "\"All Public Policy graduate students must enroll in and attend two quarters of course Public Policy Colloquium (two units)\": two enrollments of the 1-unit PUBLPOL 311.",
+      "patch": {
+        "items": [
+          [
+            "PUBLPOL 311"
+          ],
+          [
+            "PUBLPOL 311"
+          ]
+        ]
+      }
+    },
+    "IYQZVKIs": {
+      "why": "\"Completion of a five-unit master’s thesis ... enroll in course Master’s Thesis Seminar (for 1 unit in the autumn) and course Master of Arts Thesis units during their chosen quarter(s). The four remaining units may be spread over multiple quarters\"",
+      "patch": {
+        "units": 5
+      }
+    },
+    "T4EaYu6G": {
+      "why": "Moved under the coterminal MA: \"To graduate with a Coterminal MA in Public Policy, students must: Follow one of three paths (A, B, or C) through the program, as described within the Depth in Discipline section.\"",
+      "remove": true
+    },
+    "eMoSkNgE": {
+      "why": "Moved under the coterminal MA with Paths A and C.",
+      "remove": true
+    },
+    "eZ9uK3nf": {
+      "why": "Moved under the coterminal MA with Paths A and B.",
+      "remove": true
+    },
+    "YFGKPj5z": {
+      "why": "Subplan text: \"For the Coterminal MA (Path A), at least 29 units are required. For the Coterminal MA (Path B), at least 15 units are required.\" The audit cannot tie a subplan's floor to the path, so it checks the 15 units every subplan student needs; the Path A subplan approval confirms the 29.",
+      "patch": {
+        "units": 15
+      }
+    },
+    "P5zXc4x8": {
+      "why": "Rule name \"Complete 29 Units (Path A) or 15 Units (Path B) of Elective Courses\". Subplan text: \"For the Coterminal MA (Path A), at least 29 units are required. For the Coterminal MA (Path B), at least 15 units are required.\" The audit cannot tie a subplan's floor to the path, so it checks the 15 units every subplan student needs; the Path A subplan approval confirms the 29.",
+      "patch": {
+        "units": 15
+      }
+    },
+    "Ql7qS37O": {
+      "why": "\"Coterm students will take one gateway course and enough elective courses to satisfy the unit requirements.\" The foundations and organizations lists are both electives for coterminal students. Subplan text: \"For the Coterminal MA (Path A), at least 29 units are required. For the Coterminal MA (Path B), at least 15 units are required.\" The audit cannot tie a subplan's floor to the path, so it checks the 15 units every subplan student needs; the Path A subplan approval confirms the 29.",
+      "replace": {
+        "t": "all",
+        "name": "Complete 29 Units (Path A) or 15 Units (Path B) Between Gateway Courses and Elective Courses",
+        "units": 15,
+        "children": [
+          {
+            "id": "Ify9HgYz",
+            "t": "courses",
+            "name": "Gateway Courses",
+            "mode": "any",
+            "items": [
+              [
+                "EDUC 222"
+              ],
+              [
+                "EDUC 271"
+              ],
+              [
+                "EDUC 306A"
+              ],
+              [
+                "EDUC 347"
+              ]
+            ]
+          },
+          {
+            "id": "ov-edu-electives",
+            "t": "courses",
+            "name": "Elective Courses (Foundations or Organizations)",
+            "mode": "any",
+            "items": [
+              [
+                "EDUC 201"
+              ],
+              [
+                "EDUC 208C"
+              ],
+              [
+                "EDUC 220C"
+              ],
+              [
+                "EDUC 310"
+              ],
+              [
+                "EDUC 358"
+              ],
+              [
+                "LAW 7144"
+              ],
+              [
+                "EDUC 100A"
+              ],
+              [
+                "EDUC 100B"
+              ],
+              [
+                "EDUC 100C"
+              ],
+              [
+                "EDUC 103B"
+              ],
+              [
+                "EDUC 117"
+              ],
+              [
+                "EDUC 136"
+              ],
+              [
+                "EDUC 144A"
+              ],
+              [
+                "EDUC 177A"
+              ],
+              [
+                "EDUC 200A"
+              ],
+              [
+                "EDUC 200B"
+              ],
+              [
+                "EDUC 202"
+              ],
+              [
+                "EDUC 204"
+              ],
+              [
+                "EDUC 207"
+              ],
+              [
+                "EDUC 252"
+              ],
+              [
+                "EDUC 265"
+              ],
+              [
+                "EDUC 306D"
+              ],
+              [
+                "EDUC 316"
+              ],
+              [
+                "EDUC 321"
+              ],
+              [
+                "EDUC 347"
+              ],
+              [
+                "EDUC 430B"
+              ],
+              [
+                "EDUC 486"
+              ],
+              [
+                "PEDS 229"
+              ],
+              [
+                "PUBLPOL 316"
+              ],
+              [
+                "SOC 130"
+              ],
+              [
+                "SOC 369"
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    "kzEn38Y6": {
+      "why": "Subplan text: \"For the Coterminal MA (Path A), at least 29 units are required. For the Coterminal MA (Path B), at least 15 units are required.\" The audit cannot tie a subplan's floor to the path, so it checks the 15 units every subplan student needs; the Path A subplan approval confirms the 29.",
+      "patch": {
+        "units": 15
+      }
+    },
+    "doAWKXBl": {
+      "why": "Subplan text: \"For the Coterminal MA (Path A), at least 29 units are required. For the Coterminal MA (Path B), at least 15 units are required.\" The audit cannot tie a subplan's floor to the path, so it checks the 15 units every subplan student needs; the Path A subplan approval confirms the 29.",
+      "patch": {
+        "units": 15
+      }
+    },
+    "nSCpyNWQ": {
+      "why": "Subplan text: \"For the Coterminal MA (Path A), at least 29 units are required. For the Coterminal MA (Path B), at least 15 units are required.\" The audit cannot tie a subplan's floor to the path, so it checks the 15 units every subplan student needs; the Path A subplan approval confirms the 29.",
+      "patch": {
+        "units": 15
+      }
+    },
+    "InPEYzIt": {
+      "why": "Subplan text: \"For the Coterminal MA (Path A), at least 29 units are required. For the Coterminal MA (Path B), at least 15 units are required.\" The audit cannot tie a subplan's floor to the path, so it checks the 15 units every subplan student needs; the Path A subplan approval confirms the 29.",
+      "patch": {
+        "units": 15
+      }
+    },
+    "yqBs0eGU": {
+      "why": "Subplan text: \"For the Coterminal MA (Path A), at least 29 units are required. For the Coterminal MA (Path B), at least 15 units are required.\" The audit cannot tie a subplan's floor to the path, so it checks the 15 units every subplan student needs; the Path A subplan approval confirms the 29. The overview's \"A total of 35 units is required\" is the MPP figure.",
+      "patch": {
+        "units": 15
+      }
+    },
+    "WSMnqRyk": {
+      "why": "Subplan text: \"For the Coterminal MA (Path A), at least 29 units are required. For the Coterminal MA (Path B), at least 15 units are required.\" The audit cannot tie a subplan's floor to the path, so it checks the 15 units every subplan student needs; the Path A subplan approval confirms the 29.",
+      "patch": {
+        "units": 15
+      }
+    },
+    "m1xRhoju": {
+      "why": "\"Requirements for the Urban Policy Concentration for Coterminal students include completing at least one gateway course and fulfilling enough elective courses to fulfill the unit requirement.\" Subplan text: \"For the Coterminal MA (Path A), at least 29 units are required. For the Coterminal MA (Path B), at least 15 units are required.\" The audit cannot tie a subplan's floor to the path, so it checks the 15 units every subplan student needs; the Path A subplan approval confirms the 29.",
+      "patch": {
+        "units": 15
+      }
+    },
+    "TOl8DVnZ": {
+      "why": "\"A self-designed concentration requires a detailed statement of study goals and the relationship of each proposed course to those goals, as well as the approval of the student’s faculty advisor and the Program Director.\" Subplan text: \"For the Coterminal MA (Path A), at least 29 units are required. For the Coterminal MA (Path B), at least 15 units are required.\" The audit cannot tie a subplan's floor to the path, so it checks the 15 units every subplan student needs; the Path A subplan approval confirms the 29.",
+      "patch": {
+        "info": null,
+        "manual": "approval",
+        "units": 15,
+        "name": "Self-designed concentration approved by the faculty advisor and Program Director"
+      }
+    }
+  },
+  "alternatives": [
+    {
+      "id": "ov-ma-track",
+      "name": "Coterminal MA or MA",
+      "of": [
+        "SxkDxh0i",
+        "Co0PG9Q0"
+      ],
+      "why": "Two kinds of student with different requirements: the coterminal MA follows \"one of three paths (A, B, or C)\", while the one-year MA (open to \"Stanford undergraduate and graduate students, Stanford alums ... and external applicants seeking a joint graduate degree\") takes the Curriculum Requirements and the \"Master’s Thesis (non-coterminal M.A. students)\"."
+    }
+  ],
+  "add": [
+    {
+      "parent": "SxkDxh0i",
+      "node": {
+        "id": "ov-coterm-path",
+        "t": "any",
+        "name": "Path A, B, or C",
+        "children": [
+          {
+            "id": "T4EaYu6G",
+            "t": "all",
+            "name": "PATH A (Public Policy Major)",
+            "notes": "All 45 units must be taken in upper division (100-level) courses, and at least 25 must be at the graduate level (200-level and above).",
+            "children": [
+              {
+                "id": "20rHHzt0",
+                "t": "text",
+                "name": "Path A Overivew",
+                "info": true,
+                "notes": "Public Policy majors follow Path A, which consists of at least 45 units of coursework, including:"
+              },
+              {
+                "id": "y4y80pM8",
+                "t": "text",
+                "name": "Subplan of 29 or more units, study plan approved by the program director",
+                "notes": "Students in Path A must complete 29 or more units in a chosen subplan. Subplans are printed on the transcript and diploma and are elected via the Declaration or Change to a Field of Study e-form. Each subplan includes a set of gateway courses and a variety of electives. Gateway courses may vary from year to year based on availability. Students must present a coherent written study plan to support subplan course choices, designed in consultation with a faculty advisor and approved by the program director. The faculty advisor must be a member of the Academic Council. You can view individual Subplan Listings after the Depth in Discipline section.\nCurrent subplans include:\n\n• Computational Public Policy\n\n• Education Policy\n\n• Health Care Policy\n\n• International and National Security Policy\n\n• Legal and Regulatory Intervention\n\n• Political and Moral Philosophy\n\n• Resources, Environment, and Energy Policy\n\n• Science and Technology Policy\n\n• Self-designed (requires a detailed statement of study goals, the relationship of each proposed course to those goals, and a commitment by a supervising faculty member)\n\n• Urban Policy",
+                "manual": "approval"
+              },
+              {
+                "id": "RytNERJr",
+                "t": "courses",
+                "name": "Decision-Making Component",
+                "n": 1,
+                "mode": "atLeast",
+                "items": [
+                  [
+                    "DESIGN 273"
+                  ],
+                  [
+                    "ECON 137"
+                  ],
+                  [
+                    "LAW 7508"
+                  ]
+                ]
+              },
+              {
+                "id": "aKeDSzWq",
+                "t": "courses",
+                "name": "Colloquium",
+                "mode": "all",
+                "items": [
+                  [
+                    "PUBLPOL 311"
+                  ],
+                  [
+                    "PUBLPOL 311"
+                  ]
+                ],
+                "notes": "All Public Policy graduate students must attend and enroll in two quarters of course Public Policy Colloquium (two units). Attendance and participation are mandatory."
+              },
+              {
+                "id": "FFYGHWSn",
+                "t": "any",
+                "name": "Practicum or Master's Thesis",
+                "children": [
+                  {
+                    "id": "ov-a-practicum",
+                    "t": "courses",
+                    "name": "Practicum",
+                    "mode": "all",
+                    "items": [
+                      [
+                        "PUBLPOL 309"
+                      ]
+                    ]
+                  },
+                  {
+                    "id": "ov-a-thesis",
+                    "t": "courses",
+                    "name": "Master's thesis (5 units)",
+                    "mode": "all",
+                    "items": [
+                      [
+                        "PUBLPOL 310A"
+                      ],
+                      [
+                        "PUBLPOL 310"
+                      ]
+                    ],
+                    "units": 5
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "eMoSkNgE",
+            "t": "all",
+            "name": "Path B (Economics Majors)",
+            "notes": "Students must petition to count additional advanced policy skills courses (if needed) to meet the 45-unit degree requirement. All 45 units must be taken in upper division (100-level) courses, and at least 25 must be taken at the graduate level (200-level and above).",
+            "children": [
+              {
+                "id": "WlC3r63B",
+                "t": "text",
+                "name": "Path B Overivew",
+                "info": true,
+                "notes": "Economics majors typically follow the requirements detailed below in Path C; however, some Economics majors take courses for their major that also satisfy the content requirements of the Public Policy coterminal MA."
+              },
+              {
+                "id": "OGQOysTR",
+                "t": "all",
+                "name": "Core Courses - Complete one course from each of the following categories",
+                "children": [
+                  {
+                    "id": "JDmMmZcv",
+                    "t": "courses",
+                    "name": "Politics",
+                    "n": 1,
+                    "mode": "atLeast",
+                    "items": [
+                      [
+                        "PUBLPOL 201"
+                      ],
+                      [
+                        "PUBLPOL 308"
+                      ]
+                    ]
+                  },
+                  {
+                    "id": "7deoJDmN",
+                    "t": "courses",
+                    "name": "Law and Policy",
+                    "n": 1,
+                    "mode": "atLeast",
+                    "items": [
+                      [
+                        "CSRE 175W"
+                      ],
+                      [
+                        "LAW 1043"
+                      ],
+                      [
+                        "LAW 1047"
+                      ],
+                      [
+                        "LAW 2508"
+                      ],
+                      [
+                        "LAW 2513"
+                      ],
+                      [
+                        "LAW 2515"
+                      ],
+                      [
+                        "LAW 2519"
+                      ],
+                      [
+                        "LAW 5010"
+                      ],
+                      [
+                        "LAW 5013"
+                      ],
+                      [
+                        "PUBLPOL 302B"
+                      ]
+                    ],
+                    "notes": "If you took course for the Economics major, you waive this requirement and may take an advanced policy skills course or an approved (by petition) policy-related elective."
+                  },
+                  {
+                    "id": "0kEBChzX",
+                    "t": "courses",
+                    "name": "Economic Analysis",
+                    "n": 1,
+                    "mode": "atLeast",
+                    "items": [
+                      [
+                        "PUBLPOL 204"
+                      ],
+                      [
+                        "PUBLPOL 301B"
+                      ]
+                    ],
+                    "notes": "If you took course for the Economics major, you waive this requirement and may take an advanced policy skills course or an approved (by petition) policy-related elective."
+                  },
+                  {
+                    "id": "Bm2caaPD",
+                    "t": "courses",
+                    "name": "Decision Making",
+                    "n": 1,
+                    "mode": "atLeast",
+                    "items": [
+                      [
+                        "DESIGN 273"
+                      ],
+                      [
+                        "ECON 137"
+                      ],
+                      [
+                        "LAW 7508"
+                      ]
+                    ]
+                  },
+                  {
+                    "id": "93apotaK",
+                    "t": "courses",
+                    "name": "Political and Moral Philosophy",
+                    "mode": "all",
+                    "items": [
+                      [
+                        "PUBLPOL 314"
+                      ]
+                    ]
+                  },
+                  {
+                    "id": "05KDzlTK",
+                    "t": "courses",
+                    "name": "Organizations",
+                    "n": 1,
+                    "mode": "atLeast",
+                    "items": [
+                      [
+                        "MS&E 180"
+                      ],
+                      [
+                        "MS&E 280"
+                      ],
+                      [
+                        "PUBLPOL 238"
+                      ]
+                    ]
+                  },
+                  {
+                    "id": "p6iH5rm0",
+                    "t": "courses",
+                    "name": "Applied Econometrics",
+                    "n": 1,
+                    "mode": "atLeast",
+                    "items": [
+                      [
+                        "ECON 102C"
+                      ],
+                      [
+                        "PUBLPOL 205"
+                      ],
+                      [
+                        "PUBLPOL 303D"
+                      ],
+                      [
+                        "STATS 202"
+                      ]
+                    ],
+                    "notes": "If you took ECON 102C for the Economics major, you waive this requirement and may take an advanced policy skills course or an approved (by petition) policy-related elective."
+                  }
+                ]
+              },
+              {
+                "id": "Hyl5S0wo",
+                "t": "courses",
+                "name": "Colloquium",
+                "mode": "all",
+                "items": [
+                  [
+                    "PUBLPOL 311"
+                  ],
+                  [
+                    "PUBLPOL 311"
+                  ]
+                ],
+                "notes": "All Public Policy graduate students must attend and enroll in two quarters of course Public Policy Colloquium (two units). Attendance and participation are mandatory."
+              },
+              {
+                "id": "wKkPGwRz",
+                "t": "text",
+                "name": "Subplan of at least 15 units, study plan approved by the program director",
+                "notes": "Students in Path B must complete a concentration of at least 15 or more units in a chosen subplan under the guidance of a faculty advisor and the Public Policy program director. Subplans are printed on the transcript and diploma and are elected via the Declaration or Change to a Field of Study e-form. Each subplan includes a set of gateway courses and a variety of electives. Gateway courses may vary from year to year based on availability. Students must present a coherent written study plan to support subplan course choices, designed in consultation with a faculty advisor and approved by the program director. The faculty advisor must be a member of the Academic Council. You can view individual Subplan Listings after the Depth in Discipline section.\nCurrent subplans include:\n\n• Computational Public Policy\n\n• Education Policy\n\n• Health Care Policy\n\n• International and National Security Policy\n\n• Legal and Regulatory Intervention\n\n• Political and Moral Philosophy\n\n• Resources, Environment, and Energy Policy\n\n• Science and Technology Policy\n\n• Self-designed (requires a detailed statement of study goals, the relationship of each proposed course to those goals, and a commitment by a supervising faculty member)\n\n• Urban Policy",
+                "manual": "approval"
+              }
+            ]
+          },
+          {
+            "id": "eZ9uK3nf",
+            "t": "all",
+            "name": "Path C (Students who are not pursuing a major in Public Policy or Economics)",
+            "notes": "Students must petition to count additional advanced policy skills courses (if needed) to meet the 45-unit degree requirement. All 45 units must be taken in upper division (100-level) courses, and at least 25 must be taken at the graduate level (200-level and above).",
+            "children": [
+              {
+                "id": "HD5uMN0z",
+                "t": "text",
+                "name": "Path C Overview",
+                "info": true,
+                "notes": "Students not pursuing a major in Public Policy or Economics follow Path C, which consists of at least 45 units of coursework in public policy analysis.\nIn addition to the Curriculum Requirements for all coterminal MA students (listed in the Core Program Requirements section), Path C students should complete the following:"
+              },
+              {
+                "id": "kMpvsw8i",
+                "t": "all",
+                "name": "Core Courses - Complete one course from each of the following categories",
+                "children": [
+                  {
+                    "id": "jY7f4BsA",
+                    "t": "courses",
+                    "name": "Statistics and Economics",
+                    "n": 1,
+                    "mode": "atLeast",
+                    "items": [
+                      [
+                        "ECON 102A"
+                      ],
+                      [
+                        "PUBLPOL 301A"
+                      ]
+                    ],
+                    "notes": "For Track C students who take course and course for the coterminal degree, a subplan is not required."
+                  },
+                  {
+                    "id": "jHaUUgwU",
+                    "t": "courses",
+                    "name": "Politics",
+                    "n": 1,
+                    "mode": "atLeast",
+                    "items": [
+                      [
+                        "PUBLPOL 201"
+                      ],
+                      [
+                        "PUBLPOL 308"
+                      ]
+                    ]
+                  },
+                  {
+                    "id": "tGAVZVBl",
+                    "t": "courses",
+                    "name": "Law and Policy",
+                    "n": 1,
+                    "mode": "atLeast",
+                    "items": [
+                      [
+                        "CSRE 175W"
+                      ],
+                      [
+                        "LAW 1043"
+                      ],
+                      [
+                        "LAW 1047"
+                      ],
+                      [
+                        "LAW 2508"
+                      ],
+                      [
+                        "LAW 2513"
+                      ],
+                      [
+                        "LAW 2515"
+                      ],
+                      [
+                        "LAW 2519"
+                      ],
+                      [
+                        "LAW 5010"
+                      ],
+                      [
+                        "LAW 5013"
+                      ],
+                      [
+                        "PUBLPOL 302B"
+                      ]
+                    ]
+                  },
+                  {
+                    "id": "Woj79Jyf",
+                    "t": "courses",
+                    "name": "Economic Analysis",
+                    "n": 1,
+                    "mode": "atLeast",
+                    "items": [
+                      [
+                        "PUBLPOL 204"
+                      ],
+                      [
+                        "PUBLPOL 301B"
+                      ]
+                    ]
+                  },
+                  {
+                    "id": "irhZg8qm",
+                    "t": "courses",
+                    "name": "Decision Making",
+                    "n": 1,
+                    "mode": "atLeast",
+                    "items": [
+                      [
+                        "DESIGN 273"
+                      ],
+                      [
+                        "ECON 137"
+                      ],
+                      [
+                        "LAW 7508"
+                      ]
+                    ]
+                  },
+                  {
+                    "id": "NlHVmrCm",
+                    "t": "courses",
+                    "name": "Political and Moral Philosophy",
+                    "mode": "all",
+                    "items": [
+                      [
+                        "PUBLPOL 314"
+                      ]
+                    ]
+                  },
+                  {
+                    "id": "XRHT0TA5",
+                    "t": "courses",
+                    "name": "Organizations",
+                    "n": 1,
+                    "mode": "atLeast",
+                    "items": [
+                      [
+                        "MS&E 180"
+                      ],
+                      [
+                        "MS&E 280"
+                      ],
+                      [
+                        "PUBLPOL 238"
+                      ]
+                    ]
+                  },
+                  {
+                    "id": "AE6M3lXa",
+                    "t": "courses",
+                    "name": "Applied Econometrics",
+                    "n": 1,
+                    "mode": "atLeast",
+                    "items": [
+                      [
+                        "ECON 102C"
+                      ],
+                      [
+                        "PUBLPOL 205"
+                      ],
+                      [
+                        "PUBLPOL 303D"
+                      ],
+                      [
+                        "STATS 202"
+                      ]
+                    ]
+                  }
+                ]
+              },
+              {
+                "id": "T2zNVb9D",
+                "t": "courses",
+                "name": "Colloquium",
+                "mode": "all",
+                "items": [
+                  [
+                    "PUBLPOL 311"
+                  ],
+                  [
+                    "PUBLPOL 311"
+                  ]
+                ],
+                "notes": "All Public Policy graduate students must enroll in and attend two quarters of course Public Policy Colloquium (two units). Attendance and participation are mandatory."
+              }
+            ]
+          }
+        ]
+      },
+      "why": "\"Follow one of three paths (A, B, or C) through the program\". \"Public Policy majors follow Path A\"; \"Economics majors\" Path B; \"Students not pursuing a major in Public Policy or Economics follow Path C\"."
+    },
+    {
+      "parent": "SxkDxh0i",
+      "node": {
+        "id": "ov-coterm-levels",
+        "t": "text",
+        "name": "All 45 units at the 100 level or above, at least 25 at the 200 level",
+        "manual": "other"
+      },
+      "why": "Each path: \"All 45 units must be taken in upper division (100-level) courses, and at least 25 must be at the graduate level (200-level and above).\" Not expressible as one rule over the whole record."
+    },
+    {
+      "parent": "Co0PG9Q0",
+      "node": {
+        "id": "ov-ma-proposal",
+        "t": "text",
+        "name": "Master's Degree Program Proposal submitted by the end of autumn quarter",
+        "manual": "milestone"
+      },
+      "why": "\"All graduate degree candidates must submit a Master’s Degree Program Proposal to the Public Policy office by the end of autumn quarter\""
+    },
+    {
+      "block": "mAbEGmbJ",
+      "node": {
+        "id": "ov-gpa",
+        "t": "text",
+        "name": "GPA of 3.0 (B) in courses toward the MA",
+        "manual": "gpa"
+      },
+      "why": "Coterminal: \"Achieve a cumulative grade point average (GPA) of 3.0 (B) or better for all courses taken toward the MA.\" MA: \"Students must maintain a 3.0 (B) grade point average overall in courses applicable to the degree.\""
+    },
+    {
+      "block": "mAbEGmbJ",
+      "node": {
+        "id": "ov-advisor",
+        "t": "text",
+        "name": "Faculty advisor (Academic Council member) by the end of the first quarter",
+        "manual": "milestone"
+      },
+      "why": "Coterminal: \"Coterminal MA students must select a faculty advisor by the end of their first quarter in the program.\" MA: \"All Public Policy graduate students must secure a faculty advisor within the first quarter they are enrolled in the MA degree program.\""
+    }
+  ]
+}

@@ -1,0 +1,305 @@
+{
+  "code": "NEURS-PHD",
+  "reviewed": "2026-10-23",
+  "summary": "The audit checks 135 units, BIOS 217 and one graduate statistics course of 3 or more units, and NEPR 399, each required course letter graded at B or better. PhD students take the NEPR core courses with nine quarters of NEPR 280 and three quarters of NEPR 299 rotations; MSTP students instead take NEPR 209, 211, 212 and 288, one of NEPR 201, 203, 207 or 208, NEPR 202 or 204, and three quarters of NEPR 280 (two of them for 2 units), with no rotations. Checked by hand: the pre-approved advanced courses (six units with one course of 3 or more, or one 3-unit course for MSTP students), the SIN Boot Camp, the neuroanatomy sessions (not for MSTP students), a first-author paper, the qualifying exam, the oral exam and the dissertation.",
+  "nodes": {
+    "ZG3Lsc2N": {
+      "why": "\"Required courses must be taken for a letter grade and passed with a 3.0 (B) or better. MSTP students will take NEPR 209, NEPR 211, NEPR 212, and NEPR 288. MSTP students will take one of NEPR 201, NEPR 203, NEPR 207, or NEPR 208. MSTP students will also take either NEPR 202 or NEPR 204.\" \"Students must complete special sessions in neuroanatomy. (Not required for MSTP students.)\" \"9 quarters of NEPR 280 (Journal Club) are required. MSTP students in the Neurosciences PhD program are required to take 3 quarters of Journal Club and at least 2 quarters must be taken for 2 units.\" Advanced Courses: \"Six units of advanced neuroscience coursework are required. To complete the six units, at least one course must be three units or more\" and \"One course of 3 units of advanced neuroscience coursework are required for MSTP students.\" Rotations: \"Students rotate through at least three labs during the first year, enrolling in NEPR 299 each quarter ... MSTP students are exempt from this requirement\". So the core, Journal Club, advanced courses, rotations and neuroanatomy differ for MSTP students; NEPR 280 and NEPR 299 are repeatable.",
+      "replace": {
+        "t": "any",
+        "name": "Core coursework (PhD students, or MSTP students)",
+        "children": [
+          {
+            "id": "ov-std",
+            "t": "all",
+            "name": "PhD students",
+            "children": [
+              {
+                "id": "ov-std-core",
+                "t": "courses",
+                "name": "Core Courses (with nine quarters of NEPR 280)",
+                "mode": "all",
+                "letter": true,
+                "minGrade": "B",
+                "items": [
+                  [
+                    "NEPR 201"
+                  ],
+                  [
+                    "NEPR 202"
+                  ],
+                  [
+                    "NEPR 203"
+                  ],
+                  [
+                    "NEPR 204"
+                  ],
+                  [
+                    "NEPR 206"
+                  ],
+                  [
+                    "NEPR 207"
+                  ],
+                  [
+                    "NEPR 208"
+                  ],
+                  [
+                    "NEPR 209"
+                  ],
+                  [
+                    "NEPR 211"
+                  ],
+                  [
+                    "NEPR 212"
+                  ],
+                  [
+                    "NEPR 213"
+                  ],
+                  [
+                    "NEPR 280"
+                  ],
+                  [
+                    "NEPR 280"
+                  ],
+                  [
+                    "NEPR 280"
+                  ],
+                  [
+                    "NEPR 280"
+                  ],
+                  [
+                    "NEPR 280"
+                  ],
+                  [
+                    "NEPR 280"
+                  ],
+                  [
+                    "NEPR 280"
+                  ],
+                  [
+                    "NEPR 280"
+                  ],
+                  [
+                    "NEPR 280"
+                  ],
+                  [
+                    "NEPR 288"
+                  ]
+                ]
+              },
+              {
+                "id": "ov-std-advanced",
+                "t": "text",
+                "name": "Advanced Courses: six pre-approved units, one course of 3 units or more",
+                "units": 6,
+                "manual": "approval"
+              },
+              {
+                "id": "ov-std-rotations",
+                "t": "courses",
+                "name": "Rotations: NEPR 299 in three quarters",
+                "mode": "all",
+                "items": [
+                  [
+                    "NEPR 299"
+                  ],
+                  [
+                    "NEPR 299"
+                  ],
+                  [
+                    "NEPR 299"
+                  ]
+                ]
+              }
+            ]
+          },
+          {
+            "id": "ov-mstp",
+            "t": "all",
+            "name": "MSTP students",
+            "children": [
+              {
+                "id": "ov-mstp-core",
+                "t": "courses",
+                "name": "NEPR 209, NEPR 211, NEPR 212 and NEPR 288",
+                "mode": "all",
+                "letter": true,
+                "minGrade": "B",
+                "items": [
+                  [
+                    "NEPR 209"
+                  ],
+                  [
+                    "NEPR 211"
+                  ],
+                  [
+                    "NEPR 212"
+                  ],
+                  [
+                    "NEPR 288"
+                  ]
+                ]
+              },
+              {
+                "id": "ov-mstp-one",
+                "t": "courses",
+                "name": "One of NEPR 201, NEPR 203, NEPR 207 or NEPR 208",
+                "mode": "atLeast",
+                "n": 1,
+                "letter": true,
+                "minGrade": "B",
+                "items": [
+                  [
+                    "NEPR 201"
+                  ],
+                  [
+                    "NEPR 203"
+                  ],
+                  [
+                    "NEPR 207"
+                  ],
+                  [
+                    "NEPR 208"
+                  ]
+                ]
+              },
+              {
+                "id": "ov-mstp-two",
+                "t": "courses",
+                "name": "NEPR 202 or NEPR 204",
+                "mode": "atLeast",
+                "n": 1,
+                "letter": true,
+                "minGrade": "B",
+                "items": [
+                  [
+                    "NEPR 202"
+                  ],
+                  [
+                    "NEPR 204"
+                  ]
+                ]
+              },
+              {
+                "id": "ov-mstp-jc",
+                "t": "courses",
+                "name": "Three quarters of NEPR 280",
+                "mode": "atLeast",
+                "n": 3,
+                "letter": true,
+                "minGrade": "B",
+                "items": [
+                  [
+                    "NEPR 280"
+                  ]
+                ]
+              },
+              {
+                "id": "ov-mstp-jc2",
+                "t": "courses",
+                "name": "Two of those quarters for 2 units",
+                "mode": "atLeast",
+                "n": 2,
+                "minUnitsEach": 2,
+                "shares": true,
+                "letter": true,
+                "minGrade": "B",
+                "items": [
+                  [
+                    "NEPR 280"
+                  ]
+                ]
+              },
+              {
+                "id": "ov-mstp-advanced",
+                "t": "text",
+                "name": "Advanced Courses: one pre-approved course of 3 units",
+                "n": 1,
+                "units": 3,
+                "manual": "approval"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "FrJe6QAi": {
+      "why": "\"Required courses must be taken for a letter grade and passed with a 3.0 (B) or better.\"",
+      "patch": {
+        "letter": true,
+        "minGrade": "B"
+      }
+    },
+    "nUNuuWoU": {
+      "why": "\"Students must complete BIOS 217 as well as one graduate statistics course from the list below\"; the list reads \"Complete exactly 1 course(s) and earn 3 or more credit(s) from the following\". \"Required courses must be taken for a letter grade and passed with a 3.0 (B) or better.\"",
+      "patch": {
+        "units": 3,
+        "letter": true,
+        "minGrade": "B"
+      }
+    },
+    "RTT6xn3f": {
+      "why": "\"Students must complete a graduate research course (NEPR 399) every quarter with a 3.0 (B) or better upon joining a thesis lab until satisfying the 135 minimum units required.\" The 135 units are program.unitsMin; the number of quarters varies, so one enrollment is checked.",
+      "patch": {
+        "letter": true,
+        "minGrade": "B"
+      }
+    },
+    "bhWzTNKJ": {
+      "why": "\"Students must publish at least one first-author paper in a peer-reviewed major scientific journal on the defended work before completing the PhD degree.\"",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "wSgp0H7r": {
+      "why": "\"Passing a comprehensive qualifying examination given by the student's advisory committee is required for admission to PhD candidacy.\"",
+      "patch": {
+        "manual": "exam",
+        "name": "Qualifying exam"
+      }
+    },
+    "vfbDokec": {
+      "why": "\"Students must defend the dissertation in a University Oral Examination that includes a public seminar.\"",
+      "patch": {
+        "manual": "exam"
+      }
+    },
+    "BqGMZL1Z": {
+      "why": "\"Students are required to prepare a PhD dissertation that is the result of an independent investigation\"",
+      "patch": {
+        "manual": "thesis"
+      }
+    },
+    "TtnQRwPe": {
+      "why": "\"Six units of advanced neuroscience coursework are required. To complete the six units, at least one course must be three units or more ... Pre-approval for advanced courses is required.\" No list: the student moves the approved courses in. Moved into the PhD and MSTP paths (see ZG3Lsc2N).",
+      "remove": true
+    },
+    "ogbZ96OV": {
+      "why": "\"Students rotate through at least three labs during the first year, enrolling in [NEPR 299] each quarter\": three enrollments. NEPR 299 is repeatable. Moved into the PhD path, since \"MSTP students are exempt from this requirement\" (see ZG3Lsc2N).",
+      "remove": true
+    }
+  },
+  "add": [
+    {
+      "block": "TCuzvLwW",
+      "why": "\"Students must also complete the Stanford Immersive Neurosciences (SIN) Boot Camp.\"",
+      "node": {
+        "id": "ov-sin-bootcamp",
+        "t": "text",
+        "name": "Stanford Immersive Neurosciences (SIN) Boot Camp",
+        "manual": "milestone"
+      }
+    },
+    {
+      "block": "TCuzvLwW",
+      "why": "\"Students must complete special sessions in neuroanatomy. (Not required for MSTP students.)\" Under the PhD-student path only.",
+      "node": {
+        "id": "ov-neuroanatomy",
+        "t": "text",
+        "name": "Special sessions in neuroanatomy",
+        "manual": "milestone"
+      },
+      "parent": "ov-std"
+    }
+  ]
+}

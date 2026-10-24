@@ -1,0 +1,123 @@
+{
+  "code": "MLA-MLA",
+  "reviewed": "2026-10-23",
+  "summary": "The audit checks 50 units, each course with a B- or better: the three Foundations courses, MLA 102, seven 4-unit graduate seminars (one each in Humanities, Social Sciences, and Science, Engineering and Medicine, plus four more), and MLA 398 and MLA 399. Checked by hand: the 3.3 GPA overall and in the Foundations and Core Seminar, active student status within nine quarters, the thesis prospectus, the thesis colloquium and the thesis, and one approved departmental graduate seminar if you take one in place of an MLA seminar. Transfer credit is not accepted.",
+  "program": {
+    "minGrade": "B-",
+    "why": "Grading: \"MLA students must earn a B- or better grade in all courses applicable to the degree.\""
+  },
+  "nodes": {
+    "EZXYsYps": {
+      "why": "\"Students must take at least seven graduate seminars of four units each\"",
+      "patch": {
+        "minUnitsEach": 4
+      }
+    },
+    "xlYzOfy4": {
+      "why": "\"Students must take at least seven graduate seminars of four units each\"",
+      "patch": {
+        "minUnitsEach": 4
+      }
+    },
+    "Be0mdhID": {
+      "why": "\"Students must take at least seven graduate seminars of four units each\"",
+      "patch": {
+        "minUnitsEach": 4
+      }
+    },
+    "GSwF5FFN": {
+      "why": "\"Application for Active Student Status. ... within nine quarters a student must have successfully completed the Foundation Sequence, the Core Seminar, and the first two seminars with no incompletes, with a minimum 3.3 (B+) grade point average ... students must submit the Application for Active Status.\" \"Thesis Prospectus. ... must submit their Prospectus for approval by the MLA Faculty Advisory Committee.\" \"Colloquium. Students completing their thesis work are required to present their work at a colloquium open to the MLA community.\"",
+      "replace": {
+        "t": "all",
+        "name": "Program Milestones",
+        "children": [
+          {
+            "id": "GSwF5FFN-active",
+            "t": "text",
+            "name": "Application for Active Student Status",
+            "manual": "milestone"
+          },
+          {
+            "id": "GSwF5FFN-prospectus",
+            "t": "text",
+            "name": "Thesis Prospectus approved by the MLA Faculty Advisory Committee",
+            "manual": "approval"
+          },
+          {
+            "id": "GSwF5FFN-colloquium",
+            "t": "text",
+            "name": "Thesis colloquium",
+            "manual": "milestone"
+          }
+        ]
+      }
+    },
+    "k3Knj9cC": {
+      "why": "\"Students are required to complete a 75-100 page thesis with the guidance of an assigned faculty advisor. While students are working on their theses, they should enroll in MLA398: Thesis in Progress each quarter until their final quarter. Students should enroll in the six-unit MLA399: Thesis Final Quarter in their final quarter.\"",
+      "replace": {
+        "t": "all",
+        "name": "Thesis Requirement",
+        "children": [
+          {
+            "id": "k3Knj9cC-courses",
+            "t": "courses",
+            "name": "Thesis courses",
+            "mode": "all",
+            "items": [
+              [
+                "MLA 398"
+              ],
+              [
+                "MLA 399"
+              ]
+            ]
+          },
+          {
+            "id": "k3Knj9cC-thesis",
+            "t": "text",
+            "name": "75-100 page thesis",
+            "manual": "thesis"
+          }
+        ]
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "mAbEGmbJ",
+      "parent": "kkAQk0ZN",
+      "node": {
+        "id": "ov-more-seminars",
+        "t": "courses",
+        "name": "Four more graduate seminars",
+        "mode": "atLeast",
+        "n": 4,
+        "minUnitsEach": 4,
+        "pool": {
+          "subjects": [
+            "MLA"
+          ],
+          "exclude": [
+            "MLA 101A",
+            "MLA 101B",
+            "MLA 101C",
+            "MLA 102",
+            "MLA 398",
+            "MLA 399"
+          ]
+        }
+      },
+      "why": "\"Students must take at least seven graduate seminars of four units each ... these can be fulfilled by MLA seminars for all seven courses, or by taking six MLA seminars and one (approved) Stanford departmental graduate seminar.\" \"MLA seminar offerings vary yearly, and those listed below may not be available in future years.\" The three area rules give three; these are the other four, any MLA course other than the foundation, core seminar and thesis courses. The one approved departmental seminar is moved in by hand."
+    },
+    {
+      "block": "mAbEGmbJ",
+      "node": {
+        "id": "ov-gpa",
+        "t": "text",
+        "name": "3.3 (B+) GPA overall and in the Foundations and Core Seminar courses",
+        "manual": "gpa"
+      },
+      "why": "\"Candidates for the MLA degree must complete a minimum of 50 units of coursework with at least a grade point average of 3.3 (B+).\" \"Foundations and Core Seminar courses must be completed with a minimum 3.3 grade point average.\""
+    }
+  ]
+}

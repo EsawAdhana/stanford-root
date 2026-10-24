@@ -1,0 +1,38 @@
+{
+  "code": "CSB-MS",
+  "reviewed": "2026-10-23",
+  "summary": "The MS is for CSB PhD students who have finished the first two years of coursework: the listed required courses (with CSB 270 in the fall, winter and spring of years one and two), one chemical biology course, two CSB electives and one more elective, for 45 units in all. Each of these courses must be letter graded with a B- or better when a letter grade is offered; courses offered only S/NC, like CSB 399 research, count as they are. An elective the Student Advisory Committee approves, or a writing course in place of BIOS 263 once you hold a fellowship, is moved in by hand. You check by hand the qualifying exam and the written thesis.",
+  "nodes": {
+    "xe9iFJMC": {
+      "why": "Grading: \"Normally, if a course has the option to be taken as a letter grade, the student must take the course as a letter grade and receive a B- or better to have the course count towards the CSB PhD requirements.\" It is on the course rules, not the program, so S/NC and lower-graded units still count toward the 45.",
+      "patch": { "letter": true, "minGrade": "B-" }
+    },
+    "rf7HKyWN": {
+      "why": "Grading: \"the student must take the course as a letter grade and receive a B- or better to have the course count\". Notes: \"CSB 270: Research Seminar (Fall, Winter, and Spring) / To be taken fall, winter, and spring of years one and two\": six enrollments, one in Fall Quarter, Year 1 and five here.",
+      "patch": { "letter": true, "minGrade": "B-", "addItems": [["CSB 270"], ["CSB 270"], ["CSB 270"], ["CSB 270"]] }
+    },
+    "EbofNnkb": {
+      "why": "Grading: \"the student must take the course as a letter grade and receive a B- or better to have the course count\"",
+      "patch": { "letter": true, "minGrade": "B-" }
+    },
+    "suqH8LJf": {
+      "why": "Grading: \"the student must take the course as a letter grade and receive a B- or better to have the course count\"",
+      "patch": { "letter": true, "minGrade": "B-" }
+    },
+    "PpVbDT52": {
+      "why": "Grading: \"the student must take the course as a letter grade and receive a B- or better to have the course count\"",
+      "patch": { "letter": true, "minGrade": "B-" }
+    },
+    "Yjwy7mES": {
+      "why": "\"The degree requires students to pass a qualifying exam and produce a written thesis based on literature or laboratory research.\" Two separate milestones, both checked by a person.",
+      "replace": {
+        "t": "all",
+        "name": "Qualifying Exam and Thesis",
+        "children": [
+          { "id": "Yjwy7mES-exam", "t": "text", "name": "Qualifying exam", "manual": "exam" },
+          { "id": "Yjwy7mES-thesis", "t": "text", "name": "Written thesis based on literature or laboratory research", "manual": "thesis" }
+        ]
+      }
+    }
+  }
+}

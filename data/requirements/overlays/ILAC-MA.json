@@ -1,0 +1,145 @@
+{
+  "code": "ILAC-MA",
+  "reviewed": "2026-10-23",
+  "summary": "The audit checks the 45 graduate-level units (courses numbered 200 or above) and the course requirements as ILAC courses at the right level, taken for a letter grade where one is offered: one 200-level or above theory course, two 200-level or above and one 300-level course in Latin American or Latinx/Chicanx literature, and the same in Iberian literature (ILAC 299 and 399 count only with the Director's consent). Faculty expect a B+ or better and review lower grades. Checked by hand: which area each course covers, units taken at Stanford, the program proposal, two department graduate seminars each quarter and the Portuguese or Catalan OPI.",
+  "nodes": {
+    "VtNinTf3": {
+      "why": "\"Students must complete a minimum of 45 graduate-level units, 36 of which must be taken at Stanford\" (the 45 is the program's minimum) followed by the list of course requirements, encoded one rule each. The area (theory, Latin American, Iberian) is not in the course code, so only department and level are checked; \"Independent study courses (ILAC299 Individual Work, ILAC399 Individual Work) and cross-listed courses originating outside the department cannot fulfill requirements except by consent of the Director.\" Grading: \"MA students in the department must take required courses for a letter grade if available\". The B+ is an expectation that faculty review (\"The grade stands, and the student's academic performance is monitored\"), not a floor. Transfer and AP credit: \"Students must complete all units toward a degree at Stanford\", stricter than the 36 units in the rule text; both are checked by hand.",
+      "replace": {
+        "t": "all",
+        "name": "Core Program Requirements",
+        "children": [
+          {
+            "id": "ov-theory",
+            "t": "courses",
+            "name": "A 200-level or above course in literary or cultural theory",
+            "mode": "atLeast",
+            "n": 1,
+            "pool": {
+              "subjects": [
+                "ILAC"
+              ],
+              "minNumber": 200,
+              "exclude": [
+                "ILAC 299",
+                "ILAC 399"
+              ]
+            },
+            "letter": true
+          },
+          {
+            "id": "ov-latam-200",
+            "t": "courses",
+            "name": "Two 200-level or above courses in Latin American or Latinx/Chicanx literature and culture",
+            "mode": "atLeast",
+            "n": 2,
+            "pool": {
+              "subjects": [
+                "ILAC"
+              ],
+              "minNumber": 200,
+              "exclude": [
+                "ILAC 299",
+                "ILAC 399"
+              ]
+            },
+            "letter": true
+          },
+          {
+            "id": "ov-iberian-200",
+            "t": "courses",
+            "name": "Two 200-level or above courses in Iberian literature and culture",
+            "mode": "atLeast",
+            "n": 2,
+            "pool": {
+              "subjects": [
+                "ILAC"
+              ],
+              "minNumber": 200,
+              "exclude": [
+                "ILAC 299",
+                "ILAC 399"
+              ]
+            },
+            "letter": true
+          },
+          {
+            "id": "ov-latam-300",
+            "t": "courses",
+            "name": "One 300-level course in Latin American or Latinx/Chicanx literature and culture",
+            "mode": "atLeast",
+            "n": 1,
+            "pool": {
+              "subjects": [
+                "ILAC"
+              ],
+              "minNumber": 300,
+              "maxNumber": 399,
+              "exclude": [
+                "ILAC 299",
+                "ILAC 399"
+              ]
+            },
+            "letter": true
+          },
+          {
+            "id": "ov-iberian-300",
+            "t": "courses",
+            "name": "One 300-level course in Iberian literature and culture",
+            "mode": "atLeast",
+            "n": 1,
+            "pool": {
+              "subjects": [
+                "ILAC"
+              ],
+              "minNumber": 300,
+              "maxNumber": 399,
+              "exclude": [
+                "ILAC 299",
+                "ILAC 399"
+              ]
+            },
+            "letter": true
+          },
+          {
+            "id": "ov-stanford-units",
+            "t": "text",
+            "name": "36 of the 45 units taken at Stanford",
+            "manual": "residency"
+          },
+          {
+            "id": "ov-proposal",
+            "t": "text",
+            "name": "Program Proposal for a Master's Degree (terminal MA, first quarter)",
+            "manual": "approval"
+          },
+          {
+            "id": "ov-seminars",
+            "t": "text",
+            "name": "Enrollment in at least two department graduate seminars each quarter",
+            "manual": "other"
+          },
+          {
+            "id": "ov-opi",
+            "t": "text",
+            "name": "Intermediate-high proficiency in Portuguese or Catalan (OPI)",
+            "manual": "exam"
+          }
+        ]
+      }
+    }
+  },
+  "program": {
+    "totals": [
+      {
+        "label": "Courses below the graduate level",
+        "maxUnits": 0,
+        "pool": {
+          "anySubject": true,
+          "maxNumber": 199
+        },
+        "why": "Core Program Requirements: \"Students must complete a minimum of 45 graduate-level units\". Courses numbered below 200 do not count toward the 45."
+      }
+    ]
+  }
+}

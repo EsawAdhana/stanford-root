@@ -1,0 +1,4316 @@
+{
+  "code": "ME-MS",
+  "reviewed": "2026-10-23",
+  "summary": "The audit checks 45 units at Stanford: two math courses from different areas, one depth area for at least 9 units, two breadth courses from areas outside your depth, and approved graduate electives to reach 39 units, plus 15 units of ME lecture courses and one lab course (those two may overlap with your other courses). Courses for these requirements must be letter graded unless no letter grade is offered, and each course counts toward only one requirement. Units below the 100 level and ME 299A/B do not count. Checked by hand: your advisor approves the electives, the 3.0 GPA, the 15 ME units, that no IntroSem counts, and the Fluid Mechanics breadth exclusion the Bulletin names without a course number.",
+  "program": {
+    "totals": [
+      {
+        "label": "Courses below the 100 level",
+        "maxUnits": 0,
+        "pool": {
+          "anySubject": true,
+          "maxNumber": 99
+        },
+        "why": "Policies: \"Courses below level 100 cannot fulfill MS requirements.\""
+      },
+      {
+        "label": "Curricular Practical Training (ME 299A/B)",
+        "maxUnits": 0,
+        "codes": [
+          "ME 299A",
+          "ME 299B"
+        ],
+        "why": "Policies: \"IntroSems courses (those appended with N and Q) and Curricular Practical Training (CPT, ME299A/B) cannot fulfill MS requirements.\""
+      }
+    ]
+  },
+  "nodes": {
+    "eb8Fcuic": {
+      "why": "Moves under the 39-unit group (see v5SgGqWB).",
+      "remove": true
+    },
+    "ltHZYsf1": {
+      "why": "Moves under the 39-unit group (see v5SgGqWB) as one two-course list.",
+      "remove": true
+    },
+    "eZ3WGUjG": {
+      "why": "Moves under the 39-unit group (see v5SgGqWB).",
+      "remove": true
+    },
+    "v5SgGqWB": {
+      "why": "Approved Electives: \"Additional graduate (numbered 200+) engineering, math, and science courses will bring the total number of units to at least 39. The student's advisor must approve all of these units.\" Depth: \"A depth cluster or area comprises at least nine units (2-3 courses).\" Breadth: \"Two courses are required from the list of eligible breadth courses from area(s) outside your depth. They can come from the same area or two different areas. If you select two Data Science classes for your breadth, at least one of those must have an ME course number.\" The stored breadth rule required two different areas, which the text does not; it is now one list of every breadth area's courses with at most one non-ME Data Science course (CS 229 / STATS 229 is also a Robotics breadth course, so it is not capped). Breadth must come from outside the depth (\"from area(s) outside your depth\"; each area: \"If depth is Dynamics, select any two courses from one or two of the other areas\"), so each depth area is now a path with its own breadth list: every other area's breadth courses, MEMS and Data Science. A course also on another area's list stays eligible. The single shared list had let ME 334 count as breadth for a Dynamics depth. Approved electives are courses the student moves in toward the 39 units; their caps (\"no more than six units may come from independent study ... no more than three units may come from seminars\") name courses the Bulletin text lost. Grading: \"All courses taken for the Mechanical Engineering master's degree must be taken for a letter grade, except for Unrestricted Electives or when grades are not an option (e.g., seminar and research courses).\"",
+      "replace": {
+        "id": "ov-approved-39",
+        "t": "all",
+        "name": "Math, Depth, Breadth and Approved Electives (39 units)",
+        "units": 39,
+        "children": [
+          {
+            "id": "v5SgGqWB",
+            "name": "Mathematical Fundamentals",
+            "desc": "Two math courses covering two different areas from Linear Algebra, Partial Differential Equations, Numerical Analysis, and Statistics. The following courses satisfy the requirement in the indicated area(s).",
+            "notes": "Petitions for other math-focused courses, including more advanced math courses and math applications courses, will be considered in cases where students can demonstrate sufficient math fundamentals from prior coursework. Such petitions should be submitted to ME Student Services for review before taking the proposed course; include the prior course(s) syllabus.",
+            "t": "some",
+            "n": 2,
+            "children": [
+              {
+                "id": "JVcB5a8W",
+                "name": "Linear Algebra",
+                "t": "courses",
+                "items": [
+                  [
+                    "ME 300A",
+                    "CME 200"
+                  ],
+                  [
+                    "CME 302"
+                  ],
+                  [
+                    "CS 205L"
+                  ],
+                  [
+                    "EE 263",
+                    "CME 263"
+                  ],
+                  [
+                    "EE 363"
+                  ]
+                ],
+                "mode": "any",
+                "letter": true
+              },
+              {
+                "id": "lbEPzvJ2",
+                "name": "Partial Differential Equations",
+                "t": "courses",
+                "items": [
+                  [
+                    "CME 303",
+                    "MATH 220A"
+                  ],
+                  [
+                    "ME 300B",
+                    "CME 204"
+                  ]
+                ],
+                "mode": "any",
+                "letter": true
+              },
+              {
+                "id": "tAYprwd9",
+                "name": "Numerical Analysis",
+                "t": "courses",
+                "items": [
+                  [
+                    "CME 306"
+                  ],
+                  [
+                    "ME 300C",
+                    "CME 206"
+                  ],
+                  [
+                    "ME 408",
+                    "CME 322"
+                  ]
+                ],
+                "mode": "any",
+                "letter": true
+              },
+              {
+                "id": "C0Klezta",
+                "name": "Statistics",
+                "t": "courses",
+                "items": [
+                  [
+                    "CME 106",
+                    "ENGR 155C"
+                  ],
+                  [
+                    "STATS 117"
+                  ],
+                  [
+                    "STATS 118"
+                  ],
+                  [
+                    "STATS 200"
+                  ]
+                ],
+                "mode": "any",
+                "letter": true
+              }
+            ]
+          },
+          {
+            "id": "ov-me-depth-breadth",
+            "t": "any",
+            "name": "Depth and Breadth in Mechanical Engineering",
+            "children": [
+              {
+                "id": "ov-me-path-ctrl",
+                "t": "all",
+                "name": "Depth: Automatic Controls, with breadth outside it",
+                "children": [
+                  {
+                    "id": "LrwzzXdM",
+                    "name": "Automatic Controls",
+                    "desc": "At least one of course or course is recommended.",
+                    "t": "courses",
+                    "items": [
+                      [
+                        "AA 203"
+                      ],
+                      [
+                        "AA 212"
+                      ],
+                      [
+                        "AA 228",
+                        "CS 238"
+                      ],
+                      [
+                        "AA 277"
+                      ],
+                      [
+                        "ENGR 105"
+                      ],
+                      [
+                        "ENGR 205"
+                      ],
+                      [
+                        "ME 274A",
+                        "AA 274A",
+                        "CS 237A",
+                        "EE 260A"
+                      ],
+                      [
+                        "ME 274B",
+                        "AA 274B",
+                        "CS 237B",
+                        "EE 260B"
+                      ],
+                      [
+                        "ME 286"
+                      ],
+                      [
+                        "ME 327"
+                      ]
+                    ],
+                    "mode": "atLeast",
+                    "n": 3,
+                    "letter": true,
+                    "units": 9
+                  },
+                  {
+                    "id": "ov-me-breadth-ctrl",
+                    "t": "courses",
+                    "name": "Breadth: two courses from areas outside the depth",
+                    "mode": "atLeast",
+                    "n": 2,
+                    "letter": true,
+                    "items": [
+                      [
+                        "ME 234"
+                      ],
+                      [
+                        "ME 235"
+                      ],
+                      [
+                        "ME 244"
+                      ],
+                      [
+                        "ME 249"
+                      ],
+                      [
+                        "ME 281"
+                      ],
+                      [
+                        "ME 283"
+                      ],
+                      [
+                        "ME 285"
+                      ],
+                      [
+                        "ME 287"
+                      ],
+                      [
+                        "ME 303",
+                        "MATSCI 333"
+                      ],
+                      [
+                        "ME 305",
+                        "BIOE 305"
+                      ],
+                      [
+                        "ME 381"
+                      ],
+                      [
+                        "ME 485"
+                      ],
+                      [
+                        "ME 318"
+                      ],
+                      [
+                        "ME 324"
+                      ],
+                      [
+                        "AA 242A"
+                      ],
+                      [
+                        "AA 279A"
+                      ],
+                      [
+                        "CS 225A"
+                      ],
+                      [
+                        "CS 327A",
+                        "ME 323"
+                      ],
+                      [
+                        "ME 331A"
+                      ],
+                      [
+                        "ME 331B"
+                      ],
+                      [
+                        "ME 334"
+                      ],
+                      [
+                        "ME 352B"
+                      ],
+                      [
+                        "ME 352C"
+                      ],
+                      [
+                        "ME 352D"
+                      ],
+                      [
+                        "ME 362A"
+                      ],
+                      [
+                        "ME 370A"
+                      ],
+                      [
+                        "ME 371"
+                      ],
+                      [
+                        "ME 457"
+                      ],
+                      [
+                        "ME 351A"
+                      ],
+                      [
+                        "ME 351B"
+                      ],
+                      [
+                        "ME 354"
+                      ],
+                      [
+                        "ME 355"
+                      ],
+                      [
+                        "ME 361"
+                      ],
+                      [
+                        "ME 451A"
+                      ],
+                      [
+                        "ME 451B"
+                      ],
+                      [
+                        "ME 451C"
+                      ],
+                      [
+                        "ME 461"
+                      ],
+                      [
+                        "MATSCI 251"
+                      ],
+                      [
+                        "ME 203"
+                      ],
+                      [
+                        "ME 204"
+                      ],
+                      [
+                        "ME 206B"
+                      ],
+                      [
+                        "ME 217"
+                      ],
+                      [
+                        "ME 219"
+                      ],
+                      [
+                        "ME 225"
+                      ],
+                      [
+                        "ME 227"
+                      ],
+                      [
+                        "ME 321",
+                        "MATSCI 351"
+                      ],
+                      [
+                        "ME 325"
+                      ],
+                      [
+                        "ME 258",
+                        "MATSCI 358"
+                      ],
+                      [
+                        "ME 329"
+                      ],
+                      [
+                        "ME 340"
+                      ],
+                      [
+                        "AA 274B",
+                        "CS 237B",
+                        "EE 260B",
+                        "ME 274B"
+                      ],
+                      [
+                        "ME 210"
+                      ],
+                      [
+                        "ME 220"
+                      ],
+                      [
+                        "ME 362B"
+                      ],
+                      [
+                        "ME 363"
+                      ],
+                      [
+                        "ME 364"
+                      ],
+                      [
+                        "ME 366"
+                      ],
+                      [
+                        "ME 372"
+                      ],
+                      [
+                        "ME 374"
+                      ],
+                      [
+                        "ME 463"
+                      ],
+                      [
+                        "AA 277"
+                      ],
+                      [
+                        "CS 229",
+                        "STATS 229"
+                      ],
+                      [
+                        "CS 326"
+                      ],
+                      [
+                        "ME 274A",
+                        "AA 274A",
+                        "CS 237A",
+                        "EE 260A"
+                      ],
+                      [
+                        "ME 320",
+                        "CS 223A"
+                      ],
+                      [
+                        "ME 326",
+                        "CS 339R"
+                      ],
+                      [
+                        "ME 327"
+                      ],
+                      [
+                        "ME 335A"
+                      ],
+                      [
+                        "ME 338"
+                      ],
+                      [
+                        "ME 339"
+                      ],
+                      [
+                        "ME 346A"
+                      ],
+                      [
+                        "ME 346B"
+                      ],
+                      [
+                        "ENGR 240"
+                      ],
+                      [
+                        "ENGR 241"
+                      ],
+                      [
+                        "AA 222"
+                      ],
+                      [
+                        "CS 131"
+                      ],
+                      [
+                        "CS 230"
+                      ],
+                      [
+                        "CS 234"
+                      ],
+                      [
+                        "CS 236"
+                      ],
+                      [
+                        "EE 364A"
+                      ],
+                      [
+                        "EE 364B"
+                      ],
+                      [
+                        "ME 233"
+                      ],
+                      [
+                        "ME 343"
+                      ],
+                      [
+                        "ME 470"
+                      ]
+                    ],
+                    "limits": [
+                      {
+                        "label": "non-ME Data Science courses",
+                        "max": 1,
+                        "codes": [
+                          "AA 222",
+                          "CS 131",
+                          "CS 230",
+                          "CS 234",
+                          "CS 236",
+                          "EE 364A",
+                          "EE 364B"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "id": "ov-me-path-bio",
+                "t": "all",
+                "name": "Depth: Biomechanical Engineering, with breadth outside it",
+                "children": [
+                  {
+                    "id": "LgReL3EU",
+                    "name": "Biomechanical Engineering",
+                    "desc": "At least two Foundational Courses must be taken.",
+                    "t": "all",
+                    "children": [
+                      {
+                        "id": "25D2xVQw",
+                        "name": "Foundational Courses",
+                        "t": "courses",
+                        "items": [
+                          [
+                            "ME 235"
+                          ],
+                          [
+                            "ME 244"
+                          ],
+                          [
+                            "ME 249"
+                          ],
+                          [
+                            "ME 281"
+                          ],
+                          [
+                            "ME 283"
+                          ],
+                          [
+                            "ME 287"
+                          ],
+                          [
+                            "ME 305",
+                            "BIOE 305"
+                          ]
+                        ],
+                        "mode": "atLeast",
+                        "n": 2,
+                        "letter": true
+                      },
+                      {
+                        "id": "iwwUMSSv",
+                        "name": "System-Specific Courses",
+                        "t": "courses",
+                        "items": [
+                          [
+                            "ME 234"
+                          ],
+                          [
+                            "ME 285"
+                          ],
+                          [
+                            "ME 303",
+                            "MATSCI 333"
+                          ],
+                          [
+                            "ME 381"
+                          ],
+                          [
+                            "ME 485"
+                          ]
+                        ],
+                        "mode": "atLeast",
+                        "n": 1,
+                        "letter": true
+                      }
+                    ],
+                    "units": 9
+                  },
+                  {
+                    "id": "ov-me-breadth-bio",
+                    "t": "courses",
+                    "name": "Breadth: two courses from areas outside the depth",
+                    "mode": "atLeast",
+                    "n": 2,
+                    "letter": true,
+                    "items": [
+                      [
+                        "AA 203"
+                      ],
+                      [
+                        "AA 212"
+                      ],
+                      [
+                        "AA 228",
+                        "CS 238"
+                      ],
+                      [
+                        "AA 277"
+                      ],
+                      [
+                        "ENGR 105"
+                      ],
+                      [
+                        "ENGR 205"
+                      ],
+                      [
+                        "ME 274A",
+                        "AA 274A",
+                        "CS 237A",
+                        "EE 260A"
+                      ],
+                      [
+                        "ME 274B",
+                        "AA 274B",
+                        "CS 237B",
+                        "EE 260B"
+                      ],
+                      [
+                        "ME 286"
+                      ],
+                      [
+                        "ME 327"
+                      ],
+                      [
+                        "ME 318"
+                      ],
+                      [
+                        "ME 324"
+                      ],
+                      [
+                        "AA 242A"
+                      ],
+                      [
+                        "AA 279A"
+                      ],
+                      [
+                        "CS 225A"
+                      ],
+                      [
+                        "CS 327A",
+                        "ME 323"
+                      ],
+                      [
+                        "ME 331A"
+                      ],
+                      [
+                        "ME 331B"
+                      ],
+                      [
+                        "ME 334"
+                      ],
+                      [
+                        "ME 352B"
+                      ],
+                      [
+                        "ME 352C"
+                      ],
+                      [
+                        "ME 352D"
+                      ],
+                      [
+                        "ME 362A"
+                      ],
+                      [
+                        "ME 370A"
+                      ],
+                      [
+                        "ME 371"
+                      ],
+                      [
+                        "ME 457"
+                      ],
+                      [
+                        "ME 351A"
+                      ],
+                      [
+                        "ME 351B"
+                      ],
+                      [
+                        "ME 354"
+                      ],
+                      [
+                        "ME 355"
+                      ],
+                      [
+                        "ME 361"
+                      ],
+                      [
+                        "ME 451A"
+                      ],
+                      [
+                        "ME 451B"
+                      ],
+                      [
+                        "ME 451C"
+                      ],
+                      [
+                        "ME 461"
+                      ],
+                      [
+                        "MATSCI 251"
+                      ],
+                      [
+                        "ME 203"
+                      ],
+                      [
+                        "ME 204"
+                      ],
+                      [
+                        "ME 206B"
+                      ],
+                      [
+                        "ME 217"
+                      ],
+                      [
+                        "ME 219"
+                      ],
+                      [
+                        "ME 225"
+                      ],
+                      [
+                        "ME 227"
+                      ],
+                      [
+                        "ME 321",
+                        "MATSCI 351"
+                      ],
+                      [
+                        "ME 325"
+                      ],
+                      [
+                        "ME 258",
+                        "MATSCI 358"
+                      ],
+                      [
+                        "ME 303",
+                        "MATSCI 333"
+                      ],
+                      [
+                        "ME 329"
+                      ],
+                      [
+                        "ME 340"
+                      ],
+                      [
+                        "ME 210"
+                      ],
+                      [
+                        "ME 220"
+                      ],
+                      [
+                        "ME 362B"
+                      ],
+                      [
+                        "ME 363"
+                      ],
+                      [
+                        "ME 364"
+                      ],
+                      [
+                        "ME 366"
+                      ],
+                      [
+                        "ME 372"
+                      ],
+                      [
+                        "ME 374"
+                      ],
+                      [
+                        "ME 463"
+                      ],
+                      [
+                        "CS 229",
+                        "STATS 229"
+                      ],
+                      [
+                        "CS 326"
+                      ],
+                      [
+                        "ME 320",
+                        "CS 223A"
+                      ],
+                      [
+                        "ME 326",
+                        "CS 339R"
+                      ],
+                      [
+                        "ME 335A"
+                      ],
+                      [
+                        "ME 338"
+                      ],
+                      [
+                        "ME 339"
+                      ],
+                      [
+                        "ME 346A"
+                      ],
+                      [
+                        "ME 346B"
+                      ],
+                      [
+                        "ENGR 240"
+                      ],
+                      [
+                        "ENGR 241"
+                      ],
+                      [
+                        "AA 222"
+                      ],
+                      [
+                        "CS 131"
+                      ],
+                      [
+                        "CS 230"
+                      ],
+                      [
+                        "CS 234"
+                      ],
+                      [
+                        "CS 236"
+                      ],
+                      [
+                        "EE 364A"
+                      ],
+                      [
+                        "EE 364B"
+                      ],
+                      [
+                        "ME 233"
+                      ],
+                      [
+                        "ME 343"
+                      ],
+                      [
+                        "ME 470"
+                      ]
+                    ],
+                    "limits": [
+                      {
+                        "label": "non-ME Data Science courses",
+                        "max": 1,
+                        "codes": [
+                          "AA 222",
+                          "CS 131",
+                          "CS 230",
+                          "CS 234",
+                          "CS 236",
+                          "EE 364A",
+                          "EE 364B"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "id": "ov-me-path-des",
+                "t": "all",
+                "name": "Depth: Design Methodology, with breadth outside it",
+                "children": [
+                  {
+                    "id": "fCYujapv",
+                    "name": "Design Methodology",
+                    "notes": "Note: The Design Methodology Depth is intended as a series, and a singular course cannot be used as breadth. Please refer to the \"Breadth in Mechanical Engineering\" section for approved breadth courses in the Design Methodology area.",
+                    "t": "courses",
+                    "items": [
+                      [
+                        "ME 310A"
+                      ],
+                      [
+                        "ME 310B"
+                      ],
+                      [
+                        "ME 310C"
+                      ]
+                    ],
+                    "mode": "all",
+                    "letter": true,
+                    "units": 9
+                  },
+                  {
+                    "id": "ov-me-breadth-des",
+                    "t": "courses",
+                    "name": "Breadth: two courses from areas outside the depth",
+                    "mode": "atLeast",
+                    "n": 2,
+                    "letter": true,
+                    "items": [
+                      [
+                        "AA 203"
+                      ],
+                      [
+                        "AA 212"
+                      ],
+                      [
+                        "AA 228",
+                        "CS 238"
+                      ],
+                      [
+                        "AA 277"
+                      ],
+                      [
+                        "ENGR 105"
+                      ],
+                      [
+                        "ENGR 205"
+                      ],
+                      [
+                        "ME 274A",
+                        "AA 274A",
+                        "CS 237A",
+                        "EE 260A"
+                      ],
+                      [
+                        "ME 274B",
+                        "AA 274B",
+                        "CS 237B",
+                        "EE 260B"
+                      ],
+                      [
+                        "ME 286"
+                      ],
+                      [
+                        "ME 327"
+                      ],
+                      [
+                        "ME 234"
+                      ],
+                      [
+                        "ME 235"
+                      ],
+                      [
+                        "ME 244"
+                      ],
+                      [
+                        "ME 249"
+                      ],
+                      [
+                        "ME 281"
+                      ],
+                      [
+                        "ME 283"
+                      ],
+                      [
+                        "ME 285"
+                      ],
+                      [
+                        "ME 287"
+                      ],
+                      [
+                        "ME 303",
+                        "MATSCI 333"
+                      ],
+                      [
+                        "ME 305",
+                        "BIOE 305"
+                      ],
+                      [
+                        "ME 381"
+                      ],
+                      [
+                        "ME 485"
+                      ],
+                      [
+                        "AA 242A"
+                      ],
+                      [
+                        "AA 279A"
+                      ],
+                      [
+                        "CS 225A"
+                      ],
+                      [
+                        "CS 327A",
+                        "ME 323"
+                      ],
+                      [
+                        "ME 331A"
+                      ],
+                      [
+                        "ME 331B"
+                      ],
+                      [
+                        "ME 334"
+                      ],
+                      [
+                        "ME 352B"
+                      ],
+                      [
+                        "ME 352C"
+                      ],
+                      [
+                        "ME 352D"
+                      ],
+                      [
+                        "ME 362A"
+                      ],
+                      [
+                        "ME 370A"
+                      ],
+                      [
+                        "ME 371"
+                      ],
+                      [
+                        "ME 457"
+                      ],
+                      [
+                        "ME 351A"
+                      ],
+                      [
+                        "ME 351B"
+                      ],
+                      [
+                        "ME 354"
+                      ],
+                      [
+                        "ME 355"
+                      ],
+                      [
+                        "ME 361"
+                      ],
+                      [
+                        "ME 451A"
+                      ],
+                      [
+                        "ME 451B"
+                      ],
+                      [
+                        "ME 451C"
+                      ],
+                      [
+                        "ME 461"
+                      ],
+                      [
+                        "MATSCI 251"
+                      ],
+                      [
+                        "ME 203"
+                      ],
+                      [
+                        "ME 204"
+                      ],
+                      [
+                        "ME 206B"
+                      ],
+                      [
+                        "ME 217"
+                      ],
+                      [
+                        "ME 219"
+                      ],
+                      [
+                        "ME 225"
+                      ],
+                      [
+                        "ME 227"
+                      ],
+                      [
+                        "ME 318"
+                      ],
+                      [
+                        "ME 321",
+                        "MATSCI 351"
+                      ],
+                      [
+                        "ME 324"
+                      ],
+                      [
+                        "ME 325"
+                      ],
+                      [
+                        "ME 258",
+                        "MATSCI 358"
+                      ],
+                      [
+                        "ME 329"
+                      ],
+                      [
+                        "ME 340"
+                      ],
+                      [
+                        "ME 210"
+                      ],
+                      [
+                        "ME 220"
+                      ],
+                      [
+                        "ME 362B"
+                      ],
+                      [
+                        "ME 363"
+                      ],
+                      [
+                        "ME 364"
+                      ],
+                      [
+                        "ME 366"
+                      ],
+                      [
+                        "ME 372"
+                      ],
+                      [
+                        "ME 374"
+                      ],
+                      [
+                        "ME 463"
+                      ],
+                      [
+                        "CS 229",
+                        "STATS 229"
+                      ],
+                      [
+                        "CS 326"
+                      ],
+                      [
+                        "ME 320",
+                        "CS 223A"
+                      ],
+                      [
+                        "ME 326",
+                        "CS 339R"
+                      ],
+                      [
+                        "ME 335A"
+                      ],
+                      [
+                        "ME 338"
+                      ],
+                      [
+                        "ME 339"
+                      ],
+                      [
+                        "ME 346A"
+                      ],
+                      [
+                        "ME 346B"
+                      ],
+                      [
+                        "ENGR 240"
+                      ],
+                      [
+                        "ENGR 241"
+                      ],
+                      [
+                        "AA 222"
+                      ],
+                      [
+                        "CS 131"
+                      ],
+                      [
+                        "CS 230"
+                      ],
+                      [
+                        "CS 234"
+                      ],
+                      [
+                        "CS 236"
+                      ],
+                      [
+                        "EE 364A"
+                      ],
+                      [
+                        "EE 364B"
+                      ],
+                      [
+                        "ME 233"
+                      ],
+                      [
+                        "ME 343"
+                      ],
+                      [
+                        "ME 470"
+                      ]
+                    ],
+                    "limits": [
+                      {
+                        "label": "non-ME Data Science courses",
+                        "max": 1,
+                        "codes": [
+                          "AA 222",
+                          "CS 131",
+                          "CS 230",
+                          "CS 234",
+                          "CS 236",
+                          "EE 364A",
+                          "EE 364B"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "id": "ov-me-path-dyn",
+                "t": "all",
+                "name": "Depth: Dynamics, with breadth outside it",
+                "children": [
+                  {
+                    "id": "jhDYKQwv",
+                    "name": "Dynamics",
+                    "t": "courses",
+                    "items": [
+                      [
+                        "AA 242A"
+                      ],
+                      [
+                        "AA 279A"
+                      ],
+                      [
+                        "CS 225A"
+                      ],
+                      [
+                        "CS 327A",
+                        "ME 323"
+                      ],
+                      [
+                        "ME 331A"
+                      ],
+                      [
+                        "ME 331B"
+                      ],
+                      [
+                        "ME 334"
+                      ]
+                    ],
+                    "mode": "atLeast",
+                    "n": 3,
+                    "letter": true,
+                    "units": 9
+                  },
+                  {
+                    "id": "ov-me-breadth-dyn",
+                    "t": "courses",
+                    "name": "Breadth: two courses from areas outside the depth",
+                    "mode": "atLeast",
+                    "n": 2,
+                    "letter": true,
+                    "items": [
+                      [
+                        "AA 203"
+                      ],
+                      [
+                        "AA 212"
+                      ],
+                      [
+                        "AA 228",
+                        "CS 238"
+                      ],
+                      [
+                        "AA 277"
+                      ],
+                      [
+                        "ENGR 105"
+                      ],
+                      [
+                        "ENGR 205"
+                      ],
+                      [
+                        "ME 274A",
+                        "AA 274A",
+                        "CS 237A",
+                        "EE 260A"
+                      ],
+                      [
+                        "ME 274B",
+                        "AA 274B",
+                        "CS 237B",
+                        "EE 260B"
+                      ],
+                      [
+                        "ME 286"
+                      ],
+                      [
+                        "ME 327"
+                      ],
+                      [
+                        "ME 234"
+                      ],
+                      [
+                        "ME 235"
+                      ],
+                      [
+                        "ME 244"
+                      ],
+                      [
+                        "ME 249"
+                      ],
+                      [
+                        "ME 281"
+                      ],
+                      [
+                        "ME 283"
+                      ],
+                      [
+                        "ME 285"
+                      ],
+                      [
+                        "ME 287"
+                      ],
+                      [
+                        "ME 303",
+                        "MATSCI 333"
+                      ],
+                      [
+                        "ME 305",
+                        "BIOE 305"
+                      ],
+                      [
+                        "ME 381"
+                      ],
+                      [
+                        "ME 485"
+                      ],
+                      [
+                        "ME 318"
+                      ],
+                      [
+                        "ME 324"
+                      ],
+                      [
+                        "ME 352B"
+                      ],
+                      [
+                        "ME 352C"
+                      ],
+                      [
+                        "ME 352D"
+                      ],
+                      [
+                        "ME 362A"
+                      ],
+                      [
+                        "ME 370A"
+                      ],
+                      [
+                        "ME 371"
+                      ],
+                      [
+                        "ME 457"
+                      ],
+                      [
+                        "ME 351A"
+                      ],
+                      [
+                        "ME 351B"
+                      ],
+                      [
+                        "ME 354"
+                      ],
+                      [
+                        "ME 355"
+                      ],
+                      [
+                        "ME 361"
+                      ],
+                      [
+                        "ME 451A"
+                      ],
+                      [
+                        "ME 451B"
+                      ],
+                      [
+                        "ME 451C"
+                      ],
+                      [
+                        "ME 461"
+                      ],
+                      [
+                        "MATSCI 251"
+                      ],
+                      [
+                        "ME 203"
+                      ],
+                      [
+                        "ME 204"
+                      ],
+                      [
+                        "ME 206B"
+                      ],
+                      [
+                        "ME 217"
+                      ],
+                      [
+                        "ME 219"
+                      ],
+                      [
+                        "ME 225"
+                      ],
+                      [
+                        "ME 227"
+                      ],
+                      [
+                        "ME 321",
+                        "MATSCI 351"
+                      ],
+                      [
+                        "ME 325"
+                      ],
+                      [
+                        "ME 258",
+                        "MATSCI 358"
+                      ],
+                      [
+                        "ME 329"
+                      ],
+                      [
+                        "ME 340"
+                      ],
+                      [
+                        "ME 210"
+                      ],
+                      [
+                        "ME 220"
+                      ],
+                      [
+                        "ME 362B"
+                      ],
+                      [
+                        "ME 363"
+                      ],
+                      [
+                        "ME 364"
+                      ],
+                      [
+                        "ME 366"
+                      ],
+                      [
+                        "ME 372"
+                      ],
+                      [
+                        "ME 374"
+                      ],
+                      [
+                        "ME 463"
+                      ],
+                      [
+                        "CS 225A"
+                      ],
+                      [
+                        "CS 229",
+                        "STATS 229"
+                      ],
+                      [
+                        "CS 326"
+                      ],
+                      [
+                        "ME 320",
+                        "CS 223A"
+                      ],
+                      [
+                        "ME 323",
+                        "CS 327A"
+                      ],
+                      [
+                        "ME 326",
+                        "CS 339R"
+                      ],
+                      [
+                        "ME 335A"
+                      ],
+                      [
+                        "ME 338"
+                      ],
+                      [
+                        "ME 339"
+                      ],
+                      [
+                        "ME 346A"
+                      ],
+                      [
+                        "ME 346B"
+                      ],
+                      [
+                        "ENGR 240"
+                      ],
+                      [
+                        "ENGR 241"
+                      ],
+                      [
+                        "AA 222"
+                      ],
+                      [
+                        "CS 131"
+                      ],
+                      [
+                        "CS 230"
+                      ],
+                      [
+                        "CS 234"
+                      ],
+                      [
+                        "CS 236"
+                      ],
+                      [
+                        "EE 364A"
+                      ],
+                      [
+                        "EE 364B"
+                      ],
+                      [
+                        "ME 233"
+                      ],
+                      [
+                        "ME 343"
+                      ],
+                      [
+                        "ME 470"
+                      ]
+                    ],
+                    "limits": [
+                      {
+                        "label": "non-ME Data Science courses",
+                        "max": 1,
+                        "codes": [
+                          "AA 222",
+                          "CS 131",
+                          "CS 230",
+                          "CS 234",
+                          "CS 236",
+                          "EE 364A",
+                          "EE 364B"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "id": "ov-me-path-ene",
+                "t": "all",
+                "name": "Depth: Energy and Transport Sciences, with breadth outside it",
+                "children": [
+                  {
+                    "id": "hTWkQGCm",
+                    "name": "Energy and Transport Sciences",
+                    "t": "all",
+                    "children": [
+                      {
+                        "id": "LGe7GRm5",
+                        "name": "Required Courses",
+                        "t": "courses",
+                        "items": [
+                          [
+                            "ME 352B"
+                          ],
+                          [
+                            "ME 370A"
+                          ]
+                        ],
+                        "mode": "all",
+                        "letter": true
+                      },
+                      {
+                        "id": "n0I1Qy0X",
+                        "name": "Additional Course",
+                        "notes": "Note: course is not taught frequently.",
+                        "t": "courses",
+                        "items": [
+                          [
+                            "ME 352C"
+                          ],
+                          [
+                            "ME 352D"
+                          ],
+                          [
+                            "ME 362A"
+                          ],
+                          [
+                            "ME 371"
+                          ],
+                          [
+                            "ME 457"
+                          ]
+                        ],
+                        "mode": "atLeast",
+                        "n": 1,
+                        "letter": true
+                      }
+                    ],
+                    "units": 9
+                  },
+                  {
+                    "id": "ov-me-breadth-ene",
+                    "t": "courses",
+                    "name": "Breadth: two courses from areas outside the depth",
+                    "mode": "atLeast",
+                    "n": 2,
+                    "letter": true,
+                    "items": [
+                      [
+                        "AA 203"
+                      ],
+                      [
+                        "AA 212"
+                      ],
+                      [
+                        "AA 228",
+                        "CS 238"
+                      ],
+                      [
+                        "AA 277"
+                      ],
+                      [
+                        "ENGR 105"
+                      ],
+                      [
+                        "ENGR 205"
+                      ],
+                      [
+                        "ME 274A",
+                        "AA 274A",
+                        "CS 237A",
+                        "EE 260A"
+                      ],
+                      [
+                        "ME 274B",
+                        "AA 274B",
+                        "CS 237B",
+                        "EE 260B"
+                      ],
+                      [
+                        "ME 286"
+                      ],
+                      [
+                        "ME 327"
+                      ],
+                      [
+                        "ME 234"
+                      ],
+                      [
+                        "ME 235"
+                      ],
+                      [
+                        "ME 244"
+                      ],
+                      [
+                        "ME 249"
+                      ],
+                      [
+                        "ME 281"
+                      ],
+                      [
+                        "ME 283"
+                      ],
+                      [
+                        "ME 285"
+                      ],
+                      [
+                        "ME 287"
+                      ],
+                      [
+                        "ME 303",
+                        "MATSCI 333"
+                      ],
+                      [
+                        "ME 305",
+                        "BIOE 305"
+                      ],
+                      [
+                        "ME 381"
+                      ],
+                      [
+                        "ME 485"
+                      ],
+                      [
+                        "ME 318"
+                      ],
+                      [
+                        "ME 324"
+                      ],
+                      [
+                        "AA 242A"
+                      ],
+                      [
+                        "AA 279A"
+                      ],
+                      [
+                        "CS 225A"
+                      ],
+                      [
+                        "CS 327A",
+                        "ME 323"
+                      ],
+                      [
+                        "ME 331A"
+                      ],
+                      [
+                        "ME 331B"
+                      ],
+                      [
+                        "ME 334"
+                      ],
+                      [
+                        "ME 351A"
+                      ],
+                      [
+                        "ME 351B"
+                      ],
+                      [
+                        "ME 354"
+                      ],
+                      [
+                        "ME 355"
+                      ],
+                      [
+                        "ME 361"
+                      ],
+                      [
+                        "ME 451A"
+                      ],
+                      [
+                        "ME 451B"
+                      ],
+                      [
+                        "ME 451C"
+                      ],
+                      [
+                        "ME 461"
+                      ],
+                      [
+                        "MATSCI 251"
+                      ],
+                      [
+                        "ME 203"
+                      ],
+                      [
+                        "ME 204"
+                      ],
+                      [
+                        "ME 206B"
+                      ],
+                      [
+                        "ME 217"
+                      ],
+                      [
+                        "ME 219"
+                      ],
+                      [
+                        "ME 225"
+                      ],
+                      [
+                        "ME 227"
+                      ],
+                      [
+                        "ME 321",
+                        "MATSCI 351"
+                      ],
+                      [
+                        "ME 325"
+                      ],
+                      [
+                        "ME 258",
+                        "MATSCI 358"
+                      ],
+                      [
+                        "ME 329"
+                      ],
+                      [
+                        "ME 340"
+                      ],
+                      [
+                        "ME 210"
+                      ],
+                      [
+                        "ME 220"
+                      ],
+                      [
+                        "ME 362A"
+                      ],
+                      [
+                        "ME 362B"
+                      ],
+                      [
+                        "ME 363"
+                      ],
+                      [
+                        "ME 364"
+                      ],
+                      [
+                        "ME 366"
+                      ],
+                      [
+                        "ME 371"
+                      ],
+                      [
+                        "ME 372"
+                      ],
+                      [
+                        "ME 374"
+                      ],
+                      [
+                        "ME 463"
+                      ],
+                      [
+                        "CS 229",
+                        "STATS 229"
+                      ],
+                      [
+                        "CS 326"
+                      ],
+                      [
+                        "ME 320",
+                        "CS 223A"
+                      ],
+                      [
+                        "ME 326",
+                        "CS 339R"
+                      ],
+                      [
+                        "ME 335A"
+                      ],
+                      [
+                        "ME 338"
+                      ],
+                      [
+                        "ME 339"
+                      ],
+                      [
+                        "ME 346A"
+                      ],
+                      [
+                        "ME 346B"
+                      ],
+                      [
+                        "ENGR 240"
+                      ],
+                      [
+                        "ENGR 241"
+                      ],
+                      [
+                        "AA 222"
+                      ],
+                      [
+                        "CS 131"
+                      ],
+                      [
+                        "CS 230"
+                      ],
+                      [
+                        "CS 234"
+                      ],
+                      [
+                        "CS 236"
+                      ],
+                      [
+                        "EE 364A"
+                      ],
+                      [
+                        "EE 364B"
+                      ],
+                      [
+                        "ME 233"
+                      ],
+                      [
+                        "ME 343"
+                      ],
+                      [
+                        "ME 470"
+                      ]
+                    ],
+                    "limits": [
+                      {
+                        "label": "non-ME Data Science courses",
+                        "max": 1,
+                        "codes": [
+                          "AA 222",
+                          "CS 131",
+                          "CS 230",
+                          "CS 234",
+                          "CS 236",
+                          "EE 364A",
+                          "EE 364B"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "id": "ov-me-path-flu",
+                "t": "all",
+                "name": "Depth: Fluid Mechanics, with breadth outside it",
+                "children": [
+                  {
+                    "id": "mWbq8BvQ",
+                    "name": "Fluid Mechanics",
+                    "notes": "Students with exceptionally strong backgrounds in Fluid Mechanics may substitute course and/or course with other courses listed in this depth area (with advisor’s consent).",
+                    "t": "all",
+                    "children": [
+                      {
+                        "id": "RNDD92CV",
+                        "name": "Required Courses",
+                        "t": "courses",
+                        "items": [
+                          [
+                            "ME 351A"
+                          ],
+                          [
+                            "ME 351B"
+                          ]
+                        ],
+                        "mode": "all",
+                        "letter": true
+                      },
+                      {
+                        "id": "I4HHbUIv",
+                        "name": "Additional Course",
+                        "t": "courses",
+                        "items": [
+                          [
+                            "ME 354"
+                          ],
+                          [
+                            "ME 355"
+                          ],
+                          [
+                            "ME 361"
+                          ],
+                          [
+                            "ME 451A"
+                          ],
+                          [
+                            "ME 451B"
+                          ],
+                          [
+                            "ME 451C"
+                          ],
+                          [
+                            "ME 461"
+                          ]
+                        ],
+                        "mode": "atLeast",
+                        "n": 1,
+                        "letter": true
+                      }
+                    ],
+                    "units": 9
+                  },
+                  {
+                    "id": "ov-me-breadth-flu",
+                    "t": "courses",
+                    "name": "Breadth: two courses from areas outside the depth",
+                    "mode": "atLeast",
+                    "n": 2,
+                    "letter": true,
+                    "items": [
+                      [
+                        "AA 203"
+                      ],
+                      [
+                        "AA 212"
+                      ],
+                      [
+                        "AA 228",
+                        "CS 238"
+                      ],
+                      [
+                        "AA 277"
+                      ],
+                      [
+                        "ENGR 105"
+                      ],
+                      [
+                        "ENGR 205"
+                      ],
+                      [
+                        "ME 274A",
+                        "AA 274A",
+                        "CS 237A",
+                        "EE 260A"
+                      ],
+                      [
+                        "ME 274B",
+                        "AA 274B",
+                        "CS 237B",
+                        "EE 260B"
+                      ],
+                      [
+                        "ME 286"
+                      ],
+                      [
+                        "ME 327"
+                      ],
+                      [
+                        "ME 234"
+                      ],
+                      [
+                        "ME 235"
+                      ],
+                      [
+                        "ME 244"
+                      ],
+                      [
+                        "ME 249"
+                      ],
+                      [
+                        "ME 281"
+                      ],
+                      [
+                        "ME 283"
+                      ],
+                      [
+                        "ME 285"
+                      ],
+                      [
+                        "ME 287"
+                      ],
+                      [
+                        "ME 303",
+                        "MATSCI 333"
+                      ],
+                      [
+                        "ME 305",
+                        "BIOE 305"
+                      ],
+                      [
+                        "ME 381"
+                      ],
+                      [
+                        "ME 485"
+                      ],
+                      [
+                        "ME 318"
+                      ],
+                      [
+                        "ME 324"
+                      ],
+                      [
+                        "AA 242A"
+                      ],
+                      [
+                        "AA 279A"
+                      ],
+                      [
+                        "CS 225A"
+                      ],
+                      [
+                        "CS 327A",
+                        "ME 323"
+                      ],
+                      [
+                        "ME 331A"
+                      ],
+                      [
+                        "ME 331B"
+                      ],
+                      [
+                        "ME 334"
+                      ],
+                      [
+                        "ME 352B"
+                      ],
+                      [
+                        "ME 352C"
+                      ],
+                      [
+                        "ME 352D"
+                      ],
+                      [
+                        "ME 362A"
+                      ],
+                      [
+                        "ME 370A"
+                      ],
+                      [
+                        "ME 371"
+                      ],
+                      [
+                        "ME 457"
+                      ],
+                      [
+                        "MATSCI 251"
+                      ],
+                      [
+                        "ME 203"
+                      ],
+                      [
+                        "ME 204"
+                      ],
+                      [
+                        "ME 206B"
+                      ],
+                      [
+                        "ME 217"
+                      ],
+                      [
+                        "ME 219"
+                      ],
+                      [
+                        "ME 225"
+                      ],
+                      [
+                        "ME 227"
+                      ],
+                      [
+                        "ME 321",
+                        "MATSCI 351"
+                      ],
+                      [
+                        "ME 325"
+                      ],
+                      [
+                        "ME 258",
+                        "MATSCI 358"
+                      ],
+                      [
+                        "ME 329"
+                      ],
+                      [
+                        "ME 340"
+                      ],
+                      [
+                        "ME 210"
+                      ],
+                      [
+                        "ME 220"
+                      ],
+                      [
+                        "ME 362B"
+                      ],
+                      [
+                        "ME 363"
+                      ],
+                      [
+                        "ME 364"
+                      ],
+                      [
+                        "ME 366"
+                      ],
+                      [
+                        "ME 372"
+                      ],
+                      [
+                        "ME 374"
+                      ],
+                      [
+                        "ME 463"
+                      ],
+                      [
+                        "CS 229",
+                        "STATS 229"
+                      ],
+                      [
+                        "CS 326"
+                      ],
+                      [
+                        "ME 320",
+                        "CS 223A"
+                      ],
+                      [
+                        "ME 326",
+                        "CS 339R"
+                      ],
+                      [
+                        "ME 335A"
+                      ],
+                      [
+                        "ME 338"
+                      ],
+                      [
+                        "ME 339"
+                      ],
+                      [
+                        "ME 346A"
+                      ],
+                      [
+                        "ME 346B"
+                      ],
+                      [
+                        "ENGR 240"
+                      ],
+                      [
+                        "ENGR 241"
+                      ],
+                      [
+                        "AA 222"
+                      ],
+                      [
+                        "CS 131"
+                      ],
+                      [
+                        "CS 230"
+                      ],
+                      [
+                        "CS 234"
+                      ],
+                      [
+                        "CS 236"
+                      ],
+                      [
+                        "EE 364A"
+                      ],
+                      [
+                        "EE 364B"
+                      ],
+                      [
+                        "ME 233"
+                      ],
+                      [
+                        "ME 343"
+                      ],
+                      [
+                        "ME 470"
+                      ]
+                    ],
+                    "limits": [
+                      {
+                        "label": "non-ME Data Science courses",
+                        "max": 1,
+                        "codes": [
+                          "AA 222",
+                          "CS 131",
+                          "CS 230",
+                          "CS 234",
+                          "CS 236",
+                          "EE 364A",
+                          "EE 364B"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "id": "ov-me-path-man",
+                "t": "all",
+                "name": "Depth: Manufacturing and Product Realization, with breadth outside it",
+                "children": [
+                  {
+                    "id": "8qGvh4Ab",
+                    "name": "Manufacturing and Product Realization",
+                    "t": "all",
+                    "children": [
+                      {
+                        "id": "KT8d2B8p",
+                        "name": "Required Course",
+                        "notes": "Students who have previously completed course/course as an undergraduate can substitute one of the courses below. Three courses total must be taken to fulfill this Depth area.",
+                        "t": "courses",
+                        "items": [
+                          [
+                            "ME 203"
+                          ]
+                        ],
+                        "mode": "all",
+                        "letter": true
+                      },
+                      {
+                        "id": "ma3LOSqG",
+                        "name": "Additional Courses",
+                        "t": "courses",
+                        "items": [
+                          [
+                            "ME 204"
+                          ],
+                          [
+                            "ME 217"
+                          ],
+                          [
+                            "ME 219"
+                          ],
+                          [
+                            "ME 225"
+                          ],
+                          [
+                            "ME 227"
+                          ],
+                          [
+                            "ME 318"
+                          ],
+                          [
+                            "ME 321",
+                            "MATSCI 351"
+                          ],
+                          [
+                            "ME 324"
+                          ],
+                          [
+                            "ME 325"
+                          ]
+                        ],
+                        "mode": "atLeast",
+                        "n": 2,
+                        "letter": true
+                      }
+                    ],
+                    "units": 9
+                  },
+                  {
+                    "id": "ov-me-breadth-man",
+                    "t": "courses",
+                    "name": "Breadth: two courses from areas outside the depth",
+                    "mode": "atLeast",
+                    "n": 2,
+                    "letter": true,
+                    "items": [
+                      [
+                        "AA 203"
+                      ],
+                      [
+                        "AA 212"
+                      ],
+                      [
+                        "AA 228",
+                        "CS 238"
+                      ],
+                      [
+                        "AA 277"
+                      ],
+                      [
+                        "ENGR 105"
+                      ],
+                      [
+                        "ENGR 205"
+                      ],
+                      [
+                        "ME 274A",
+                        "AA 274A",
+                        "CS 237A",
+                        "EE 260A"
+                      ],
+                      [
+                        "ME 274B",
+                        "AA 274B",
+                        "CS 237B",
+                        "EE 260B"
+                      ],
+                      [
+                        "ME 286"
+                      ],
+                      [
+                        "ME 327"
+                      ],
+                      [
+                        "ME 234"
+                      ],
+                      [
+                        "ME 235"
+                      ],
+                      [
+                        "ME 244"
+                      ],
+                      [
+                        "ME 249"
+                      ],
+                      [
+                        "ME 281"
+                      ],
+                      [
+                        "ME 283"
+                      ],
+                      [
+                        "ME 285"
+                      ],
+                      [
+                        "ME 287"
+                      ],
+                      [
+                        "ME 303",
+                        "MATSCI 333"
+                      ],
+                      [
+                        "ME 305",
+                        "BIOE 305"
+                      ],
+                      [
+                        "ME 381"
+                      ],
+                      [
+                        "ME 485"
+                      ],
+                      [
+                        "ME 318"
+                      ],
+                      [
+                        "ME 324"
+                      ],
+                      [
+                        "AA 242A"
+                      ],
+                      [
+                        "AA 279A"
+                      ],
+                      [
+                        "CS 225A"
+                      ],
+                      [
+                        "CS 327A",
+                        "ME 323"
+                      ],
+                      [
+                        "ME 331A"
+                      ],
+                      [
+                        "ME 331B"
+                      ],
+                      [
+                        "ME 334"
+                      ],
+                      [
+                        "ME 352B"
+                      ],
+                      [
+                        "ME 352C"
+                      ],
+                      [
+                        "ME 352D"
+                      ],
+                      [
+                        "ME 362A"
+                      ],
+                      [
+                        "ME 370A"
+                      ],
+                      [
+                        "ME 371"
+                      ],
+                      [
+                        "ME 457"
+                      ],
+                      [
+                        "ME 351A"
+                      ],
+                      [
+                        "ME 351B"
+                      ],
+                      [
+                        "ME 354"
+                      ],
+                      [
+                        "ME 355"
+                      ],
+                      [
+                        "ME 361"
+                      ],
+                      [
+                        "ME 451A"
+                      ],
+                      [
+                        "ME 451B"
+                      ],
+                      [
+                        "ME 451C"
+                      ],
+                      [
+                        "ME 461"
+                      ],
+                      [
+                        "ME 219"
+                      ],
+                      [
+                        "ME 258",
+                        "MATSCI 358"
+                      ],
+                      [
+                        "ME 329"
+                      ],
+                      [
+                        "ME 340"
+                      ],
+                      [
+                        "ME 210"
+                      ],
+                      [
+                        "ME 220"
+                      ],
+                      [
+                        "ME 362B"
+                      ],
+                      [
+                        "ME 363"
+                      ],
+                      [
+                        "ME 364"
+                      ],
+                      [
+                        "ME 366"
+                      ],
+                      [
+                        "ME 372"
+                      ],
+                      [
+                        "ME 374"
+                      ],
+                      [
+                        "ME 463"
+                      ],
+                      [
+                        "CS 229",
+                        "STATS 229"
+                      ],
+                      [
+                        "CS 326"
+                      ],
+                      [
+                        "ME 320",
+                        "CS 223A"
+                      ],
+                      [
+                        "ME 326",
+                        "CS 339R"
+                      ],
+                      [
+                        "ME 335A"
+                      ],
+                      [
+                        "ME 338"
+                      ],
+                      [
+                        "ME 339"
+                      ],
+                      [
+                        "ME 346A"
+                      ],
+                      [
+                        "ME 346B"
+                      ],
+                      [
+                        "ENGR 240"
+                      ],
+                      [
+                        "ENGR 241"
+                      ],
+                      [
+                        "AA 222"
+                      ],
+                      [
+                        "CS 131"
+                      ],
+                      [
+                        "CS 230"
+                      ],
+                      [
+                        "CS 234"
+                      ],
+                      [
+                        "CS 236"
+                      ],
+                      [
+                        "EE 364A"
+                      ],
+                      [
+                        "EE 364B"
+                      ],
+                      [
+                        "ME 233"
+                      ],
+                      [
+                        "ME 343"
+                      ],
+                      [
+                        "ME 470"
+                      ]
+                    ],
+                    "limits": [
+                      {
+                        "label": "non-ME Data Science courses",
+                        "max": 1,
+                        "codes": [
+                          "AA 222",
+                          "CS 131",
+                          "CS 230",
+                          "CS 234",
+                          "CS 236",
+                          "EE 364A",
+                          "EE 364B"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "id": "ov-me-path-mat",
+                "t": "all",
+                "name": "Depth: Materials and Stress Analysis, with breadth outside it",
+                "children": [
+                  {
+                    "id": "pCEtoSl5",
+                    "name": "Materials and Stress Analysis",
+                    "t": "courses",
+                    "items": [
+                      [
+                        "ME 219"
+                      ],
+                      [
+                        "ME 258",
+                        "MATSCI 358"
+                      ],
+                      [
+                        "ME 303",
+                        "MATSCI 333"
+                      ],
+                      [
+                        "ME 329"
+                      ],
+                      [
+                        "ME 340"
+                      ]
+                    ],
+                    "mode": "atLeast",
+                    "n": 3,
+                    "letter": true,
+                    "units": 9
+                  },
+                  {
+                    "id": "ov-me-breadth-mat",
+                    "t": "courses",
+                    "name": "Breadth: two courses from areas outside the depth",
+                    "mode": "atLeast",
+                    "n": 2,
+                    "letter": true,
+                    "items": [
+                      [
+                        "AA 203"
+                      ],
+                      [
+                        "AA 212"
+                      ],
+                      [
+                        "AA 228",
+                        "CS 238"
+                      ],
+                      [
+                        "AA 277"
+                      ],
+                      [
+                        "ENGR 105"
+                      ],
+                      [
+                        "ENGR 205"
+                      ],
+                      [
+                        "ME 274A",
+                        "AA 274A",
+                        "CS 237A",
+                        "EE 260A"
+                      ],
+                      [
+                        "ME 274B",
+                        "AA 274B",
+                        "CS 237B",
+                        "EE 260B"
+                      ],
+                      [
+                        "ME 286"
+                      ],
+                      [
+                        "ME 327"
+                      ],
+                      [
+                        "ME 234"
+                      ],
+                      [
+                        "ME 235"
+                      ],
+                      [
+                        "ME 244"
+                      ],
+                      [
+                        "ME 249"
+                      ],
+                      [
+                        "ME 281"
+                      ],
+                      [
+                        "ME 283"
+                      ],
+                      [
+                        "ME 285"
+                      ],
+                      [
+                        "ME 287"
+                      ],
+                      [
+                        "ME 303",
+                        "MATSCI 333"
+                      ],
+                      [
+                        "ME 305",
+                        "BIOE 305"
+                      ],
+                      [
+                        "ME 381"
+                      ],
+                      [
+                        "ME 485"
+                      ],
+                      [
+                        "ME 318"
+                      ],
+                      [
+                        "ME 324"
+                      ],
+                      [
+                        "AA 242A"
+                      ],
+                      [
+                        "AA 279A"
+                      ],
+                      [
+                        "CS 225A"
+                      ],
+                      [
+                        "CS 327A",
+                        "ME 323"
+                      ],
+                      [
+                        "ME 331A"
+                      ],
+                      [
+                        "ME 331B"
+                      ],
+                      [
+                        "ME 334"
+                      ],
+                      [
+                        "ME 352B"
+                      ],
+                      [
+                        "ME 352C"
+                      ],
+                      [
+                        "ME 352D"
+                      ],
+                      [
+                        "ME 362A"
+                      ],
+                      [
+                        "ME 370A"
+                      ],
+                      [
+                        "ME 371"
+                      ],
+                      [
+                        "ME 457"
+                      ],
+                      [
+                        "ME 351A"
+                      ],
+                      [
+                        "ME 351B"
+                      ],
+                      [
+                        "ME 354"
+                      ],
+                      [
+                        "ME 355"
+                      ],
+                      [
+                        "ME 361"
+                      ],
+                      [
+                        "ME 451A"
+                      ],
+                      [
+                        "ME 451B"
+                      ],
+                      [
+                        "ME 451C"
+                      ],
+                      [
+                        "ME 461"
+                      ],
+                      [
+                        "MATSCI 251"
+                      ],
+                      [
+                        "ME 203"
+                      ],
+                      [
+                        "ME 204"
+                      ],
+                      [
+                        "ME 206B"
+                      ],
+                      [
+                        "ME 217"
+                      ],
+                      [
+                        "ME 219"
+                      ],
+                      [
+                        "ME 225"
+                      ],
+                      [
+                        "ME 227"
+                      ],
+                      [
+                        "ME 321",
+                        "MATSCI 351"
+                      ],
+                      [
+                        "ME 325"
+                      ],
+                      [
+                        "ME 210"
+                      ],
+                      [
+                        "ME 220"
+                      ],
+                      [
+                        "ME 362B"
+                      ],
+                      [
+                        "ME 363"
+                      ],
+                      [
+                        "ME 364"
+                      ],
+                      [
+                        "ME 366"
+                      ],
+                      [
+                        "ME 372"
+                      ],
+                      [
+                        "ME 374"
+                      ],
+                      [
+                        "ME 463"
+                      ],
+                      [
+                        "CS 229",
+                        "STATS 229"
+                      ],
+                      [
+                        "CS 326"
+                      ],
+                      [
+                        "ME 320",
+                        "CS 223A"
+                      ],
+                      [
+                        "ME 326",
+                        "CS 339R"
+                      ],
+                      [
+                        "ME 335A"
+                      ],
+                      [
+                        "ME 338"
+                      ],
+                      [
+                        "ME 339"
+                      ],
+                      [
+                        "ME 340"
+                      ],
+                      [
+                        "ME 346A"
+                      ],
+                      [
+                        "ME 346B"
+                      ],
+                      [
+                        "ENGR 240"
+                      ],
+                      [
+                        "ENGR 241"
+                      ],
+                      [
+                        "AA 222"
+                      ],
+                      [
+                        "CS 131"
+                      ],
+                      [
+                        "CS 230"
+                      ],
+                      [
+                        "CS 234"
+                      ],
+                      [
+                        "CS 236"
+                      ],
+                      [
+                        "EE 364A"
+                      ],
+                      [
+                        "EE 364B"
+                      ],
+                      [
+                        "ME 233"
+                      ],
+                      [
+                        "ME 343"
+                      ],
+                      [
+                        "ME 470"
+                      ]
+                    ],
+                    "limits": [
+                      {
+                        "label": "non-ME Data Science courses",
+                        "max": 1,
+                        "codes": [
+                          "AA 222",
+                          "CS 131",
+                          "CS 230",
+                          "CS 234",
+                          "CS 236",
+                          "EE 364A",
+                          "EE 364B"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "id": "ov-me-path-mec",
+                "t": "all",
+                "name": "Depth: Mechatronics, with breadth outside it",
+                "children": [
+                  {
+                    "id": "kZzt47Tq",
+                    "name": "Mechatronics",
+                    "notes": "Note: The Mechatronics Depth is intended as a series, and a singular course cannot be used as breadth. Please refer to the \"Breadth in Mechanical Engineering\" section for approved breadth courses in the Mechatronics area.",
+                    "t": "courses",
+                    "items": [
+                      [
+                        "ME 218A"
+                      ],
+                      [
+                        "ME 218B"
+                      ],
+                      [
+                        "ME 218C"
+                      ]
+                    ],
+                    "mode": "atLeast",
+                    "n": 2,
+                    "letter": true,
+                    "units": 9
+                  },
+                  {
+                    "id": "ov-me-breadth-mec",
+                    "t": "courses",
+                    "name": "Breadth: two courses from areas outside the depth",
+                    "mode": "atLeast",
+                    "n": 2,
+                    "letter": true,
+                    "items": [
+                      [
+                        "AA 203"
+                      ],
+                      [
+                        "AA 212"
+                      ],
+                      [
+                        "AA 228",
+                        "CS 238"
+                      ],
+                      [
+                        "AA 277"
+                      ],
+                      [
+                        "ENGR 105"
+                      ],
+                      [
+                        "ENGR 205"
+                      ],
+                      [
+                        "ME 274A",
+                        "AA 274A",
+                        "CS 237A",
+                        "EE 260A"
+                      ],
+                      [
+                        "ME 274B",
+                        "AA 274B",
+                        "CS 237B",
+                        "EE 260B"
+                      ],
+                      [
+                        "ME 286"
+                      ],
+                      [
+                        "ME 327"
+                      ],
+                      [
+                        "ME 234"
+                      ],
+                      [
+                        "ME 235"
+                      ],
+                      [
+                        "ME 244"
+                      ],
+                      [
+                        "ME 249"
+                      ],
+                      [
+                        "ME 281"
+                      ],
+                      [
+                        "ME 283"
+                      ],
+                      [
+                        "ME 285"
+                      ],
+                      [
+                        "ME 287"
+                      ],
+                      [
+                        "ME 303",
+                        "MATSCI 333"
+                      ],
+                      [
+                        "ME 305",
+                        "BIOE 305"
+                      ],
+                      [
+                        "ME 381"
+                      ],
+                      [
+                        "ME 485"
+                      ],
+                      [
+                        "ME 318"
+                      ],
+                      [
+                        "ME 324"
+                      ],
+                      [
+                        "AA 242A"
+                      ],
+                      [
+                        "AA 279A"
+                      ],
+                      [
+                        "CS 225A"
+                      ],
+                      [
+                        "CS 327A",
+                        "ME 323"
+                      ],
+                      [
+                        "ME 331A"
+                      ],
+                      [
+                        "ME 331B"
+                      ],
+                      [
+                        "ME 334"
+                      ],
+                      [
+                        "ME 352B"
+                      ],
+                      [
+                        "ME 352C"
+                      ],
+                      [
+                        "ME 352D"
+                      ],
+                      [
+                        "ME 362A"
+                      ],
+                      [
+                        "ME 370A"
+                      ],
+                      [
+                        "ME 371"
+                      ],
+                      [
+                        "ME 457"
+                      ],
+                      [
+                        "ME 351A"
+                      ],
+                      [
+                        "ME 351B"
+                      ],
+                      [
+                        "ME 354"
+                      ],
+                      [
+                        "ME 355"
+                      ],
+                      [
+                        "ME 361"
+                      ],
+                      [
+                        "ME 451A"
+                      ],
+                      [
+                        "ME 451B"
+                      ],
+                      [
+                        "ME 451C"
+                      ],
+                      [
+                        "ME 461"
+                      ],
+                      [
+                        "MATSCI 251"
+                      ],
+                      [
+                        "ME 203"
+                      ],
+                      [
+                        "ME 204"
+                      ],
+                      [
+                        "ME 206B"
+                      ],
+                      [
+                        "ME 217"
+                      ],
+                      [
+                        "ME 219"
+                      ],
+                      [
+                        "ME 225"
+                      ],
+                      [
+                        "ME 227"
+                      ],
+                      [
+                        "ME 321",
+                        "MATSCI 351"
+                      ],
+                      [
+                        "ME 325"
+                      ],
+                      [
+                        "ME 258",
+                        "MATSCI 358"
+                      ],
+                      [
+                        "ME 329"
+                      ],
+                      [
+                        "ME 340"
+                      ],
+                      [
+                        "ME 362B"
+                      ],
+                      [
+                        "ME 363"
+                      ],
+                      [
+                        "ME 364"
+                      ],
+                      [
+                        "ME 366"
+                      ],
+                      [
+                        "ME 372"
+                      ],
+                      [
+                        "ME 374"
+                      ],
+                      [
+                        "ME 463"
+                      ],
+                      [
+                        "CS 229",
+                        "STATS 229"
+                      ],
+                      [
+                        "CS 326"
+                      ],
+                      [
+                        "ME 320",
+                        "CS 223A"
+                      ],
+                      [
+                        "ME 326",
+                        "CS 339R"
+                      ],
+                      [
+                        "ME 335A"
+                      ],
+                      [
+                        "ME 338"
+                      ],
+                      [
+                        "ME 339"
+                      ],
+                      [
+                        "ME 346A"
+                      ],
+                      [
+                        "ME 346B"
+                      ],
+                      [
+                        "ENGR 240"
+                      ],
+                      [
+                        "ENGR 241"
+                      ],
+                      [
+                        "AA 222"
+                      ],
+                      [
+                        "CS 131"
+                      ],
+                      [
+                        "CS 230"
+                      ],
+                      [
+                        "CS 234"
+                      ],
+                      [
+                        "CS 236"
+                      ],
+                      [
+                        "EE 364A"
+                      ],
+                      [
+                        "EE 364B"
+                      ],
+                      [
+                        "ME 233"
+                      ],
+                      [
+                        "ME 343"
+                      ],
+                      [
+                        "ME 470"
+                      ]
+                    ],
+                    "limits": [
+                      {
+                        "label": "non-ME Data Science courses",
+                        "max": 1,
+                        "codes": [
+                          "AA 222",
+                          "CS 131",
+                          "CS 230",
+                          "CS 234",
+                          "CS 236",
+                          "EE 364A",
+                          "EE 364B"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "id": "ov-me-path-rea",
+                "t": "all",
+                "name": "Depth: Reactive and Ionized Gas Dynamics, with breadth outside it",
+                "children": [
+                  {
+                    "id": "UwJJLSgx",
+                    "name": "Reactive and Ionized Gas Dynamics",
+                    "t": "all",
+                    "children": [
+                      {
+                        "id": "WLulOaHi",
+                        "name": "Required Course",
+                        "t": "courses",
+                        "items": [
+                          [
+                            "ME 362A"
+                          ]
+                        ],
+                        "mode": "all",
+                        "letter": true
+                      },
+                      {
+                        "id": "LjALvSlz",
+                        "name": "Additional Courses",
+                        "t": "courses",
+                        "items": [
+                          [
+                            "ME 362B"
+                          ],
+                          [
+                            "ME 363"
+                          ],
+                          [
+                            "ME 364"
+                          ],
+                          [
+                            "ME 366"
+                          ],
+                          [
+                            "ME 371"
+                          ],
+                          [
+                            "ME 372"
+                          ],
+                          [
+                            "ME 374"
+                          ],
+                          [
+                            "ME 463"
+                          ]
+                        ],
+                        "mode": "atLeast",
+                        "n": 2,
+                        "letter": true
+                      }
+                    ],
+                    "units": 9
+                  },
+                  {
+                    "id": "ov-me-breadth-rea",
+                    "t": "courses",
+                    "name": "Breadth: two courses from areas outside the depth",
+                    "mode": "atLeast",
+                    "n": 2,
+                    "letter": true,
+                    "items": [
+                      [
+                        "AA 203"
+                      ],
+                      [
+                        "AA 212"
+                      ],
+                      [
+                        "AA 228",
+                        "CS 238"
+                      ],
+                      [
+                        "AA 277"
+                      ],
+                      [
+                        "ENGR 105"
+                      ],
+                      [
+                        "ENGR 205"
+                      ],
+                      [
+                        "ME 274A",
+                        "AA 274A",
+                        "CS 237A",
+                        "EE 260A"
+                      ],
+                      [
+                        "ME 274B",
+                        "AA 274B",
+                        "CS 237B",
+                        "EE 260B"
+                      ],
+                      [
+                        "ME 286"
+                      ],
+                      [
+                        "ME 327"
+                      ],
+                      [
+                        "ME 234"
+                      ],
+                      [
+                        "ME 235"
+                      ],
+                      [
+                        "ME 244"
+                      ],
+                      [
+                        "ME 249"
+                      ],
+                      [
+                        "ME 281"
+                      ],
+                      [
+                        "ME 283"
+                      ],
+                      [
+                        "ME 285"
+                      ],
+                      [
+                        "ME 287"
+                      ],
+                      [
+                        "ME 303",
+                        "MATSCI 333"
+                      ],
+                      [
+                        "ME 305",
+                        "BIOE 305"
+                      ],
+                      [
+                        "ME 381"
+                      ],
+                      [
+                        "ME 485"
+                      ],
+                      [
+                        "ME 318"
+                      ],
+                      [
+                        "ME 324"
+                      ],
+                      [
+                        "AA 242A"
+                      ],
+                      [
+                        "AA 279A"
+                      ],
+                      [
+                        "CS 225A"
+                      ],
+                      [
+                        "CS 327A",
+                        "ME 323"
+                      ],
+                      [
+                        "ME 331A"
+                      ],
+                      [
+                        "ME 331B"
+                      ],
+                      [
+                        "ME 334"
+                      ],
+                      [
+                        "ME 352B"
+                      ],
+                      [
+                        "ME 352C"
+                      ],
+                      [
+                        "ME 352D"
+                      ],
+                      [
+                        "ME 362A"
+                      ],
+                      [
+                        "ME 370A"
+                      ],
+                      [
+                        "ME 371"
+                      ],
+                      [
+                        "ME 457"
+                      ],
+                      [
+                        "ME 351A"
+                      ],
+                      [
+                        "ME 351B"
+                      ],
+                      [
+                        "ME 354"
+                      ],
+                      [
+                        "ME 355"
+                      ],
+                      [
+                        "ME 361"
+                      ],
+                      [
+                        "ME 451A"
+                      ],
+                      [
+                        "ME 451B"
+                      ],
+                      [
+                        "ME 451C"
+                      ],
+                      [
+                        "ME 461"
+                      ],
+                      [
+                        "MATSCI 251"
+                      ],
+                      [
+                        "ME 203"
+                      ],
+                      [
+                        "ME 204"
+                      ],
+                      [
+                        "ME 206B"
+                      ],
+                      [
+                        "ME 217"
+                      ],
+                      [
+                        "ME 219"
+                      ],
+                      [
+                        "ME 225"
+                      ],
+                      [
+                        "ME 227"
+                      ],
+                      [
+                        "ME 321",
+                        "MATSCI 351"
+                      ],
+                      [
+                        "ME 325"
+                      ],
+                      [
+                        "ME 258",
+                        "MATSCI 358"
+                      ],
+                      [
+                        "ME 329"
+                      ],
+                      [
+                        "ME 340"
+                      ],
+                      [
+                        "ME 210"
+                      ],
+                      [
+                        "ME 220"
+                      ],
+                      [
+                        "CS 229",
+                        "STATS 229"
+                      ],
+                      [
+                        "CS 326"
+                      ],
+                      [
+                        "ME 320",
+                        "CS 223A"
+                      ],
+                      [
+                        "ME 326",
+                        "CS 339R"
+                      ],
+                      [
+                        "ME 335A"
+                      ],
+                      [
+                        "ME 338"
+                      ],
+                      [
+                        "ME 339"
+                      ],
+                      [
+                        "ME 346A"
+                      ],
+                      [
+                        "ME 346B"
+                      ],
+                      [
+                        "ENGR 240"
+                      ],
+                      [
+                        "ENGR 241"
+                      ],
+                      [
+                        "AA 222"
+                      ],
+                      [
+                        "CS 131"
+                      ],
+                      [
+                        "CS 230"
+                      ],
+                      [
+                        "CS 234"
+                      ],
+                      [
+                        "CS 236"
+                      ],
+                      [
+                        "EE 364A"
+                      ],
+                      [
+                        "EE 364B"
+                      ],
+                      [
+                        "ME 233"
+                      ],
+                      [
+                        "ME 343"
+                      ],
+                      [
+                        "ME 470"
+                      ]
+                    ],
+                    "limits": [
+                      {
+                        "label": "non-ME Data Science courses",
+                        "max": 1,
+                        "codes": [
+                          "AA 222",
+                          "CS 131",
+                          "CS 230",
+                          "CS 234",
+                          "CS 236",
+                          "EE 364A",
+                          "EE 364B"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "id": "ov-me-path-rob",
+                "t": "all",
+                "name": "Depth: Robotics and Kinematics, with breadth outside it",
+                "children": [
+                  {
+                    "id": "sStupu84",
+                    "name": "Robotics and Kinematics",
+                    "t": "courses",
+                    "items": [
+                      [
+                        "AA 277"
+                      ],
+                      [
+                        "CS 225A"
+                      ],
+                      [
+                        "CS 229",
+                        "STATS 229"
+                      ],
+                      [
+                        "CS 326"
+                      ],
+                      [
+                        "ME 274A",
+                        "AA 274A",
+                        "CS 237A",
+                        "EE 260A"
+                      ],
+                      [
+                        "ME 274B",
+                        "AA 274B",
+                        "CS 237B",
+                        "EE 260B"
+                      ],
+                      [
+                        "ME 303",
+                        "MATSCI 333"
+                      ],
+                      [
+                        "ME 320",
+                        "CS 223A"
+                      ],
+                      [
+                        "ME 323",
+                        "CS 327A"
+                      ],
+                      [
+                        "ME 326",
+                        "CS 339R"
+                      ],
+                      [
+                        "ME 327"
+                      ]
+                    ],
+                    "mode": "atLeast",
+                    "n": 3,
+                    "letter": true,
+                    "units": 9
+                  },
+                  {
+                    "id": "ov-me-breadth-rob",
+                    "t": "courses",
+                    "name": "Breadth: two courses from areas outside the depth",
+                    "mode": "atLeast",
+                    "n": 2,
+                    "letter": true,
+                    "items": [
+                      [
+                        "AA 203"
+                      ],
+                      [
+                        "AA 212"
+                      ],
+                      [
+                        "AA 228",
+                        "CS 238"
+                      ],
+                      [
+                        "AA 277"
+                      ],
+                      [
+                        "ENGR 105"
+                      ],
+                      [
+                        "ENGR 205"
+                      ],
+                      [
+                        "ME 274A",
+                        "AA 274A",
+                        "CS 237A",
+                        "EE 260A"
+                      ],
+                      [
+                        "ME 274B",
+                        "AA 274B",
+                        "CS 237B",
+                        "EE 260B"
+                      ],
+                      [
+                        "ME 286"
+                      ],
+                      [
+                        "ME 327"
+                      ],
+                      [
+                        "ME 234"
+                      ],
+                      [
+                        "ME 235"
+                      ],
+                      [
+                        "ME 244"
+                      ],
+                      [
+                        "ME 249"
+                      ],
+                      [
+                        "ME 281"
+                      ],
+                      [
+                        "ME 283"
+                      ],
+                      [
+                        "ME 285"
+                      ],
+                      [
+                        "ME 287"
+                      ],
+                      [
+                        "ME 303",
+                        "MATSCI 333"
+                      ],
+                      [
+                        "ME 305",
+                        "BIOE 305"
+                      ],
+                      [
+                        "ME 381"
+                      ],
+                      [
+                        "ME 485"
+                      ],
+                      [
+                        "ME 318"
+                      ],
+                      [
+                        "ME 324"
+                      ],
+                      [
+                        "AA 242A"
+                      ],
+                      [
+                        "AA 279A"
+                      ],
+                      [
+                        "CS 225A"
+                      ],
+                      [
+                        "CS 327A",
+                        "ME 323"
+                      ],
+                      [
+                        "ME 331A"
+                      ],
+                      [
+                        "ME 331B"
+                      ],
+                      [
+                        "ME 334"
+                      ],
+                      [
+                        "ME 352B"
+                      ],
+                      [
+                        "ME 352C"
+                      ],
+                      [
+                        "ME 352D"
+                      ],
+                      [
+                        "ME 362A"
+                      ],
+                      [
+                        "ME 370A"
+                      ],
+                      [
+                        "ME 371"
+                      ],
+                      [
+                        "ME 457"
+                      ],
+                      [
+                        "ME 351A"
+                      ],
+                      [
+                        "ME 351B"
+                      ],
+                      [
+                        "ME 354"
+                      ],
+                      [
+                        "ME 355"
+                      ],
+                      [
+                        "ME 361"
+                      ],
+                      [
+                        "ME 451A"
+                      ],
+                      [
+                        "ME 451B"
+                      ],
+                      [
+                        "ME 451C"
+                      ],
+                      [
+                        "ME 461"
+                      ],
+                      [
+                        "MATSCI 251"
+                      ],
+                      [
+                        "ME 203"
+                      ],
+                      [
+                        "ME 204"
+                      ],
+                      [
+                        "ME 206B"
+                      ],
+                      [
+                        "ME 217"
+                      ],
+                      [
+                        "ME 219"
+                      ],
+                      [
+                        "ME 225"
+                      ],
+                      [
+                        "ME 227"
+                      ],
+                      [
+                        "ME 321",
+                        "MATSCI 351"
+                      ],
+                      [
+                        "ME 325"
+                      ],
+                      [
+                        "ME 258",
+                        "MATSCI 358"
+                      ],
+                      [
+                        "ME 329"
+                      ],
+                      [
+                        "ME 340"
+                      ],
+                      [
+                        "ME 210"
+                      ],
+                      [
+                        "ME 220"
+                      ],
+                      [
+                        "ME 362B"
+                      ],
+                      [
+                        "ME 363"
+                      ],
+                      [
+                        "ME 364"
+                      ],
+                      [
+                        "ME 366"
+                      ],
+                      [
+                        "ME 372"
+                      ],
+                      [
+                        "ME 374"
+                      ],
+                      [
+                        "ME 463"
+                      ],
+                      [
+                        "ME 335A"
+                      ],
+                      [
+                        "ME 338"
+                      ],
+                      [
+                        "ME 339"
+                      ],
+                      [
+                        "ME 346A"
+                      ],
+                      [
+                        "ME 346B"
+                      ],
+                      [
+                        "ENGR 240"
+                      ],
+                      [
+                        "ENGR 241"
+                      ],
+                      [
+                        "AA 222"
+                      ],
+                      [
+                        "CS 131"
+                      ],
+                      [
+                        "CS 229",
+                        "STATS 229"
+                      ],
+                      [
+                        "CS 230"
+                      ],
+                      [
+                        "CS 234"
+                      ],
+                      [
+                        "CS 236"
+                      ],
+                      [
+                        "EE 364A"
+                      ],
+                      [
+                        "EE 364B"
+                      ],
+                      [
+                        "ME 233"
+                      ],
+                      [
+                        "ME 343"
+                      ],
+                      [
+                        "ME 470"
+                      ]
+                    ],
+                    "limits": [
+                      {
+                        "label": "non-ME Data Science courses",
+                        "max": 1,
+                        "codes": [
+                          "AA 222",
+                          "CS 131",
+                          "CS 230",
+                          "CS 234",
+                          "CS 236",
+                          "EE 364A",
+                          "EE 364B"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "id": "ov-me-path-sol",
+                "t": "all",
+                "name": "Depth: Solid Mechanics, with breadth outside it",
+                "children": [
+                  {
+                    "id": "o3eeCeFw",
+                    "name": "Solid Mechanics",
+                    "t": "courses",
+                    "items": [
+                      [
+                        "ME 335A"
+                      ],
+                      [
+                        "ME 338"
+                      ],
+                      [
+                        "ME 340"
+                      ],
+                      [
+                        "ME 346A"
+                      ]
+                    ],
+                    "mode": "atLeast",
+                    "n": 3,
+                    "letter": true,
+                    "units": 9
+                  },
+                  {
+                    "id": "ov-me-breadth-sol",
+                    "t": "courses",
+                    "name": "Breadth: two courses from areas outside the depth",
+                    "mode": "atLeast",
+                    "n": 2,
+                    "letter": true,
+                    "items": [
+                      [
+                        "AA 203"
+                      ],
+                      [
+                        "AA 212"
+                      ],
+                      [
+                        "AA 228",
+                        "CS 238"
+                      ],
+                      [
+                        "AA 277"
+                      ],
+                      [
+                        "ENGR 105"
+                      ],
+                      [
+                        "ENGR 205"
+                      ],
+                      [
+                        "ME 274A",
+                        "AA 274A",
+                        "CS 237A",
+                        "EE 260A"
+                      ],
+                      [
+                        "ME 274B",
+                        "AA 274B",
+                        "CS 237B",
+                        "EE 260B"
+                      ],
+                      [
+                        "ME 286"
+                      ],
+                      [
+                        "ME 327"
+                      ],
+                      [
+                        "ME 234"
+                      ],
+                      [
+                        "ME 235"
+                      ],
+                      [
+                        "ME 244"
+                      ],
+                      [
+                        "ME 249"
+                      ],
+                      [
+                        "ME 281"
+                      ],
+                      [
+                        "ME 283"
+                      ],
+                      [
+                        "ME 285"
+                      ],
+                      [
+                        "ME 287"
+                      ],
+                      [
+                        "ME 303",
+                        "MATSCI 333"
+                      ],
+                      [
+                        "ME 305",
+                        "BIOE 305"
+                      ],
+                      [
+                        "ME 381"
+                      ],
+                      [
+                        "ME 485"
+                      ],
+                      [
+                        "ME 318"
+                      ],
+                      [
+                        "ME 324"
+                      ],
+                      [
+                        "AA 242A"
+                      ],
+                      [
+                        "AA 279A"
+                      ],
+                      [
+                        "CS 225A"
+                      ],
+                      [
+                        "CS 327A",
+                        "ME 323"
+                      ],
+                      [
+                        "ME 331A"
+                      ],
+                      [
+                        "ME 331B"
+                      ],
+                      [
+                        "ME 334"
+                      ],
+                      [
+                        "ME 352B"
+                      ],
+                      [
+                        "ME 352C"
+                      ],
+                      [
+                        "ME 352D"
+                      ],
+                      [
+                        "ME 362A"
+                      ],
+                      [
+                        "ME 370A"
+                      ],
+                      [
+                        "ME 371"
+                      ],
+                      [
+                        "ME 457"
+                      ],
+                      [
+                        "ME 351A"
+                      ],
+                      [
+                        "ME 351B"
+                      ],
+                      [
+                        "ME 354"
+                      ],
+                      [
+                        "ME 355"
+                      ],
+                      [
+                        "ME 361"
+                      ],
+                      [
+                        "ME 451A"
+                      ],
+                      [
+                        "ME 451B"
+                      ],
+                      [
+                        "ME 451C"
+                      ],
+                      [
+                        "ME 461"
+                      ],
+                      [
+                        "MATSCI 251"
+                      ],
+                      [
+                        "ME 203"
+                      ],
+                      [
+                        "ME 204"
+                      ],
+                      [
+                        "ME 206B"
+                      ],
+                      [
+                        "ME 217"
+                      ],
+                      [
+                        "ME 219"
+                      ],
+                      [
+                        "ME 225"
+                      ],
+                      [
+                        "ME 227"
+                      ],
+                      [
+                        "ME 321",
+                        "MATSCI 351"
+                      ],
+                      [
+                        "ME 325"
+                      ],
+                      [
+                        "ME 258",
+                        "MATSCI 358"
+                      ],
+                      [
+                        "ME 329"
+                      ],
+                      [
+                        "ME 340"
+                      ],
+                      [
+                        "ME 210"
+                      ],
+                      [
+                        "ME 220"
+                      ],
+                      [
+                        "ME 362B"
+                      ],
+                      [
+                        "ME 363"
+                      ],
+                      [
+                        "ME 364"
+                      ],
+                      [
+                        "ME 366"
+                      ],
+                      [
+                        "ME 372"
+                      ],
+                      [
+                        "ME 374"
+                      ],
+                      [
+                        "ME 463"
+                      ],
+                      [
+                        "CS 229",
+                        "STATS 229"
+                      ],
+                      [
+                        "CS 326"
+                      ],
+                      [
+                        "ME 320",
+                        "CS 223A"
+                      ],
+                      [
+                        "ME 326",
+                        "CS 339R"
+                      ],
+                      [
+                        "ENGR 240"
+                      ],
+                      [
+                        "ENGR 241"
+                      ],
+                      [
+                        "AA 222"
+                      ],
+                      [
+                        "CS 131"
+                      ],
+                      [
+                        "CS 230"
+                      ],
+                      [
+                        "CS 234"
+                      ],
+                      [
+                        "CS 236"
+                      ],
+                      [
+                        "EE 364A"
+                      ],
+                      [
+                        "EE 364B"
+                      ],
+                      [
+                        "ME 233"
+                      ],
+                      [
+                        "ME 343"
+                      ],
+                      [
+                        "ME 470"
+                      ]
+                    ],
+                    "limits": [
+                      {
+                        "label": "non-ME Data Science courses",
+                        "max": 1,
+                        "codes": [
+                          "AA 222",
+                          "CS 131",
+                          "CS 230",
+                          "CS 234",
+                          "CS 236",
+                          "EE 364A",
+                          "EE 364B"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "eZ3WGUjG",
+            "name": "Approved Electives",
+            "desc": "Additional graduate (numbered 200+) engineering, math, and science courses will bring the total number of units to at least 39. The student’s advisor must approve all of these units. Graduate engineering, math, and science courses are typically approved. 100-level CS courses that satisfy the program program are also allowed.\nOf these 39 units, no more than six units may come from independent study (course and course), and no more than three units may come from seminars. Students planning to pursue the PhD should discuss taking course or course during the master’s program with their academic advisor. course and course/course may not be included in approved electives.\nStudents may use one of the following courses as an approved elective without petition: course, course, course, course.",
+            "notes": "Note: Students participating in course or course should make the necessary arrangements with a faculty member. In addition, the faculty member and the student should determine the number of units for the course. course and course may only be taken on a credit / no credit basis. If a student takes an independent study in a different department, the grading option should be credit/no credit.",
+            "t": "text",
+            "manual": "approval",
+            "optional": true
+          }
+        ]
+      }
+    },
+    "YHam3s35": {
+      "why": "\"Students must take a minimum of 15 units of coursework in mechanical engineering. Only courses with a 200+ ME course number and lecture (LEC) designation are considered mechanical engineering topics ... Research (independent study) units and seminars cannot count toward the 15 units of ME coursework.\" These are courses counted for the requirements above, not extra ones; the lecture designation is not in the data, so the student moves the courses in and they still count where they are.",
+      "patch": {
+        "manual": "other",
+        "shares": true,
+        "n": null,
+        "units": 15
+      }
+    },
+    "AytFmDhV": {
+      "why": "\"These courses will bring the total number of units submitted for the MS degree to 45.\" The 45 units are program.unitsMin; \"Unrestricted electives must be level 100+ and may be taken credit/no credit.\"",
+      "patch": {
+        "info": true
+      }
+    },
+    "mADM43CG": {
+      "why": "\"Within the courses satisfying the requirements above, there must be at least one graduate-level course with a laboratory component.\" The lab course is one already counted above. Directed study with lab work needs ME Student Services approval and is moved in by hand. Grading: \"All courses taken for the Mechanical Engineering master's degree must be taken for a letter grade, except for Unrestricted Electives or when grades are not an option (e.g., seminar and research courses).\"",
+      "patch": {
+        "shares": true,
+        "letter": true
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "xcb9rxTJ",
+      "node": {
+        "id": "ov-gpa",
+        "t": "text",
+        "name": "GPA of 3.0 for all degree courses",
+        "manual": "gpa"
+      },
+      "why": "GPA: \"The minimum GPA for all courses taken for the Mechanical Engineering master's degree is 3.0.\""
+    }
+  ]
+}

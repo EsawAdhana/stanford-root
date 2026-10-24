@@ -1,0 +1,119 @@
+{
+  "code": "THPST-BA",
+  "reviewed": "2026-10-23",
+  "summary": "You take TAPS 1, 16 units of theater and dance studies (four of them a WIM course), 8 units of production, 10 elective units (TAPS or DANCE, up to 4 units of ITALIC or SLE), 4 units of the TAPS 200 capstone and your subplan's 18 practicum units, for 60 units; the capstone does not also count as an elective. The capstone proposal and honors (TAPS 202, application, GPA and thesis) are checked by hand.",
+  "blocks": {
+    "K9tuCdJn": {
+      "shares": false
+    }
+  },
+  "nodes": {
+    "z8tqbJIH": {
+      "why": "\"See Acting or Theater-Making section below for subplan-specific practicum options.\" The 18 practicum units are the subplan's two practicum rules (Acting 10 + 8, Theater-Making 8 + 10).",
+      "patch": {
+        "info": true
+      }
+    },
+    "9dPB2fQw": {
+      "why": "\"Production (8 units)\" and \"Students are required to complete two units of course and three units of course.\" With TAPS 34 at 3 units, the two variable-unit courses make up the rest of the 8.",
+      "patch": {
+        "units": 8
+      }
+    },
+    "miXDwdp0": {
+      "why": "\"Electives (10 units)\": \"All courses in TAPS and DANCE qualify as electives. Four units of ITALIC or SLE can also count as electives.\"",
+      "replace": {
+        "t": "courses",
+        "name": "Electives (10 units)",
+        "mode": "units",
+        "units": 10,
+        "pool": {
+          "subjects": [
+            "TAPS",
+            "DANCE",
+            "ITALIC",
+            "SLE"
+          ]
+        },
+        "limits": [
+          {
+            "label": "ITALIC or SLE units",
+            "maxUnits": 4,
+            "pool": {
+              "subjects": [
+                "ITALIC",
+                "SLE"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "kSOz0xWb": {
+      "why": "\"Students enroll in four units of course Senior Project during the quarter in which their capstone project takes place.\" The capstone is its own part of \"the 60 units required for the major\" (4 + 16 + 18 + 8 + 10 + 4 = 60), so its block no longer shares its course with the electives.",
+      "patch": {
+        "units": 4
+      }
+    },
+    "DQmDxme1": {
+      "why": "\"Students enroll in course Honors Thesis, which is worth four units total. Students must enroll in this course each quarter during the senior year (one unit in autumn, one unit in winter, and two units in spring).\"",
+      "patch": {
+        "units": 4
+      }
+    },
+    "7tWSuuvX": {
+      "why": "An overview: \"The Acting Subplan, also called the Acting Concentration, develops students' skills ...\" Its required courses are the practicum rules below it.",
+      "patch": {
+        "info": true
+      }
+    },
+    "J34nKB1U": {
+      "why": "An overview: \"The Theater-Making Subplan, also called the Theater-Making Concentration, develops students' creative skills in theater-making.\" Its required courses are the practicum rules below it.",
+      "patch": {
+        "info": true
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "K9tuCdJn",
+      "why": "\"Students pursuing capstone projects must submit an adviser-approved proposal to the Production Manager, to be approved by the Artistic Director and Director of Undergraduate Studies no later than the end of spring quarter of the junior year.\"",
+      "node": {
+        "id": "ov-capstone-proposal",
+        "t": "text",
+        "name": "Approved capstone proposal",
+        "manual": "approval"
+      }
+    },
+    {
+      "block": "gmBcZV3s",
+      "why": "\"Applying to the honors program involves a written application, including a project proposal and transcript\"",
+      "node": {
+        "id": "ov-honors-application",
+        "t": "text",
+        "name": "Honors application and project proposal accepted",
+        "manual": "approval"
+      }
+    },
+    {
+      "block": "gmBcZV3s",
+      "why": "\"Students must have at least an overall university GPA of 3.3 and a 3.5 GPA in courses counting towards the major.\"",
+      "node": {
+        "id": "ov-honors-gpa",
+        "t": "text",
+        "name": "3.3 overall GPA and 3.5 GPA in the major",
+        "manual": "gpa"
+      }
+    },
+    {
+      "block": "gmBcZV3s",
+      "why": "\"The honors thesis (described below) is due on May 15 in spring quarter and is double-marked by the primary advisor and one other Stanford faculty member.\"",
+      "node": {
+        "id": "ov-honors-thesis",
+        "t": "text",
+        "name": "Honors thesis",
+        "manual": "thesis"
+      }
+    }
+  ]
+}

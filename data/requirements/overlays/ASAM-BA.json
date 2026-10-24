@@ -1,0 +1,201 @@
+{
+  "code": "ASAM-BA",
+  "reviewed": "2026-10-23",
+  "summary": "The audit counts your courses toward the 60 units the major needs. Every core course (gateway, comparative core, major core, methodology, international dimension, community-engaged learning, WIM and capstone) must be taken for a letter grade, unless only offered S/NC, with a C- or better; methodology courses need 3 or more units. The rest of the 60 units are ASNAMST electives, plus at most 8 units of AFRICAAM, CHILATST, CSRE, JEWISHST or NATIVEAM courses and 5 units of Asian language. Petitioned courses (at most 15 units), external credit (at most 20 units) and a CEL fellowship or Alternative Spring Break are moved in by hand. Left: you may count only 2 electives taken S/NC, which the audit does not limit. Honors requires CSRE 201X-Z, a B+ thesis and the GPA minimums.",
+  "nodes": {
+    "KtdfYNb6": {
+      "why": "Grading: \"All courses must be taken for a letter grade, unless only offered S/NC. A minimum grade of C- is required for a student to count a class towards the Core Curriculum, including the Gateway, Comparative Core, Major Core, Methodology, International Dimension, WIM, and Capstone requirements.\"",
+      "patch": {
+        "minGrade": "C-",
+        "letter": true
+      }
+    },
+    "WpqZZBU7": {
+      "why": "Grading: \"All courses must be taken for a letter grade, unless only offered S/NC. A minimum grade of C- is required for a student to count a class towards the Core Curriculum, including the Gateway, Comparative Core, Major Core, Methodology, International Dimension, WIM, and Capstone requirements.\"",
+      "patch": {
+        "minGrade": "C-",
+        "letter": true
+      }
+    },
+    "O2JmrA9P": {
+      "why": "Grading: \"All courses must be taken for a letter grade, unless only offered S/NC. A minimum grade of C- is required for a student to count a class towards the Core Curriculum, including the Gateway, Comparative Core, Major Core, Methodology, International Dimension, WIM, and Capstone requirements.\" The stored 5-unit floor is not in the text and ASNAMST 100 carries 4 units, so no student could meet it.",
+      "patch": {
+        "minGrade": "C-",
+        "units": null,
+        "letter": true
+      }
+    },
+    "rrFh2YAJ": {
+      "why": "\"Methodology courses must be taken for 3-5 units and a letter grade.\" Grading: \"All courses must be taken for a letter grade, unless only offered S/NC. A minimum grade of C- is required for a student to count a class towards the Core Curriculum, including the Gateway, Comparative Core, Major Core, Methodology, International Dimension, WIM, and Capstone requirements.\"",
+      "patch": {
+        "minUnitsEach": 3,
+        "letter": true,
+        "minGrade": "C-"
+      }
+    },
+    "NlUrbj8B": {
+      "why": "Grading: \"All courses must be taken for a letter grade, unless only offered S/NC. A minimum grade of C- is required for a student to count a class towards the Core Curriculum, including the Gateway, Comparative Core, Major Core, Methodology, International Dimension, WIM, and Capstone requirements.\"",
+      "patch": {
+        "letter": true,
+        "minGrade": "C-"
+      }
+    },
+    "fQVNFc4W": {
+      "why": "\"The CEL requirement may be fulfilled by courses that also fulfill other Asian American Studies degree requirements (e.g., a Methodology course may also count toward the CEL requirement).\" Cardinal Courses, fellowships and Alternative Spring Break are marked done by hand. Grading: \"All courses must be taken for a letter grade, unless only offered S/NC.\"",
+      "patch": {
+        "shares": true,
+        "letter": true
+      }
+    },
+    "Ge8yz0mx": {
+      "why": "\"Asian American Studies majors must complete the remaining units of their 60-unit minimum with elective coursework in Asian American Studies.\" The remainder depends on the units of the other courses, so the 60 units are the program total and this rule takes the ASNAMST electives (at least one is always needed: the core carries well under 60 units).",
+      "replace": {
+        "t": "courses",
+        "name": "Asian American Studies Electives (toward the 60 units)",
+        "mode": "any",
+        "pool": {
+          "subjects": [
+            "ASNAMST"
+          ]
+        }
+      }
+    },
+    "zdfps8gi": {
+      "why": "\"Asian American Studies majors may count up to 5 units of advanced study of an Asian language\" and \"If students complete 15 or more units of advanced (second-year or beyond) Asian language study, they may apply 5 of those units toward their Asian American Studies major.\" Optional; up to 5 units count toward the 60. The 15-unit condition is not checked.",
+      "patch": {
+        "limits": [
+          {
+            "label": "Asian language study",
+            "maxUnits": 5,
+            "codes": [
+              "ARMELANG 1",
+              "ARMELANG 2",
+              "ARMELANG 3",
+              "FILILANG 1",
+              "FILILANG 2",
+              "FILILANG 3",
+              "HINDLANG 1",
+              "HINDLANG 2",
+              "HINDLANG 3",
+              "HINDLANG 21",
+              "HINDLANG 22",
+              "HINDLANG 101",
+              "HINDLANG 102",
+              "PUNJLANG 1",
+              "PUNJLANG 2",
+              "PUNJLANG 3",
+              "PUNJLANG 21",
+              "PUNJLANG 22",
+              "TELULANG 1",
+              "TELULANG 2",
+              "TELULANG 3",
+              "TIBETLNG 1",
+              "TIBETLNG 2",
+              "TIBETLNG 21",
+              "TIBETLNG 22",
+              "URDULANG 1",
+              "URDULANG 21",
+              "VIETLANG 1",
+              "VIETLANG 2",
+              "VIETLANG 3",
+              "VIETLANG 21",
+              "VIETLANG 22",
+              "VIETLANG 101",
+              "VIETLANG 102",
+              "VIETLANG 103"
+            ]
+          }
+        ]
+      }
+    },
+    "Wlun7WZu": {
+      "why": "Grading: \"All courses must be taken for a letter grade, unless only offered S/NC. A minimum grade of C- is required for a student to count a class towards the Core Curriculum, including the Gateway, Comparative Core, Major Core, Methodology, International Dimension, WIM, and Capstone requirements.\"",
+      "patch": {
+        "minGrade": "C-",
+        "letter": true
+      }
+    },
+    "dbpv70E6": {
+      "why": "Grading: \"All courses must be taken for a letter grade, unless only offered S/NC. A minimum grade of C- is required for a student to count a class towards the Core Curriculum, including the Gateway, Comparative Core, Major Core, Methodology, International Dimension, WIM, and Capstone requirements.\"",
+      "patch": {
+        "minGrade": "C-",
+        "letter": true
+      }
+    },
+    "M3VegpFj": {
+      "why": "Inside the opt-in Honors section the courses are required, not optional. \"Honors applications are open to students with a grade point average (GPA) of at least 3.7 in the major and 3.5 overall. Students must receive a grade of B+ or above on their thesis and maintain the GPA minimum until graduation in order to receive Honors.\"",
+      "replace": {
+        "t": "all",
+        "name": "Honors",
+        "children": [
+          {
+            "id": "ov-asamba-honors-courses",
+            "t": "courses",
+            "name": "CSRE 201X, 201Y and 201Z",
+            "mode": "all",
+            "items": [
+              [
+                "CSRE 201X"
+              ],
+              [
+                "CSRE 201Y"
+              ],
+              [
+                "CSRE 201Z"
+              ]
+            ]
+          },
+          {
+            "id": "ov-asamba-honors-thesis",
+            "t": "text",
+            "name": "Honors thesis graded B+ or above, from an approved proposal",
+            "manual": "thesis"
+          },
+          {
+            "id": "ov-asamba-honors-gpa",
+            "t": "text",
+            "name": "GPA of 3.7 in the major and 3.5 overall, kept until graduation",
+            "manual": "gpa"
+          }
+        ]
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "f1y2ucEj",
+      "why": "\"Asian American Studies majors may count up to 8 units of Department of African and African American Studies (DAAAS), Chicana/o-Latina/o Studies (CHILATST), Comparative Studies in Race and Ethnicity (CSRE), Jewish Studies (JEWISHST), or Native American Studies (NATIVEAM) courses toward their degree\". Optional; up to 8 units count toward the 60.",
+      "node": {
+        "id": "ov-asamba-related-electives",
+        "t": "courses",
+        "name": "Related ethnic studies electives (up to 8 units, toward the 60 units)",
+        "mode": "any",
+        "optional": true,
+        "pool": {
+          "subjects": [
+            "AFRICAAM",
+            "CHILATST",
+            "CSRE",
+            "JEWISHST",
+            "NATIVEAM"
+          ]
+        },
+        "limits": [
+          {
+            "label": "DAAAS, CHILATST, CSRE, JEWISHST and NATIVEAM courses",
+            "maxUnits": 8,
+            "pool": {
+              "subjects": [
+                "AFRICAAM",
+                "CHILATST",
+                "CSRE",
+                "JEWISHST",
+                "NATIVEAM"
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

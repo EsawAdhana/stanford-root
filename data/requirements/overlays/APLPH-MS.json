@@ -1,0 +1,450 @@
+{
+  "code": "APLPH-MS",
+  "reviewed": "2026-10-23",
+  "summary": "The audit checks one letter-graded core course in each of any four of the five areas (a course counts for one area only) and 33 more units from APPPHYS 290, the listed seminars and the listed advanced courses. Every course toward the 45 units must be letter graded when that option is offered, and at most six units below the 200 level count. Seminars or other courses your advisor approves are moved in by hand, and you check the 3.0 GPA by hand.",
+  "program": {
+    "letterGrade": true,
+    "why": "Grading: \"All courses used to satisfy the 45-unit minimum for the Master of Science degree must be taken for a letter grade if offered.\"",
+    "totals": [
+      {
+        "label": "Courses below the 200 level",
+        "maxUnits": 6,
+        "pool": {
+          "anySubject": true,
+          "maxNumber": 199
+        },
+        "why": "\"Only six units below the 200-level are permitted without approval by the Applied Physics Graduate Study Committee.\""
+      }
+    ]
+  },
+  "nodes": {
+    "tLqHOj8B": {
+      "why": "\"All Master students must complete at least one approved graduate course (for a letter grade) in each of any four of the following five areas: Quantum Mechanics, Statistical and Condensed Matter Physics, Classical Physics, Methods, Biophysics\" and \"Letter grade: All courses used to satisfy core requirements must be taken for a letter grade.\" Biophysics is its own area, not a kind of Methods course. The audit already keeps one course from counting in two areas (\"A course that appears in multiple categories may be used to satisfy only one core requirement\").",
+      "replace": {
+        "t": "some",
+        "name": "Core Course Requirements (four of five areas)",
+        "n": 4,
+        "children": [
+          {
+            "id": "E2YQYSd4",
+            "t": "courses",
+            "name": "Quantum Mechanics",
+            "mode": "atLeast",
+            "n": 1,
+            "letter": true,
+            "items": [
+              [
+                "APPPHYS 203"
+              ],
+              [
+                "APPPHYS 228"
+              ],
+              [
+                "APPPHYS 282"
+              ],
+              [
+                "APPPHYS 283"
+              ],
+              [
+                "EE 224"
+              ],
+              [
+                "PHYSICS 230"
+              ],
+              [
+                "PHYSICS 231"
+              ],
+              [
+                "PHYSICS 234"
+              ],
+              [
+                "PHYSICS 330"
+              ],
+              [
+                "PHYSICS 331"
+              ],
+              [
+                "PHYSICS 332"
+              ],
+              [
+                "PHYSICS 430"
+              ]
+            ]
+          },
+          {
+            "id": "EDtmn4A9",
+            "t": "courses",
+            "name": "Statistical and Condensed Matter Physics",
+            "mode": "atLeast",
+            "n": 1,
+            "letter": true,
+            "items": [
+              [
+                "APPPHYS 204"
+              ],
+              [
+                "APPPHYS 229"
+              ],
+              [
+                "APPPHYS 230"
+              ],
+              [
+                "APPPHYS 270"
+              ],
+              [
+                "APPPHYS 272"
+              ],
+              [
+                "APPPHYS 273"
+              ],
+              [
+                "APPPHYS 280"
+              ],
+              [
+                "APPPHYS 285"
+              ],
+              [
+                "CHEMENG 466"
+              ],
+              [
+                "PHYSICS 212"
+              ],
+              [
+                "PHYSICS 372"
+              ],
+              [
+                "PHYSICS 373"
+              ]
+            ]
+          },
+          {
+            "id": "nkcKb8nJ",
+            "t": "any",
+            "name": "Classical Physics",
+            "children": [
+              {
+                "id": "KjgARji8",
+                "t": "courses",
+                "name": "Electrodynamics and Optics",
+                "mode": "atLeast",
+                "n": 1,
+                "letter": true,
+                "items": [
+                  [
+                    "APPPHYS 201"
+                  ],
+                  [
+                    "APPPHYS 220"
+                  ],
+                  [
+                    "APPPHYS 325"
+                  ],
+                  [
+                    "EE 236A"
+                  ],
+                  [
+                    "EE 236B"
+                  ],
+                  [
+                    "EE 236C"
+                  ],
+                  [
+                    "EE 242"
+                  ],
+                  [
+                    "EE 336"
+                  ],
+                  [
+                    "EE 346"
+                  ],
+                  [
+                    "MATSCI 341"
+                  ],
+                  [
+                    "PHOTON 366"
+                  ],
+                  [
+                    "PHYSICS 220"
+                  ]
+                ]
+              },
+              {
+                "id": "cK9Wzrx9",
+                "t": "courses",
+                "name": "Continuum Mechanics",
+                "mode": "atLeast",
+                "n": 1,
+                "letter": true,
+                "items": [
+                  [
+                    "AA 201A"
+                  ],
+                  [
+                    "AA 201B"
+                  ],
+                  [
+                    "AA 210A"
+                  ],
+                  [
+                    "CEE 262A"
+                  ],
+                  [
+                    "GEOPHYS 238"
+                  ],
+                  [
+                    "ME 351A"
+                  ],
+                  [
+                    "ME 351B"
+                  ],
+                  [
+                    "ME 360"
+                  ]
+                ]
+              }
+            ]
+          },
+          {
+            "id": "B3FkuCD2",
+            "t": "any",
+            "name": "Methods",
+            "children": [
+              {
+                "id": "mRfiCbGi",
+                "t": "courses",
+                "name": "Laboratory Courses",
+                "mode": "atLeast",
+                "n": 1,
+                "letter": true,
+                "items": [
+                  [
+                    "APPPHYS 232"
+                  ],
+                  [
+                    "APPPHYS 214"
+                  ],
+                  [
+                    "APPPHYS 222"
+                  ],
+                  [
+                    "EE 234"
+                  ],
+                  [
+                    "EE 235"
+                  ],
+                  [
+                    "EE 235A"
+                  ],
+                  [
+                    "EE 251"
+                  ],
+                  [
+                    "EE 312"
+                  ],
+                  [
+                    "ENGR 241"
+                  ],
+                  [
+                    "MATSCI 171"
+                  ],
+                  [
+                    "MATSCI 172"
+                  ],
+                  [
+                    "MATSCI 173"
+                  ],
+                  [
+                    "MATSCI 322"
+                  ],
+                  [
+                    "MATSCI 326"
+                  ],
+                  [
+                    "MATSCI 327"
+                  ],
+                  [
+                    "PHYSICS 301"
+                  ]
+                ]
+              },
+              {
+                "id": "flJUj3KY",
+                "t": "courses",
+                "name": "Computational Courses",
+                "mode": "atLeast",
+                "n": 1,
+                "letter": true,
+                "items": [
+                  [
+                    "CME 206"
+                  ],
+                  [
+                    "CME 213"
+                  ],
+                  [
+                    "CS 221"
+                  ],
+                  [
+                    "CS 224N"
+                  ],
+                  [
+                    "CS 224R"
+                  ],
+                  [
+                    "CS 228"
+                  ],
+                  [
+                    "CS 229"
+                  ],
+                  [
+                    "CS 236"
+                  ],
+                  [
+                    "EE 292L"
+                  ],
+                  [
+                    "EE 364A"
+                  ],
+                  [
+                    "EE 364B"
+                  ],
+                  [
+                    "ME 469"
+                  ]
+                ]
+              },
+              {
+                "id": "YoA0gtSH",
+                "t": "courses",
+                "name": "Mathematical Methods Courses",
+                "mode": "atLeast",
+                "n": 1,
+                "letter": true,
+                "items": [
+                  [
+                    "APPPHYS 223"
+                  ],
+                  [
+                    "CME 308"
+                  ],
+                  [
+                    "EE 276"
+                  ],
+                  [
+                    "EE 278"
+                  ],
+                  [
+                    "MATH 220A"
+                  ],
+                  [
+                    "STATS 200"
+                  ]
+                ]
+              }
+            ]
+          },
+          {
+            "id": "BRquS8Q7",
+            "t": "courses",
+            "name": "Biophysics",
+            "mode": "atLeast",
+            "n": 1,
+            "letter": true,
+            "items": [
+              [
+                "APPPHYS 205"
+              ],
+              [
+                "APPPHYS 235"
+              ],
+              [
+                "APPPHYS 237"
+              ],
+              [
+                "APPPHYS 294"
+              ],
+              [
+                "CHEMENG 320"
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    "D5WaL9uQ": {
+      "why": "\"Complete 33 additional units in advanced science and/or engineering courses. These may be a combination of APPPHYS290 Directed Studies in Applied Physics, one-unit courses (listed below), and other courses (listed below).\" Seminars the advisor approves (\"Your academic advisor may approve other one-unit seminar courses\") are moved in by hand. From the overview, \"Only six units below the 200-level are permitted without approval by the Applied Physics Graduate Study Committee.\": a program-wide cap (now also a program total), kept here on the rule that takes the elective units.",
+      "replace": {
+        "t": "courses",
+        "name": "33 units of Additional Advanced Courses in Science and/or Engineering",
+        "mode": "units",
+        "units": 33,
+        "items": [
+          [
+            "APPPHYS 290"
+          ],
+          [
+            "APPPHYS 470"
+          ],
+          [
+            "APPPHYS 483"
+          ],
+          [
+            "BIOPHYS 250"
+          ],
+          [
+            "EE 380"
+          ],
+          [
+            "MATSCI 230"
+          ],
+          [
+            "EE 222"
+          ],
+          [
+            "EE 223"
+          ],
+          [
+            "EE 236A"
+          ],
+          [
+            "EE 236C"
+          ],
+          [
+            "EE 332"
+          ],
+          [
+            "EE 346"
+          ],
+          [
+            "PHYSICS 372"
+          ],
+          [
+            "PHYSICS 373"
+          ]
+        ],
+        "limits": [
+          {
+            "label": "courses below the 200 level",
+            "maxUnits": 6,
+            "pool": {
+              "anySubject": true,
+              "maxNumber": 199
+            }
+          }
+        ]
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "mAbEGmbJ",
+      "why": "GPA: \"A final overall grade point average (GPA) of 3.0 (B) is for courses used to fulfill degree requirements.\"",
+      "node": {
+        "id": "ov-gpa",
+        "t": "text",
+        "name": "GPA of 3.0 (B) in the courses used for the degree",
+        "manual": "gpa"
+      }
+    }
+  ]
+}

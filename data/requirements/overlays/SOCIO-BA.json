@@ -1,0 +1,197 @@
+{
+  "code": "SOCIO-BA",
+  "reviewed": "2026-10-23",
+  "summary": "You take SOC 1, 170, 180A and 180B, one foundation course in each of three areas, a methods course you move in by hand, the WIM and a capstone (SOC 202 with an honors thesis, or SOC 204A with a capstone paper), and Social Science electives (at most 10 units from Anthropology, Communication, Economics, Political Science or Psychology) for 60 units. S and CR grades count; a course taken for a letter grade needs a C or better. The Data Science, Markets and Management subplan is optional; its seven additional courses are moved in by hand. Honors admission, the thesis grade and the colloquium are checked by hand.",
+  "program": {
+    "minGrade": "C",
+    "why": "Grading: \"Grades of S or CR are allowable. When students take classes for a letter grade, the student should earn a C or better or obtain a written exception.\" A written exception is moved in by hand."
+  },
+  "nodes": {
+    "MC0kNTOK": {
+      "why": "\"Sociology majors must take at least one methodology course, either quantitative or qualitative ... Quantitative classes in data analysis, programming, computer science, statistics, and mathematics, are all suitable for this requirement, as are qualitative methods classes such as field research methods.\" No list: the course is moved in.",
+      "patch": {
+        "n": 1,
+        "manual": "approval"
+      }
+    },
+    "z5CCxjDH": {
+      "why": "\"Social Science electives are required for the major, sufficient to bring the total number of units in the Sociology major to 60 ... Non-Sociology courses must be approved by the Director of Undergraduate Studies. A maximum of 10 units taken in other Social Science departments (Anthropology, Communication, Economics, Political Science, Psychology) may be counted\". The overview gives \"Social Science Electives ... 25-27 units\"; the floor is 25, and non-SOC courses are moved in.",
+      "replace": {
+        "t": "courses",
+        "name": "Social Science Elective Courses",
+        "mode": "units",
+        "units": 25,
+        "pool": {
+          "subjects": [
+            "SOC"
+          ]
+        },
+        "limits": [
+          {
+            "label": "other Social Science departments",
+            "maxUnits": 10,
+            "pool": {
+              "subjects": [
+                "ANTHRO",
+                "COMM",
+                "ECON",
+                "POLISCI",
+                "PSYCH"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "PvoDojhQ": {
+      "why": "\"Completing SOC 202 and the honors thesis will fulfill the capstone requirement.\" \"For seniors not completing an honors thesis ... SOC 204A in autumn - this course is required ... culminating in the submission of a paper and a presentation ... only SOC 204A is required.\" SOC 204B and 204C alone do not meet it.",
+      "replace": {
+        "t": "any",
+        "name": "Capstone Requirement",
+        "children": [
+          {
+            "id": "ov-capstone-honors",
+            "t": "all",
+            "name": "Honors route: SOC 202 and the honors thesis",
+            "children": [
+              {
+                "id": "ov-capstone-honors-202",
+                "t": "courses",
+                "name": "SOC 202",
+                "mode": "all",
+                "items": [
+                  [
+                    "SOC 202"
+                  ]
+                ]
+              },
+              {
+                "id": "ov-capstone-honors-thesis",
+                "t": "text",
+                "name": "Honors thesis",
+                "manual": "thesis"
+              }
+            ]
+          },
+          {
+            "id": "ov-capstone-seq",
+            "t": "all",
+            "name": "Capstone sequence: SOC 204A and the capstone paper",
+            "children": [
+              {
+                "id": "ov-capstone-204a",
+                "t": "courses",
+                "name": "SOC 204A",
+                "mode": "all",
+                "items": [
+                  [
+                    "SOC 204A"
+                  ]
+                ]
+              },
+              {
+                "id": "ov-capstone-paper",
+                "t": "text",
+                "name": "Capstone paper and presentation",
+                "manual": "thesis"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "c3CuQDWM": {
+      "why": "The explanation of the capstone options, now encoded in the Capstone Requirement above. A thesis or capstone for another department counts \"with prior approval from the Sociology director of undergraduate studies\" and is moved in.",
+      "patch": {
+        "info": true
+      }
+    },
+    "DHRLafi6": {
+      "why": "SOC 180A and SOC 180B are already required Core Courses; honors restates them (\"Students pursuing honors should take the Sociology methods sequence ... as early as possible\").",
+      "patch": {
+        "shares": true
+      }
+    },
+    "BaQBlq5Q": {
+      "why": "SOC 180B is already a required Core Course; the subplan restates it.",
+      "patch": {
+        "shares": true
+      }
+    },
+    "YVrurEDG": {
+      "why": "\"In addition to the Core classes and the Foundation classes, the Data Science, Markets and Management subplan requires seven additional courses, as follows: Four additional Sociology (SOC) courses - 16 units; Two additional Computer Science, Math, Statistics, or Quantitative Social Science Courses - 8 units; One additional Sociology or Social Science elective - 4 units\". The text does not say whether these also count as the major's Social Science electives (which only bring the major to 60 units), so a person confirms the seven courses and they may be courses the major already counts.",
+      "patch": {
+        "n": 7,
+        "units": 28,
+        "manual": "approval",
+        "shares": true
+      }
+    },
+    "7yzSZNHJ": {
+      "why": "Overview: \"Sociology Core Courses (four courses): 15-18 units\". The data offers SOC 1 or SOC 170 in one slot, which leaves three courses (12-13 units); four courses at 15-18 units means SOC 1, SOC 170, SOC 180A and SOC 180B.",
+      "patch": {
+        "items": [
+          [
+            "SOC 1"
+          ],
+          [
+            "SOC 170"
+          ],
+          [
+            "SOC 180A"
+          ],
+          [
+            "SOC 180B"
+          ]
+        ]
+      }
+    }
+  },
+  "alternatives": [
+    {
+      "id": "ov-foundation-areas",
+      "name": "One course in three different areas",
+      "of": [
+        "1K3OGKNH",
+        "Hp7T5Rjz",
+        "flUZqbBS",
+        "1F5Oz0YG",
+        "dYq9Ekiy"
+      ],
+      "n": 3,
+      "why": "\"Sociology majors must complete three foundation courses - one course in three different areas for a total of three courses.\""
+    }
+  ],
+  "add": [
+    {
+      "block": "XPIW5Yzh",
+      "node": {
+        "id": "ov-honors-gpa",
+        "t": "text",
+        "name": "GPA of 3.5 in the major and 3.3 overall for admission",
+        "manual": "gpa"
+      },
+      "why": "\"Admission to the program requires a grade point average (GPA) of 3.5 or higher in courses taken within the major and an overall GPA of 3.3 (B+) or higher in all undergraduate coursework.\""
+    },
+    {
+      "block": "XPIW5Yzh",
+      "node": {
+        "id": "ov-honors-thesis",
+        "t": "text",
+        "name": "Honors thesis with a grade of A- or higher",
+        "manual": "thesis"
+      },
+      "why": "\"Completion of an honors thesis with a grade of A- or higher\""
+    },
+    {
+      "block": "XPIW5Yzh",
+      "node": {
+        "id": "ov-honors-colloquium",
+        "t": "text",
+        "name": "Sociology Honors Colloquium in spring quarter",
+        "manual": "milestone"
+      },
+      "why": "\"Participation in the Sociology Honors Colloquium in spring quarter before graduation.\""
+    }
+  ]
+}

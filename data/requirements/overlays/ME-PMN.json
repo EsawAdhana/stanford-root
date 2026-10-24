@@ -1,0 +1,39 @@
+{
+  "code": "ME-PMN",
+  "reviewed": "2026-10-23",
+  "summary": "The audit checks 20 units of graduate-level ME courses. Checked by hand: the courses must be approved, chosen from the ME Depth Requirement list, and form a coherent program.",
+  "blocks": {
+    "EmcURdKE": {
+      "kind": "required"
+    }
+  },
+  "add": [
+    {
+      "block": "EmcURdKE",
+      "node": {
+        "id": "ov-units",
+        "t": "courses",
+        "name": "20 units of graduate-level ME courses",
+        "mode": "units",
+        "units": 20,
+        "pool": {
+          "subjects": [
+            "ME"
+          ],
+          "onlyGraduate": true
+        }
+      },
+      "why": "\"A PhD minor in Mechanical Engineering may be obtained by completing 20 units of approved graduate-level ME courses.\" Graduate level is the course's graduate listing (pool.onlyGraduate); which of them are approved is the rule below."
+    },
+    {
+      "block": "EmcURdKE",
+      "node": {
+        "id": "ov-approval",
+        "t": "text",
+        "name": "Approved graduate-level courses from the Depth Requirement list, forming a coherent program",
+        "manual": "approval"
+      },
+      "why": "\"Courses approved for the minor must form a coherent program and must be chosen from those satisfying the Depth Requirement for the program.\""
+    }
+  ]
+}

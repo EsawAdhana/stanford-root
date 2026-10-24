@@ -1,0 +1,351 @@
+{
+  "code": "MELLC-MIN",
+  "reviewed": "2026-10-23",
+  "summary": "You pick one track: Arabic (24 units), Hebrew (32), African Languages, Literatures and Cultures (32), Persian (30) or Turkish (30). The audit checks the track's unit total, its language courses (Arabic from the list, the others by language subject, with three courses in one African language) and the Persian or Turkish COMPLIT units, at least six courses in all, with every course letter graded and a C or better. Checked by hand: the faculty director approves all courses, six of them are 3 units or more, the Hebrew and African literature and culture units (one course in COMPLIT), which you move in, a sequence in an African language Stanford lists under another subject, and the Oral Proficiency Interview. Up to 5 units of transfer credit may count with the director's approval, and units may not also count toward another major or minor.",
+  "nodes": {
+    "OQ2aGv7E": {
+      "why": "\"To fulfill the Arabic Track, students must earn a minimum of 24 units total.\"",
+      "patch": {
+        "units": 24
+      }
+    },
+    "HgghzwBT": {
+      "why": "\"Students must take the Oral Proficiency Interview (OPI) in Arabic two quarters prior to degree conferral, minimally earning a notation of 'intermediate-high'.\"",
+      "patch": {
+        "manual": "exam"
+      }
+    },
+    "lQEDzYS0": {
+      "why": "\"To fulfill the Hebrew Track, students must earn a minimum of 32 units total.\"",
+      "patch": {
+        "units": 32
+      }
+    },
+    "bazal9iD": {
+      "why": "\"Students must complete a minimum of three (3) Hebrew language classes. This requirement may be tested out of this requirement with the approval of the faculty director.\" Hebrew language classes are the HEBRLANG subject; a test-out or a Hebrew course in another subject is moved in by hand.",
+      "replace": {
+        "t": "courses",
+        "name": "Hebrew Language Courses (three)",
+        "mode": "atLeast",
+        "n": 3,
+        "pool": {
+          "subjects": [
+            "HEBRLANG"
+          ]
+        }
+      }
+    },
+    "eBo62ldO": {
+      "why": "\"Students must complete a minimum of 20 units of Hebrew literature and culture courses, one of which must be listed in COMPLIT. The Hebrew Forum may count towards this requirement with the approval of the faculty director\". Hebrew literature and culture courses are not one subject, so the student moves them in; the COMPLIT course is checked by hand.",
+      "patch": {
+        "manual": "approval",
+        "units": 20
+      }
+    },
+    "dnri1pah": {
+      "why": "\"Students must take the Oral Proficiency Interview (OPI) in Hebrew two quarters prior to degree conferral, minimally earning a notation of 'intermediate-high'.\"",
+      "patch": {
+        "manual": "exam"
+      }
+    },
+    "1ThYUiLE": {
+      "why": "\"To fulfill the African Languages, Literatures, and Cultures Track, students must earn a minimum 32 units total.\"",
+      "patch": {
+        "units": 32
+      }
+    },
+    "E02CL9UB": {
+      "why": "\"Students must complete a sequence of three (3) African language classes all toward the same language.\" Each African language taught at Stanford has its own language subject; one not listed is moved in with the director's approval.",
+      "replace": {
+        "t": "any",
+        "name": "African Language Courses (three in one language)",
+        "children": [
+          {
+            "id": "E02CL9UB-SWAHLANG",
+            "t": "courses",
+            "name": "Three Swahili courses",
+            "mode": "atLeast",
+            "n": 3,
+            "pool": {
+              "subjects": [
+                "SWAHLANG"
+              ]
+            }
+          },
+          {
+            "id": "E02CL9UB-ZULULANG",
+            "t": "courses",
+            "name": "Three Zulu courses",
+            "mode": "atLeast",
+            "n": 3,
+            "pool": {
+              "subjects": [
+                "ZULULANG"
+              ]
+            }
+          },
+          {
+            "id": "E02CL9UB-YORULANG",
+            "t": "courses",
+            "name": "Three Yoruba courses",
+            "mode": "atLeast",
+            "n": 3,
+            "pool": {
+              "subjects": [
+                "YORULANG"
+              ]
+            }
+          },
+          {
+            "id": "E02CL9UB-IGBOLANG",
+            "t": "courses",
+            "name": "Three Igbo courses",
+            "mode": "atLeast",
+            "n": 3,
+            "pool": {
+              "subjects": [
+                "IGBOLANG"
+              ]
+            }
+          },
+          {
+            "id": "E02CL9UB-TWILANG",
+            "t": "courses",
+            "name": "Three Twi courses",
+            "mode": "atLeast",
+            "n": 3,
+            "pool": {
+              "subjects": [
+                "TWILANG"
+              ]
+            }
+          },
+          {
+            "id": "E02CL9UB-AMHRLANG",
+            "t": "courses",
+            "name": "Three Amharic courses",
+            "mode": "atLeast",
+            "n": 3,
+            "pool": {
+              "subjects": [
+                "AMHRLANG"
+              ]
+            }
+          },
+          {
+            "id": "E02CL9UB-TIGRYLNG",
+            "t": "courses",
+            "name": "Three Tigrinya courses",
+            "mode": "atLeast",
+            "n": 3,
+            "pool": {
+              "subjects": [
+                "TIGRYLNG"
+              ]
+            }
+          },
+          {
+            "id": "E02CL9UB-OROMLANG",
+            "t": "courses",
+            "name": "Three Oromo courses",
+            "mode": "atLeast",
+            "n": 3,
+            "pool": {
+              "subjects": [
+                "OROMLANG"
+              ]
+            }
+          },
+          {
+            "id": "E02CL9UB-KINYLANG",
+            "t": "courses",
+            "name": "Three Kinyarwanda courses",
+            "mode": "atLeast",
+            "n": 3,
+            "pool": {
+              "subjects": [
+                "KINYLANG"
+              ]
+            }
+          },
+          {
+            "id": "E02CL9UB-LUGALANG",
+            "t": "courses",
+            "name": "Three Luganda courses",
+            "mode": "atLeast",
+            "n": 3,
+            "pool": {
+              "subjects": [
+                "LUGALANG"
+              ]
+            }
+          },
+          {
+            "id": "E02CL9UB-other",
+            "t": "text",
+            "name": "Three courses in another African language, approved by the faculty director",
+            "manual": "approval",
+            "n": 3
+          }
+        ]
+      }
+    },
+    "M1Njz7e1": {
+      "why": "\"Students must complete 20 additional units from relevant literature and culture courses; one of these courses must be a COMPLIT course. Students may enroll in other relevant courses listed under AFRICAST. The faculty director may approve some upper-level language classes to count toward the remaining units.\" Relevance is the director's call, so the student moves the courses in; the COMPLIT course is checked by hand.",
+      "patch": {
+        "manual": "approval",
+        "units": 20
+      }
+    },
+    "KxneCxkd": {
+      "why": "\"Students must take the Oral Proficiency Interview (OPI) in an African Language two quarters prior to degree conferral, minimally earning a notation of 'intermediate-high'.\"",
+      "patch": {
+        "manual": "exam"
+      }
+    },
+    "RgyC4Ccq": {
+      "why": "\"To fulfill the Persian Track, students must earn a minimum 30 units total.\"",
+      "patch": {
+        "units": 30
+      }
+    },
+    "ej6lKIef": {
+      "why": "\"Students must complete 20 units of Persian language courses.\" Persian language courses are the PERSLANG subject.",
+      "replace": {
+        "t": "courses",
+        "name": "Persian Language Courses (20 units)",
+        "mode": "units",
+        "units": 20,
+        "pool": {
+          "subjects": [
+            "PERSLANG"
+          ]
+        }
+      }
+    },
+    "zCSx6WY5": {
+      "why": "\"Students must complete 10 units of Persian-focused courses in COMPLIT.\" That a COMPLIT course is Persian-focused is part of the director's approval of all courses.",
+      "replace": {
+        "t": "courses",
+        "name": "Persian Literature Courses in Comparative Literature (10 units)",
+        "mode": "units",
+        "units": 10,
+        "pool": {
+          "subjects": [
+            "COMPLIT"
+          ]
+        }
+      }
+    },
+    "AqrxpNuj": {
+      "why": "\"Students must take the Oral Proficiency Interview (OPI) in Persian two quarters prior to degree conferral, minimally earning a notation of 'intermediate-high'.\"",
+      "patch": {
+        "manual": "exam"
+      }
+    },
+    "djYrkijB": {
+      "why": "\"To fulfill the Turkish Track, students must earn a minimum 30 units total.\"",
+      "patch": {
+        "units": 30
+      }
+    },
+    "fLpAFoGS": {
+      "why": "\"Students must complete 15 units of Turkish language courses.\" Turkish language courses are the TURKLANG subject.",
+      "replace": {
+        "t": "courses",
+        "name": "Turkish Language Courses (15 units)",
+        "mode": "units",
+        "units": 15,
+        "pool": {
+          "subjects": [
+            "TURKLANG"
+          ]
+        }
+      }
+    },
+    "nCRTgF1N": {
+      "why": "\"Students must complete 15 units of Turkish-focused courses in COMPLIT.\" That a COMPLIT course is Turkish-focused is part of the director's approval of all courses.",
+      "replace": {
+        "t": "courses",
+        "name": "Turkish Literature Courses in Comparative Literature (15 units)",
+        "mode": "units",
+        "units": 15,
+        "pool": {
+          "subjects": [
+            "COMPLIT"
+          ]
+        }
+      }
+    },
+    "w1YRsYnq": {
+      "why": "\"Students must take the Oral Proficiency Interview (OPI) in Turkish two quarters prior to degree conferral, minimally earning a notation of 'intermediate-high'.\"",
+      "patch": {
+        "manual": "exam"
+      }
+    }
+  },
+  "add": [
+    {
+      "parent": "OQ2aGv7E",
+      "node": {
+        "id": "ov-arabic-approval",
+        "t": "text",
+        "name": "Faculty director approves all courses",
+        "manual": "approval"
+      },
+      "why": "\"The faculty director must approve all courses.\""
+    },
+    {
+      "parent": "lQEDzYS0",
+      "node": {
+        "id": "ov-hebrew-approval",
+        "t": "text",
+        "name": "Faculty director approves all courses",
+        "manual": "approval"
+      },
+      "why": "\"The faculty director must approve all courses.\""
+    },
+    {
+      "parent": "1ThYUiLE",
+      "node": {
+        "id": "ov-african-approval",
+        "t": "text",
+        "name": "Faculty director approves all courses",
+        "manual": "approval"
+      },
+      "why": "\"The faculty director must approve all courses.\""
+    },
+    {
+      "parent": "RgyC4Ccq",
+      "node": {
+        "id": "ov-persian-approval",
+        "t": "text",
+        "name": "Faculty director approves all courses",
+        "manual": "approval"
+      },
+      "why": "\"The faculty director must approve all courses.\""
+    },
+    {
+      "parent": "djYrkijB",
+      "node": {
+        "id": "ov-turkish-approval",
+        "t": "text",
+        "name": "Faculty director approves all courses",
+        "manual": "approval"
+      },
+      "why": "\"The faculty director must approve all courses.\""
+    }
+  ],
+  "program": {
+    "letterGrade": true,
+    "minGrade": "C",
+    "why": "Grading: \"All courses must be taken for a letter grade, and a C or better grade must be achieved in each course.\"",
+    "totals": [
+      {
+        "label": "At least six courses",
+        "minCourses": 6,
+        "why": "Requirements Overview: \"Complete at least six courses at three units or more and the required overall units of coursework in the department depending on track.\" That six of them are 3 units or more is checked by hand."
+      }
+    ]
+  }
+}

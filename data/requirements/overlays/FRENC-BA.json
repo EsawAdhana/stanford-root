@@ -1,0 +1,247 @@
+{
+  "code": "FRENC-BA",
+  "reviewed": "2026-10-23",
+  "summary": "Every course needs a C or better, and every course except up to 10 Philosophy units in the French and Philosophy subplan must be letter graded. You take three 100- or 200-level courses taught in French (or FRENLANG 124) for 12 units, a course on a period before 1800, a WIM course, the 3-unit FRENCH 199 capstone and the Oral Proficiency Interview, with FRENCH electives and up to three French language courses at or above FRENLANG 21C (12 units) making up 60 units; at most 12 units of independent study count. The optional French and Philosophy subplan raises the total to 66 units and adds three FRENCH courses numbered 140 or above, FRENCH 181, PHIL 80, a 170-series and a 180-series course, two history of philosophy courses, two approved electives and its own capstone. Courses from other departments, Bing Overseas Paris, ESF, SLE and Digital Humanities count with the Director of Undergraduate Studies' approval and are moved in by hand, as are transfer units (at most 12); whether a course is taught in French or covers the pre-1800 period is checked by hand. Honors adds 9 units of DLCL 189H, the thesis and the colloquium.",
+  "program": {
+    "minGrade": "C",
+    "why": "Grading: \"All courses applied to the major must be taken for a letter grade and passed with at least a C.\" GPA: \"A grade point average (GPA) of 2.0 or better must be achieved in each course.\" The letter grade is set on each rule rather than program-wide, because the French and Philosophy subplan lets up to 10 Philosophy units be CR/NC or S/NC.",
+    "totals": [
+      {
+        "label": "66 units with the French and Philosophy subplan",
+        "minUnits": 66,
+        "when": "23HZcyDM",
+        "why": "\"The French and Philosophy subplan requires 66 units.\""
+      },
+      {
+        "label": "At most 10 CR/NC or S/NC Philosophy units",
+        "maxUnits": 10,
+        "grading": "not-letter",
+        "pool": {
+          "subjects": [
+            "PHIL"
+          ]
+        },
+        "when": "23HZcyDM",
+        "why": "Grading: \"French and Philosophy Subplan: Up to 10 units of courses taken in the Philosophy department may be taken CR/NC or S/NC; the remainder must be taken for a letter grade.\""
+      },
+      {
+        "label": "At most 12 units of independent study",
+        "maxUnits": 12,
+        "codes": [
+          "FRENCH 199"
+        ],
+        "why": "Policies: \"No more than 12 units of coursework for the major should be taken as independent study courses.\" FRENCH 199 (Individual Work), which the capstone also uses; independent study in other departments is checked by hand."
+      }
+    ]
+  },
+  "blocks": {
+    "kd8TBlxz": {
+      "units": null
+    }
+  },
+  "nodes": {
+    "6BMWiUzs": {
+      "why": "\"At least 3 courses must be taken in the French language at the 100- or 200-level (FRENLANG 124 is the only language class that counts for this requirement) for a total of at least 12 units.\" The listed courses are \"possible examples\". The unit floor moved here from the block. Whether a course is taught in French that year is not in the data.",
+      "patch": {
+        "units": 12,
+        "letter": true,
+        "pool": {
+          "subjects": [
+            "FRENCH"
+          ],
+          "minNumber": 100,
+          "maxNumber": 299
+        }
+      }
+    },
+    "6Gq1R9RH": {
+      "why": "Grading: \"All courses applied to the major must be taken for a letter grade and passed with at least a C.\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "Lax2qjTc": {
+      "why": "Grading: \"All courses applied to the major must be taken for a letter grade and passed with at least a C.\" The rule is unnamed on the page; it is the block's WIM course.",
+      "patch": {
+        "letter": true,
+        "name": "Writing in the Major (WIM)"
+      }
+    },
+    "01L7w0AU": {
+      "why": "Grading: \"All courses applied to the major must be taken for a letter grade and passed with at least a C.\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "TG9yQESl": {
+      "why": "Grading: \"All courses applied to the major must be taken for a letter grade and passed with at least a C.\" Unnamed on the page: \"To earn honors, students must complete a minimum of 9 units (3 units per quarter)\".",
+      "patch": {
+        "letter": true,
+        "name": "Honors: 9 units of DLCL 189H"
+      }
+    },
+    "df2lSApB": {
+      "why": "Grading: \"All courses applied to the major must be taken for a letter grade and passed with at least a C.\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "tjfw1HwI": {
+      "why": "\"Students must take the Oral Proficiency Interview (OPI) two quarters prior to degree conferral through the Stanford Language Center.\"",
+      "patch": {
+        "manual": "exam"
+      }
+    },
+    "dtEPwQha": {
+      "why": "\"Elective courses taken within the following parameters listed should add up to meet the 60 unit major minimum\" (program.unitsMin). \"Additional FRENCH courses taught by French faculty ... at the 100- or 200- level\" are pooled here; language courses at or above FRENLANG 21C (up to three, 12 units), approved courses from other departments, Bing Overseas Paris, ESF (10 units), SLE (10 units) and Digital Humanities (5 units) are moved in by hand. Optional because the number of elective units is whatever brings the major to 60.",
+      "replace": {
+        "t": "courses",
+        "name": "Electives toward the 60-unit major",
+        "mode": "any",
+        "optional": true,
+        "letter": true,
+        "pool": {
+          "subjects": [
+            "FRENCH"
+          ],
+          "minNumber": 100,
+          "maxNumber": 299
+        }
+      }
+    },
+    "aLnGqIOZ": {
+      "why": "\"French and Philosophy Subplan Capstone Experience\" applies only to the French and Philosophy subplan, so it moves into that block (re-added there below). FRENCH 199 stays the capstone for every major; the text does not say the subplan replaces it.",
+      "remove": true
+    },
+    "p2zCywAl": {
+      "why": "\"At least three courses numbered FRENCH 140 or higher. Courses listed below are EXAMPLES of eligible courses and are not required.\"",
+      "patch": {
+        "letter": true,
+        "pool": {
+          "subjects": [
+            "FRENCH"
+          ],
+          "minNumber": 140
+        }
+      }
+    },
+    "ID80mFpO": {
+      "why": "\"Complete AT LEAST 2 courses from the PHIL 100-139 course set.\"",
+      "replace": {
+        "t": "courses",
+        "name": "History of Philosophy",
+        "mode": "atLeast",
+        "n": 2,
+        "pool": {
+          "subjects": [
+            "PHIL"
+          ],
+          "minNumber": 100,
+          "maxNumber": 139
+        }
+      }
+    },
+    "AqjfhWFV": {
+      "why": "\"Two additional elective courses of special relevance to the study of philosophy and literature. Students must consult with the Director of Undergraduate Studies (DUS) in French.\" The data said one.",
+      "patch": {
+        "n": 2,
+        "manual": "approval"
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "Wwy5AS0K",
+      "why": "Electives: \"Language coursework. Up to three language courses in French at or above FRENLANG 21C for a maximum of 12 units.\" Grading: \"All courses applied to the major must be taken for a letter grade and passed with at least a C.\"",
+      "node": {
+        "id": "ov-frenc-ba-language",
+        "t": "courses",
+        "name": "French language courses at or above FRENLANG 21C (up to three, 12 units)",
+        "mode": "any",
+        "optional": true,
+        "letter": true,
+        "pool": {
+          "subjects": [
+            "FRENLANG"
+          ],
+          "minNumber": 21,
+          "exclude": [
+            "FRENLANG 21B"
+          ]
+        },
+        "limits": [
+          {
+            "label": "language courses",
+            "max": 3,
+            "pool": {
+              "subjects": [
+                "FRENLANG"
+              ]
+            }
+          },
+          {
+            "label": "language units",
+            "maxUnits": 12,
+            "pool": {
+              "subjects": [
+                "FRENLANG"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "block": "23HZcyDM",
+      "why": "Moved from the Capstone block: \"French and Philosophy Subplan Capstone Experience\", one of three options.",
+      "node": {
+        "id": "aLnGqIOZ",
+        "t": "any",
+        "name": "French and Philosophy Subplan Capstone Experience",
+        "children": [
+          {
+            "id": "TiwncJ7Y",
+            "t": "text",
+            "name": "Philosophy and Literature Capstone Seminar",
+            "n": 1,
+            "manual": "approval",
+            "desc": "Students must take one course designated as a philosophy and literature capstone with the approval of the Director of Undergraduate Studies and the Faculty Advisor for Philosophy."
+          },
+          {
+            "id": "k9op6wZx",
+            "t": "courses",
+            "name": "Honors Thesis",
+            "mode": "units",
+            "units": 9,
+            "letter": true,
+            "items": [
+              [
+                "DLCL 189H"
+              ]
+            ],
+            "desc": "To earn honors, students must complete a minimum of 9 units (3 units per quarter), submit a thesis, and present at the Honors Colloquium at the end of their senior year.",
+            "notes": "This option is only available if accepted into the Honors program."
+          },
+          {
+            "id": "CMoqQsMk",
+            "t": "text",
+            "name": "5,000-word Topic Paper",
+            "n": 1,
+            "manual": "thesis",
+            "desc": "The student will write a 5,000-word paper on a topic of their choosing, serving as the culmination of their work in the field.\nTo write the paper, students must enroll in a 3-unit, letter-grade independent study with a faculty member (or affiliate) in the Philosophy and Literature Focal Group. The paper must involve philosophy and literature, and the faculty member must approve the topic by the add/drop deadline."
+          }
+        ]
+      }
+    },
+    {
+      "block": "jyaaGQK8",
+      "why": "\"To earn honors, students must complete a minimum of 9 units (3 units per quarter), submit a thesis, and present at the Honors Colloquium at the end of their senior year.\" The 9 units are the DLCL 189H rule; the thesis and colloquium are checked by hand.",
+      "node": {
+        "id": "ov-frenc-ba-honors-thesis",
+        "t": "text",
+        "name": "Honors thesis and Honors Colloquium presentation",
+        "manual": "thesis"
+      }
+    }
+  ]
+}

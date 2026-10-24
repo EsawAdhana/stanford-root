@@ -1,0 +1,57 @@
+{
+  "code": "CHEME-PMN",
+  "reviewed": "2026-10-23",
+  "summary": "You need 20 units of graduate lecture courses numbered 200 and above, each of at least 3 units, from any department. The audit checks the numbers and units; you check by hand that your minor adviser and the department chair approve the list as a coherent program of lecture courses. Every course must be letter graded. You also check by hand the application both departments approve, the 3.0 GPA in the minor's courses, and your minor adviser's place on your reading and oral examination committees. All of the minor's coursework must be taken at Stanford.",
+  "program": {
+    "letterGrade": true,
+    "why": "Grading: \"All courses for the minor must be taken for a letter grade.\""
+  },
+  "blocks": {
+    "8NbimV3A": { "kind": "required" }
+  },
+  "add": [
+    {
+      "block": "8NbimV3A",
+      "node": { "id": "ov-gpa", "t": "text", "name": "GPA of 3.0 in the minor's courses", "manual": "gpa" },
+      "why": "GPA: \"A GPA of at least 3.0 must be earned for courses being used for the minor.\""
+    },
+    {
+      "block": "8NbimV3A",
+      "node": {
+        "id": "ov-application",
+        "t": "text",
+        "name": "PhD minor application approved by both departments",
+        "manual": "approval"
+      },
+      "why": "\"Both the major and minor departments must approve an application for a PhD minor.\""
+    },
+    {
+      "block": "8NbimV3A",
+      "node": {
+        "id": "ov-coursework",
+        "t": "courses",
+        "name": "20 units of graduate-level lecture courses (3+ units each)",
+        "mode": "units",
+        "units": 20,
+        "minUnitsEach": 3,
+        "pool": { "anySubject": true, "minNumber": 200 }
+      },
+      "why": "\"The PhD minor program must include at least 20 units of graduate-level lecture courses (numbered at the 200 level or above). It may not include any one to two-unit lecture courses in the 20-unit minimum. The list of courses must form a coherent program and must be approved by the minor program advisor and the chair of this department.\" The text does not say the courses must be CHEMENG courses, so any course numbered 200 or above of at least 3 units counts here; that it is a lecture course in a coherent, approved program is ov-coursework-approval."
+    },
+    {
+      "block": "8NbimV3A",
+      "node": { "id": "ov-coursework-approval", "t": "text", "name": "Course list approved by the minor program adviser and the department chair", "manual": "approval" },
+      "why": "\"The list of courses must form a coherent program and must be approved by the minor program advisor and the chair of this department.\""
+    },
+    {
+      "block": "8NbimV3A",
+      "node": {
+        "id": "ov-committee",
+        "t": "text",
+        "name": "Minor adviser on the reading and oral examination committees",
+        "manual": "milestone"
+      },
+      "why": "\"This adviser must be included as a member of the student's reading committee for the doctoral dissertation, and the entire reading committee must meet at least once with the candidate.\" \"In addition, the Chemical Engineering faculty member who is the minor adviser must be a member of the student's University Oral Examination committee.\""
+    }
+  ]
+}

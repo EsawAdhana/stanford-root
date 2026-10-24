@@ -1,0 +1,682 @@
+{
+  "code": "SUSTSCI-MS",
+  "reviewed": "2026-10-23",
+  "summary": "You take the SUST core, an Earth Systems social interactions course, a biophysical course (Path 1, or Path 2 if you completed EARTHSYS 10), two Decision Making and two Design and Innovation courses and three electives (each of 3+ units), for 45 units, all letter graded where offered. As an MS candidate you also take one mathematics course (CME 100 or MATH 51) and one statistics course, ideally before the program; their units do not count toward the 45. At least 34 units must be at the 200 level and none below the 100 level. Your 3.4 GPA and the 25 science-designated units (blended courses count half) are checked by hand, as are petitioned electives.",
+  "program": {
+    "letterGrade": true,
+    "why": "Grading: \"All courses must be taken for a letter grade if a letter grade is offered.\"",
+    "totals": [
+      {
+        "label": "34 units at the 200 level or above",
+        "minUnits": 34,
+        "pool": {
+          "anySubject": true,
+          "minNumber": 200
+        },
+        "why": "Policies: \"At least 34 units of coursework must be at the 200 level or above.\""
+      },
+      {
+        "label": "Courses below the 100 level",
+        "maxUnits": 0,
+        "pool": {
+          "anySubject": true,
+          "maxNumber": 99,
+          "excludeGraduate": true
+        },
+        "why": "Policies: \"All coursework must be at the 100 level or above.\""
+      },
+      {
+        "label": "Mathematics and Statistics courses",
+        "maxUnits": 0,
+        "codes": [
+          "CME 100",
+          "MATH 51",
+          "CME 106",
+          "CS 109",
+          "ECON 102A",
+          "EE 178",
+          "MS&E 120",
+          "MS&E 220",
+          "STATS 110"
+        ],
+        "why": "Additional Requirements for M.S. Candidates: \"Units from the Mathematics and Statistics courses do not count toward the 45 units required for the SUST master's degree.\""
+      }
+    ]
+  },
+  "nodes": {
+    "GUWpUhWW": {
+      "why": "\"Choose two. Courses must be taken for at least three units to fulfill this requirement.\"",
+      "patch": {
+        "minUnitsEach": 3
+      }
+    },
+    "00ZHjf5N": {
+      "why": "\"Choose two. Courses must be taken for at least three units to fulfill this requirement.\"",
+      "patch": {
+        "minUnitsEach": 3
+      }
+    },
+    "vEpXxHiA": {
+      "why": "\"Complete additional units from any of the following three lists to satisfy SUST unit requirements\" and \"At least three elective courses for the master's program must be taken for three or more units.\" The three lists are one pool, not one course from each: they differ only in how their units count toward the sciences total. Petitioned electives are moved in by hand; further elective units count toward the 45-unit total.",
+      "replace": {
+        "t": "courses",
+        "name": "Elective Courses (three of 3+ units from the sciences, arts or blended lists)",
+        "mode": "atLeast",
+        "n": 3,
+        "minUnitsEach": 3,
+        "items": [
+          [
+            "BIO 243H"
+          ],
+          [
+            "BIO 245"
+          ],
+          [
+            "CEE 176A"
+          ],
+          [
+            "CEE 177E"
+          ],
+          [
+            "CEE 207A"
+          ],
+          [
+            "CEE 224A"
+          ],
+          [
+            "CEE 226"
+          ],
+          [
+            "CEE 226E"
+          ],
+          [
+            "CEE 262D"
+          ],
+          [
+            "CEE 262E"
+          ],
+          [
+            "CEE 263S"
+          ],
+          [
+            "CEE 265I"
+          ],
+          [
+            "CEE 266B"
+          ],
+          [
+            "CEE 266G"
+          ],
+          [
+            "CEE 272"
+          ],
+          [
+            "CEE 272R"
+          ],
+          [
+            "CEE 272T"
+          ],
+          [
+            "CEE 276"
+          ],
+          [
+            "CEE 276B"
+          ],
+          [
+            "CEE 277F"
+          ],
+          [
+            "CEE 278A"
+          ],
+          [
+            "CEE 279D"
+          ],
+          [
+            "CEE 279E"
+          ],
+          [
+            "EARTHSYS 144"
+          ],
+          [
+            "EARTHSYS 183"
+          ],
+          [
+            "EARTHSYS 185"
+          ],
+          [
+            "EARTHSYS 214"
+          ],
+          [
+            "EARTHSYS 242"
+          ],
+          [
+            "EARTHSYS 245"
+          ],
+          [
+            "EARTHSYS 280"
+          ],
+          [
+            "EARTHSYS 308"
+          ],
+          [
+            "EBS 282"
+          ],
+          [
+            "EBS 308"
+          ],
+          [
+            "EBS 321"
+          ],
+          [
+            "ECON 163"
+          ],
+          [
+            "ECON 177"
+          ],
+          [
+            "EE 293B"
+          ],
+          [
+            "ENERGY 204"
+          ],
+          [
+            "ENERGY 205"
+          ],
+          [
+            "ENERGY 253"
+          ],
+          [
+            "ENERGY 263"
+          ],
+          [
+            "ENERGY 285"
+          ],
+          [
+            "ENERGY 291"
+          ],
+          [
+            "EPS 228"
+          ],
+          [
+            "ESS 202"
+          ],
+          [
+            "ESS 223"
+          ],
+          [
+            "ESS 233"
+          ],
+          [
+            "ESS 246A"
+          ],
+          [
+            "ESS 246B"
+          ],
+          [
+            "ESS 251"
+          ],
+          [
+            "ESS 252"
+          ],
+          [
+            "ESS 267"
+          ],
+          [
+            "ESS 305"
+          ],
+          [
+            "ESS 333"
+          ],
+          [
+            "GEOPHYS 190"
+          ],
+          [
+            "GEP 235"
+          ],
+          [
+            "GEP 349"
+          ],
+          [
+            "MATSCI 256"
+          ],
+          [
+            "MS&E 243"
+          ],
+          [
+            "MS&E 394"
+          ],
+          [
+            "OCEANS 225H"
+          ],
+          [
+            "PHYSICS 240"
+          ],
+          [
+            "PHYSICS 241"
+          ],
+          [
+            "SOC 226"
+          ],
+          [
+            "AFRICAAM 207"
+          ],
+          [
+            "ANTHRO 224B"
+          ],
+          [
+            "BIOE 273"
+          ],
+          [
+            "BUSGEN 100"
+          ],
+          [
+            "BUSGEN 143"
+          ],
+          [
+            "CEE 251"
+          ],
+          [
+            "CEE 257"
+          ],
+          [
+            "CEE 263G"
+          ],
+          [
+            "CEE 265D"
+          ],
+          [
+            "CEE 273B"
+          ],
+          [
+            "CEE 275D"
+          ],
+          [
+            "CEE 276G"
+          ],
+          [
+            "CEE 323A"
+          ],
+          [
+            "CEE 330"
+          ],
+          [
+            "CEE 330B"
+          ],
+          [
+            "CLASSICS 293"
+          ],
+          [
+            "COMPLIT 107"
+          ],
+          [
+            "COMPLIT 207B"
+          ],
+          [
+            "CSRE 100"
+          ],
+          [
+            "CSRE 161P"
+          ],
+          [
+            "EARTHSYS 119"
+          ],
+          [
+            "EARTHSYS 194A"
+          ],
+          [
+            "EARTHSYS 196A"
+          ],
+          [
+            "EARTHSYS 225"
+          ],
+          [
+            "EARTHSYS 254"
+          ],
+          [
+            "EARTHSYS 277C"
+          ],
+          [
+            "EARTHSYS 291"
+          ],
+          [
+            "EARTHSYS 292"
+          ],
+          [
+            "EARTHSYS 295C"
+          ],
+          [
+            "EBS 222"
+          ],
+          [
+            "EBS 234"
+          ],
+          [
+            "EBS 236"
+          ],
+          [
+            "EBS 237"
+          ],
+          [
+            "EBS 238"
+          ],
+          [
+            "EBS 249"
+          ],
+          [
+            "EBS 292"
+          ],
+          [
+            "EBS 306"
+          ],
+          [
+            "EBS 325"
+          ],
+          [
+            "ECON 155"
+          ],
+          [
+            "EDUC 335"
+          ],
+          [
+            "EDUC 377B"
+          ],
+          [
+            "ENERGY 203A"
+          ],
+          [
+            "ENGR 248"
+          ],
+          [
+            "ENVRES 221"
+          ],
+          [
+            "ENVRES 223"
+          ],
+          [
+            "ENVRES 260"
+          ],
+          [
+            "ESS 166"
+          ],
+          [
+            "ESS 306"
+          ],
+          [
+            "GEP 229"
+          ],
+          [
+            "GEP 233"
+          ],
+          [
+            "GEP 382"
+          ],
+          [
+            "GSBGEN 315"
+          ],
+          [
+            "GSBGEN 515"
+          ],
+          [
+            "GSBGEN 559"
+          ],
+          [
+            "GSBGEN 565"
+          ],
+          [
+            "GSBGEN 581"
+          ],
+          [
+            "GSBGID 305"
+          ],
+          [
+            "HISTORY 200B"
+          ],
+          [
+            "HRP 285"
+          ],
+          [
+            "HUMRTS 224"
+          ],
+          [
+            "INTNLREL 142"
+          ],
+          [
+            "LAW 241X"
+          ],
+          [
+            "LAW 808B"
+          ],
+          [
+            "LAW 809T"
+          ],
+          [
+            "LAW 809V"
+          ],
+          [
+            "LAW 1047"
+          ],
+          [
+            "LAW 2504"
+          ],
+          [
+            "LAW 2506"
+          ],
+          [
+            "LAW 2513"
+          ],
+          [
+            "LAW 2519"
+          ],
+          [
+            "LAW 2530"
+          ],
+          [
+            "LAW 7115"
+          ],
+          [
+            "MS&E 175"
+          ],
+          [
+            "MS&E 180"
+          ],
+          [
+            "MS&E 184"
+          ],
+          [
+            "MS&E 188"
+          ],
+          [
+            "MS&E 254"
+          ],
+          [
+            "MS&E 272"
+          ],
+          [
+            "MS&E 280"
+          ],
+          [
+            "MS&E 384"
+          ],
+          [
+            "MS&E 472"
+          ],
+          [
+            "PHIL 278M"
+          ],
+          [
+            "PUBLPOL 135"
+          ],
+          [
+            "PUBLPOL 183"
+          ],
+          [
+            "PUBLPOL 224"
+          ],
+          [
+            "PUBLPOL 234"
+          ],
+          [
+            "PUBLPOL 306"
+          ],
+          [
+            "SOC 256A"
+          ],
+          [
+            "SUSTAIN 120"
+          ],
+          [
+            "SUSTAIN 123"
+          ],
+          [
+            "SUSTAIN 132"
+          ],
+          [
+            "SUSTAIN 210"
+          ],
+          [
+            "SUSTAIN 213"
+          ],
+          [
+            "SUSTAIN 221"
+          ],
+          [
+            "SUSTAIN 231"
+          ],
+          [
+            "URBANST 132"
+          ],
+          [
+            "URBANST 163"
+          ],
+          [
+            "URBANST 164"
+          ],
+          [
+            "URBANST 173"
+          ],
+          [
+            "BIO 234"
+          ],
+          [
+            "BIO 279"
+          ],
+          [
+            "CEE 173"
+          ],
+          [
+            "CEE 227"
+          ],
+          [
+            "CEE 243"
+          ],
+          [
+            "CEE 265F"
+          ],
+          [
+            "CEE 265H"
+          ],
+          [
+            "CEE 273S"
+          ],
+          [
+            "CEE 275A"
+          ],
+          [
+            "CEE 277L"
+          ],
+          [
+            "EARTHSYS 206"
+          ],
+          [
+            "EARTHSYS 209"
+          ],
+          [
+            "EARTHSYS 281"
+          ],
+          [
+            "EBS 235"
+          ],
+          [
+            "EBS 291"
+          ],
+          [
+            "EBS 332"
+          ],
+          [
+            "ECON 118"
+          ],
+          [
+            "EDUC 324"
+          ],
+          [
+            "ENERGY 277A"
+          ],
+          [
+            "ENERGY 277B"
+          ],
+          [
+            "ESS 314"
+          ],
+          [
+            "ESS 367"
+          ],
+          [
+            "GEP 160"
+          ],
+          [
+            "LAW 808D"
+          ],
+          [
+            "ME 297"
+          ],
+          [
+            "MS&E 494"
+          ],
+          [
+            "OCEANS 273H"
+          ],
+          [
+            "POLISCI 141"
+          ],
+          [
+            "PUBLPOL 353A"
+          ],
+          [
+            "SUSTAIN 210M"
+          ],
+          [
+            "SUSTAIN 212"
+          ],
+          [
+            "SUSTAIN 370A"
+          ],
+          [
+            "SUSTAIN 370B"
+          ]
+        ]
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "mAbEGmbJ",
+      "why": "\"A cumulative GPA of 3.4 or higher must be maintained throughout the program.\" and \"A minimum GPA of 3.4 is required to graduate.\"",
+      "node": {
+        "id": "ov-sust-gpa",
+        "t": "text",
+        "name": "3.4 GPA",
+        "manual": "gpa"
+      }
+    },
+    {
+      "block": "mAbEGmbJ",
+      "why": "\"At least 25 of the 45 units must be designated as “science” units.\" Courses on the sciences list count fully and blended courses count half their units, which no rule can weigh.",
+      "node": {
+        "id": "ov-sust-science-units",
+        "t": "text",
+        "name": "25 science-designated units",
+        "manual": "other"
+      }
+    }
+  ]
+}

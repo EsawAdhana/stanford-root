@@ -1,0 +1,82 @@
+{
+  "code": "ITAL-MIN",
+  "reviewed": "2026-10-23",
+  "summary": "You choose the Italian Culture or Italian Literature subplan. The audit checks the 24 units, the subplan's two required courses (at least 8 units), and up to 12 units of second-year Italian language courses (ITALLANG 21-23, 21A, 22A), all letter graded with a C or better. The rest are electives the Director of Undergraduate Studies approves in advance, which you move in by hand: ITALIAN courses at the 100 or 200 level, courses on Italian topics in other departments, Bing Overseas Florence, ESF (up to 10 units), SLE (up to 10 units) and Digital Humanities (up to 5 units). AP credit is not accepted.",
+  "program": {
+    "letterGrade": true,
+    "minGrade": "C",
+    "why": "Grading: \"All courses applied to the Italian Culture and Literature subplans must be taken for a letter grade and passed with at least a 'C'.\" These are the minor's only subplans. GPA: \"A grade point average (GPA) of 2.0 or better must be achieved in each course.\"",
+    "totals": [
+      {
+        "label": "Second-year language units",
+        "maxUnits": 12,
+        "pool": {
+          "subjects": [
+            "ITALLANG"
+          ]
+        },
+        "why": "Preparing for the Minor notes: \"Students may contribute up to 12 units in second-year language courses to their Italian minor in the electives section.\""
+      },
+      {
+        "label": "ESF units",
+        "maxUnits": 10,
+        "pool": {
+          "subjects": [
+            "ESF"
+          ]
+        },
+        "why": "Electives: \"Education as Self-Fashioning (ESF). ESF courses taught at least partially by a French and Italian Department faculty member. Students may count a maximum of ten units.\""
+      },
+      {
+        "label": "SLE units",
+        "maxUnits": 10,
+        "pool": {
+          "subjects": [
+            "SLE"
+          ]
+        },
+        "why": "Electives: \"Structured Liberal Education. Students may count ten units of SLE coursework towards their major elective totals.\""
+      }
+    ]
+  },
+  "nodes": {
+    "uCOOvIL9": {
+      "why": "\"Preparing for the Minor\" is \"Highly Encouraged\", not required; \"Students may contribute up to 12 units in second-year language courses to their Italian minor in the electives section.\"",
+      "patch": {
+        "optional": true
+      }
+    },
+    "I9qSa177": {
+      "why": "\"Preparing for the Minor\" is \"Highly Encouraged\", not required.",
+      "patch": {
+        "optional": true
+      }
+    },
+    "gGL8FlDd": {
+      "why": "\"Prior approval from the Director of Undergraduate Studies for elective courses is required.\" Electives fill \"the remaining units toward the 24 unit total required for the minor\", which is the program's unit minimum, so second-year language units (\"Students may contribute up to 12 units in second-year language courses to their Italian minor in the electives section\") count toward it too.",
+      "patch": {
+        "manual": "approval",
+        "n": 1
+      }
+    },
+    "KiPyLnKj": {
+      "why": "\"Prior approval from the Director of Undergraduate Studies for elective courses is required.\" Electives fill \"the remaining units toward the 24 unit total required for the minor\", which is the program's unit minimum, so second-year language units (\"Students may contribute up to 12 units in second-year language courses to their Italian minor in the electives section\") count toward it too.",
+      "patch": {
+        "manual": "approval",
+        "n": 1
+      }
+    },
+    "Dqpo5wh5": {
+      "why": "\"Total unit count must reach at least 8 units.\"",
+      "patch": {
+        "units": 8
+      }
+    },
+    "4DUl8CMC": {
+      "why": "\"Total unit count must reach at least 8 units.\"",
+      "patch": {
+        "units": 8
+      }
+    }
+  }
+}

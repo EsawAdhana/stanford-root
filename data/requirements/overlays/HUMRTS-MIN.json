@@ -1,0 +1,67 @@
+{
+  "code": "HUMRTS-MIN",
+  "reviewed": "2026-10-23",
+  "summary": "The audit checks the 25 units: HUMRTS 101, at least one course from each of the Foundations, Contemporary Issues and Practice lists (more courses from these lists fill the remaining units), and a 3-5 unit capstone by proposal, all letter graded where a letter grade is offered. These courses cannot also count toward your major. Checked by hand: the capstone pathway, the 3.0 GPA in the minor's courses, at least 10 units on Stanford's campus, and petitioned transfer credit. Declare the minor at least two quarters before your degree is conferred.",
+  "nodes": {
+    "9awRhyR3": {
+      "why": "\"students may choose between one of two pathways: the Independent Project Pathway or the Course Equivalency Pathway\" and \"students must complete and submit their capstone proposals\". Either pathway is one 3-5 unit course chosen by proposal, so the student moves it in.",
+      "patch": {
+        "manual": "approval",
+        "n": 1
+      }
+    },
+    "omw8oWXv": {
+      "why": "\"Remaining units for the minor must be completed by taking at least one course across each of three streams below\" is the three stream rules under it; advice to meet the Student Services Specialist is not a requirement.",
+      "patch": {
+        "name": "Breadth Requirement"
+      }
+    },
+    "3et04bSS": {
+      "why": "\"Remaining units for the minor must be completed by taking at least one course across each of three streams below\": the stream lists also take the units beyond one course each, up to the 25 units (Policies: \"Completion of a minimum of 25 units of Human Rights related coursework\").",
+      "patch": {
+        "mode": "any",
+        "n": 1
+      }
+    },
+    "XRwjPolq": {
+      "why": "\"Remaining units for the minor must be completed by taking at least one course across each of three streams below\": the stream lists also take the units beyond one course each, up to the 25 units (Policies: \"Completion of a minimum of 25 units of Human Rights related coursework\").",
+      "patch": {
+        "mode": "any",
+        "n": 1
+      }
+    },
+    "bZyp4I6Y": {
+      "why": "\"Remaining units for the minor must be completed by taking at least one course across each of three streams below\": the stream lists also take the units beyond one course each, up to the 25 units (Policies: \"Completion of a minimum of 25 units of Human Rights related coursework\").",
+      "patch": {
+        "mode": "any",
+        "n": 1
+      }
+    }
+  },
+  "program": {
+    "letterGrade": true,
+    "why": "Grading: \"All courses counted toward the minor must be taken for a letter grade, except where letter grades are not offered, as university policy requires.\""
+  },
+  "add": [
+    {
+      "block": "5PKktfXt",
+      "why": "GPA: \"All students must maintain a GPA of no less than 3.0 in the classes counting toward the minor.\"",
+      "node": {
+        "id": "ov-humrts-min-gpa",
+        "t": "text",
+        "name": "GPA of 3.0 or higher in the minor's courses",
+        "manual": "gpa"
+      }
+    },
+    {
+      "block": "5PKktfXt",
+      "why": "Policies: \"At least 10 of the 25 units must be completed on Stanford's campus.\"",
+      "node": {
+        "id": "ov-humrts-min-campus",
+        "t": "text",
+        "name": "At least 10 of the 25 units on Stanford's campus",
+        "manual": "residency"
+      }
+    }
+  ]
+}

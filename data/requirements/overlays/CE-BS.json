@@ -1,0 +1,609 @@
+{
+  "code": "CE-BS",
+  "reviewed": "2026-10-23",
+  "summary": "Every course must be taken for a letter grade when that option is offered (CR grades from spring 2020 through summer 2021 still count), toward the 113 units the major needs. The audit checks 45 units of math and science, the Technology in Society course, and 68 units of engineering fundamentals and depth: the core courses, programming, thermodynamics, 12 units in one depth focus area and 6 units in each of three other areas, electives as needed (at most 4 units of CEE 199/199L), and two of CEE 101A-D. You move in math and science electives from the School of Engineering lists. Honors needs the directed writing courses, a 3.3 GPA and an approved thesis.",
+  "program": {
+    "letterGrade": true,
+    "why": "Grading: \"All courses must be taken for a letter grade, if offered.\" Other requirements: \"CR grades are acceptable only for classes completed in the six quarters between spring 2020 and summer 2021.\" The audit already accepts pass grades from those terms."
+  },
+  "nodes": {
+    "pYIBEusZ": {
+      "why": "\"Students must complete a minimum of 45 units of Math and Science coursework.\"",
+      "patch": {
+        "units": 45
+      }
+    },
+    "mksoI2VY": {
+      "why": "\"Complete additional courses from the School of Engineering's approved 2026-27 Math & Stats and/or Science course lists for 2026-27 to reach the 45 unit minimum of Math and Science coursework.\" The lists are not in this program's data; the student moves the courses in.",
+      "patch": {
+        "manual": "approval"
+      }
+    },
+    "vNtm6aeG": {
+      "why": "\"Students must complete at least 68 units of Engineering Fundamentals and Engineering Depth coursework\": one unit floor over both, so the Fundamentals courses move into the Engineering Depth group as ov-fundamentals.",
+      "remove": true
+    },
+    "HPxGgp1q": {
+      "why": "\"Students must complete at least 68 units of Engineering Fundamentals and Engineering Depth coursework in order to satisfy ABET and departmental requirements to graduate.\" (Fundamentals now sit inside this group.)",
+      "patch": {
+        "units": 68
+      }
+    },
+    "SSn63ITs": {
+      "why": "\"Complete a minimum of 30 units of Focus Area coursework. To reach the 30 unit minimum, students must take at least 12 units in one of the following focus areas as their Depth area. And, students must also take at least 6 units each in 3 other focus areas for Breadth.\" Each area's own text: \"must complete at least 12 units from the following courses\" for Depth and \"at least 6 units\" as a Breadth area. One choice per depth area, each with three of the other six as breadth (12 + 3 x 6 = 30).",
+      "replace": {
+        "t": "any",
+        "name": "Focus Areas (one 12-unit depth area, three 6-unit breadth areas)",
+        "children": [
+          {
+            "id": "ov-depth-construction",
+            "t": "all",
+            "name": "Depth: Construction Engineering",
+            "children": [
+              {
+                "id": "ov-construction-depth",
+                "t": "courses",
+                "name": "Construction Engineering depth (12 units)",
+                "mode": "units",
+                "units": 12,
+                "items": ["CEE 101C", "CEE 120A", "CEE 122A", "CEE 122B", "CEE 141A", "CEE 141B", "CEE 241"]
+              },
+              {
+                "id": "ov-construction-breadth",
+                "t": "some",
+                "n": 3,
+                "name": "Breadth: 6 units in each of three other focus areas",
+                "children": [
+                  {
+                    "id": "ov-construction-b-climate",
+                    "t": "courses",
+                    "name": "Engineering & Climate (6 units)",
+                    "mode": "units",
+                    "units": 6,
+                    "items": ["CEE 63", "CEE 64", ["CEE 107A", "CEE 107S"], "CEE 107R", "CEE 156", "CEE 172", "CEE 176A", "CEE 176B"]
+                  },
+                  {
+                    "id": "ov-construction-b-efmh",
+                    "t": "courses",
+                    "name": "Environmental Fluid Mechanics & Hydrology (6 units)",
+                    "mode": "units",
+                    "units": 6,
+                    "items": ["CEE 101B", "CEE 161I", "CEE 162D", "CEE 162E", "CEE 162F", "CEE 162I", "CEE 166B", "CEE 175A"]
+                  },
+                  {
+                    "id": "ov-construction-b-eqe",
+                    "t": "courses",
+                    "name": "Environmental Quality Engineering (6 units)",
+                    "mode": "units",
+                    "units": 6,
+                    "items": ["CEE 172", "CEE 173", "CEE 178", "CEE 179D", "CEE 179E"]
+                  },
+                  {
+                    "id": "ov-construction-b-sensing",
+                    "t": "courses",
+                    "name": "Sensing, Analytics, and Control (6 units)",
+                    "mode": "units",
+                    "units": 6,
+                    "items": ["CEE 101D", "CEE 154", "CEE 156", "ME 161", "ME 210"]
+                  },
+                  {
+                    "id": "ov-construction-b-structural",
+                    "t": "courses",
+                    "name": "Structural Engineering & Mechanics (6 units)",
+                    "mode": "units",
+                    "units": 6,
+                    "items": ["CEE 101A", "CEE 101C", "CEE 101D", "CEE 180", "CEE 182", "CEE 192"]
+                  },
+                  {
+                    "id": "ov-construction-b-urban",
+                    "t": "courses",
+                    "name": "Urban Systems (6 units)",
+                    "mode": "units",
+                    "units": 6,
+                    "items": ["CEE 120A", "CEE 156", "CEE 176A", "CEE 177L", "CEE 243"]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "ov-depth-climate",
+            "t": "all",
+            "name": "Depth: Engineering & Climate",
+            "children": [
+              {
+                "id": "ov-climate-depth",
+                "t": "courses",
+                "name": "Engineering & Climate depth (12 units)",
+                "mode": "units",
+                "units": 12,
+                "items": ["CEE 63", "CEE 64", ["CEE 107A", "CEE 107S"], "CEE 107R", "CEE 156", "CEE 172", "CEE 176A", "CEE 176B"]
+              },
+              {
+                "id": "ov-climate-breadth",
+                "t": "some",
+                "n": 3,
+                "name": "Breadth: 6 units in each of three other focus areas",
+                "children": [
+                  {
+                    "id": "ov-climate-b-construction",
+                    "t": "courses",
+                    "name": "Construction Engineering (6 units)",
+                    "mode": "units",
+                    "units": 6,
+                    "items": ["CEE 101C", "CEE 120A", "CEE 122A", "CEE 122B", "CEE 141A", "CEE 141B", "CEE 241"]
+                  },
+                  {
+                    "id": "ov-climate-b-efmh",
+                    "t": "courses",
+                    "name": "Environmental Fluid Mechanics & Hydrology (6 units)",
+                    "mode": "units",
+                    "units": 6,
+                    "items": ["CEE 101B", "CEE 161I", "CEE 162D", "CEE 162E", "CEE 162F", "CEE 162I", "CEE 166B", "CEE 175A"]
+                  },
+                  {
+                    "id": "ov-climate-b-eqe",
+                    "t": "courses",
+                    "name": "Environmental Quality Engineering (6 units)",
+                    "mode": "units",
+                    "units": 6,
+                    "items": ["CEE 172", "CEE 173", "CEE 178", "CEE 179D", "CEE 179E"]
+                  },
+                  {
+                    "id": "ov-climate-b-sensing",
+                    "t": "courses",
+                    "name": "Sensing, Analytics, and Control (6 units)",
+                    "mode": "units",
+                    "units": 6,
+                    "items": ["CEE 101D", "CEE 154", "CEE 156", "ME 161", "ME 210"]
+                  },
+                  {
+                    "id": "ov-climate-b-structural",
+                    "t": "courses",
+                    "name": "Structural Engineering & Mechanics (6 units)",
+                    "mode": "units",
+                    "units": 6,
+                    "items": ["CEE 101A", "CEE 101C", "CEE 101D", "CEE 180", "CEE 182", "CEE 192"]
+                  },
+                  {
+                    "id": "ov-climate-b-urban",
+                    "t": "courses",
+                    "name": "Urban Systems (6 units)",
+                    "mode": "units",
+                    "units": 6,
+                    "items": ["CEE 120A", "CEE 156", "CEE 176A", "CEE 177L", "CEE 243"]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "ov-depth-efmh",
+            "t": "all",
+            "name": "Depth: Environmental Fluid Mechanics & Hydrology",
+            "children": [
+              {
+                "id": "ov-efmh-depth",
+                "t": "courses",
+                "name": "Environmental Fluid Mechanics & Hydrology depth (12 units)",
+                "mode": "units",
+                "units": 12,
+                "items": ["CEE 101B", "CEE 161I", "CEE 162D", "CEE 162E", "CEE 162F", "CEE 162I", "CEE 166B", "CEE 175A"]
+              },
+              {
+                "id": "ov-efmh-breadth",
+                "t": "some",
+                "n": 3,
+                "name": "Breadth: 6 units in each of three other focus areas",
+                "children": [
+                  {
+                    "id": "ov-efmh-b-construction",
+                    "t": "courses",
+                    "name": "Construction Engineering (6 units)",
+                    "mode": "units",
+                    "units": 6,
+                    "items": ["CEE 101C", "CEE 120A", "CEE 122A", "CEE 122B", "CEE 141A", "CEE 141B", "CEE 241"]
+                  },
+                  {
+                    "id": "ov-efmh-b-climate",
+                    "t": "courses",
+                    "name": "Engineering & Climate (6 units)",
+                    "mode": "units",
+                    "units": 6,
+                    "items": ["CEE 63", "CEE 64", ["CEE 107A", "CEE 107S"], "CEE 107R", "CEE 156", "CEE 172", "CEE 176A", "CEE 176B"]
+                  },
+                  {
+                    "id": "ov-efmh-b-eqe",
+                    "t": "courses",
+                    "name": "Environmental Quality Engineering (6 units)",
+                    "mode": "units",
+                    "units": 6,
+                    "items": ["CEE 172", "CEE 173", "CEE 178", "CEE 179D", "CEE 179E"]
+                  },
+                  {
+                    "id": "ov-efmh-b-sensing",
+                    "t": "courses",
+                    "name": "Sensing, Analytics, and Control (6 units)",
+                    "mode": "units",
+                    "units": 6,
+                    "items": ["CEE 101D", "CEE 154", "CEE 156", "ME 161", "ME 210"]
+                  },
+                  {
+                    "id": "ov-efmh-b-structural",
+                    "t": "courses",
+                    "name": "Structural Engineering & Mechanics (6 units)",
+                    "mode": "units",
+                    "units": 6,
+                    "items": ["CEE 101A", "CEE 101C", "CEE 101D", "CEE 180", "CEE 182", "CEE 192"]
+                  },
+                  {
+                    "id": "ov-efmh-b-urban",
+                    "t": "courses",
+                    "name": "Urban Systems (6 units)",
+                    "mode": "units",
+                    "units": 6,
+                    "items": ["CEE 120A", "CEE 156", "CEE 176A", "CEE 177L", "CEE 243"]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "ov-depth-eqe",
+            "t": "all",
+            "name": "Depth: Environmental Quality Engineering",
+            "children": [
+              {
+                "id": "ov-eqe-depth",
+                "t": "courses",
+                "name": "Environmental Quality Engineering depth (12 units)",
+                "mode": "units",
+                "units": 12,
+                "items": ["CEE 172", "CEE 173", "CEE 178", "CEE 179D", "CEE 179E"]
+              },
+              {
+                "id": "ov-eqe-breadth",
+                "t": "some",
+                "n": 3,
+                "name": "Breadth: 6 units in each of three other focus areas",
+                "children": [
+                  {
+                    "id": "ov-eqe-b-construction",
+                    "t": "courses",
+                    "name": "Construction Engineering (6 units)",
+                    "mode": "units",
+                    "units": 6,
+                    "items": ["CEE 101C", "CEE 120A", "CEE 122A", "CEE 122B", "CEE 141A", "CEE 141B", "CEE 241"]
+                  },
+                  {
+                    "id": "ov-eqe-b-climate",
+                    "t": "courses",
+                    "name": "Engineering & Climate (6 units)",
+                    "mode": "units",
+                    "units": 6,
+                    "items": ["CEE 63", "CEE 64", ["CEE 107A", "CEE 107S"], "CEE 107R", "CEE 156", "CEE 172", "CEE 176A", "CEE 176B"]
+                  },
+                  {
+                    "id": "ov-eqe-b-efmh",
+                    "t": "courses",
+                    "name": "Environmental Fluid Mechanics & Hydrology (6 units)",
+                    "mode": "units",
+                    "units": 6,
+                    "items": ["CEE 101B", "CEE 161I", "CEE 162D", "CEE 162E", "CEE 162F", "CEE 162I", "CEE 166B", "CEE 175A"]
+                  },
+                  {
+                    "id": "ov-eqe-b-sensing",
+                    "t": "courses",
+                    "name": "Sensing, Analytics, and Control (6 units)",
+                    "mode": "units",
+                    "units": 6,
+                    "items": ["CEE 101D", "CEE 154", "CEE 156", "ME 161", "ME 210"]
+                  },
+                  {
+                    "id": "ov-eqe-b-structural",
+                    "t": "courses",
+                    "name": "Structural Engineering & Mechanics (6 units)",
+                    "mode": "units",
+                    "units": 6,
+                    "items": ["CEE 101A", "CEE 101C", "CEE 101D", "CEE 180", "CEE 182", "CEE 192"]
+                  },
+                  {
+                    "id": "ov-eqe-b-urban",
+                    "t": "courses",
+                    "name": "Urban Systems (6 units)",
+                    "mode": "units",
+                    "units": 6,
+                    "items": ["CEE 120A", "CEE 156", "CEE 176A", "CEE 177L", "CEE 243"]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "ov-depth-sensing",
+            "t": "all",
+            "name": "Depth: Sensing, Analytics, and Control",
+            "children": [
+              {
+                "id": "ov-sensing-depth",
+                "t": "courses",
+                "name": "Sensing, Analytics, and Control depth (12 units)",
+                "mode": "units",
+                "units": 12,
+                "items": ["CEE 101D", "CEE 154", "CEE 156", "ME 161", "ME 210"]
+              },
+              {
+                "id": "ov-sensing-breadth",
+                "t": "some",
+                "n": 3,
+                "name": "Breadth: 6 units in each of three other focus areas",
+                "children": [
+                  {
+                    "id": "ov-sensing-b-construction",
+                    "t": "courses",
+                    "name": "Construction Engineering (6 units)",
+                    "mode": "units",
+                    "units": 6,
+                    "items": ["CEE 101C", "CEE 120A", "CEE 122A", "CEE 122B", "CEE 141A", "CEE 141B", "CEE 241"]
+                  },
+                  {
+                    "id": "ov-sensing-b-climate",
+                    "t": "courses",
+                    "name": "Engineering & Climate (6 units)",
+                    "mode": "units",
+                    "units": 6,
+                    "items": ["CEE 63", "CEE 64", ["CEE 107A", "CEE 107S"], "CEE 107R", "CEE 156", "CEE 172", "CEE 176A", "CEE 176B"]
+                  },
+                  {
+                    "id": "ov-sensing-b-efmh",
+                    "t": "courses",
+                    "name": "Environmental Fluid Mechanics & Hydrology (6 units)",
+                    "mode": "units",
+                    "units": 6,
+                    "items": ["CEE 101B", "CEE 161I", "CEE 162D", "CEE 162E", "CEE 162F", "CEE 162I", "CEE 166B", "CEE 175A"]
+                  },
+                  {
+                    "id": "ov-sensing-b-eqe",
+                    "t": "courses",
+                    "name": "Environmental Quality Engineering (6 units)",
+                    "mode": "units",
+                    "units": 6,
+                    "items": ["CEE 172", "CEE 173", "CEE 178", "CEE 179D", "CEE 179E"]
+                  },
+                  {
+                    "id": "ov-sensing-b-structural",
+                    "t": "courses",
+                    "name": "Structural Engineering & Mechanics (6 units)",
+                    "mode": "units",
+                    "units": 6,
+                    "items": ["CEE 101A", "CEE 101C", "CEE 101D", "CEE 180", "CEE 182", "CEE 192"]
+                  },
+                  {
+                    "id": "ov-sensing-b-urban",
+                    "t": "courses",
+                    "name": "Urban Systems (6 units)",
+                    "mode": "units",
+                    "units": 6,
+                    "items": ["CEE 120A", "CEE 156", "CEE 176A", "CEE 177L", "CEE 243"]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "ov-depth-structural",
+            "t": "all",
+            "name": "Depth: Structural Engineering & Mechanics",
+            "children": [
+              {
+                "id": "ov-structural-depth",
+                "t": "courses",
+                "name": "Structural Engineering & Mechanics depth (12 units)",
+                "mode": "units",
+                "units": 12,
+                "items": ["CEE 101A", "CEE 101C", "CEE 101D", "CEE 180", "CEE 182", "CEE 192"]
+              },
+              {
+                "id": "ov-structural-breadth",
+                "t": "some",
+                "n": 3,
+                "name": "Breadth: 6 units in each of three other focus areas",
+                "children": [
+                  {
+                    "id": "ov-structural-b-construction",
+                    "t": "courses",
+                    "name": "Construction Engineering (6 units)",
+                    "mode": "units",
+                    "units": 6,
+                    "items": ["CEE 101C", "CEE 120A", "CEE 122A", "CEE 122B", "CEE 141A", "CEE 141B", "CEE 241"]
+                  },
+                  {
+                    "id": "ov-structural-b-climate",
+                    "t": "courses",
+                    "name": "Engineering & Climate (6 units)",
+                    "mode": "units",
+                    "units": 6,
+                    "items": ["CEE 63", "CEE 64", ["CEE 107A", "CEE 107S"], "CEE 107R", "CEE 156", "CEE 172", "CEE 176A", "CEE 176B"]
+                  },
+                  {
+                    "id": "ov-structural-b-efmh",
+                    "t": "courses",
+                    "name": "Environmental Fluid Mechanics & Hydrology (6 units)",
+                    "mode": "units",
+                    "units": 6,
+                    "items": ["CEE 101B", "CEE 161I", "CEE 162D", "CEE 162E", "CEE 162F", "CEE 162I", "CEE 166B", "CEE 175A"]
+                  },
+                  {
+                    "id": "ov-structural-b-eqe",
+                    "t": "courses",
+                    "name": "Environmental Quality Engineering (6 units)",
+                    "mode": "units",
+                    "units": 6,
+                    "items": ["CEE 172", "CEE 173", "CEE 178", "CEE 179D", "CEE 179E"]
+                  },
+                  {
+                    "id": "ov-structural-b-sensing",
+                    "t": "courses",
+                    "name": "Sensing, Analytics, and Control (6 units)",
+                    "mode": "units",
+                    "units": 6,
+                    "items": ["CEE 101D", "CEE 154", "CEE 156", "ME 161", "ME 210"]
+                  },
+                  {
+                    "id": "ov-structural-b-urban",
+                    "t": "courses",
+                    "name": "Urban Systems (6 units)",
+                    "mode": "units",
+                    "units": 6,
+                    "items": ["CEE 120A", "CEE 156", "CEE 176A", "CEE 177L", "CEE 243"]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "ov-depth-urban",
+            "t": "all",
+            "name": "Depth: Urban Systems",
+            "children": [
+              {
+                "id": "ov-urban-depth",
+                "t": "courses",
+                "name": "Urban Systems depth (12 units)",
+                "mode": "units",
+                "units": 12,
+                "items": ["CEE 120A", "CEE 156", "CEE 176A", "CEE 177L", "CEE 243"]
+              },
+              {
+                "id": "ov-urban-breadth",
+                "t": "some",
+                "n": 3,
+                "name": "Breadth: 6 units in each of three other focus areas",
+                "children": [
+                  {
+                    "id": "ov-urban-b-construction",
+                    "t": "courses",
+                    "name": "Construction Engineering (6 units)",
+                    "mode": "units",
+                    "units": 6,
+                    "items": ["CEE 101C", "CEE 120A", "CEE 122A", "CEE 122B", "CEE 141A", "CEE 141B", "CEE 241"]
+                  },
+                  {
+                    "id": "ov-urban-b-climate",
+                    "t": "courses",
+                    "name": "Engineering & Climate (6 units)",
+                    "mode": "units",
+                    "units": 6,
+                    "items": ["CEE 63", "CEE 64", ["CEE 107A", "CEE 107S"], "CEE 107R", "CEE 156", "CEE 172", "CEE 176A", "CEE 176B"]
+                  },
+                  {
+                    "id": "ov-urban-b-efmh",
+                    "t": "courses",
+                    "name": "Environmental Fluid Mechanics & Hydrology (6 units)",
+                    "mode": "units",
+                    "units": 6,
+                    "items": ["CEE 101B", "CEE 161I", "CEE 162D", "CEE 162E", "CEE 162F", "CEE 162I", "CEE 166B", "CEE 175A"]
+                  },
+                  {
+                    "id": "ov-urban-b-eqe",
+                    "t": "courses",
+                    "name": "Environmental Quality Engineering (6 units)",
+                    "mode": "units",
+                    "units": 6,
+                    "items": ["CEE 172", "CEE 173", "CEE 178", "CEE 179D", "CEE 179E"]
+                  },
+                  {
+                    "id": "ov-urban-b-sensing",
+                    "t": "courses",
+                    "name": "Sensing, Analytics, and Control (6 units)",
+                    "mode": "units",
+                    "units": 6,
+                    "items": ["CEE 101D", "CEE 154", "CEE 156", "ME 161", "ME 210"]
+                  },
+                  {
+                    "id": "ov-urban-b-structural",
+                    "t": "courses",
+                    "name": "Structural Engineering & Mechanics (6 units)",
+                    "mode": "units",
+                    "units": 6,
+                    "items": ["CEE 101A", "CEE 101C", "CEE 101D", "CEE 180", "CEE 182", "CEE 192"]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "SvlcrpVd": {
+      "why": "\"At least 68 units of engineering science and design courses (Engineering Fundamentals, Depth, and Electives) must be completed ... For the remaining engineering elective units: Additional electives may be selected from the 7 focus areas listed in the Depth in Discipline section, or from the following.\" The 68 is the group floor, not this list's; electives count only as needed to reach it. \"Up to 4 units of CEE 199/199L may be used in this category.\" Unlisted courses approved by petition are moved in by hand.",
+      "replace": {
+        "t": "courses",
+        "name": "Engineering Electives (as needed to reach 68 units)",
+        "mode": "any",
+        "optional": true,
+        "items": ["CEE 41Q", "CEE 83N", "CEE 133E", "CEE 199", "CEE 199L", "ENGR 10", "ENGR 15", "ENGR 21", ["ENGR 40M", "ENGR 40A"], ["ENGR 50", "ENGR 50E", "ENGR 50M"], "CEE 101C", "CEE 120A", "CEE 122A", "CEE 122B", "CEE 141A", "CEE 141B", "CEE 241", "CEE 63", "CEE 64", "CEE 107A", "CEE 107S", "CEE 107R", "CEE 156", "CEE 172", "CEE 176A", "CEE 176B", "CEE 101B", "CEE 161I", "CEE 162D", "CEE 162E", "CEE 162F", "CEE 162I", "CEE 166B", "CEE 175A", "CEE 173", "CEE 178", "CEE 179D", "CEE 179E", "CEE 101D", "CEE 154", "ME 161", "ME 210", "CEE 101A", "CEE 180", "CEE 182", "CEE 192", "CEE 177L", "CEE 243"],
+        "limits": [
+          {
+            "label": "CEE 199/199L",
+            "maxUnits": 4,
+            "codes": ["CEE 199", "CEE 199L"]
+          }
+        ]
+      }
+    },
+    "kTRGS01e": {
+      "why": "\"The capstone course must be at least 3 units.\"",
+      "patch": {
+        "minUnitsEach": 3
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "9ohAEZMy",
+      "parent": "HPxGgp1q",
+      "why": "Moved from School Requirements: \"Engineering Fundamentals\" ENGR 14 and ENGR 90, which count toward \"at least 68 units of Engineering Fundamentals and Engineering Depth coursework\".",
+      "node": {
+        "id": "ov-fundamentals",
+        "t": "courses",
+        "name": "Engineering Fundamentals",
+        "mode": "all",
+        "items": ["ENGR 14", "ENGR 90"]
+      }
+    },
+    {
+      "block": "9ohAEZMy",
+      "why": "\"To satisfy ABET criteria, students MUST choose at least TWO of the following 4 classes: CEE 101A, 101B, 101C, and 101D. CEE 101A, 101B, and/or 101C will count as Focus Area Electives. CEE 101D may count either as a Focus Area Elective, or as a Required Core Course\": a designation on courses that also count elsewhere.",
+      "node": {
+        "id": "ov-abet-101",
+        "t": "courses",
+        "name": "ABET: two of CEE 101A, 101B, 101C, 101D",
+        "mode": "atLeast",
+        "n": 2,
+        "items": ["CEE 101A", "CEE 101B", "CEE 101C", "CEE 101D"],
+        "shares": true
+      }
+    },
+    {
+      "block": "oRQe51LW",
+      "why": "\"At the time of application, the student must have an overall grade point average (GPA) of at least 3.3 for course work at Stanford; this GPA must be maintained to graduation.\"",
+      "node": {
+        "id": "ov-honors-gpa",
+        "t": "text",
+        "name": "Stanford GPA of at least 3.3 through graduation",
+        "manual": "gpa"
+      }
+    },
+    {
+      "block": "oRQe51LW",
+      "why": "\"A written proposal for the research to be undertaken must be submitted and approved by the faculty advisor in the fourth quarter prior to graduation\" and \"The written thesis must be approved by the thesis adviser.\"",
+      "node": {
+        "id": "ov-honors-thesis",
+        "t": "text",
+        "name": "Approved research proposal and honors thesis",
+        "manual": "thesis"
+      }
+    }
+  ]
+}

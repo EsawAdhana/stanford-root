@@ -1,0 +1,60 @@
+{
+  "code": "CLASS-MIN",
+  "reviewed": "2026-10-23",
+  "summary": "Choose one of the four fields of study. Each asks for CLASSICS 150, the Majors Seminar, plus five courses from that field's list (any five CLASSICS courses for Classical Studies). Every course must be letter graded with a C or better. Outside courses and Latin or Greek courses on related topics count only with the Director of Undergraduate Studies' approval, so you move those in by hand.",
+  "nodes": {
+    "YpK5MuLH": {
+      "why": "\"Students must take a minimum of five courses in Greek or Latin.\"",
+      "patch": {
+        "mode": "atLeast",
+        "n": 5
+      }
+    },
+    "S3JVVZRg": {
+      "why": "\"Students are required to take a minimum of five courses in history, art history, and archaeology.\" Courses from outside the department or Latin and Greek courses on historical topics count only with the Director of Undergraduate Studies' prior approval and are moved in by hand.",
+      "patch": {
+        "mode": "atLeast",
+        "n": 5
+      }
+    },
+    "5Li6B0EA": {
+      "why": "\"Students must take at least five courses in classical literature or philosophy, including classical science.\" Outside courses with prior written approval and Latin and Greek courses on philosophical or literary topics are moved in by hand.",
+      "patch": {
+        "mode": "atLeast",
+        "n": 5
+      }
+    },
+    "Bq5LvkYP": {
+      "why": "\"Students are required to take at least five courses in Classics (any course with subject code CLASSICS)\" \"plus course Majors Seminar (WIM)\".",
+      "replace": {
+        "t": "courses",
+        "name": "Classical Studies Electives",
+        "mode": "atLeast",
+        "n": 5,
+        "pool": {
+          "subjects": [
+            "CLASSICS"
+          ]
+        }
+      }
+    }
+  },
+  "alternatives": [
+    {
+      "id": "ov-field",
+      "name": "Field of study",
+      "of": [
+        "QB8jDUsv",
+        "R9mJ78Qf",
+        "xsHnwIPj",
+        "kE9x0Yek"
+      ],
+      "why": "\"Students may choose among four fields of study for the minor in Classics: Classical Languages, Ancient History, Literature and Philosophy, and Classical Studies.\""
+    }
+  ],
+  "program": {
+    "letterGrade": true,
+    "minGrade": "C",
+    "why": "Other requirements: \"A letter grade is required for all courses taken for the minor. No course receiving a grade lower than 'C' is counted toward fulfilling minor requirements.\""
+  }
+}

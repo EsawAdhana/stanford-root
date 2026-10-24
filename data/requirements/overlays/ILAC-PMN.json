@@ -1,0 +1,48 @@
+{
+  "code": "ILAC-PMN",
+  "reviewed": "2026-10-23",
+  "summary": "You and the ILAC Director agree on a course of study: 25 units of courses numbered 200 or higher, with a 3.0 GPA. The audit counts the courses you move into the minor; the course of study and the GPA are checked by hand, and required courses are taken for a letter grade where one is offered.",
+  "blocks": {
+    "SZfNHite": {
+      "kind": "required"
+    }
+  },
+  "nodes": {
+    "QrJlUw4G": {
+      "why": "\"must complete 25 units, with a grade point average (GPA) of 3.0 or above, selected from courses numbered 200 or higher ... develop an approved course of study.\" The text does not name a subject, so the student moves the approved courses in.",
+      "replace": {
+        "t": "all",
+        "name": "PhD Minor Requirements",
+        "children": [
+          {
+            "id": "ov-units",
+            "t": "text",
+            "name": "25 units of approved courses numbered 200 or higher",
+            "manual": "approval",
+            "units": 25
+          },
+          {
+            "id": "ov-gpa",
+            "t": "text",
+            "name": "GPA of 3.0 or above in the minor",
+            "manual": "gpa"
+          }
+        ]
+      }
+    }
+  },
+  "program": {
+    "totals": [
+      {
+        "label": "Courses numbered below 200",
+        "maxUnits": 0,
+        "pool": {
+          "anySubject": true,
+          "maxNumber": 199
+        },
+        "inRules": true,
+        "why": "\"must complete 25 units ... selected from courses numbered 200 or higher.\""
+      }
+    ]
+  }
+}

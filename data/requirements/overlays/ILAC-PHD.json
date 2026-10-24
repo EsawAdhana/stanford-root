@@ -1,0 +1,113 @@
+{
+  "code": "ILAC-PHD",
+  "reviewed": "2026-10-23",
+  "summary": "The audit checks the 135 graduate units, all in courses numbered 200 or above, and DLCL 301 and DLCL 369, taken for a letter grade where one is offered. Faculty expect a B+ or better and review lower grades, which the audit does not treat as failing. Checked by hand, because fields are not in course codes: four graduate courses in your major field and two in each of two minor areas (one from a different group), two letter-graded department graduate courses each quarter before TGR, the qualifying and comprehensive exams, candidacy, the University Oral, the dissertation and the language requirement.",
+  "nodes": {
+    "PGtlOm3w-text": {
+      "why": "\"Although teaching is not a requirement for the degree, students may teach as part of the financial support commitment and their professional training.\" Not a requirement.",
+      "patch": {
+        "info": true
+      }
+    },
+    "rIn1qwtL": {
+      "why": "\"These texts will serve as the basis for the Qualifying Exam, which will be administered during the Spring quarter of the student's first year of study.\"",
+      "patch": {
+        "manual": "exam"
+      }
+    },
+    "jCGDYLpz": {
+      "why": "\"The Comprehensive Exam is designed for students to demonstrate intellectual competence in multiple areas of study.\"",
+      "patch": {
+        "manual": "exam"
+      }
+    },
+    "j67kRQDh": {
+      "why": "\"apply for candidacy by the end of the second year in residence ... Candidacy is determined by faculty vote.\"",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "b3LalyIy": {
+      "why": "\"Students are required to take a University Oral examination after successfully completing the Comprehensive Examination\"",
+      "patch": {
+        "manual": "exam"
+      }
+    },
+    "GBDzQQAg": {
+      "why": "\"Students are expected to submit the dissertation by the end of their fifth year in the program.\"",
+      "patch": {
+        "manual": "thesis"
+      }
+    },
+    "JnoJe7h1": {
+      "why": "\"students must attain advanced low proficiency in one other language ... Proficiency will be assessed by testing at the Language Center (C1 level required), or by completing 5 quarters of language study or the equivalent.\"",
+      "patch": {
+        "manual": "exam"
+      }
+    },
+    "IPbfthwz": {
+      "why": "Grading: \"Ph.D. students in the department must take required courses for a letter grade if available\". The B+ is an expectation that faculty review (\"The grade stands, and the student's academic performance is monitored\"), not a floor.",
+      "patch": {
+        "letter": true
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "0GzLObTh",
+      "node": {
+        "id": "ov-major-field",
+        "t": "text",
+        "name": "Four graduate-level courses in the major field",
+        "manual": "approval",
+        "n": 4
+      },
+      "why": "\"At least four graduate-level courses must be taken in the major field.\" The field is chosen with the Department Director and is not in course codes."
+    },
+    {
+      "block": "0GzLObTh",
+      "node": {
+        "id": "ov-minor-area-1",
+        "t": "text",
+        "name": "Two graduate-level courses in the first minor area",
+        "manual": "approval",
+        "n": 2
+      },
+      "why": "\"At least two graduate-level courses must be taken in each minor area\" (students choose \"one major field and two minor areas\")."
+    },
+    {
+      "block": "0GzLObTh",
+      "node": {
+        "id": "ov-minor-area-2",
+        "t": "text",
+        "name": "Two graduate-level courses in the second minor area (from a different group than the major)",
+        "manual": "approval",
+        "n": 2
+      },
+      "why": "\"At least two graduate-level courses must be taken in each minor area\" and \"Students must select one minor area from a group (A, B, C) other than their major field.\""
+    },
+    {
+      "block": "0GzLObTh",
+      "node": {
+        "id": "ov-quarterly",
+        "t": "text",
+        "name": "Two graduate department courses for a letter grade each quarter before TGR",
+        "manual": "other"
+      },
+      "why": "\"During each quarter preceding advancement to TGR status, students must complete (for a letter grade) at least two graduate courses (200- or 300-level) offered through the department.\""
+    }
+  ],
+  "program": {
+    "totals": [
+      {
+        "label": "Courses below the graduate level",
+        "maxUnits": 0,
+        "pool": {
+          "anySubject": true,
+          "maxNumber": 199
+        },
+        "why": "Degree Overview: \"All courses counted towards the 135-unit requirement for the Ph.D. must be at the graduate level.\" Courses numbered below 200 do not count toward the 135 units."
+      }
+    ]
+  }
+}

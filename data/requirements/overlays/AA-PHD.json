@@ -1,0 +1,79 @@
+{
+  "code": "AA-PHD",
+  "reviewed": "2026-10-23",
+  "summary": "The audit counts your graduate units toward the 135 the university requires (90 of them beyond the M.S.), leaving out courses numbered below 100; approved transfer credit lowers the units you need at Stanford. You move in the 21 units of approved advanced courses (200 and above, letter graded, no research or seminars). If you began without a related M.S., you also complete the Aero/Astro M.S. requirements before the Ph.D. The advisor commitment, the 3.0 GPA, the qualifying exam, candidacy, the oral exam and the dissertation are checked by hand.",
+  "program": {
+    "totals": [
+      {
+        "label": "Courses below the 100 level",
+        "maxUnits": 0,
+        "pool": { "anySubject": true, "maxNumber": 99 },
+        "why": "\"The remaining units can be fulfilled through Ph.D. dissertation units or free electives numbered 100 and above.\" The 21 advanced units must be numbered 200 and above."
+      }
+    ]
+  },
+  "blocks": { "0GzLObTh": { "units": null } },
+  "nodes": {
+    "CUhUXcZE": {
+      "why": "\"Ph.D. students must receive an official commitment from a faculty member to serve as their Ph.D. advisor by the end of quarter four of the Ph.D. program.\"",
+      "patch": { "manual": "milestone" }
+    },
+    "DRenKbGs": {
+      "why": "\"There are two requirements for admission to Ph.D. candidacy in Aeronautics and Astronautics: students must first pass the departmental qualifying exam and apply for candidacy.\" Before the oral qualifying exam \"the student must complete two courses in each of the three core areas\" with core-area GPAs of at least 3.7 and an overall GPA of at least 3.5; the core-area courses are not listed, so they are part of the exam check.",
+      "replace": {
+        "t": "all",
+        "name": "Advancement to Candidacy",
+        "children": [
+          {
+            "id": "ov-aaphd-quals",
+            "t": "text",
+            "name": "Departmental qualifying exam (two courses in each of three core areas, core-area GPAs of 3.7, overall GPA of 3.5)",
+            "manual": "exam"
+          },
+          {
+            "id": "ov-aaphd-candidacy",
+            "t": "text",
+            "name": "Candidacy application with the advisor-signed course form, by the end of the second year",
+            "manual": "milestone"
+          }
+        ]
+      }
+    },
+    "x381Cs8c": {
+      "why": "\"The Ph.D. candidate is required to take the university oral examination after the dissertation is substantially completed\"",
+      "patch": { "manual": "exam" }
+    },
+    "ROEJZOYF": {
+      "why": "\"Each Ph.D. candidate is required to establish a reading committee for the doctoral dissertation within six months after passing the department’s Ph.D. qualifying exam.\" and \"Students must submit the final version of the dissertation to the Registrar’s Office\"",
+      "patch": { "manual": "thesis" }
+    }
+  },
+  "add": [
+    {
+      "block": "0GzLObTh",
+      "why": "\"A total of 90 units of credit is required beyond the M.S.\" (on top of the M.S., so the audit checks the Bulletin's 135-unit minimum; Transfer: \"Transfer credits, if approved, reduce the total number of Stanford units required for a degree.\"). \"Of the 90 units required beyond the M.S. degree, a student must complete at least 21 units of approved courses in advanced study in engineering, science, and mathematics. These courses cannot include research, directed study, or seminars, must be taken for a letter grade, and must be numbered 200 and above.\" No list, so the student moves the approved courses in.",
+      "node": {
+        "id": "ov-aaphd-advanced",
+        "t": "text",
+        "name": "21 units of approved advanced courses (200+, letter grade, no research or seminars)",
+        "units": 21,
+        "manual": "approval"
+      }
+    },
+    {
+      "block": "0GzLObTh",
+      "why": "GPA: \"A minimum cumulative grade point average (GPA) of 3.0 is required to fulfill the department’s Ph.D. requirements, and to maintain satisfactory academic standing in the program.\"",
+      "node": { "id": "ov-gpa", "t": "text", "name": "Cumulative GPA of 3.0 or higher", "manual": "gpa" }
+    },
+    {
+      "block": "0GzLObTh",
+      "why": "\"Students admitted to our Ph.D. program who do not already have an M.S. in a related discipline conferred when they begin the program must complete the Aeronautics and Astronautics M.S. degree requirements before receiving the Ph.D.\"",
+      "node": {
+        "id": "ov-aaphd-ms",
+        "t": "text",
+        "name": "Aero/Astro M.S. requirements, if you began without a related M.S.",
+        "manual": "other"
+      }
+    }
+  ]
+}

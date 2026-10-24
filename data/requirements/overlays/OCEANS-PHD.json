@@ -1,0 +1,89 @@
+{
+  "code": "OCEANS-PHD",
+  "reviewed": "2026-10-23",
+  "summary": "The audit checks the first-year seminars (OCEANS 300A-C) and workshops (OCEANS 301 and 305), the second-year workshops (OCEANS 303 and 304), and 135 units, every course letter graded when a letter grade is offered. Checked by hand: the 3.0 GPA, 3 units with each of four Stanford faculty, the TA appointment and service, the research requirement in the Oceans Handbook, the two-part qualifying exam, candidacy, the oral exam and the dissertation.",
+  "program": {
+    "letterGrade": true,
+    "why": "Grading: \"If offered, any course that satisfies the PhD degree requirements must be taken for a letter grade.\""
+  },
+  "nodes": {
+    "H8oOhes5": {
+      "why": "\"Degree milestones indicate progress toward a degree. They are listed on unofficial transcripts\": a description; the milestones themselves are their own rules below.",
+      "patch": {
+        "info": true
+      }
+    },
+    "mZcSXBGT": {
+      "why": "\"Students in the PhD program are required to complete 135 units of unduplicated coursework. In addition to the program requirements listed above, this total may be satisfied by: seminar units, research units (e.g., OCEANS 300) ...\" The 135 is program.unitsMin; OCEANS 300 is an example, not a required course.",
+      "replace": {
+        "t": "text",
+        "name": "Additional Units",
+        "info": true
+      }
+    },
+    "fxk1TAC3": {
+      "why": "\"PhD students in the Oceans Department must complete at least one TA appointment at a rate of at least 25% throughout their study. Students have the option to choose between a second TAship or a service commitment\"",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "YhwQIWB0": {
+      "why": "\"Detailed information regarding a student's research requirement is included in the Oceans Handbook.\" The requirement exists but the Bulletin does not state it, so it is checked by hand.",
+      "patch": {
+        "manual": "other"
+      }
+    },
+    "StAA7Tbv": {
+      "why": "\"University policy requires all PhD students to complete their department's degree program qualifying procedures, apply for candidacy by the end of their second year\": the policy behind the exam (w929Cvpq) and the candidacy application (QUPqbLSE), which are the checked rules.",
+      "patch": {
+        "info": true
+      }
+    },
+    "w929Cvpq": {
+      "why": "\"Written dissertation proposal ... which the candidate's Reading Committee must approve\" and \"Oral defense of the dissertation proposal\"",
+      "patch": {
+        "manual": "exam"
+      }
+    },
+    "QUPqbLSE": {
+      "why": "\"After passing the qualifying exams, students file for PhD candidacy, a university milestone.\"",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "RylZp5DJ": {
+      "why": "\"The doctoral dissertation is defended in a university Oral Examination.\"",
+      "patch": {
+        "manual": "exam"
+      }
+    },
+    "HOZFBx92": {
+      "why": "\"the candidate must prepare a doctoral dissertation that contributes to knowledge and is the result of independent research ... the final written dissertation must be approved by the student's reading committee\"",
+      "patch": {
+        "manual": "thesis"
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "9e38oQvr",
+      "node": {
+        "id": "ov-gpa",
+        "t": "text",
+        "name": "Cumulative GPA of 3.0",
+        "manual": "gpa"
+      },
+      "why": "GPA: \"A minimum cumulative GPA of 3.0 or above is required for all courses.\""
+    },
+    {
+      "block": "9e38oQvr",
+      "node": {
+        "id": "ov-four-faculty",
+        "t": "text",
+        "name": "At least 3 units of work with each of four Stanford faculty",
+        "manual": "other"
+      },
+      "why": "Policies: \"The university requires all PhD students to complete at least three units of work with each of four Stanford faculty.\""
+    }
+  ]
+}

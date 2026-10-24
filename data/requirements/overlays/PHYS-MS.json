@@ -1,0 +1,50 @@
+{
+  "code": "PHYS-MS",
+  "reviewed": "2026-10-23",
+  "summary": "The audit checks 45 units, every course letter graded with a B+ or better (research courses offered only S/NC excepted): PHYSICS 212 and 220 and one quantum course, each for at least 3 units. Checked by hand: two 3-unit graduate courses in Physics or Applied Physics, which you move in, the 3-unit minimum for your other courses, the 3.3 GPA, replacement courses if your PhD waived PHYSICS 212, 220 or a quantum elective, and a petition to waive up to six required units if you submit a thesis.",
+  "blocks": {
+    "mAbEGmbJ": {
+      "units": null
+    }
+  },
+  "nodes": {
+    "8bsCMHUo": {
+      "why": "\"Plus two 3-unit graduate level courses in Physics or Applied Physics, for a total of 6 units.\" The 6 units belong to these two courses, not the whole block. The text does not say which numbers are graduate level, so the student moves the two courses in.",
+      "patch": {
+        "name": "Two 3-unit graduate courses in Physics or Applied Physics",
+        "n": 2,
+        "units": 6,
+        "manual": "approval"
+      }
+    },
+    "5k6zxcCD": {
+      "why": "Grading: \"All courses taken towards the MS (with the exception of research courses) must be taken for at least 3 units for letter grade and receive a grade of B+ or higher.\"",
+      "patch": {
+        "minUnitsEach": 3
+      }
+    },
+    "rcwklhFZ": {
+      "why": "Grading: \"All courses taken towards the MS (with the exception of research courses) must be taken for at least 3 units for letter grade and receive a grade of B+ or higher.\"",
+      "patch": {
+        "minUnitsEach": 3
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "mAbEGmbJ",
+      "why": "Notes: \"Among the department requirements are a grade point average (GPA) of at least 3.3 (B+) for all required courses (or their equivalents).\" GPA: \"A GPA of 3.3 or higher must be maintained across all graded courses counting towards the MS.\"",
+      "node": {
+        "id": "ov-required-gpa",
+        "t": "text",
+        "name": "GPA of 3.3 across graded MS courses and the required courses",
+        "manual": "gpa"
+      }
+    }
+  ],
+  "program": {
+    "letterGrade": true,
+    "minGrade": "B+",
+    "why": "Grading: \"All courses taken towards the MS (with the exception of research courses) must be taken for at least 3 units for letter grade and receive a grade of B+ or higher.\" Physics research courses (PHYSICS 290, 490) are offered only S/NC, which the letter-grade rule allows."
+  }
+}

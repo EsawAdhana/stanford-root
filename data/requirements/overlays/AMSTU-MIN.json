@@ -1,0 +1,20 @@
+{
+  "code": "AMSTU-MIN",
+  "reviewed": "2026-10-23",
+  "summary": "The audit checks the gateway seminar AMSTUD 160, two history, politics and society courses, two literature, culture and arts courses, one race and ethnicity course on top of those, and at least 28 units, every course taken for a letter grade. The lists are not complete, so another course the program accepts, from another department or another school, or extra coursework to reach 28 units, is moved in by hand with the Faculty Director's, Associate Director's or Program Coordinator's approval.",
+  "program": {
+    "letterGrade": true,
+    "why": "\"Courses used to satisfy all units taken for the minor must be taken for a letter grade.\""
+  },
+  "nodes": {
+    "nIb3lfSh-text": {
+      "why": "\"If the units for these requirements do not total 28, the student must take additional coursework appropriate to American Studies and approved by the Faculty Director, Associate Director, or Program Coordinator to meet the minimum unit requirement.\" The 28 units are the program minimum the audit already checks; the extra coursework has no list, so the student moves it in. The same sentence's letter-grade rule is on the program.",
+      "replace": {
+        "t": "text",
+        "name": "Additional approved coursework to reach 28 units",
+        "manual": "approval",
+        "optional": true
+      }
+    }
+  }
+}

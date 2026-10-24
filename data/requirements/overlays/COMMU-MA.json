@@ -1,0 +1,350 @@
+{
+  "code": "COMMU-MA",
+  "reviewed": "2026-10-23",
+  "summary": "Choose the Media Studies or the Journalism subplan. Media Studies asks for the statistics prerequisite (letter grade or credit, outside the 45 units), COMM 206 (or SOC 280A) and COMM 208, six media studies courses, COMM electives (at most two of your courses below the 200 level) and two quarters of the COMM 290 project. Journalism asks for its required courses, two specialized reporting courses, three graduate COMM electives and the Journalism Thesis. Every other course must be letter graded where a letter grade is offered, and you need 45 units with at least 36 in COMM. You check by hand the 3.0 GPA, the thesis or project, any outside course your advisor approves, and a COMM 299 elective in Journalism, which needs approval and at least 3 units.",
+  "blocks": {
+    "pd8ZYvvY": {
+      "units": 45
+    }
+  },
+  "nodes": {
+    "T42Dyz3i": {
+      "why": "The numbered list restates the rules below it (statistics, core, six media studies courses, electives, MA project); \"Units from the statistics course do not count toward the 45 units required for the MA in media studies\" is the 45-unit group (aLmCuxYB) that leaves the statistics rule out.",
+      "patch": {
+        "info": true
+      }
+    },
+    "m4WQUpsJ": {
+      "why": "Moved into the 45-unit group (aLmCuxYB).",
+      "remove": true
+    },
+    "STUJ1c0Y": {
+      "why": "Moved into the 45-unit group (aLmCuxYB).",
+      "remove": true
+    },
+    "hXNRWATW": {
+      "why": "Moved into the 45-unit group (aLmCuxYB).",
+      "remove": true
+    },
+    "aLmCuxYB": {
+      "why": "\"Units from the statistics course do not count toward the 45 units required for the MA in media studies.\" Groups the core, the six media studies courses, the electives and the MA project under the 45-unit floor. Core: \"Students must complete course Communication Research Methods and course Media Processes and Effects ... course Foundations of Social Research is accepted as an alternative to COMM 206\". Electives: \"Additional communication courses (including course Individual Work) or up to 9 units from non-COMM courses from the pre-approved list or approved by the student's advisor, to reach total units towards degree\"; the non-COMM list is not in the Bulletin, so those courses are moved in by hand. Project: \"enroll in COMM 290 ... to complete a project over two consecutive quarters\", so COMM 290 twice. Each rule is letter graded (\"Courses must be taken for a letter grade if offered\"). Policies: \"No more than two courses (not including the statistics prerequisite) may be at the 100 level\"; only the elective rule takes COMM courses below 200, so it counts at most two.",
+      "replace": {
+        "t": "all",
+        "name": "Media Studies coursework (45 units)",
+        "units": 45,
+        "children": [
+          {
+            "id": "ov-ms-core",
+            "t": "courses",
+            "name": "Core Requirements",
+            "mode": "all",
+            "items": [
+              [
+                "COMM 206",
+                "SOC 280A"
+              ],
+              [
+                "COMM 208"
+              ]
+            ],
+            "letter": true
+          },
+          {
+            "id": "m4WQUpsJ",
+            "t": "courses",
+            "name": "Six Media Studies Courses",
+            "mode": "atLeast",
+            "n": 6,
+            "items": [
+              [
+                "COMM 216"
+              ],
+              [
+                "COMM 220"
+              ],
+              [
+                "COMM 224"
+              ],
+              [
+                "COMM 228"
+              ],
+              [
+                "COMM 235"
+              ],
+              [
+                "COMM 237"
+              ],
+              [
+                "COMM 238"
+              ],
+              [
+                "COMM 238A"
+              ],
+              [
+                "COMM 245"
+              ],
+              [
+                "COMM 251"
+              ],
+              [
+                "COMM 252A"
+              ],
+              [
+                "COMM 254"
+              ],
+              [
+                "COMM 258"
+              ],
+              [
+                "COMM 262"
+              ],
+              [
+                "COMM 264"
+              ],
+              [
+                "COMM 266"
+              ],
+              [
+                "COMM 273A"
+              ],
+              [
+                "COMM 275"
+              ],
+              [
+                "COMM 276"
+              ],
+              [
+                "COMM 277A"
+              ],
+              [
+                "COMM 277B"
+              ],
+              [
+                "COMM 277C"
+              ],
+              [
+                "COMM 277D"
+              ],
+              [
+                "COMM 277G"
+              ],
+              [
+                "COMM 277I"
+              ],
+              [
+                "COMM 277M"
+              ],
+              [
+                "COMM 277S"
+              ],
+              [
+                "COMM 277T"
+              ],
+              [
+                "COMM 277Y"
+              ],
+              [
+                "COMM 278A"
+              ],
+              [
+                "COMM 278N"
+              ],
+              [
+                "COMM 280R"
+              ],
+              [
+                "COMM 284"
+              ],
+              [
+                "COMM 286"
+              ],
+              [
+                "COMM 324"
+              ],
+              [
+                "COMM 326"
+              ],
+              [
+                "COMM 339"
+              ],
+              [
+                "COMM 385"
+              ]
+            ],
+            "letter": true
+          },
+          {
+            "id": "STUJ1c0Y",
+            "t": "courses",
+            "name": "Elective Credit",
+            "mode": "any",
+            "pool": {
+              "subjects": [
+                "COMM"
+              ]
+            },
+            "letter": true,
+            "limits": [
+              {
+                "label": "Courses below the 200 level",
+                "max": 2,
+                "pool": {
+                  "subjects": [
+                    "COMM"
+                  ],
+                  "maxNumber": 199
+                }
+              }
+            ]
+          },
+          {
+            "id": "hXNRWATW",
+            "t": "courses",
+            "name": "Media Studies MA Project",
+            "mode": "all",
+            "items": [
+              [
+                "COMM 290"
+              ],
+              [
+                "COMM 290"
+              ]
+            ],
+            "letter": true
+          }
+        ]
+      }
+    },
+    "k4VUlY2z": {
+      "why": "\"The MA degree in Communication (Journalism) requires a minimum of 45 units\" is the subplan block's floor. \"Except for course Journalism Thesis, all courses must be taken for a letter grade unless offered only for satisfactory/no credit (S/NC)\" is set on each Journalism rule; the GPA is rule ov-j-gpa.",
+      "patch": {
+        "info": true
+      }
+    },
+    "3RifuMUx": {
+      "why": "\"Except for course Journalism Thesis, all courses must be taken for a letter grade unless offered only for satisfactory/no credit (S/NC).\" Journalism Thesis is COMM 289P, so it is split out of the letter-graded list.",
+      "replace": {
+        "t": "all",
+        "name": "Required Courses",
+        "children": [
+          {
+            "id": "ov-j-required",
+            "t": "courses",
+            "name": "Required courses (letter grade)",
+            "mode": "all",
+            "letter": true,
+            "items": [
+              [
+                "COMM 216"
+              ],
+              [
+                "COMM 278A",
+                "COMM 278N"
+              ],
+              [
+                "COMM 273D"
+              ],
+              [
+                "COMM 274D"
+              ],
+              [
+                "COMM 275"
+              ],
+              [
+                "COMM 279"
+              ]
+            ]
+          },
+          {
+            "id": "ov-j-thesis-course",
+            "t": "courses",
+            "name": "Journalism Thesis",
+            "mode": "all",
+            "items": [
+              [
+                "COMM 289P"
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    "QSAg1h0G": {
+      "why": "\"all courses must be taken for a letter grade unless offered only for satisfactory/no credit (S/NC).\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "VfgzmKIG": {
+      "why": "\"Three electives from among graduate-level courses in the Department of Communication or from among courses on campus that deal substantively with issues of public importance. Elective courses outside of Communication require approval from the advisor and the Director of the Graduate Program in Journalism.\" Graduate-level is read as 200 and above; approved outside courses are moved in by hand. Letter grade per the subplan's grading rule. \"Approval of COMM 299 Individual Work as an elective requires enrollment for three units or more\", so COMM 299 is moved in by hand once approved.",
+      "replace": {
+        "t": "courses",
+        "name": "Electives",
+        "mode": "atLeast",
+        "n": 3,
+        "letter": true,
+        "pool": {
+          "subjects": [
+            "COMM"
+          ],
+          "minNumber": 200,
+          "exclude": [
+            "COMM 299"
+          ]
+        }
+      }
+    },
+    "RctU5Dx2": {
+      "why": "\"Journalism Thesis (course), a requirement for graduation ... it must be judged by a faculty member to be of a quality acceptable for publication.\"",
+      "patch": {
+        "manual": "thesis"
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "pd8ZYvvY",
+      "node": {
+        "id": "ov-j-gpa",
+        "t": "text",
+        "name": "GPA of 3.0 or better",
+        "manual": "gpa"
+      },
+      "why": "\"To remain in good academic standing, students must maintain a grade point average (GPA) of 3.0 or better. Graduation requires a GPA of 3.0 or better.\""
+    },
+    {
+      "block": "A5KGm6QW",
+      "node": {
+        "id": "ov-gpa",
+        "t": "text",
+        "name": "GPA of 3.0 or better",
+        "manual": "gpa"
+      },
+      "why": "GPA: \"To remain in good academic standing, students must maintain a grade point average (GPA) of 3.0 or better. Graduation requires a GPA of 3.0 or better.\""
+    }
+  ],
+  "program": {
+    "why": "Grading: \"Courses must be taken for a letter grade if offered.\" It is set on each course rule rather than on the program, because the statistics prerequisite is an exception: \"Students may enroll for the statistics course for either a letter grade or credit.\" The Journalism rules carry it already.",
+    "totals": [
+      {
+        "label": "36 units in Communication",
+        "minUnits": 36,
+        "pool": {
+          "subjects": [
+            "COMM"
+          ]
+        },
+        "why": "Policies: \"A minimum of 36 units must be taken in the Communication department.\""
+      },
+      {
+        "label": "Statistics prerequisite (not part of the 45 units)",
+        "maxUnits": 0,
+        "codes": [
+          "STATS 60"
+        ],
+        "when": "A5KGm6QW",
+        "why": "\"Units from the statistics course do not count toward the 45 units required for the MA in media studies.\""
+      }
+    ]
+  }
+}

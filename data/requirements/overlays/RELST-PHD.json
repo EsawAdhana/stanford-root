@@ -1,0 +1,102 @@
+{
+  "code": "RELST-PHD",
+  "reviewed": "2026-10-23",
+  "summary": "You take RELIGST 304A and 304B, RELIGST 391 and 379 (379 is also the Paper-in-Field), each letter graded where a letter grade is offered. Coursework with five department faculty, two courses outside your subfield, your 3.0 GPA, the qualifying exams, teaching and the teaching practicum, candidacy, the two languages, the defense and the dissertation are checked by hand.",
+  "nodes": {
+    "TueBSII6": {
+      "why": "\"This requirement is fulfilled by taking RELIGST 379.\" RELIGST 379 is already required by the Course requirement (\"The following two seminars (391 and 379)\"), so the same course satisfies both. Grading: \"Students are expected to enroll in all required courses for a letter grade unless that option is not available.\"",
+      "patch": {
+        "shares": true,
+        "letter": true
+      }
+    },
+    "WGsyyB7R": {
+      "why": "\"Students should do course work with at least five different faculty members of the department during their first two years in the program. Two courses in an area outside the student's subfield within Religious Studies. The remainder of the coursework is individually designed in consultation with the student’s advisor.\"",
+      "replace": {
+        "t": "all",
+        "name": "Breadth requirement",
+        "children": [
+          {
+            "id": "ov-breadth-faculty",
+            "t": "text",
+            "name": "Coursework with at least five department faculty in the first two years",
+            "manual": "other"
+          },
+          {
+            "id": "ov-breadth-outside",
+            "t": "text",
+            "name": "Two courses outside the subfield within Religious Studies",
+            "n": 2,
+            "manual": "approval"
+          }
+        ]
+      }
+    },
+    "tswZY5WA": {
+      "why": "\"the student must pass comprehensive written and oral examinations in their chosen field(s) and area(s) of specialization\"",
+      "patch": {
+        "manual": "exam"
+      }
+    },
+    "vvZbn39p": {
+      "why": "\"All students are required to complete 2 quarters of teaching experience by the end of their 3rd year\"",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "X3gvur1O": {
+      "why": "\"all students are required to complete at least one Advanced Teaching Practicum under the supervision of a faculty member.\"",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "iHUVnSTL": {
+      "why": "\"Students are expected to apply for candidacy by the middle of the third quarter of the second year ... submission of the candidacy dossier.\"",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "BTyP1sCw": {
+      "why": "\"the oral exam is a defense of the completed draft of the dissertation.\"",
+      "patch": {
+        "manual": "exam"
+      }
+    },
+    "gRretwVf": {
+      "why": "\"The dissertation ... is written under the direction of the student's dissertation reading committee ... Dissertation Proposal: ... read and approved by the three members of the dissertation reading committee.\"",
+      "patch": {
+        "manual": "thesis"
+      }
+    },
+    "kX4wcsF0": {
+      "why": "\"Students are required to demonstrate reading knowledge of at least two modern foreign languages ... Certification of one of the required languages is completed prior to advancement to candidacy\"",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "vq0jbayk": {
+      "why": "Grading: \"Students are expected to enroll in all required courses for a letter grade unless that option is not available.\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "QJAkHGZD": {
+      "why": "Grading: \"Students are expected to enroll in all required courses for a letter grade unless that option is not available.\"",
+      "patch": {
+        "letter": true
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "0GzLObTh",
+      "why": "GPA: \"Per university regulations a 3.0 or B average must be maintained in all courses to maintain minimum progress to degree.\"",
+      "node": {
+        "id": "ov-gpa",
+        "t": "text",
+        "manual": "gpa",
+        "name": "GPA of 3.0 (B) across all courses"
+      }
+    }
+  ]
+}

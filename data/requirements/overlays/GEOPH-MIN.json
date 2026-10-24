@@ -1,0 +1,29 @@
+{
+  "code": "GEOPH-MIN",
+  "reviewed": "2026-10-23",
+  "summary": "The audit checks the 28 units, four Geophysics courses from the list with a C or better, one supporting math course and three supporting physics courses, all letter graded where a letter grade is offered. You check the 2.0 cumulative GPA yourself.",
+  "program": {
+    "letterGrade": true,
+    "why": "Grading: \"Classes should be taken for a letter grade if so offered.\""
+  },
+  "nodes": {
+    "zQ1GIO6R": {
+      "why": "Grading: \"Students must earn a \\\"C\\\" or higher in all classes used for GP 100+ course requirement.\"",
+      "patch": {
+        "minGrade": "C"
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "aXM3pKPw",
+      "why": "GPA: \"Declared minors must maintain a cumulative grade point average (GPA) of at least 2.0\"",
+      "node": {
+        "id": "ov-geoph-min-gpa",
+        "t": "text",
+        "name": "Cumulative GPA of at least 2.0",
+        "manual": "gpa"
+      }
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "code": "PLA-PMN",
+  "reviewed": "2026-10-23",
+  "summary": "You take the core seminar DLCL 333, two more courses from the list (at least one should be in a participating department other than your own), and two graduate courses in your minor field, for at least 20 units in all. Which minor-field courses count depends on your home department, so you move them in by hand. If the five courses come to fewer than 20 units, DLCL 222 units count toward the total, and other graduate courses your minor advisor agrees to can be moved in by hand.",
+  "blocks": {
+    "qjMoF9gk": {
+      "units": 20
+    }
+  },
+  "nodes": {
+    "P5MkKIF3": {
+      "why": "\"All students take two graduate-level courses providing a structured program of coursework in the student's minor field (such as philosophy for literature and arts students or literary or arts criticism for philosophy students)\". Which courses qualify depends on the student's department and is not a list, so the student moves two in.",
+      "patch": {
+        "n": 2,
+        "manual": "approval"
+      }
+    },
+    "6zRL3vuS": {
+      "why": "\"If the five required courses do not total 20 units, students may satisfy the 20-unit requirement by taking units of [DLCL 222], or by taking additional graduate-level courses of special relevance at their discretion and with the agreement of their minor advisor.\" The 20 units are now the block floor; this rule stays optional and its units count toward the floor.",
+      "patch": {
+        "optional": true
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "qjMoF9gk",
+      "why": "\"or by taking additional graduate-level courses of special relevance at their discretion and with the agreement of their minor advisor.\"",
+      "node": {
+        "id": "ov-remaining-approved",
+        "t": "text",
+        "name": "Other graduate courses toward the 20 units, agreed with your minor advisor",
+        "manual": "approval",
+        "optional": true
+      }
+    }
+  ]
+}

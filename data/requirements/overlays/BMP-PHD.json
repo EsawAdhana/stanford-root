@@ -1,0 +1,59 @@
+{
+  "code": "BMP-PHD",
+  "reviewed": "2026-10-23",
+  "summary": "Every course must be letter graded with a B- or better. The audit checks the touchstone courses, the Biomedical Physics seminars, the professionalism and ethics course, 4 units on the human body, 6 units of quantitation and computation, nine depth units within one area (or an area set with your advisor, moved in by hand), and 135 graduate units. The 3.0 GPA, the qualifying exam, candidacy, the oral exam and the dissertation are checked by hand.",
+  "program": {
+    "unitsMin": 135,
+    "letterGrade": true,
+    "minGrade": "B-",
+    "why": "Grading: \"All courses taken for the program must be completed with a letter grade and must be passed with a grade of B- or better.\" Units: \"a minimum of 135 Stanford units\" (the Bulletin's program minimum says 31, the core and depth curriculum)."
+  },
+  "blocks": {
+    "4SNCmDzT": { "kind": "required" }
+  },
+  "nodes": {
+    "QbvAzDz5": {
+      "why": "\"Complete the BMP Core and Depth Curriculum (31 or more units)\" (the 22 core and 9 depth units below), \"a minimum of 135 Stanford units\" (set on the program), \"All courses taken for the program must be completed with a letter grade and must be passed with a grade of B- or better\" (program.letterGrade, program.minGrade), \"Achieve a cumulative GPA of 3.0 or greater to maintain good academic standing\" and \"PhD students will be expected to take and pass an oral qualifying examination during their second year\". TGR registration for RAD 802 is registration, not a requirement.",
+      "replace": {
+        "t": "all",
+        "name": "Program Requirements",
+        "children": [
+          { "id": "ov-gpa", "t": "text", "name": "Cumulative GPA of 3.0 or greater", "manual": "gpa" },
+          { "id": "ov-qual-exam", "t": "text", "name": "Oral qualifying examination with a written proposal, in the second year", "manual": "exam" }
+        ]
+      }
+    },
+    "sAJLLSfQ": {
+      "why": "\"demonstrate depth in a chosen area by completing nine units within a single area of specialization\"",
+      "patch": { "mode": "units", "units": 9 }
+    },
+    "AZa60WEp": {
+      "why": "\"demonstrate depth in a chosen area by completing nine units within a single area of specialization\"",
+      "patch": { "mode": "units", "units": 9 }
+    },
+    "eQde9kan": {
+      "why": "\"demonstrate depth in a chosen area by completing nine units within a single area of specialization\"",
+      "patch": { "mode": "units", "units": 9 }
+    },
+    "PRz3uWJk": {
+      "why": "\"a student will be in good academic standing and have successfully completed the core course requirements, at least 20 units of coursework in an area of specialization, and passed the qualifying examination ... by the beginning of the third year.\"",
+      "patch": { "manual": "milestone" }
+    },
+    "sHoaEE8T": {
+      "why": "\"The University Oral Examination is taken after the student has substantially completed their research.\"",
+      "patch": { "manual": "exam" }
+    },
+    "Q5Uye84X": {
+      "why": "\"Students must present a PhD dissertation that results from independent investigation and contributes to knowledge in biomedical physics\" ... \"The submission of a final draft of the work signed by all members of the dissertation committee\". A requirement, not an overview.",
+      "patch": { "info": null, "manual": "thesis", "name": "Dissertation signed by the dissertation committee" }
+    }
+  },
+  "add": [
+    {
+      "block": "mAbEGmbJ",
+      "parent": "uXJ4IoUf",
+      "why": "\"nine units within a single area of specialization, as given by the examples below or in consultation with their primary advisor\": an area set with the advisor, whose courses the student moves in.",
+      "node": { "id": "ov-depth-advisor", "t": "text", "name": "Another area set with the primary advisor (9 units)", "units": 9, "manual": "approval" }
+    }
+  ]
+}

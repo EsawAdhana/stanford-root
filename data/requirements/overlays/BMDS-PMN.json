@@ -1,0 +1,62 @@
+{
+  "code": "BMDS-PMN",
+  "reviewed": "2026-10-23",
+  "summary": "The audit checks the four core courses for at least 12 units and 8 more units from the CS, statistics, math and engineering list at the 200 level or above, another core course, or BMDS 201C, toward the 20 units. Every course must be letter graded except BMDS 201C, which is offered only S/NC. You check the 3.0 GPA and regular participation in the BMDS 201C seminar by hand.",
+  "program": {
+    "letterGrade": true,
+    "why": "Grading: \"All courses used for the PhD minor must be taken for a letter grade, except for BMDS 201C.\" BMDS 201C is offered only S/NC, which the letter rule allows."
+  },
+  "nodes": {
+    "OSdmecgM-text": {
+      "why": "\"How to apply / Stanford PhD students should submit: 1. Application for Ph.D. Minor form ... A one page statement of purpose\" and \"A minor program advisor is assigned upon admission to the program.\" How to be admitted to the minor and who advises, not a requirement for completing it.",
+      "patch": { "info": true }
+    },
+    "Y2DrSLmS": {
+      "why": "\"Complete the list below for at least 12 units.\" (BMDS 214 is offered for 1-4 units)",
+      "patch": {
+        "units": 12
+      }
+    },
+    "Kq7i9E2k": {
+      "why": "\"Students in the DBDS PhD minor are expected to participate regularly in BMDS 201C ... Students only need to enroll in this course for credit if they want to count the 1 unit toward their total units for the program.\" Enrollment is optional (BMDS 201C is now one of the 8 elective units); participation is checked by hand.",
+      "replace": {
+        "t": "text",
+        "name": "Regular participation in the BMDS 201C student seminar",
+        "manual": "milestone"
+      }
+    },
+    "aAzxW3AY": {
+      "why": "\"Complete 8 units from any combination of: any additional DBDS core course (listed below) / BIOMEDIN 201C Biomedical Data Science Student Seminar (1 unit) / any course at the 200-level or above on the DBDS Computer Science/Statistics/Math/Engineering electives\" and \"you cannot use any class numbered below 200 to contribute to the 20 units\". The list's courses below 200 are removed; \"Units from enrollment in BMDS 201C can be used once (maximum of one quarter)\". The four core courses are all required above, so no additional core course is listed.",
+      "patch": {
+        "mode": "units",
+        "units": 8,
+        "name": "Electives: 8 units from the CS/Stats/Math/Eng list (200+) or BMDS 201C",
+        "removeItems": ["EE 101A", "EE 101B", "EE 102A", "EE 102B", "EE 108", "EE 168", "EE 169", "EE 178", "EE 179", "ENGR 108", "ENGR 154", "ENGR 155A", "ENGR 155B", "ENGR 155C", "MATH 104", "MATH 106", "MATH 107", "MATH 108", "MATH 109", "MATH 110", "MATH 113", "MATH 115", "MATH 116", "MATH 118", "MATH 120", "MATH 121", "MATH 122", "MATH 131P", "MATH 136", "MATH 143", "MATH 144", "MATH 145", "MATH 147", "MATH 148", "MATH 151", "MATH 152", "MATH 154", "MATH 155", "MATH 159", "MATH 161", "MATH 171", "MATH 172", "MATH 173", "MATH 175", "MATH 193", "ME 161", "MS&E 120", "STATS 110", "STATS 191"],
+        "addItems": [
+          [
+            "BMDS 201C"
+          ]
+        ],
+        "limits": [
+          {
+            "label": "BMDS 201C (one quarter)",
+            "max": 1,
+            "codes": ["BMDS 201C"]
+          }
+        ]
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "CyjHKgkq",
+      "why": "\"The student should maintain an overall GPA of 3.0 or better.\"",
+      "node": {
+        "id": "ov-gpa",
+        "t": "text",
+        "name": "Overall GPA of 3.0 or better",
+        "manual": "gpa"
+      }
+    }
+  ]
+}

@@ -1,0 +1,85 @@
+{
+  "code": "MATSC-ENG",
+  "reviewed": "2026-10-23",
+  "summary": "The audit checks 90 units of graduate coursework, a C or better in each course, and three letter-graded MATSCI elective courses numbered 200 or above for 9 units (no seminars, labs or research units). Checked by hand: finishing the MS in Materials Science and Engineering requirements first, the Application for Candidacy by your second quarter, the 3.0 GPA, and the Engineer thesis approved by two faculty readers.",
+  "program": {
+    "minGrade": "C",
+    "why": "Grading: \"The minimum grade in each course applied towards degree requirements is a C.\""
+  },
+  "nodes": {
+    "E14ETQoN": {
+      "why": "\"Three MATSCI Elective Courses are required (9 units). These must be 200+ Level MATSCI Courses taken for a letter grade (seminars, labs, and research units cannot apply).\" The overview adds \"(no research units, seminars, colloquia, and MATSCI400 Participation in Materials Science Teaching\". Excluded by the catalog titles: MATSCI 200 Master's Research, MATSCI 230 Materials Science Colloquium, MATSCI 231 Materials Science Research Advising and MATSCI 232 Ethics and Broader Impacts (1-unit seminars), MATSCI 299 Practical Training, MATSCI 300 Ph.D. Research, MATSCI 322 Transmission Electron Microscopy Laboratory (a lab), MATSCI 399 Graduate Independent Study (research), MATSCI 400, and the zero-unit TGR courses MATSCI 801 and 802, the same list the MS uses for its MATSCI electives. That they come \"beyond the requirements of the MS Program\" is checked by hand. MATSCI 402A and 402T (1-unit topics seminars offered only satisfactory/no credit) are left out too: the electives must be \"taken for a letter grade (seminars ... cannot apply)\".",
+      "replace": {
+        "t": "courses",
+        "name": "MATSCI Elective Courses (three courses, 9 units)",
+        "mode": "atLeast",
+        "n": 3,
+        "units": 9,
+        "letter": true,
+        "pool": {
+          "subjects": [
+            "MATSCI"
+          ],
+          "minNumber": 200,
+          "exclude": [
+            "MATSCI 200",
+            "MATSCI 230",
+            "MATSCI 231",
+            "MATSCI 232",
+            "MATSCI 299",
+            "MATSCI 300",
+            "MATSCI 322",
+            "MATSCI 399",
+            "MATSCI 400",
+            "MATSCI 402A",
+            "MATSCI 402T",
+            "MATSCI 801",
+            "MATSCI 802"
+          ]
+        }
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "mAbEGmbJ",
+      "node": {
+        "id": "ov-ms-first",
+        "t": "text",
+        "name": "MS in Materials Science and Engineering requirements completed",
+        "manual": "milestone"
+      },
+      "why": "\"A student wishing to enter the Engineer program must have completed the MS in Materials Science and Engineering requirements\""
+    },
+    {
+      "block": "mAbEGmbJ",
+      "node": {
+        "id": "ov-candidacy",
+        "t": "text",
+        "name": "Application for Candidacy by the end of the second quarter",
+        "manual": "milestone"
+      },
+      "why": "\"Once approved, the Application for Candidacy must be submitted to the department's student services director by the end of the second quarter in the Engineer program.\""
+    },
+    {
+      "block": "mAbEGmbJ",
+      "node": {
+        "id": "ov-gpa",
+        "t": "text",
+        "name": "3.0 GPA in all degree coursework at Stanford",
+        "manual": "gpa"
+      },
+      "why": "\"A grade point average (GPA) of 3.0 must be maintained for all degree coursework taken at Stanford.\""
+    },
+    {
+      "block": "mAbEGmbJ",
+      "node": {
+        "id": "ov-thesis",
+        "t": "text",
+        "name": "Engineer thesis approved by two Academic Council faculty (one MATSCI)",
+        "manual": "thesis"
+      },
+      "why": "\"The Engineer thesis must be approved and signed off by two Academic Council faculty members; one must be a MATSCI faculty member.\""
+    }
+  ]
+}

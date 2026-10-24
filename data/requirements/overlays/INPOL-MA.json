@@ -1,0 +1,230 @@
+{
+  "code": "INPOL-MA",
+  "reviewed": "2026-10-23",
+  "summary": "You choose one of four subplans. The audit checks the 80 graduate units, the seven core courses and the INTLPOL 310 capstone (twice, plus INTLPOL 310A) for a letter grade, the subplan's required courses (letter graded) and electives with at least 20 units, and 24 units of Customized Electives numbered 100 or above (at most 3 units of practical training). Courses below 100 and WELLNESS courses never count; at most 12 units at the 100-199 level, 15 units of directed reading (INTLPOL 299, letter graded) and 10 pass/fail elective units count. Checked by hand: the program proposal in spring of your first year and the graduation program proposal, the 3.0 GPA, that electives relate to international policy, directed reading proposals (at most 10 units in the subplan, 5 per course), language courses (Customized Electives only, with approval), and HISTORY or POLISCI 200-level courses against the 12 undergraduate units. Coterminal students who add the Coterminal MA section need 70 units instead of 80, and mark the Customized Electives met at 14 units. MBA and JD dual-degree students need 54 MA units; the audit still asks for 80, so check that allocation by hand. Vienna exchange students add their 15 Vienna units by hand.",
+  "program": {
+    "totals": [
+      {
+        "label": "80 units",
+        "minUnits": 80,
+        "unless": "CM3k3HXj",
+        "why": "Requirements Overview: \"To earn the MA in International Policy, students must complete a minimum of 80 units.\" Coterminal students need 70 (the program's unit minimum)."
+      },
+      {
+        "label": "Courses numbered below 100",
+        "maxUnits": 0,
+        "pool": {
+          "anySubject": true,
+          "subjects": [],
+          "maxNumber": 99
+        },
+        "why": "Policies: \"Courses numbered below 100 may not be applied toward graduate degree requirements. A maximum of 12 undergraduate-level units (generally numbered 100-199, with the exception of History and Political Science courses numbered 100-299) may be taken toward the INPOL-MA\" \"Activity courses ... and other courses numbered below 100 do not satisfy MIP degree requirements.\""
+      },
+      {
+        "label": "WELLNESS courses",
+        "maxUnits": 0,
+        "pool": {
+          "subjects": [
+            "WELLNESS"
+          ]
+        },
+        "why": "Policies: \"Activity courses (e.g., tennis and weightlifting), performance and visual arts courses (e.g., piano, studio arts, and dance), WELLNESS courses, and other courses numbered below 100 do not satisfy MIP degree requirements.\""
+      },
+      {
+        "label": "Undergraduate-level units (100-199)",
+        "maxUnits": 12,
+        "pool": {
+          "anySubject": true,
+          "subjects": [],
+          "minNumber": 100,
+          "maxNumber": 199
+        },
+        "why": "Policies: \"Courses numbered below 100 may not be applied toward graduate degree requirements. A maximum of 12 undergraduate-level units (generally numbered 100-199, with the exception of History and Political Science courses numbered 100-299) may be taken toward the INPOL-MA\". HISTORY and POLISCI courses numbered 200-299 also count against the 12 units; that part is checked by hand."
+      },
+      {
+        "label": "Directed reading (INTLPOL 299)",
+        "maxUnits": 15,
+        "codes": [
+          "INTLPOL 299"
+        ],
+        "why": "Policies: \"A maximum of 15 units of directed reading may be applied toward the MA degree.\""
+      },
+      {
+        "label": "Pass/fail units in electives",
+        "maxUnits": 10,
+        "grading": "not-letter",
+        "pool": {
+          "anySubject": true,
+          "subjects": [],
+          "exclude": [
+            "INTLPOL 300A",
+            "INTLPOL 300S",
+            "INTLPOL 310A"
+          ]
+        },
+        "why": "Grading: \"Students may apply up to 10 pass/fail units toward the Subplan Electives and Customized Electives. (Note: This is a combined total).\" The S/NC-only core and capstone courses (INTLPOL 300A, 300S, 310A) are outside the limit."
+      },
+      {
+        "label": "Directed reading taken pass/fail",
+        "maxUnits": 0,
+        "grading": "not-letter",
+        "codes": [
+          "INTLPOL 299"
+        ],
+        "why": "Directed Reading Limits: \"All directed reading courses must be taken for a letter grade.\""
+      }
+    ],
+    "unitsMin": 70,
+    "why": "Coterminal MA: \"The minimum total number of units required to complete the coterminal MA in International Policy is 70 units.\" Everyone else needs the 80 units of the Requirements Overview (\"students must complete a minimum of 80 units\"), a total that applies unless the Coterminal MA section is in the plan."
+  },
+  "blocks": {
+    "4SNCmDzT": {
+      "units": 9
+    },
+    "A5KGm6QW": {
+      "units": 20
+    },
+    "mjnPDqsv": {
+      "units": 20
+    },
+    "Ea7rMgrH": {
+      "units": 20
+    },
+    "7rzhykMP": {
+      "units": 20
+    },
+    "yyzvulGh": {
+      "kind": "optional",
+      "name": "Stanford MIP-Vienna Academic Exchange",
+      "why": "\"Each year, two second-year students from each institution are selected through a competitive application process to participate in the exchange.\" Only for the students selected."
+    },
+    "VIFE5bPZ": {
+      "kind": "optional",
+      "name": "Dual and joint degrees",
+      "why": "\"Allocation of Credit for Dual Degree Programs involving the Master of Arts in International Policy\": GSB-MBA, ENVRES-MS, LAW-JD and MPP. Only for students in one of those programs."
+    },
+    "CM3k3HXj": {
+      "kind": "optional",
+      "name": "Coterminal MA",
+      "why": "\"Coterminal Master's Degree Requirements / Coterminal students admitted to MIP must complete the following requirements\". Only for coterminal students."
+    }
+  },
+  "nodes": {
+    "ly8sP0qI-text": {
+      "why": "\"Students must submit a MIP Master's Degree Program Proposal during the Spring Quarter of their first year of study.\" and \"Students must submit a MIP Graduate Program Proposal in the quarter in which they intend to graduate, or no later than the second week of the intended graduation quarter.\"",
+      "patch": {
+        "name": "Program Proposal in spring of year 1, and Graduation Program Proposal by week 2 of the graduation quarter",
+        "manual": "milestone"
+      }
+    },
+    "yyzvulGh-text": {
+      "why": "\"The minimum number of Stanford units required for graduation is reduced to 65 units for students participating in the exchange. In addition to the Stanford unit requirement, students must complete the equivalent of at least 15 units ... at the Vienna School of International Studies. These courses will apply towards the subplan electives or Customized Electives. As such, the two required subplan courses must be completed at Stanford.\" and \"MIP exchange participants must submit their proposed DA course selections to the MIP Academic Services Team for approval\". The Vienna courses are not on the Stanford transcript, so the student adds them by hand; with them the 80-unit total still holds (65 + 15).",
+      "patch": {
+        "name": "At least 15 units at the Vienna School of International Studies, with course selections approved by MIP",
+        "manual": "approval"
+      }
+    },
+    "VIFE5bPZ-text": {
+      "why": "\"Students in the dual degree program must complete: 90 units for the MBA / 54 units for the MA in International Policy, including ... Core curriculum: 27 units / Subplan: 18 units / Capstone: 9 units\"; the LAW-JD joint degree also needs 54 MA units, and \"Customized Electives are not required for joint JD students who matriculate first in the Law School\"; for MPP/INPOL-MA \"up to 45 units (or one year of residency) may be applied toward both degrees\"; ENVRES-MS students complete all 80 units. The audit cannot lower the 80-unit minimum or drop the Customized Electives for one group of students, so the allocation is checked by hand.",
+      "patch": {
+        "name": "Dual or joint degree unit allocation (54 MA units for MBA and JD students, up to 45 units shared with the MPP)",
+        "manual": "other"
+      }
+    },
+    "CM3k3HXj-text": {
+      "why": "\"Core curriculum: 27 units / Subplan: 20 units, including: Two required courses / At least three additional courses selected from the approved subplan elective list / Customized Electives: 14 units / Capstone: 9 units / The minimum total number of units required to complete the coterminal MA in International Policy is 70 units.\" With this section in the plan the program asks for 70 units instead of 80; the Customized Electives rule still asks for 24 units, so a coterminal student marks it met once 14 are done.",
+      "patch": {
+        "name": "Coterminal MA: 70 units, with 14 units of Customized Electives",
+        "manual": "other"
+      }
+    },
+    "liNNECrk": {
+      "why": "\"Students must select one subplan and complete a minimum of five courses totaling at least 20 units ... Complete details for each subplan are provided in the individual subplan sections below.\" Restates the subplan sections, which carry these rules.",
+      "patch": {
+        "info": true
+      }
+    },
+    "scS019uG": {
+      "why": "\"Students must complete a minimum of 24 units of Customized Electives ... Courses numbered below 100 may not be applied toward graduate degree requirements ... With program approval, a maximum of 3 units of practical training may be applied toward the Customized Electives requirement\" (INTLPOL 298 and 298S). Whether a course is \"broadly related to international policy\", and the exclusion of activity and arts courses, stay with the program.",
+      "replace": {
+        "t": "courses",
+        "name": "Customized Electives (24 units)",
+        "mode": "units",
+        "units": 24,
+        "pool": {
+          "anySubject": true,
+          "minNumber": 100
+        },
+        "limits": [
+          {
+            "label": "practical training",
+            "maxUnits": 3,
+            "codes": [
+              "INTLPOL 298",
+              "INTLPOL 298S"
+            ]
+          }
+        ]
+      }
+    },
+    "WpmKrihr": {
+      "why": "\"Students enroll in the Policy Change Studio over Winter Quarter and Spring Quarter of the second year, for a total of 8 units. / In addition, students enroll in the associated field research component course during Spring Quarter\" and the overview's \"Capstone (9 units)\": INTLPOL 310 (Policy Change Studio, 4 units) twice plus INTLPOL 310A (Capstone Field Research). Grading: \"Students must take the following courses for a letter grade: MIP Core Courses (Exceptions: INTLPOL 300A and 300S, both of which are only offered as Satisfactory/No Credit), MIP Capstone Courses (Exception: INTLPOL 310A, which is only offered as Satisfactory/No Credit)\". The S/NC-only courses pass on their own grading.",
+      "patch": {
+        "items": [
+          [
+            "INTLPOL 310"
+          ],
+          [
+            "INTLPOL 310"
+          ],
+          [
+            "INTLPOL 310A"
+          ]
+        ],
+        "letter": true
+      }
+    },
+    "VQ257tIY": {
+      "why": "Subplan overview: \"All required subplan courses must be taken for a letter grade.\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "dzLUOfPO": {
+      "why": "Subplan overview: \"All required subplan courses must be taken for a letter grade.\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "gzlZ4Zou": {
+      "why": "Subplan overview: \"All required subplan courses must be taken for a letter grade.\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "CzQaXCmH": {
+      "why": "Subplan overview: \"All required subplan courses must be taken for a letter grade.\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "nYQZmSYw": {
+      "why": "Grading: \"Students must take the following courses for a letter grade: MIP Core Courses (Exceptions: INTLPOL 300A and 300S, both of which are only offered as Satisfactory/No Credit), MIP Capstone Courses (Exception: INTLPOL 310A, which is only offered as Satisfactory/No Credit)\". The S/NC-only courses pass on their own grading.",
+      "patch": {
+        "letter": true
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "mAbEGmbJ",
+      "why": "GPA: \"MIP students must maintain a minimum cumulative GPA of 3.0.\"",
+      "node": {
+        "id": "ov-inpol-ma-gpa",
+        "t": "text",
+        "name": "Cumulative GPA of at least 3.0",
+        "manual": "gpa"
+      }
+    }
+  ]
+}

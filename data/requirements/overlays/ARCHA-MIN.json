@@ -1,0 +1,45 @@
+{
+  "code": "ARCHA-MIN",
+  "reviewed": "2026-10-23",
+  "summary": "You pick the self-designed path or one of the four tracks. Every course must be taken for a letter grade unless it is only offered S/NC, the core courses need a B or better and every other course a C or better, and each course counts toward one component only. On the self-designed path the audit checks 10 units of core courses, Methods & Skills, Theory, and 10 elective units from any of the emphasis lists; a non-ARCHLGY elective the curriculum committee approves is moved in by hand. The tracks have no Bulletin text beyond their course lists and are checked as listed.",
+  "program": {
+    "letterGrade": true,
+    "minGrade": "C",
+    "why": "Grading: \"All courses must be taken for a letter grade, unless only offered S/NC. Core courses require a minimum grade of B. All other program requirements require a minimum grade of C.\""
+  },
+  "nodes": {
+    "Q4OOXeui-text": {
+      "why": "\"To minor in Archaeology, students must complete at least 27 units of relevant coursework comprised of: Core | 10 Units, Methods & Skills | 2-5 Units, Theory | 5 Units, Electives | 10 Units\". An overview: the 27 units are the program minimum, each component is its own rule on the self-designed path, and the tracks and emphasis categories are described, not required.",
+      "patch": { "info": true }
+    },
+    "ynH5Jvus": {
+      "why": "\"Select any combination of the core courses to complete the 10-unit requirement. All courses must be taken for a letter grade and have a minimum passing grade of B.\"",
+      "patch": { "letter": true, "minGrade": "B" }
+    },
+    "cbxRGXfP": {
+      "why": "\"Students must complete 10 units of Electives on regions, themes, or other areas of interest ... students may choose courses from multiple emphasis categories.\" The 10 units come from all the category lists together. Non-ARCHLGY courses with the curriculum committee's prior approval are moved in by hand.",
+      "replace": {
+        "t": "courses",
+        "name": "Electives (10 units from any emphasis category)",
+        "mode": "units",
+        "units": 10,
+        "items": [["ARCHLGY 29A"], ["ARCHLGY 60N"], ["ARCHLGY 80"], ["ARCHLGY 91"], ["ARCHLGY 107"], ["ARCHLGY 111B"], ["ARCHLGY 112A"], ["ARCHLGY 114"], ["ARCHLGY 116"], ["ARCHLGY 121B"], ["ARCHLGY 127"], ["ARCHLGY 134"], ["ARCHLGY 135"], ["ARCHLGY 137A"], ["ARCHLGY 139"], ["ARCHLGY 140"], ["ARCHLGY 145"], ["ARCHLGY 147"], ["ARCHLGY 158"], ["ARCHLGY 160"], ["ARCHLGY 166"], ["ARCHLGY 173"], ["ARCHLGY 189"], ["ARCHLGY 201"], ["ARCHLGY 34"], ["ARCHLGY 103A"], ["ARCHLGY 106"], ["ARCHLGY 110"], ["ARCHLGY 115"], ["ARCHLGY 116B"], ["ARCHLGY 119"], ["ARCHLGY 124"], ["ARCHLGY 126"], ["ARCHLGY 132"], ["ARCHLGY 133"], ["ARCHLGY 152"], ["ARCHLGY 188"], ["ARCHLGY 47"], ["ARCHLGY 54N"], ["ARCHLGY 106Q"], ["ARCHLGY 117"], ["ARCHLGY 118"], ["ARCHLGY 125"], ["ARCHLGY 180"], ["ARCHLGY 198A"], ["ARCHLGY 59"], ["ARCHLGY 116A"], ["ARCHLGY 122"], ["ARCHLGY 129"], ["ARCHLGY 143"], ["ARCHLGY 148"], ["ARCHLGY 151"], ["ARCHLGY 156"], ["ARCHLGY 159"], ["ARCHLGY 58"], ["ARCHLGY 16"], ["ARCHLGY 84"], ["ARCHLGY 102B"], ["ARCHLGY 104B"], ["ARCHLGY 106W"], ["ARCHLGY 117C"], ["ARCHLGY 118C"], ["ARCHLGY 124C"], ["ARCHLGY 136"], ["ARCHLGY 111"], ["ARCHLGY 138"], ["ARCHLGY 293"], ["CLASSICS 81"], ["ARCHLGY 30"], ["ARCHLGY 79"], ["ARCHLGY 52"], ["ARCHLGY 92"], ["ARCHLGY 128"], ["ARCHLGY 141"], ["ARCHLGY 165"], ["ARTHIST 100N"], ["CLASSICS 36"]]
+      }
+    },
+    "horgbdye": { "why": "Grading: \"Core courses require a minimum grade of B.\"", "patch": { "minGrade": "B" } },
+    "xZVR8CaK": { "why": "Grading: \"Core courses require a minimum grade of B.\"", "patch": { "minGrade": "B" } },
+    "zz0csN4f": { "why": "Grading: \"Core courses require a minimum grade of B.\"", "patch": { "minGrade": "B" } },
+    "FHmaEvOj": { "why": "Grading: \"Core courses require a minimum grade of B.\"", "patch": { "minGrade": "B" } },
+    "BJWdyQZS": { "why": "Grading: \"Core courses require a minimum grade of B.\"", "patch": { "minGrade": "B" } },
+    "ZSwa6A8e": { "why": "Grading: \"Core courses require a minimum grade of B.\"", "patch": { "minGrade": "B" } },
+    "a0Vsv6BW": { "why": "Grading: \"Core courses require a minimum grade of B.\"", "patch": { "minGrade": "B" } },
+    "QhY35D2k": {
+      "why": "\"Theory Course for Track 1: Complete ANY of the following Courses\": the page asks for one course and shows no count of two, which came from a hidden data field.",
+      "patch": { "n": null }
+    },
+    "WddjAZv6": {
+      "why": "\"Theory Courses for Track 3: Complete ANY of the following Courses\": the page asks for one course and shows no count of two, which came from a hidden data field.",
+      "patch": { "n": null }
+    }
+  }
+}

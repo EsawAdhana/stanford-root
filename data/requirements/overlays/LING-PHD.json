@@ -1,0 +1,918 @@
+{
+  "code": "LING-PHD",
+  "reviewed": "2026-10-23",
+  "summary": "The nine basic courses follow the Bulletin's sets: either two Group I sets and one Group II set plus one more Group II course, or the reverse, then one Group III methods course and one more course from any group. All nine, and LINGUIST 200, must be letter graded with a B or better and taken for at least 2 units. The audit also checks the first-year courses (LINGUIST 294, 395, 396, 398) and LINGUIST 394. Your advisor and the department check by hand the 3.3 GPA, the qualifying papers, teaching, the research quarter, candidacy, the language requirement, the oral exam and the dissertation. The extra course in (d) must come from a set you did not use. Left: the audit does not stop the course in (f) from repeating a set you already used, and the Cognitive Science subplan has no listed requirements (see the Student Services Officer).",
+  "nodes": {
+    "hi781yWj-text": {
+      "why": "\"Please see department Student Services Officer for requirements.\" The Bulletin lists none, so the subplan's requirements are checked with the Student Services Officer.",
+      "patch": {
+        "name": "Cognitive Science subplan requirements, as set by the department Student Services Officer",
+        "manual": "approval"
+      }
+    },
+    "ULVMH53j": {
+      "why": "\"a. One two course set from Group I. / b. One two course set from Group II. / c. One additional two course set from either Group I or Group II. / d. One additional course from the group with only one set ... / f. One more course from any group\" and \"h. All nine basic courses must be taken for a letter grade and completed with a grade of B or better ... no course may be taken for less than 2 units.\" Group II's sets are now inside the basic-course choice.",
+      "remove": true
+    },
+    "sietK377": {
+      "why": "\"a. One two course set from Group I. / b. One two course set from Group II. / c. One additional two course set from either Group I or Group II. / d. One additional course from the group with only one set ... / f. One more course from any group\" and \"h. All nine basic courses must be taken for a letter grade and completed with a grade of B or better ... no course may be taken for less than 2 units.\" Sets come from each group's lists (Group I and Group II courses not listed need DGS approval); Computational Linguistics notes: \"AND any additional LINGUIST course numbered 281-289\". Each choice of the single set (b in the first path, a in the second) carries its own (d) course, from that group's other sets, since (d) \"should not be from a set used to fulfill items (a)-(c)\".",
+      "replace": {
+        "t": "any",
+        "name": "Basic courses: Group I and II sets (a-d)",
+        "children": [
+          {
+            "id": "ov-c-group1",
+            "t": "all",
+            "name": "Second set from Group I, one more Group II course",
+            "children": [
+              {
+                "id": "ov-x-g1",
+                "t": "some",
+                "n": 2,
+                "name": "Two Group I sets (a and c)",
+                "children": [
+                  {
+                    "id": "nVFzPltj",
+                    "t": "courses",
+                    "name": "Phonetics/Phonology",
+                    "items": [
+                      [
+                        "LINGUIST 205A"
+                      ],
+                      [
+                        "LINGUIST 210A"
+                      ],
+                      [
+                        "LINGUIST 210B"
+                      ]
+                    ],
+                    "letter": true,
+                    "minGrade": "B",
+                    "minUnitsEach": 2,
+                    "mode": "atLeast",
+                    "n": 2
+                  },
+                  {
+                    "id": "muM9u8eV",
+                    "t": "courses",
+                    "name": "Morphology",
+                    "items": [
+                      [
+                        "LINGUIST 216"
+                      ],
+                      [
+                        "LINGUIST 217"
+                      ]
+                    ],
+                    "letter": true,
+                    "minGrade": "B",
+                    "minUnitsEach": 2,
+                    "mode": "all"
+                  },
+                  {
+                    "id": "2Nq4wfu1",
+                    "t": "courses",
+                    "name": "Syntax",
+                    "items": [
+                      [
+                        "LINGUIST 222A"
+                      ],
+                      [
+                        "LINGUIST 222B"
+                      ]
+                    ],
+                    "letter": true,
+                    "minGrade": "B",
+                    "minUnitsEach": 2,
+                    "mode": "all"
+                  },
+                  {
+                    "id": "ZFfF1rMV",
+                    "t": "courses",
+                    "name": "Semantics and Pragmatics",
+                    "items": [
+                      [
+                        "LINGUIST 230A"
+                      ],
+                      [
+                        "LINGUIST 230B",
+                        "LINGUIST 232A"
+                      ]
+                    ],
+                    "letter": true,
+                    "minGrade": "B",
+                    "minUnitsEach": 2,
+                    "mode": "all"
+                  }
+                ]
+              },
+              {
+                "id": "ov-x-g2",
+                "t": "any",
+                "name": "One Group II set (b)",
+                "children": [
+                  {
+                    "id": "ov-x-b-XZZEDrtX",
+                    "t": "all",
+                    "name": "Computational Linguistics set, and one more Group II course from another set",
+                    "children": [
+                      {
+                        "id": "XZZEDrtX",
+                        "t": "courses",
+                        "name": "Computational Linguistics",
+                        "items": [
+                          [
+                            "LINGUIST 280"
+                          ],
+                          [
+                            "LINGUIST 284"
+                          ]
+                        ],
+                        "letter": true,
+                        "minGrade": "B",
+                        "minUnitsEach": 2,
+                        "mode": "atLeast",
+                        "n": 2,
+                        "pool": {
+                          "subjects": [
+                            "LINGUIST"
+                          ],
+                          "minNumber": 281,
+                          "maxNumber": 289
+                        }
+                      },
+                      {
+                        "id": "ov-x-b-XZZEDrtX-d",
+                        "t": "courses",
+                        "name": "One more Group II course, not Computational Linguistics (d)",
+                        "mode": "atLeast",
+                        "n": 1,
+                        "items": [
+                          [
+                            "LINGUIST 240"
+                          ],
+                          [
+                            "LINGUIST 245A"
+                          ],
+                          [
+                            "LINGUIST 245B"
+                          ],
+                          [
+                            "LINGUIST 250"
+                          ],
+                          [
+                            "LINGUIST 257"
+                          ],
+                          [
+                            "LINGUIST 258"
+                          ]
+                        ],
+                        "letter": true,
+                        "minGrade": "B",
+                        "minUnitsEach": 2
+                      }
+                    ]
+                  },
+                  {
+                    "id": "ov-x-b-MSuBq95l",
+                    "t": "all",
+                    "name": "Language Acquisition and Psycholinguistics set, and one more Group II course from another set",
+                    "children": [
+                      {
+                        "id": "MSuBq95l",
+                        "t": "courses",
+                        "name": "Language Acquisition and Psycholinguistics",
+                        "items": [
+                          [
+                            "LINGUIST 240"
+                          ],
+                          [
+                            "LINGUIST 245A"
+                          ],
+                          [
+                            "LINGUIST 245B"
+                          ]
+                        ],
+                        "letter": true,
+                        "minGrade": "B",
+                        "minUnitsEach": 2,
+                        "mode": "atLeast",
+                        "n": 2
+                      },
+                      {
+                        "id": "ov-x-b-MSuBq95l-d",
+                        "t": "courses",
+                        "name": "One more Group II course, not Language Acquisition and Psycholinguistics (d)",
+                        "mode": "atLeast",
+                        "n": 1,
+                        "items": [
+                          [
+                            "LINGUIST 280"
+                          ],
+                          [
+                            "LINGUIST 284"
+                          ],
+                          [
+                            "LINGUIST 250"
+                          ],
+                          [
+                            "LINGUIST 257"
+                          ],
+                          [
+                            "LINGUIST 258"
+                          ]
+                        ],
+                        "pool": {
+                          "subjects": [
+                            "LINGUIST"
+                          ],
+                          "minNumber": 281,
+                          "maxNumber": 289
+                        },
+                        "letter": true,
+                        "minGrade": "B",
+                        "minUnitsEach": 2
+                      }
+                    ]
+                  },
+                  {
+                    "id": "ov-x-b-iPA6e1GI",
+                    "t": "all",
+                    "name": "Sociolinguistic Variation set, and one more Group II course from another set",
+                    "children": [
+                      {
+                        "id": "iPA6e1GI",
+                        "t": "courses",
+                        "name": "Sociolinguistic Variation",
+                        "items": [
+                          [
+                            "LINGUIST 250"
+                          ],
+                          [
+                            "LINGUIST 257",
+                            "LINGUIST 258"
+                          ]
+                        ],
+                        "letter": true,
+                        "minGrade": "B",
+                        "minUnitsEach": 2,
+                        "mode": "all"
+                      },
+                      {
+                        "id": "ov-x-b-iPA6e1GI-d",
+                        "t": "courses",
+                        "name": "One more Group II course, not Sociolinguistic Variation (d)",
+                        "mode": "atLeast",
+                        "n": 1,
+                        "items": [
+                          [
+                            "LINGUIST 280"
+                          ],
+                          [
+                            "LINGUIST 284"
+                          ],
+                          [
+                            "LINGUIST 240"
+                          ],
+                          [
+                            "LINGUIST 245A"
+                          ],
+                          [
+                            "LINGUIST 245B"
+                          ]
+                        ],
+                        "pool": {
+                          "subjects": [
+                            "LINGUIST"
+                          ],
+                          "minNumber": 281,
+                          "maxNumber": 289
+                        },
+                        "letter": true,
+                        "minGrade": "B",
+                        "minUnitsEach": 2
+                      }
+                    ]
+                  },
+                  {
+                    "id": "ov-x-b-2IbTWuIH",
+                    "t": "all",
+                    "name": "Kindred Area set, and one more Group II course from another set",
+                    "children": [
+                      {
+                        "id": "2IbTWuIH",
+                        "t": "text",
+                        "name": "Kindred Area (two approved courses outside Linguistics)",
+                        "manual": "approval",
+                        "n": 2
+                      },
+                      {
+                        "id": "ov-x-b-2IbTWuIH-d",
+                        "t": "courses",
+                        "name": "One more Group II course, not Kindred Area (d)",
+                        "mode": "atLeast",
+                        "n": 1,
+                        "items": [
+                          [
+                            "LINGUIST 280"
+                          ],
+                          [
+                            "LINGUIST 284"
+                          ],
+                          [
+                            "LINGUIST 240"
+                          ],
+                          [
+                            "LINGUIST 245A"
+                          ],
+                          [
+                            "LINGUIST 245B"
+                          ],
+                          [
+                            "LINGUIST 250"
+                          ],
+                          [
+                            "LINGUIST 257"
+                          ],
+                          [
+                            "LINGUIST 258"
+                          ]
+                        ],
+                        "pool": {
+                          "subjects": [
+                            "LINGUIST"
+                          ],
+                          "minNumber": 281,
+                          "maxNumber": 289
+                        },
+                        "letter": true,
+                        "minGrade": "B",
+                        "minUnitsEach": 2
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "ov-c-group2",
+            "t": "all",
+            "name": "Second set from Group II, one more Group I course",
+            "children": [
+              {
+                "id": "ov-y-g1",
+                "t": "any",
+                "name": "One Group I set (a)",
+                "children": [
+                  {
+                    "id": "ov-y-a-nVFzPltj",
+                    "t": "all",
+                    "name": "Phonetics/Phonology set, and one more Group I course from another set",
+                    "children": [
+                      {
+                        "id": "ov-y-nVFzPltj",
+                        "t": "courses",
+                        "name": "Phonetics/Phonology",
+                        "items": [
+                          [
+                            "LINGUIST 205A"
+                          ],
+                          [
+                            "LINGUIST 210A"
+                          ],
+                          [
+                            "LINGUIST 210B"
+                          ]
+                        ],
+                        "letter": true,
+                        "minGrade": "B",
+                        "minUnitsEach": 2,
+                        "mode": "atLeast",
+                        "n": 2
+                      },
+                      {
+                        "id": "ov-y-a-nVFzPltj-d",
+                        "t": "courses",
+                        "name": "One more Group I course, not Phonetics/Phonology (d)",
+                        "mode": "atLeast",
+                        "n": 1,
+                        "items": [
+                          [
+                            "LINGUIST 216"
+                          ],
+                          [
+                            "LINGUIST 217"
+                          ],
+                          [
+                            "LINGUIST 222A"
+                          ],
+                          [
+                            "LINGUIST 222B"
+                          ],
+                          [
+                            "LINGUIST 230A"
+                          ],
+                          [
+                            "LINGUIST 230B"
+                          ],
+                          [
+                            "LINGUIST 232A"
+                          ]
+                        ],
+                        "letter": true,
+                        "minGrade": "B",
+                        "minUnitsEach": 2
+                      }
+                    ]
+                  },
+                  {
+                    "id": "ov-y-a-muM9u8eV",
+                    "t": "all",
+                    "name": "Morphology set, and one more Group I course from another set",
+                    "children": [
+                      {
+                        "id": "ov-y-muM9u8eV",
+                        "t": "courses",
+                        "name": "Morphology",
+                        "items": [
+                          [
+                            "LINGUIST 216"
+                          ],
+                          [
+                            "LINGUIST 217"
+                          ]
+                        ],
+                        "letter": true,
+                        "minGrade": "B",
+                        "minUnitsEach": 2,
+                        "mode": "all"
+                      },
+                      {
+                        "id": "ov-y-a-muM9u8eV-d",
+                        "t": "courses",
+                        "name": "One more Group I course, not Morphology (d)",
+                        "mode": "atLeast",
+                        "n": 1,
+                        "items": [
+                          [
+                            "LINGUIST 205A"
+                          ],
+                          [
+                            "LINGUIST 210A"
+                          ],
+                          [
+                            "LINGUIST 210B"
+                          ],
+                          [
+                            "LINGUIST 222A"
+                          ],
+                          [
+                            "LINGUIST 222B"
+                          ],
+                          [
+                            "LINGUIST 230A"
+                          ],
+                          [
+                            "LINGUIST 230B"
+                          ],
+                          [
+                            "LINGUIST 232A"
+                          ]
+                        ],
+                        "letter": true,
+                        "minGrade": "B",
+                        "minUnitsEach": 2
+                      }
+                    ]
+                  },
+                  {
+                    "id": "ov-y-a-2Nq4wfu1",
+                    "t": "all",
+                    "name": "Syntax set, and one more Group I course from another set",
+                    "children": [
+                      {
+                        "id": "ov-y-2Nq4wfu1",
+                        "t": "courses",
+                        "name": "Syntax",
+                        "items": [
+                          [
+                            "LINGUIST 222A"
+                          ],
+                          [
+                            "LINGUIST 222B"
+                          ]
+                        ],
+                        "letter": true,
+                        "minGrade": "B",
+                        "minUnitsEach": 2,
+                        "mode": "all"
+                      },
+                      {
+                        "id": "ov-y-a-2Nq4wfu1-d",
+                        "t": "courses",
+                        "name": "One more Group I course, not Syntax (d)",
+                        "mode": "atLeast",
+                        "n": 1,
+                        "items": [
+                          [
+                            "LINGUIST 205A"
+                          ],
+                          [
+                            "LINGUIST 210A"
+                          ],
+                          [
+                            "LINGUIST 210B"
+                          ],
+                          [
+                            "LINGUIST 216"
+                          ],
+                          [
+                            "LINGUIST 217"
+                          ],
+                          [
+                            "LINGUIST 230A"
+                          ],
+                          [
+                            "LINGUIST 230B"
+                          ],
+                          [
+                            "LINGUIST 232A"
+                          ]
+                        ],
+                        "letter": true,
+                        "minGrade": "B",
+                        "minUnitsEach": 2
+                      }
+                    ]
+                  },
+                  {
+                    "id": "ov-y-a-ZFfF1rMV",
+                    "t": "all",
+                    "name": "Semantics and Pragmatics set, and one more Group I course from another set",
+                    "children": [
+                      {
+                        "id": "ov-y-ZFfF1rMV",
+                        "t": "courses",
+                        "name": "Semantics and Pragmatics",
+                        "items": [
+                          [
+                            "LINGUIST 230A"
+                          ],
+                          [
+                            "LINGUIST 230B",
+                            "LINGUIST 232A"
+                          ]
+                        ],
+                        "letter": true,
+                        "minGrade": "B",
+                        "minUnitsEach": 2,
+                        "mode": "all"
+                      },
+                      {
+                        "id": "ov-y-a-ZFfF1rMV-d",
+                        "t": "courses",
+                        "name": "One more Group I course, not Semantics and Pragmatics (d)",
+                        "mode": "atLeast",
+                        "n": 1,
+                        "items": [
+                          [
+                            "LINGUIST 205A"
+                          ],
+                          [
+                            "LINGUIST 210A"
+                          ],
+                          [
+                            "LINGUIST 210B"
+                          ],
+                          [
+                            "LINGUIST 216"
+                          ],
+                          [
+                            "LINGUIST 217"
+                          ],
+                          [
+                            "LINGUIST 222A"
+                          ],
+                          [
+                            "LINGUIST 222B"
+                          ]
+                        ],
+                        "letter": true,
+                        "minGrade": "B",
+                        "minUnitsEach": 2
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "id": "ov-y-g2",
+                "t": "some",
+                "n": 2,
+                "name": "Two Group II sets (b and c)",
+                "children": [
+                  {
+                    "id": "ov-y-XZZEDrtX",
+                    "t": "courses",
+                    "name": "Computational Linguistics",
+                    "items": [
+                      [
+                        "LINGUIST 280"
+                      ],
+                      [
+                        "LINGUIST 284"
+                      ]
+                    ],
+                    "letter": true,
+                    "minGrade": "B",
+                    "minUnitsEach": 2,
+                    "mode": "atLeast",
+                    "n": 2,
+                    "pool": {
+                      "subjects": [
+                        "LINGUIST"
+                      ],
+                      "minNumber": 281,
+                      "maxNumber": 289
+                    }
+                  },
+                  {
+                    "id": "ov-y-MSuBq95l",
+                    "t": "courses",
+                    "name": "Language Acquisition and Psycholinguistics",
+                    "items": [
+                      [
+                        "LINGUIST 240"
+                      ],
+                      [
+                        "LINGUIST 245A"
+                      ],
+                      [
+                        "LINGUIST 245B"
+                      ]
+                    ],
+                    "letter": true,
+                    "minGrade": "B",
+                    "minUnitsEach": 2,
+                    "mode": "atLeast",
+                    "n": 2
+                  },
+                  {
+                    "id": "ov-y-iPA6e1GI",
+                    "t": "courses",
+                    "name": "Sociolinguistic Variation",
+                    "items": [
+                      [
+                        "LINGUIST 250"
+                      ],
+                      [
+                        "LINGUIST 257",
+                        "LINGUIST 258"
+                      ]
+                    ],
+                    "letter": true,
+                    "minGrade": "B",
+                    "minUnitsEach": 2,
+                    "mode": "all"
+                  },
+                  {
+                    "id": "ov-y-2IbTWuIH",
+                    "t": "text",
+                    "name": "Kindred Area (two approved courses outside Linguistics)",
+                    "manual": "approval",
+                    "n": 2
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "0iX3XqOo": {
+      "why": "\"e. One course from Group III\" and \"h. All nine basic courses must be taken for a letter grade and completed with a grade of B or better\"",
+      "patch": {
+        "letter": true,
+        "minGrade": "B",
+        "minUnitsEach": 2
+      }
+    },
+    "ju6zgAFP": {
+      "why": "Notes: \"LINGUIST 200 ... This course must be completed with a letter grade of B or better to satisfy this coursework requirement.\" and \"LINGUIST 394 (TA Training workshop) in Autumn Quarter of the second year.\" The B floor applies only to LINGUIST 200.",
+      "replace": {
+        "t": "all",
+        "name": "Additional Year 2+ Coursework",
+        "children": [
+          {
+            "id": "ov-ling200",
+            "t": "courses",
+            "name": "LINGUIST 200 (B or better)",
+            "mode": "all",
+            "items": [
+              [
+                "LINGUIST 200"
+              ]
+            ],
+            "letter": true,
+            "minGrade": "B"
+          },
+          {
+            "id": "ov-ling394",
+            "t": "courses",
+            "name": "LINGUIST 394",
+            "mode": "all",
+            "items": [
+              [
+                "LINGUIST 394"
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    "CbwtTKyf": {
+      "why": "\"Any amendments to the curriculum must be approved in advance by the DGS and the student's advisor.\"",
+      "patch": {
+        "manual": "approval"
+      }
+    },
+    "9OJj0W08": {
+      "why": "\"each student must complete two qualifying research papers in different subfields of linguistics; each paper is discussed with a faculty committee at an oral defense\"",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "h1Nb1c8T": {
+      "why": "\"All students are required to complete 3 quarters of teaching experience by the end of their fourth year\"",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "tSn4JSHt": {
+      "why": "\"All students must complete one quarter of mentored research ... students register for LINGUIST 396\" (LINGUIST 396 is in the Year 1 coursework).",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "s6pRnVxJ": {
+      "why": "\"Students are expected to complete qualifying procedures and to apply for candidacy by the end of their second year\", including \"g. 7 of the 9 basic courses ... must be taken prior to candidacy.\"",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "TeYI6huP": {
+      "why": "\"the oral exam is a defense of the dissertation presented upon the completion of an acceptable pre-final draft\"",
+      "patch": {
+        "manual": "exam"
+      }
+    },
+    "Hmyf2QMI": {
+      "why": "\"Students may take up to 15 Units of Optional Dissertation Research Coursework\": LINGUIST 399 is optional; the dissertation itself is a separate manual rule.",
+      "patch": {
+        "optional": true
+      }
+    },
+    "m7vdxjGg": {
+      "why": "\"must demonstrate an explicit in-depth knowledge of the structure of at least one language other than standard English by completing a research paper on that language\"",
+      "patch": {
+        "manual": "milestone"
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "0GzLObTh",
+      "node": {
+        "id": "ov-any-group",
+        "t": "courses",
+        "name": "One more basic course from any group (f)",
+        "mode": "atLeast",
+        "n": 1,
+        "items": [
+          [
+            "LINGUIST 205A"
+          ],
+          [
+            "LINGUIST 210A"
+          ],
+          [
+            "LINGUIST 210B"
+          ],
+          [
+            "LINGUIST 216"
+          ],
+          [
+            "LINGUIST 217"
+          ],
+          [
+            "LINGUIST 222A"
+          ],
+          [
+            "LINGUIST 222B"
+          ],
+          [
+            "LINGUIST 230A"
+          ],
+          [
+            "LINGUIST 230B",
+            "LINGUIST 232A"
+          ],
+          [
+            "LINGUIST 280"
+          ],
+          [
+            "LINGUIST 284"
+          ],
+          [
+            "LINGUIST 240"
+          ],
+          [
+            "LINGUIST 245A"
+          ],
+          [
+            "LINGUIST 245B"
+          ],
+          [
+            "LINGUIST 250"
+          ],
+          [
+            "LINGUIST 257",
+            "LINGUIST 258"
+          ],
+          [
+            "ANTHRO 306"
+          ],
+          [
+            "COMM 206"
+          ],
+          [
+            "COMM 314",
+            "SOC 319"
+          ],
+          [
+            "COMM 318"
+          ],
+          [
+            "CS 106A"
+          ],
+          [
+            "CS 106B"
+          ],
+          [
+            "CS 229"
+          ],
+          [
+            "LINGUIST 245B"
+          ],
+          [
+            "LINGUIST 274A"
+          ],
+          [
+            "LINGUIST 278"
+          ],
+          [
+            "PSYCH 251"
+          ],
+          [
+            "STATS 160"
+          ],
+          [
+            "STATS 202"
+          ]
+        ],
+        "pool": {
+          "subjects": [
+            "LINGUIST"
+          ],
+          "minNumber": 281,
+          "maxNumber": 289
+        },
+        "letter": true,
+        "minGrade": "B",
+        "minUnitsEach": 2
+      },
+      "why": "\"a. One two course set from Group I. / b. One two course set from Group II. / c. One additional two course set from either Group I or Group II. / d. One additional course from the group with only one set ... / f. One more course from any group\" and \"h. All nine basic courses must be taken for a letter grade and completed with a grade of B or better ... no course may be taken for less than 2 units.\""
+    },
+    {
+      "block": "iwHWtFFx",
+      "node": {
+        "id": "ov-dissertation",
+        "t": "text",
+        "name": "Approved dissertation",
+        "manual": "thesis"
+      },
+      "why": "\"Doctoral students are required to submit an approved dissertation that makes an original contribution to the field of linguistics.\""
+    },
+    {
+      "block": "0GzLObTh",
+      "node": {
+        "id": "ov-gpa",
+        "t": "text",
+        "name": "GPA of 3.3 (B+) or above",
+        "manual": "gpa"
+      },
+      "why": "GPA: \"Students in the program are expected to maintain a GPA of 3.3 (B+) or above.\""
+    }
+  ]
+}

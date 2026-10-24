@@ -1,0 +1,138 @@
+{
+  "code": "TRAM-MS",
+  "reviewed": "2026-10-23",
+  "summary": "You take the required TRAM courses (three quarters of TRAM 221) and one track: TRIP (TRAM 212B, TRAM 250, 14 units of TRAM 299M or MED 370 for MD students, and 6 units of TRAM 299P) or TEAM (CSB 245, GSBGEN 551, 12 units of TRAM 299P and 10 elective units), for 52 units. TRAM 299P is taken more than once to reach those units. The TEAM electives come from a pre-approved list that is not in the Bulletin, so you move them in by hand.",
+  "nodes": {
+    "Mt00foWc": {
+      "why": "\"Complete 3 quarters of TRAM 221. Total of 6 units.\" TRAM 221 is a repeatable 2-unit course, so three slots.",
+      "patch": {
+        "addItems": [
+          [
+            "TRAM 221"
+          ],
+          [
+            "TRAM 221"
+          ]
+        ]
+      }
+    },
+    "cxRzjci7": {
+      "why": "\"Complete 3 units in TRAM 212B, 3 units in TRAM 250, 14 units in TRAM 299M, and 6 units in TRAM 299P.\" and \"Students pursuing an MD may substitute MED 370 for TRAM 299M.\"",
+      "replace": {
+        "t": "all",
+        "name": "Track Option 1: Translational Research Individual Project (TRIP)",
+        "children": [
+          {
+            "id": "ov-trip-212b",
+            "t": "courses",
+            "name": "3 units of TRAM 212B",
+            "mode": "units",
+            "units": 3,
+            "items": [
+              [
+                "TRAM 212B"
+              ]
+            ]
+          },
+          {
+            "id": "ov-trip-250",
+            "t": "courses",
+            "name": "3 units of TRAM 250",
+            "mode": "units",
+            "units": 3,
+            "items": [
+              [
+                "TRAM 250"
+              ]
+            ]
+          },
+          {
+            "id": "ov-trip-299m",
+            "t": "courses",
+            "name": "14 units of TRAM 299M (MD students: MED 370)",
+            "mode": "units",
+            "units": 14,
+            "items": [
+              [
+                "TRAM 299M"
+              ],
+              [
+                "MED 370"
+              ]
+            ]
+          },
+          {
+            "id": "ov-trip-299p",
+            "t": "courses",
+            "name": "6 units of TRAM 299P",
+            "mode": "units",
+            "units": 6,
+            "items": [
+              [
+                "TRAM 299P"
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    "ZX53q60x": {
+      "why": "\"The TEAM track requires a total of 26 units\"; the stored 29 disagrees with the text and with its parts (2 + 2 + 12 + 10 = 26).",
+      "patch": {
+        "units": 26
+      }
+    },
+    "RcuZ3pN5": {
+      "why": "\"Complete 2 units in CSB 245, 2 units in GSBGEN 551, and 12 units in TRAM 299P. The CSB and GSBGEN classes can be substituted with electives upon program approval.\" An approved substitute is moved in by hand.",
+      "replace": {
+        "t": "all",
+        "name": "TEAM project courses",
+        "children": [
+          {
+            "id": "ov-team-csb245",
+            "t": "courses",
+            "name": "2 units of CSB 245",
+            "mode": "units",
+            "units": 2,
+            "items": [
+              [
+                "CSB 245"
+              ]
+            ]
+          },
+          {
+            "id": "ov-team-gsbgen551",
+            "t": "courses",
+            "name": "2 units of GSBGEN 551",
+            "mode": "units",
+            "units": 2,
+            "items": [
+              [
+                "GSBGEN 551"
+              ]
+            ]
+          },
+          {
+            "id": "ov-team-299p",
+            "t": "courses",
+            "name": "12 units of TRAM 299P",
+            "mode": "units",
+            "units": 12,
+            "items": [
+              [
+                "TRAM 299P"
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    "sW88m6Sb": {
+      "why": "\"Complete 10 units in pre-approved MTRAM electives for a total of 26 units in the TEAM Project Track.\" The pre-approved list is not in the Bulletin; the student moves the courses in.",
+      "patch": {
+        "manual": "approval",
+        "units": 10
+      }
+    }
+  }
+}

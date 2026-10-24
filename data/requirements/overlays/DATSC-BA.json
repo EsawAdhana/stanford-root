@@ -1,0 +1,2670 @@
+{
+  "code": "DATSC-BA",
+  "reviewed": "2026-10-23",
+  "summary": "The audit checks the Data Science Core (up to two of the listed pre-approved substitutions, and any number of the advanced alternatives), then your subplan's own Extended Core, WIM and capstone, with every course letter graded and counted toward one requirement only. The exceptions the text makes are the Data Science Practicum (DATASCI 192A and 192B), which counts as both your WIM and your capstone in Social Systems, and DATASCI 120, which is the WIM inside the independent research capstone. In the Social Systems subplan each pathway takes seven courses, two from each category plus one more; in the Artistic and Cultural Analysis subplan your primary pathway takes two foundation classes, one foundation class from each of two other pathways (15 units in all) and 12 advanced units, and any HISTORY 200 Doing History seminar counts as an Archive foundation class. You check by hand the one CR course the program may allow, a third core substitution or a CS 106A waiver, pathway and capstone approvals, the unit minimums some pathway courses carry (DATASCI 199 at 2 units, EARTHSYS 106 at 5, ENERGY 177A/B at 3 each), the self-designed pathway and the Capstone Showcase.",
+  "program": {
+    "letterGrade": true,
+    "why": "Grading: \"All courses that fulfill major requirements must be taken for a letter grade. Students may be granted a one-time exception to use one course taken for credit (CR) toward the major. This exception does not apply to the WIM and capstone, which must always be taken for a letter grade.\" The one-time CR exception is moved in by hand."
+  },
+  "blocks": {
+    "zqeiUoq9": {
+      "shares": false,
+      "why": "Policies: \"Double-counting within the major is not allowed, unless explicitly stated otherwise.\" The capstone counts once, as the capstone. The WIM block stays a designation because the text says otherwise for it: the practicum \"double-counts to satisfy both the capstone and WIM requirements\", and DATASCI 120 is the WIM inside the independent research capstone."
+    }
+  },
+  "nodes": {
+    "wOZGBbUg": {
+      "why": "\"CS 124 is required for all students in this pathway.\" Two foundation courses, one of them CS 124.",
+      "replace": {
+        "t": "all",
+        "name": "Foundation Courses",
+        "children": [
+          {
+            "id": "wOZGBbUg-cs124",
+            "t": "courses",
+            "name": "CS 124 (required in this pathway)",
+            "mode": "all",
+            "items": [
+              [
+                "CS 124"
+              ]
+            ]
+          },
+          {
+            "id": "wOZGBbUg-other",
+            "t": "courses",
+            "name": "One more foundation course",
+            "mode": "atLeast",
+            "n": 1,
+            "items": [
+              [
+                "ECON 1"
+              ],
+              [
+                "ECON 47"
+              ],
+              [
+                "POLISCI 1"
+              ],
+              [
+                "PSYCH 1"
+              ],
+              [
+                "PSYCH 35"
+              ],
+              [
+                "SOC 1"
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    "cqJn6FZd": {
+      "why": "\"Upon declaring, students in this subplan will select one of the following four pathways as their primary concentration ... Students must complete a total of at least 4 foundation classes for a total of 15-20 units. This must include 2 classes from their chosen pathway and 2 classes that cover 2 of the remaining 3 pathways.\" and \"Students will work with their advisor and the program administration to select 12-16 units of advanced coursework within their chosen pathway\". The Bulletin stored this as 3 of 4 pathways at one class each, and the advanced classes as a separate choice; both now hang off the one chosen pathway. Archive: \"Note that any of the Doing History (HISTORY 200) seminars count towards this requirement\", so every HISTORY 200 seminar counts, not only the listed ones.",
+      "replace": {
+        "t": "any",
+        "name": "Primary Pathway: Foundation and Advanced Classes",
+        "children": [
+          {
+            "id": "ov-aca-analysis",
+            "t": "all",
+            "name": "Analysis pathway",
+            "children": [
+              {
+                "id": "ov-aca-analysis-foundation",
+                "t": "all",
+                "name": "Foundation classes (at least 4, 15-20 units)",
+                "units": 15,
+                "children": [
+                  {
+                    "id": "ov-aca-analysis-own",
+                    "t": "courses",
+                    "name": "Two Analysis foundation classes",
+                    "mode": "atLeast",
+                    "n": 2,
+                    "items": [
+                      [
+                        "ANTHRO 91"
+                      ],
+                      [
+                        "COMM 106"
+                      ],
+                      [
+                        "COMPLIT 101"
+                      ],
+                      [
+                        "ENGLISH 160"
+                      ],
+                      [
+                        "ENGLISH 161"
+                      ],
+                      [
+                        "ILAC 130"
+                      ],
+                      [
+                        "ILAC 131"
+                      ],
+                      [
+                        "JAPAN 123"
+                      ],
+                      [
+                        "PHIL 49"
+                      ],
+                      [
+                        "RELIGST 1"
+                      ]
+                    ]
+                  },
+                  {
+                    "id": "ov-aca-analysis-others",
+                    "t": "some",
+                    "n": 2,
+                    "name": "One foundation class from each of two other pathways",
+                    "children": [
+                      {
+                        "id": "ov-aca-analysis-other-archive",
+                        "t": "courses",
+                        "name": "Archive foundation class",
+                        "mode": "any",
+                        "items": [
+                          [
+                            "AFRICAAM 139"
+                          ],
+                          [
+                            "ANTHRO 134D"
+                          ],
+                          [
+                            "CHILATST 130"
+                          ],
+                          [
+                            "CLASSICS 30"
+                          ],
+                          [
+                            "CLASSICS 59"
+                          ],
+                          [
+                            "HISTORY 95N"
+                          ],
+                          [
+                            "HISTORY 99S"
+                          ],
+                          [
+                            "HISTORY 200A"
+                          ],
+                          [
+                            "HISTORY 200B"
+                          ],
+                          [
+                            "HISTORY 200BG"
+                          ],
+                          [
+                            "HISTORY 200D"
+                          ],
+                          [
+                            "HISTORY 200DE"
+                          ],
+                          [
+                            "HISTORY 200F"
+                          ],
+                          [
+                            "HISTORY 200GH"
+                          ],
+                          [
+                            "HISTORY 200MM"
+                          ],
+                          [
+                            "HISTORY 200Y"
+                          ],
+                          [
+                            "PHIL 60"
+                          ]
+                        ],
+                        "pool": {
+                          "subjects": [
+                            "HISTORY"
+                          ],
+                          "minNumber": 200,
+                          "maxNumber": 200
+                        }
+                      },
+                      {
+                        "id": "ov-aca-analysis-other-creation",
+                        "t": "courses",
+                        "name": "Creation foundation class",
+                        "mode": "any",
+                        "items": [
+                          [
+                            "ARTSTUDI 101"
+                          ],
+                          [
+                            "ARTSTUDI 102"
+                          ],
+                          [
+                            "DESIGN 1"
+                          ],
+                          [
+                            "ENGLISH 90"
+                          ],
+                          [
+                            "ENGLISH 91"
+                          ],
+                          [
+                            "MUSIC 21"
+                          ],
+                          [
+                            "MUSIC 113"
+                          ],
+                          [
+                            "TAPS 34"
+                          ],
+                          [
+                            "TAPS 120A"
+                          ]
+                        ]
+                      },
+                      {
+                        "id": "ov-aca-analysis-other-critique",
+                        "t": "courses",
+                        "name": "Critique foundation class",
+                        "mode": "any",
+                        "items": [
+                          [
+                            "AFRICAAM 176"
+                          ],
+                          [
+                            "ANTHRO 90B"
+                          ],
+                          [
+                            "ARTHIST 5"
+                          ],
+                          [
+                            "CLASSICS 83"
+                          ],
+                          [
+                            "COMM 108"
+                          ],
+                          [
+                            "CSRE 100"
+                          ],
+                          [
+                            "FEMGEN 103"
+                          ],
+                          [
+                            "FILMEDIA 6"
+                          ],
+                          [
+                            "KOREA 151"
+                          ],
+                          [
+                            "RELIGST 19Q"
+                          ]
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "id": "ov-aca-analysis-advanced",
+                "t": "courses",
+                "name": "Advanced Analysis classes (12-16 units)",
+                "mode": "units",
+                "units": 12,
+                "items": [
+                  [
+                    "ANTHRO 98C"
+                  ],
+                  [
+                    "DLCL 122Q"
+                  ],
+                  [
+                    "DLCL 153"
+                  ],
+                  [
+                    "DLCL 201"
+                  ],
+                  [
+                    "ENGLISH 184E"
+                  ],
+                  [
+                    "ENGLISH 184F"
+                  ],
+                  [
+                    "LINGUIST 180"
+                  ],
+                  [
+                    "PHIL 20N"
+                  ],
+                  [
+                    "SLAVIC 70N"
+                  ]
+                ],
+                "notes": "Given the interdisciplinary nature of the program, students may submit the Data Science Requirement Inquiry Form to include additional courses not in the lists below towards their advanced class requirements."
+              }
+            ]
+          },
+          {
+            "id": "ov-aca-archive",
+            "t": "all",
+            "name": "Archive pathway",
+            "children": [
+              {
+                "id": "ov-aca-archive-foundation",
+                "t": "all",
+                "name": "Foundation classes (at least 4, 15-20 units)",
+                "units": 15,
+                "children": [
+                  {
+                    "id": "ov-aca-archive-own",
+                    "t": "courses",
+                    "name": "Two Archive foundation classes",
+                    "mode": "atLeast",
+                    "n": 2,
+                    "items": [
+                      [
+                        "AFRICAAM 139"
+                      ],
+                      [
+                        "ANTHRO 134D"
+                      ],
+                      [
+                        "CHILATST 130"
+                      ],
+                      [
+                        "CLASSICS 30"
+                      ],
+                      [
+                        "CLASSICS 59"
+                      ],
+                      [
+                        "HISTORY 95N"
+                      ],
+                      [
+                        "HISTORY 99S"
+                      ],
+                      [
+                        "HISTORY 200A"
+                      ],
+                      [
+                        "HISTORY 200B"
+                      ],
+                      [
+                        "HISTORY 200BG"
+                      ],
+                      [
+                        "HISTORY 200D"
+                      ],
+                      [
+                        "HISTORY 200DE"
+                      ],
+                      [
+                        "HISTORY 200F"
+                      ],
+                      [
+                        "HISTORY 200GH"
+                      ],
+                      [
+                        "HISTORY 200MM"
+                      ],
+                      [
+                        "HISTORY 200Y"
+                      ],
+                      [
+                        "PHIL 60"
+                      ]
+                    ],
+                    "pool": {
+                      "subjects": [
+                        "HISTORY"
+                      ],
+                      "minNumber": 200,
+                      "maxNumber": 200
+                    }
+                  },
+                  {
+                    "id": "ov-aca-archive-others",
+                    "t": "some",
+                    "n": 2,
+                    "name": "One foundation class from each of two other pathways",
+                    "children": [
+                      {
+                        "id": "ov-aca-archive-other-analysis",
+                        "t": "courses",
+                        "name": "Analysis foundation class",
+                        "mode": "any",
+                        "items": [
+                          [
+                            "ANTHRO 91"
+                          ],
+                          [
+                            "COMM 106"
+                          ],
+                          [
+                            "COMPLIT 101"
+                          ],
+                          [
+                            "ENGLISH 160"
+                          ],
+                          [
+                            "ENGLISH 161"
+                          ],
+                          [
+                            "ILAC 130"
+                          ],
+                          [
+                            "ILAC 131"
+                          ],
+                          [
+                            "JAPAN 123"
+                          ],
+                          [
+                            "PHIL 49"
+                          ],
+                          [
+                            "RELIGST 1"
+                          ]
+                        ]
+                      },
+                      {
+                        "id": "ov-aca-archive-other-creation",
+                        "t": "courses",
+                        "name": "Creation foundation class",
+                        "mode": "any",
+                        "items": [
+                          [
+                            "ARTSTUDI 101"
+                          ],
+                          [
+                            "ARTSTUDI 102"
+                          ],
+                          [
+                            "DESIGN 1"
+                          ],
+                          [
+                            "ENGLISH 90"
+                          ],
+                          [
+                            "ENGLISH 91"
+                          ],
+                          [
+                            "MUSIC 21"
+                          ],
+                          [
+                            "MUSIC 113"
+                          ],
+                          [
+                            "TAPS 34"
+                          ],
+                          [
+                            "TAPS 120A"
+                          ]
+                        ]
+                      },
+                      {
+                        "id": "ov-aca-archive-other-critique",
+                        "t": "courses",
+                        "name": "Critique foundation class",
+                        "mode": "any",
+                        "items": [
+                          [
+                            "AFRICAAM 176"
+                          ],
+                          [
+                            "ANTHRO 90B"
+                          ],
+                          [
+                            "ARTHIST 5"
+                          ],
+                          [
+                            "CLASSICS 83"
+                          ],
+                          [
+                            "COMM 108"
+                          ],
+                          [
+                            "CSRE 100"
+                          ],
+                          [
+                            "FEMGEN 103"
+                          ],
+                          [
+                            "FILMEDIA 6"
+                          ],
+                          [
+                            "KOREA 151"
+                          ],
+                          [
+                            "RELIGST 19Q"
+                          ]
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "id": "ov-aca-archive-advanced",
+                "t": "courses",
+                "name": "Advanced Archive classes (12-16 units)",
+                "mode": "units",
+                "units": 12,
+                "items": [
+                  [
+                    "ANTHRO 198B"
+                  ],
+                  [
+                    "ARCHLGY 117"
+                  ],
+                  [
+                    "CLASSICS 21N"
+                  ],
+                  [
+                    "HISTORY 201B"
+                  ],
+                  [
+                    "HISTORY 207F"
+                  ]
+                ],
+                "notes": "Given the interdisciplinary nature of the program, students may submit the Data Science Requirement Inquiry Form to include additional courses not in the lists below towards their advanced class requirements."
+              }
+            ]
+          },
+          {
+            "id": "ov-aca-creation",
+            "t": "all",
+            "name": "Creation pathway",
+            "children": [
+              {
+                "id": "ov-aca-creation-foundation",
+                "t": "all",
+                "name": "Foundation classes (at least 4, 15-20 units)",
+                "units": 15,
+                "children": [
+                  {
+                    "id": "ov-aca-creation-own",
+                    "t": "courses",
+                    "name": "Two Creation foundation classes",
+                    "mode": "atLeast",
+                    "n": 2,
+                    "items": [
+                      [
+                        "ARTSTUDI 101"
+                      ],
+                      [
+                        "ARTSTUDI 102"
+                      ],
+                      [
+                        "DESIGN 1"
+                      ],
+                      [
+                        "ENGLISH 90"
+                      ],
+                      [
+                        "ENGLISH 91"
+                      ],
+                      [
+                        "MUSIC 21"
+                      ],
+                      [
+                        "MUSIC 113"
+                      ],
+                      [
+                        "TAPS 34"
+                      ],
+                      [
+                        "TAPS 120A"
+                      ]
+                    ]
+                  },
+                  {
+                    "id": "ov-aca-creation-others",
+                    "t": "some",
+                    "n": 2,
+                    "name": "One foundation class from each of two other pathways",
+                    "children": [
+                      {
+                        "id": "ov-aca-creation-other-analysis",
+                        "t": "courses",
+                        "name": "Analysis foundation class",
+                        "mode": "any",
+                        "items": [
+                          [
+                            "ANTHRO 91"
+                          ],
+                          [
+                            "COMM 106"
+                          ],
+                          [
+                            "COMPLIT 101"
+                          ],
+                          [
+                            "ENGLISH 160"
+                          ],
+                          [
+                            "ENGLISH 161"
+                          ],
+                          [
+                            "ILAC 130"
+                          ],
+                          [
+                            "ILAC 131"
+                          ],
+                          [
+                            "JAPAN 123"
+                          ],
+                          [
+                            "PHIL 49"
+                          ],
+                          [
+                            "RELIGST 1"
+                          ]
+                        ]
+                      },
+                      {
+                        "id": "ov-aca-creation-other-archive",
+                        "t": "courses",
+                        "name": "Archive foundation class",
+                        "mode": "any",
+                        "items": [
+                          [
+                            "AFRICAAM 139"
+                          ],
+                          [
+                            "ANTHRO 134D"
+                          ],
+                          [
+                            "CHILATST 130"
+                          ],
+                          [
+                            "CLASSICS 30"
+                          ],
+                          [
+                            "CLASSICS 59"
+                          ],
+                          [
+                            "HISTORY 95N"
+                          ],
+                          [
+                            "HISTORY 99S"
+                          ],
+                          [
+                            "HISTORY 200A"
+                          ],
+                          [
+                            "HISTORY 200B"
+                          ],
+                          [
+                            "HISTORY 200BG"
+                          ],
+                          [
+                            "HISTORY 200D"
+                          ],
+                          [
+                            "HISTORY 200DE"
+                          ],
+                          [
+                            "HISTORY 200F"
+                          ],
+                          [
+                            "HISTORY 200GH"
+                          ],
+                          [
+                            "HISTORY 200MM"
+                          ],
+                          [
+                            "HISTORY 200Y"
+                          ],
+                          [
+                            "PHIL 60"
+                          ]
+                        ],
+                        "pool": {
+                          "subjects": [
+                            "HISTORY"
+                          ],
+                          "minNumber": 200,
+                          "maxNumber": 200
+                        }
+                      },
+                      {
+                        "id": "ov-aca-creation-other-critique",
+                        "t": "courses",
+                        "name": "Critique foundation class",
+                        "mode": "any",
+                        "items": [
+                          [
+                            "AFRICAAM 176"
+                          ],
+                          [
+                            "ANTHRO 90B"
+                          ],
+                          [
+                            "ARTHIST 5"
+                          ],
+                          [
+                            "CLASSICS 83"
+                          ],
+                          [
+                            "COMM 108"
+                          ],
+                          [
+                            "CSRE 100"
+                          ],
+                          [
+                            "FEMGEN 103"
+                          ],
+                          [
+                            "FILMEDIA 6"
+                          ],
+                          [
+                            "KOREA 151"
+                          ],
+                          [
+                            "RELIGST 19Q"
+                          ]
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "id": "ov-aca-creation-advanced",
+                "t": "courses",
+                "name": "Advanced Creation classes (12-16 units)",
+                "mode": "units",
+                "units": 12,
+                "items": [
+                  [
+                    "ARTHIST 206B"
+                  ],
+                  [
+                    "ARTSTUDI 209"
+                  ],
+                  [
+                    "ARTSTUDI 261"
+                  ],
+                  [
+                    "ARTSTUDI 163"
+                  ],
+                  [
+                    "COMM 153D"
+                  ],
+                  [
+                    "ENGLISH 9CFS"
+                  ],
+                  [
+                    "MUSIC 101"
+                  ],
+                  [
+                    "MUSIC 220D"
+                  ]
+                ],
+                "notes": "Given the interdisciplinary nature of the program, students may submit the Data Science Requirement Inquiry Form to include additional courses not in the lists below towards their advanced class requirements."
+              }
+            ]
+          },
+          {
+            "id": "ov-aca-critique",
+            "t": "all",
+            "name": "Critique pathway",
+            "children": [
+              {
+                "id": "ov-aca-critique-foundation",
+                "t": "all",
+                "name": "Foundation classes (at least 4, 15-20 units)",
+                "units": 15,
+                "children": [
+                  {
+                    "id": "ov-aca-critique-own",
+                    "t": "courses",
+                    "name": "Two Critique foundation classes",
+                    "mode": "atLeast",
+                    "n": 2,
+                    "items": [
+                      [
+                        "AFRICAAM 176"
+                      ],
+                      [
+                        "ANTHRO 90B"
+                      ],
+                      [
+                        "ARTHIST 5"
+                      ],
+                      [
+                        "CLASSICS 83"
+                      ],
+                      [
+                        "COMM 108"
+                      ],
+                      [
+                        "CSRE 100"
+                      ],
+                      [
+                        "FEMGEN 103"
+                      ],
+                      [
+                        "FILMEDIA 6"
+                      ],
+                      [
+                        "KOREA 151"
+                      ],
+                      [
+                        "RELIGST 19Q"
+                      ]
+                    ]
+                  },
+                  {
+                    "id": "ov-aca-critique-others",
+                    "t": "some",
+                    "n": 2,
+                    "name": "One foundation class from each of two other pathways",
+                    "children": [
+                      {
+                        "id": "ov-aca-critique-other-analysis",
+                        "t": "courses",
+                        "name": "Analysis foundation class",
+                        "mode": "any",
+                        "items": [
+                          [
+                            "ANTHRO 91"
+                          ],
+                          [
+                            "COMM 106"
+                          ],
+                          [
+                            "COMPLIT 101"
+                          ],
+                          [
+                            "ENGLISH 160"
+                          ],
+                          [
+                            "ENGLISH 161"
+                          ],
+                          [
+                            "ILAC 130"
+                          ],
+                          [
+                            "ILAC 131"
+                          ],
+                          [
+                            "JAPAN 123"
+                          ],
+                          [
+                            "PHIL 49"
+                          ],
+                          [
+                            "RELIGST 1"
+                          ]
+                        ]
+                      },
+                      {
+                        "id": "ov-aca-critique-other-archive",
+                        "t": "courses",
+                        "name": "Archive foundation class",
+                        "mode": "any",
+                        "items": [
+                          [
+                            "AFRICAAM 139"
+                          ],
+                          [
+                            "ANTHRO 134D"
+                          ],
+                          [
+                            "CHILATST 130"
+                          ],
+                          [
+                            "CLASSICS 30"
+                          ],
+                          [
+                            "CLASSICS 59"
+                          ],
+                          [
+                            "HISTORY 95N"
+                          ],
+                          [
+                            "HISTORY 99S"
+                          ],
+                          [
+                            "HISTORY 200A"
+                          ],
+                          [
+                            "HISTORY 200B"
+                          ],
+                          [
+                            "HISTORY 200BG"
+                          ],
+                          [
+                            "HISTORY 200D"
+                          ],
+                          [
+                            "HISTORY 200DE"
+                          ],
+                          [
+                            "HISTORY 200F"
+                          ],
+                          [
+                            "HISTORY 200GH"
+                          ],
+                          [
+                            "HISTORY 200MM"
+                          ],
+                          [
+                            "HISTORY 200Y"
+                          ],
+                          [
+                            "PHIL 60"
+                          ]
+                        ],
+                        "pool": {
+                          "subjects": [
+                            "HISTORY"
+                          ],
+                          "minNumber": 200,
+                          "maxNumber": 200
+                        }
+                      },
+                      {
+                        "id": "ov-aca-critique-other-creation",
+                        "t": "courses",
+                        "name": "Creation foundation class",
+                        "mode": "any",
+                        "items": [
+                          [
+                            "ARTSTUDI 101"
+                          ],
+                          [
+                            "ARTSTUDI 102"
+                          ],
+                          [
+                            "DESIGN 1"
+                          ],
+                          [
+                            "ENGLISH 90"
+                          ],
+                          [
+                            "ENGLISH 91"
+                          ],
+                          [
+                            "MUSIC 21"
+                          ],
+                          [
+                            "MUSIC 113"
+                          ],
+                          [
+                            "TAPS 34"
+                          ],
+                          [
+                            "TAPS 120A"
+                          ]
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "id": "ov-aca-critique-advanced",
+                "t": "courses",
+                "name": "Advanced Critique classes (12-16 units)",
+                "mode": "units",
+                "units": 12,
+                "items": [
+                  [
+                    "AFRICAAM 80Q"
+                  ],
+                  [
+                    "AMSTUD 120"
+                  ],
+                  [
+                    "ARTSTUDI 192"
+                  ],
+                  [
+                    "CSRE 154T"
+                  ],
+                  [
+                    "ENGLISH 106A"
+                  ],
+                  [
+                    "ENGLISH 182"
+                  ]
+                ],
+                "notes": "Given the interdisciplinary nature of the program, students may submit the Data Science Requirement Inquiry Form to include additional courses not in the lists below towards their advanced class requirements."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "GBcMl6ry": {
+      "why": "\"select 12-16 units of advanced coursework within their chosen pathway\": moved under each pathway of cqJn6FZd so the advanced classes follow the same pathway as the foundation classes.",
+      "remove": true
+    },
+    "xbsOGJlV": {
+      "why": "\"Pre-Approved Substitutions: ... students may use up to two of the following pre-approved substitutions within the Data Science Core without additional approval. Students requesting more than two substitutions must submit the Data Science Requirement Inquiry Form and obtain approval from the program directors. Required course: MATH 104 | Approved substitution: ENGR 108; Required course: STATS 117 | Approved substitutions: CS 109, MS&E 120, or EE 178; Required course: STATS 191 | Approved substitutions: MS&E 125 or MS&E 226\" and \"Advanced Alternatives: ... Students may take any number of advanced alternatives: MATH 51 | MATH 61CM or MATH 61DM; MATH 104 | MATH 113; STATS 117 | STATS 118; STATS 191 | STATS 200 or STATS 200Q or STATS 203; MS&E 111, MS&E 111DS, or MS&E 111X | EE 364A\". Computation notes: \"students who have experience with programming but not Python can take CS 193Q instead\" of CS 106A. The data listed only the standard courses. The core is one rule so the two-substitution cap can span it; a third substitution, or a CS 106A waiver, is moved in by hand.",
+      "replace": {
+        "t": "courses",
+        "name": "Data Science Core",
+        "mode": "all",
+        "items": [
+          [
+            "CS 106A",
+            "CS 193Q"
+          ],
+          [
+            "CS 106B"
+          ],
+          [
+            "MATH 51",
+            "MATH 61CM",
+            "MATH 61DM"
+          ],
+          [
+            "DATASCI 112"
+          ],
+          [
+            "MATH 104",
+            "MATH 113",
+            "ENGR 108"
+          ],
+          [
+            "STATS 117",
+            "STATS 118",
+            "CS 109",
+            "MS&E 120",
+            "EE 178"
+          ],
+          [
+            "STATS 191",
+            "STATS 200",
+            "STATS 200Q",
+            "STATS 203",
+            "MS&E 125",
+            "MS&E 226"
+          ],
+          [
+            "MS&E 111",
+            "MS&E 111DS",
+            "MS&E 111X",
+            "EE 364A"
+          ]
+        ],
+        "limits": [
+          {
+            "label": "Pre-approved substitutions",
+            "max": 2,
+            "codes": [
+              "ENGR 108",
+              "CS 109",
+              "MS&E 120",
+              "EE 178",
+              "MS&E 125",
+              "MS&E 226"
+            ]
+          }
+        ]
+      }
+    },
+    "iyTi4S22": {
+      "why": "\"Students must fulfill the Extended Core that aligns with their subplan.\" The data offered either subplan's version to every student; each moves into its subplan block.",
+      "remove": true
+    },
+    "QdWqCcj1": {
+      "why": "\"Students must fulfill the WIM requirement that aligns with their subplan.\" Each subplan's WIM moves into its subplan block as a designation (shares), so its course still counts elsewhere where the text allows.",
+      "remove": true
+    },
+    "gyKYiufk": {
+      "why": "\"Students must fulfill the capstone requirement that aligns with their subplan.\" Each subplan's capstone moves into its subplan block; the Capstone Showcase stays here.",
+      "remove": true
+    }
+  },
+  "add": [
+    {
+      "block": "3yREHnCE",
+      "node": {
+        "id": "gHoLq6jq",
+        "name": "Extended Core for Social Systems",
+        "t": "all",
+        "children": [
+          {
+            "id": "tQ5bOC34",
+            "name": "Data Science for Social Impact",
+            "t": "courses",
+            "items": [
+              [
+                "DATASCI 154"
+              ]
+            ],
+            "mode": "all"
+          },
+          {
+            "id": "vL5APzaI",
+            "name": "Causal Inference",
+            "t": "courses",
+            "items": [
+              [
+                "DATASCI 161"
+              ],
+              [
+                "ECON 102C"
+              ],
+              [
+                "MS&E 228"
+              ],
+              [
+                "POLISCI 150C"
+              ],
+              [
+                "SOC 258B"
+              ]
+            ],
+            "mode": "atLeast",
+            "n": 1
+          },
+          {
+            "id": "YQdvs4EH",
+            "name": "Machine Learning",
+            "t": "courses",
+            "items": [
+              [
+                "CS 124"
+              ],
+              [
+                "CS 129"
+              ],
+              [
+                "CS 161"
+              ],
+              [
+                "CS 221"
+              ],
+              [
+                "STATS 202"
+              ]
+            ],
+            "mode": "atLeast",
+            "n": 1
+          },
+          {
+            "id": "mRWEMx29",
+            "name": "Ethics",
+            "notes": "Students who identify another course that explores the intersection between data, technology, and ethics may submit the Data Science Requirement Inquiry Form to obtain approval from the program.",
+            "t": "courses",
+            "items": [
+              [
+                "COMM 154"
+              ],
+              [
+                "CS 120"
+              ],
+              [
+                "CS 139"
+              ],
+              [
+                "CS 181"
+              ],
+              [
+                "CS 182"
+              ],
+              [
+                "ETHICSOC 20"
+              ],
+              [
+                "POLISCI 103"
+              ],
+              [
+                "POLISCI 145B"
+              ]
+            ],
+            "mode": "atLeast",
+            "n": 1
+          }
+        ]
+      },
+      "why": "Extended Core: \"Students must fulfill the Extended Core that aligns with their subplan.\" The Social Systems version, moved from the core block."
+    },
+    {
+      "block": "3yREHnCE",
+      "node": {
+        "id": "nJXJpq5W",
+        "t": "any",
+        "name": "WIM for Students in Social Systems Subplan",
+        "desc": "Most students pursuing the Data Science B.A. with the social systems subplan will complete the Data Science Practicum (DATASCI 192A/B), which double-counts to satisfy both the capstone and WIM requirements.\nIn special instances, students can apply to fulfill the capstone requirement through conducting an independent data science research project under the supervision of a professor (see capstone requirement for more details), in which case they must take DATASCI 120 to satisfy the WIM requirement.",
+        "children": [
+          {
+            "id": "nJXJpq5W-practicum",
+            "t": "courses",
+            "name": "Data Science Practicum",
+            "mode": "all",
+            "shares": true,
+            "items": [
+              [
+                "DATASCI 192A"
+              ],
+              [
+                "DATASCI 192B"
+              ]
+            ]
+          },
+          {
+            "id": "nJXJpq5W-120",
+            "t": "courses",
+            "name": "Data Narratives (with an independent research capstone)",
+            "mode": "all",
+            "shares": true,
+            "items": [
+              [
+                "DATASCI 120"
+              ]
+            ]
+          }
+        ]
+      },
+      "why": "\"Students must fulfill the WIM requirement that aligns with their subplan.\" \"Most students pursuing the Data Science B.A. with the social systems subplan will complete the Data Science Practicum (DATASCI 192A/B), which double-counts to satisfy both the capstone and WIM requirements. ... in which case they must take DATASCI 120 to satisfy the WIM requirement.\" The practicum is the two-quarter pair, not either half."
+    },
+    {
+      "block": "3yREHnCE",
+      "node": {
+        "id": "CbPLrqL3",
+        "name": "Capstone for Students in Social Systems Subplan",
+        "t": "any",
+        "children": [
+          {
+            "id": "Z0T9pMDa",
+            "name": "Data Science Practicum",
+            "desc": "Most students pursuing the Data Science & Social Systems B.A. will complete the Data Science Practicum (DATASCI 192A/B) for their capstone, which double-counts to satisfy both the capstone and WIM requirements.",
+            "t": "courses",
+            "items": [
+              [
+                "DATASCI 192A"
+              ],
+              [
+                "DATASCI 192B"
+              ]
+            ],
+            "mode": "all"
+          },
+          {
+            "id": "bE1RSace",
+            "t": "all",
+            "name": "Independent Research Project",
+            "desc": "In special instances, completing DATASCI 120 and an independent research project in data science could also be considered for the capstone requirement; the project must be pre-approved by the program directors, substantially use techniques from upper-division Data Science coursework, connect to a social issue (typically related to the student’s pathway), and be completed during senior year.\n\n• By the final study list deadline of autumn quarter during senior year, students should join the Canvas page for Independent Research Projects.\n\n• During autumn quarter of senior year, students should find a professor who agrees to supervise the research project.\n\n• By the last day of classes of autumn quarter, students must complete the Proposal to Use Independent Research for Data Science & Social Systems B.A. Capstone form, have it approved by the research advisor, and submit it to the Canvas page for Independent Research Projects. Approval must be obtained from the program directors through this process.\n\n• Students should enroll in DATASCI 199 (independent study) for a letter grade with the supervising professor in every quarter until they finish conducting the research and creating the report/poster.\n\n• To complete the capstone, the student must submit a final report and approval form signed by their research advisor.\nStudents who use an independent research project to fulfill the capstone requirement will need to take DATASCI 120 (Data Narratives) to fulfill the WIM requirement. DATASCI 120 complements independent research, and it can be taken before or concurrently with working on the project.",
+            "children": [
+              {
+                "id": "bE1RSace-courses",
+                "t": "courses",
+                "name": "DATASCI 120 and independent research",
+                "mode": "all",
+                "items": [
+                  [
+                    "DATASCI 120"
+                  ],
+                  [
+                    "DATASCI 199"
+                  ]
+                ]
+              },
+              {
+                "id": "bE1RSace-approval",
+                "t": "text",
+                "name": "Project pre-approved by the program directors; final report and advisor approval form submitted",
+                "manual": "approval"
+              }
+            ]
+          }
+        ]
+      },
+      "why": "\"Students must fulfill the capstone requirement that aligns with their subplan.\" Independent Research Project: \"In special instances, completing DATASCI 120 and an independent research project in data science could also be considered for the capstone requirement; the project must be pre-approved by the program directors ... Approval must be obtained from the program directors through this process. ... To complete the capstone, the student must submit a final report and approval form signed by their research advisor.\""
+    },
+    {
+      "block": "TRIn6XkC",
+      "node": {
+        "id": "a3CIRjYz",
+        "name": "Extended Core for Artistic and Cultural Analysis",
+        "t": "all",
+        "children": [
+          {
+            "id": "LRYrzl5t",
+            "name": "Thinking and Making with Data",
+            "t": "courses",
+            "items": [
+              [
+                "DATASCI 156"
+              ]
+            ],
+            "mode": "all"
+          },
+          {
+            "id": "tF3nUXjx",
+            "name": "Machine Learning",
+            "t": "courses",
+            "items": [
+              [
+                "CS 124"
+              ],
+              [
+                "CS 129"
+              ],
+              [
+                "CS 161"
+              ],
+              [
+                "CS 221"
+              ],
+              [
+                "STATS 202"
+              ]
+            ],
+            "mode": "atLeast",
+            "n": 1
+          },
+          {
+            "id": "HuALW8kS",
+            "name": "Moral Philosophy",
+            "t": "courses",
+            "items": [
+              [
+                "ETHICSOC 20"
+              ]
+            ],
+            "mode": "all"
+          },
+          {
+            "id": "AGZJU3YE",
+            "name": "Additional Ethics Course",
+            "notes": "Students who identify another course that explores the intersection between data, technology, and ethics may submit the Data Science Requirement Inquiry Form to obtain approval from the Program Director.",
+            "t": "courses",
+            "items": [
+              [
+                "COMM 154"
+              ],
+              [
+                "CS 120"
+              ],
+              [
+                "CS 139"
+              ],
+              [
+                "CS 181"
+              ],
+              [
+                "CS 182"
+              ],
+              [
+                "POLISCI 103"
+              ],
+              [
+                "POLISCI 145B"
+              ]
+            ],
+            "mode": "atLeast",
+            "n": 1
+          }
+        ]
+      },
+      "why": "Extended Core: \"Students must fulfill the Extended Core that aligns with their subplan.\" The Artistic and Cultural Analysis version, moved from the core block."
+    },
+    {
+      "block": "TRIn6XkC",
+      "node": {
+        "id": "n7VYES9i",
+        "name": "WIM for Students in Artistic and Cultural Analysis Subplan",
+        "desc": "All students pursuing the Artistic and Cultural Analysis subplan must complete the following as their WIM.",
+        "t": "courses",
+        "items": [
+          [
+            "DATASCI 120"
+          ]
+        ],
+        "shares": true,
+        "mode": "all"
+      },
+      "why": "\"All students pursuing the Artistic and Cultural Analysis subplan must complete the following as their WIM\": DATASCI 120, a designation (shares)."
+    },
+    {
+      "block": "TRIn6XkC",
+      "node": {
+        "id": "xDgoMrW5",
+        "name": "Capstone for Students in Artistic and Cultural Analysis Subplan",
+        "desc": "All students pursuing the Artistic and Cultural Analysis subplan must complete the following as their capstone.",
+        "t": "courses",
+        "items": [
+          [
+            "DATASCI 193"
+          ]
+        ],
+        "mode": "all"
+      },
+      "why": "\"All students pursuing the Artistic and Cultural Analysis subplan must complete the following as their capstone\": DATASCI 193."
+    },
+    {
+      "parent": "md8EX72B",
+      "node": {
+        "id": "ov-ds-bb-seventh",
+        "t": "courses",
+        "name": "Seventh pathway course (any category)",
+        "mode": "atLeast",
+        "n": 1,
+        "items": [
+          [
+            "ECON 1"
+          ],
+          [
+            "ECON 40"
+          ],
+          [
+            "POLISCI 1"
+          ],
+          [
+            "PSYCH 1"
+          ],
+          [
+            "PSYCH 35"
+          ],
+          [
+            "PSYCH 45"
+          ],
+          [
+            "PSYCH 50"
+          ],
+          [
+            "SOC 1"
+          ],
+          [
+            "DATASCI 120"
+          ],
+          [
+            "DATASCI 192D"
+          ],
+          [
+            "DATASCI 194L"
+          ],
+          [
+            "DATASCI 194N"
+          ],
+          [
+            "DATASCI 199"
+          ],
+          [
+            "PSYCH 154"
+          ],
+          [
+            "PSYCH 163"
+          ],
+          [
+            "PSYCH 209"
+          ],
+          [
+            "PSYCH 236"
+          ],
+          [
+            "PSYCH 251"
+          ],
+          [
+            "NBIO 101"
+          ],
+          [
+            "PHIL 167D"
+          ],
+          [
+            "PSYCH 30"
+          ],
+          [
+            "PSYCH 90"
+          ],
+          [
+            "PSYCH 134"
+          ],
+          [
+            "PSYCH 164"
+          ],
+          [
+            "PSYCH 169"
+          ]
+        ]
+      },
+      "why": "\"Complete seven total courses, at least two from each category (Foundation, Intersection, Context). Courses must span at least two social science disciplines (communication, economics, political science, psychology, and sociology). To support students in selecting balanced pathway coursework, students will be required to meet with the data science team to discuss their planned pathway courses and receive final program approval.\" Two from each of three categories is six; the seventh comes from any category. The span of disciplines and the final approval are checked by hand."
+    },
+    {
+      "parent": "md8EX72B",
+      "node": {
+        "id": "ov-ds-bb-approval",
+        "t": "text",
+        "name": "Pathway courses span two social science disciplines and have final program approval",
+        "manual": "approval"
+      },
+      "why": "\"Complete seven total courses, at least two from each category (Foundation, Intersection, Context). Courses must span at least two social science disciplines (communication, economics, political science, psychology, and sociology). To support students in selecting balanced pathway coursework, students will be required to meet with the data science team to discuss their planned pathway courses and receive final program approval.\" Two from each of three categories is six; the seventh comes from any category. The span of disciplines and the final approval are checked by hand."
+    },
+    {
+      "parent": "yYXrDbjM",
+      "node": {
+        "id": "ov-ds-climate-seventh",
+        "t": "courses",
+        "name": "Seventh pathway course (any category)",
+        "mode": "atLeast",
+        "n": 1,
+        "items": [
+          [
+            "EARTHSYS 10"
+          ],
+          [
+            "EARTHSYS 101"
+          ],
+          [
+            "ECON 1"
+          ],
+          [
+            "ECON 50"
+          ],
+          [
+            "INTNLREL 15N"
+          ],
+          [
+            "POLISCI 1"
+          ],
+          [
+            "POLISCI 101"
+          ],
+          [
+            "POLISCI 102"
+          ],
+          [
+            "PSYCH 1"
+          ],
+          [
+            "SOC 1"
+          ],
+          [
+            "SOC 103"
+          ],
+          [
+            "BIO 143H"
+          ],
+          [
+            "DATASCI 120"
+          ],
+          [
+            "DATASCI 192D"
+          ],
+          [
+            "DATASCI 199"
+          ],
+          [
+            "EARTHSYS 106"
+          ],
+          [
+            "EARTHSYS 115"
+          ],
+          [
+            "EARTHSYS 141"
+          ],
+          [
+            "EARTHSYS 185"
+          ],
+          [
+            "ECON 177"
+          ],
+          [
+            "ECON 185"
+          ],
+          [
+            "ESS 136"
+          ],
+          [
+            "ESS 171"
+          ],
+          [
+            "ESS 367"
+          ],
+          [
+            "INTNLREL 165"
+          ],
+          [
+            "BIO 125"
+          ],
+          [
+            "EARTHSYS 103"
+          ],
+          [
+            "EARTHSYS 112"
+          ],
+          [
+            "EARTHSYS 134"
+          ],
+          [
+            "EARTHSYS 146A"
+          ],
+          [
+            "EARTHSYS 155"
+          ],
+          [
+            "ECON 133"
+          ],
+          [
+            "ECON 155"
+          ],
+          [
+            "ECON 156"
+          ],
+          [
+            "EARTHSYS 102"
+          ],
+          [
+            "ENERGY 110"
+          ],
+          [
+            "ENERGY 177A"
+          ],
+          [
+            "ENERGY 177B"
+          ],
+          [
+            "ESS 102"
+          ],
+          [
+            "HUMRTS 224"
+          ],
+          [
+            "POLISCI 111"
+          ],
+          [
+            "PUBLPOL 153"
+          ],
+          [
+            "URBANST 132"
+          ],
+          [
+            "URBANST 164"
+          ],
+          [
+            "URBANST 181"
+          ]
+        ]
+      },
+      "why": "\"Complete seven total courses, at least two from each category (Foundation, Intersection, Context). Courses must span at least two social science disciplines (communication, economics, political science, psychology, and sociology). To support students in selecting balanced pathway coursework, students will be required to meet with the data science team to discuss their planned pathway courses and receive final program approval.\" Two from each of three categories is six; the seventh comes from any category. The span of disciplines and the final approval are checked by hand."
+    },
+    {
+      "parent": "yYXrDbjM",
+      "node": {
+        "id": "ov-ds-climate-approval",
+        "t": "text",
+        "name": "Pathway courses span two social science disciplines and have final program approval",
+        "manual": "approval"
+      },
+      "why": "\"Complete seven total courses, at least two from each category (Foundation, Intersection, Context). Courses must span at least two social science disciplines (communication, economics, political science, psychology, and sociology). To support students in selecting balanced pathway coursework, students will be required to meet with the data science team to discuss their planned pathway courses and receive final program approval.\" Two from each of three categories is six; the seventh comes from any category. The span of disciplines and the final approval are checked by hand."
+    },
+    {
+      "parent": "hOacKCQM",
+      "node": {
+        "id": "ov-ds-econ-seventh",
+        "t": "courses",
+        "name": "Seventh pathway course (any category)",
+        "mode": "atLeast",
+        "n": 1,
+        "items": [
+          [
+            "ECON 1"
+          ],
+          [
+            "ECON 11N"
+          ],
+          [
+            "ECON 30"
+          ],
+          [
+            "ECON 40"
+          ],
+          [
+            "ECON 50"
+          ],
+          [
+            "POLISCI 1"
+          ],
+          [
+            "POLISCI 21Q"
+          ],
+          [
+            "POLISCI 101"
+          ],
+          [
+            "POLISCI 102"
+          ],
+          [
+            "POLISCI 114D"
+          ],
+          [
+            "PSYCH 1"
+          ],
+          [
+            "SOC 1"
+          ],
+          [
+            "SOC 3"
+          ],
+          [
+            "SOC 19N"
+          ],
+          [
+            "SOC 100"
+          ],
+          [
+            "DATASCI 120"
+          ],
+          [
+            "DATASCI 192D"
+          ],
+          [
+            "DATASCI 199"
+          ],
+          [
+            "EARTHSYS 162"
+          ],
+          [
+            "EARTHSYS 185"
+          ],
+          [
+            "ECON 125"
+          ],
+          [
+            "ECON 127"
+          ],
+          [
+            "ETHICSOC 151C"
+          ],
+          [
+            "SOC 12N"
+          ],
+          [
+            "SOC 156A"
+          ],
+          [
+            "SOC 373"
+          ],
+          [
+            "CSRE 112X"
+          ],
+          [
+            "CSRE 181"
+          ],
+          [
+            "CSRE 149A"
+          ],
+          [
+            "ECON 118"
+          ],
+          [
+            "ECON 134"
+          ],
+          [
+            "ECON 166"
+          ],
+          [
+            "ECON 144"
+          ],
+          [
+            "ENERGY 177A"
+          ],
+          [
+            "ENERGY 177B"
+          ],
+          [
+            "ETHICSOC 232T"
+          ],
+          [
+            "FEMGEN 173"
+          ],
+          [
+            "POLISCI 141"
+          ],
+          [
+            "POLISCI 147"
+          ],
+          [
+            "POLISCI 243"
+          ],
+          [
+            "POLISCI 247G"
+          ],
+          [
+            "SOC 175"
+          ]
+        ]
+      },
+      "why": "\"Complete seven total courses, at least two from each category (Foundation, Intersection, Context). Courses must span at least two social science disciplines (communication, economics, political science, psychology, and sociology). To support students in selecting balanced pathway coursework, students will be required to meet with the data science team to discuss their planned pathway courses and receive final program approval.\" Two from each of three categories is six; the seventh comes from any category. The span of disciplines and the final approval are checked by hand."
+    },
+    {
+      "parent": "hOacKCQM",
+      "node": {
+        "id": "ov-ds-econ-approval",
+        "t": "text",
+        "name": "Pathway courses span two social science disciplines and have final program approval",
+        "manual": "approval"
+      },
+      "why": "\"Complete seven total courses, at least two from each category (Foundation, Intersection, Context). Courses must span at least two social science disciplines (communication, economics, political science, psychology, and sociology). To support students in selecting balanced pathway coursework, students will be required to meet with the data science team to discuss their planned pathway courses and receive final program approval.\" Two from each of three categories is six; the seventh comes from any category. The span of disciplines and the final approval are checked by hand."
+    },
+    {
+      "parent": "dun197Xl",
+      "node": {
+        "id": "ov-ds-edu-seventh",
+        "t": "courses",
+        "name": "Seventh pathway course (any category)",
+        "mode": "atLeast",
+        "n": 1,
+        "items": [
+          [
+            "ECON 1"
+          ],
+          [
+            "ECON 50"
+          ],
+          [
+            "EDUC 101"
+          ],
+          [
+            "POLISCI 1"
+          ],
+          [
+            "POLISCI 102"
+          ],
+          [
+            "PSYCH 1"
+          ],
+          [
+            "PSYCH 35"
+          ],
+          [
+            "PSYCH 45"
+          ],
+          [
+            "SOC 1"
+          ],
+          [
+            "DATASCI 120"
+          ],
+          [
+            "DATASCI 192D"
+          ],
+          [
+            "DATASCI 194L"
+          ],
+          [
+            "DATASCI 199"
+          ],
+          [
+            "EDUC 281"
+          ],
+          [
+            "EDUC 303"
+          ],
+          [
+            "EDUC 473"
+          ],
+          [
+            "SOC 302A"
+          ],
+          [
+            "SOC 373"
+          ],
+          [
+            "CSRE 112X"
+          ],
+          [
+            "CSRE 181"
+          ],
+          [
+            "ECON 146"
+          ],
+          [
+            "EDUC 103B"
+          ],
+          [
+            "EDUC 115N"
+          ],
+          [
+            "EDUC 117"
+          ],
+          [
+            "EDUC 142"
+          ],
+          [
+            "EDUC 144"
+          ],
+          [
+            "ETHICSOC 204"
+          ],
+          [
+            "FEMGEN 173"
+          ],
+          [
+            "HISTORY 158C"
+          ],
+          [
+            "SOC 130"
+          ]
+        ]
+      },
+      "why": "\"Complete seven total courses, at least two from each category (Foundation, Intersection, Context). Courses must span at least two social science disciplines (communication, economics, political science, psychology, and sociology). To support students in selecting balanced pathway coursework, students will be required to meet with the data science team to discuss their planned pathway courses and receive final program approval.\" Two from each of three categories is six; the seventh comes from any category. The span of disciplines and the final approval are checked by hand."
+    },
+    {
+      "parent": "dun197Xl",
+      "node": {
+        "id": "ov-ds-edu-approval",
+        "t": "text",
+        "name": "Pathway courses span two social science disciplines and have final program approval",
+        "manual": "approval"
+      },
+      "why": "\"Complete seven total courses, at least two from each category (Foundation, Intersection, Context). Courses must span at least two social science disciplines (communication, economics, political science, psychology, and sociology). To support students in selecting balanced pathway coursework, students will be required to meet with the data science team to discuss their planned pathway courses and receive final program approval.\" Two from each of three categories is six; the seventh comes from any category. The span of disciplines and the final approval are checked by hand."
+    },
+    {
+      "parent": "SwWms8ez",
+      "node": {
+        "id": "ov-ds-health-seventh",
+        "t": "courses",
+        "name": "Seventh pathway course (any category)",
+        "mode": "atLeast",
+        "n": 1,
+        "items": [
+          [
+            "ECON 1"
+          ],
+          [
+            "ECON 28N"
+          ],
+          [
+            "ECON 39"
+          ],
+          [
+            "ECON 48"
+          ],
+          [
+            "ECON 50"
+          ],
+          [
+            "POLISCI 1"
+          ],
+          [
+            "POLISCI 102"
+          ],
+          [
+            "PSYCH 1"
+          ],
+          [
+            "SOC 1"
+          ],
+          [
+            "SOC 103"
+          ],
+          [
+            "DATASCI 120"
+          ],
+          [
+            "DATASCI 192D"
+          ],
+          [
+            "DATASCI 194B"
+          ],
+          [
+            "DATASCI 199"
+          ],
+          [
+            "ECON 127"
+          ],
+          [
+            "HRP 252"
+          ],
+          [
+            "MED 232"
+          ],
+          [
+            "MS&E 292"
+          ],
+          [
+            "ECON 122"
+          ],
+          [
+            "ECON 126"
+          ],
+          [
+            "EPI 263"
+          ],
+          [
+            "HUMBIO 29"
+          ],
+          [
+            "HUMBIO 114"
+          ],
+          [
+            "HUMBIO 122"
+          ],
+          [
+            "HUMBIO 123G"
+          ],
+          [
+            "HUMBIO 124C"
+          ],
+          [
+            "PEDS 150"
+          ],
+          [
+            "PUBLPOL 122"
+          ],
+          [
+            "PUBLPOL 156"
+          ]
+        ]
+      },
+      "why": "\"Complete seven total courses, at least two from each category (Foundation, Intersection, Context). Courses must span at least two social science disciplines (communication, economics, political science, psychology, and sociology). To support students in selecting balanced pathway coursework, students will be required to meet with the data science team to discuss their planned pathway courses and receive final program approval.\" Two from each of three categories is six; the seventh comes from any category. The span of disciplines and the final approval are checked by hand."
+    },
+    {
+      "parent": "SwWms8ez",
+      "node": {
+        "id": "ov-ds-health-approval",
+        "t": "text",
+        "name": "Pathway courses span two social science disciplines and have final program approval",
+        "manual": "approval"
+      },
+      "why": "\"Complete seven total courses, at least two from each category (Foundation, Intersection, Context). Courses must span at least two social science disciplines (communication, economics, political science, psychology, and sociology). To support students in selecting balanced pathway coursework, students will be required to meet with the data science team to discuss their planned pathway courses and receive final program approval.\" Two from each of three categories is six; the seventh comes from any category. The span of disciplines and the final approval are checked by hand."
+    },
+    {
+      "parent": "t7L5w3kF",
+      "node": {
+        "id": "ov-ds-lang-seventh",
+        "t": "courses",
+        "name": "Seventh pathway course (any category)",
+        "mode": "atLeast",
+        "n": 1,
+        "items": [
+          [
+            "CS 124"
+          ],
+          [
+            "ECON 1"
+          ],
+          [
+            "ECON 47"
+          ],
+          [
+            "POLISCI 1"
+          ],
+          [
+            "PSYCH 1"
+          ],
+          [
+            "PSYCH 35"
+          ],
+          [
+            "SOC 1"
+          ],
+          [
+            "DATASCI 120"
+          ],
+          [
+            "DATASCI 192D"
+          ],
+          [
+            "DATASCI 194N"
+          ],
+          [
+            "DATASCI 199"
+          ],
+          [
+            "LINGUIST 150"
+          ],
+          [
+            "SYMSYS 195N"
+          ],
+          [
+            "SYMSYS 195T"
+          ],
+          [
+            "SYMSYS 195L"
+          ],
+          [
+            "COMM 120W"
+          ],
+          [
+            "COMM 124"
+          ],
+          [
+            "COMM 145"
+          ],
+          [
+            "COMM 154"
+          ],
+          [
+            "COMM 166"
+          ],
+          [
+            "COMM 186W"
+          ],
+          [
+            "LINGUIST 130A"
+          ],
+          [
+            "LINGUIST 145"
+          ],
+          [
+            "LINGUIST 156"
+          ],
+          [
+            "PSYCH 80"
+          ],
+          [
+            "PSYCH 122"
+          ],
+          [
+            "PSYCH 175"
+          ]
+        ]
+      },
+      "why": "\"Complete seven total courses, at least two from each category (Foundation, Intersection, Context). Courses must span at least two social science disciplines (communication, economics, political science, psychology, and sociology). To support students in selecting balanced pathway coursework, students will be required to meet with the data science team to discuss their planned pathway courses and receive final program approval.\" Two from each of three categories is six; the seventh comes from any category. The span of disciplines and the final approval are checked by hand."
+    },
+    {
+      "parent": "t7L5w3kF",
+      "node": {
+        "id": "ov-ds-lang-approval",
+        "t": "text",
+        "name": "Pathway courses span two social science disciplines and have final program approval",
+        "manual": "approval"
+      },
+      "why": "\"Complete seven total courses, at least two from each category (Foundation, Intersection, Context). Courses must span at least two social science disciplines (communication, economics, political science, psychology, and sociology). To support students in selecting balanced pathway coursework, students will be required to meet with the data science team to discuss their planned pathway courses and receive final program approval.\" Two from each of three categories is six; the seventh comes from any category. The span of disciplines and the final approval are checked by hand."
+    },
+    {
+      "parent": "ppelaeVg",
+      "node": {
+        "id": "ov-ds-law-seventh",
+        "t": "courses",
+        "name": "Seventh pathway course (any category)",
+        "mode": "atLeast",
+        "n": 1,
+        "items": [
+          [
+            "ECON 1"
+          ],
+          [
+            "ECON 40"
+          ],
+          [
+            "ECON 42"
+          ],
+          [
+            "ECON 50"
+          ],
+          [
+            "POLISCI 1"
+          ],
+          [
+            "POLISCI 29N"
+          ],
+          [
+            "POLISCI 102"
+          ],
+          [
+            "POLISCI 114D"
+          ],
+          [
+            "PSYCH 1"
+          ],
+          [
+            "SOC 1"
+          ],
+          [
+            "COMM 138"
+          ],
+          [
+            "DATASCI 120"
+          ],
+          [
+            "DATASCI 192D"
+          ],
+          [
+            "DATASCI 199"
+          ],
+          [
+            "CS 182"
+          ],
+          [
+            "DDRL 191"
+          ],
+          [
+            "POLISCI 120B"
+          ],
+          [
+            "POLISCI 145B"
+          ],
+          [
+            "AMSTUD 155"
+          ],
+          [
+            "ECON 154"
+          ],
+          [
+            "ETHICSOC 175W"
+          ],
+          [
+            "HISTORY 57"
+          ],
+          [
+            "HISTORY 153"
+          ],
+          [
+            "LAWGEN 112N"
+          ],
+          [
+            "POLISCI 115"
+          ],
+          [
+            "POLISCI 120C"
+          ],
+          [
+            "POLISCI 121L"
+          ],
+          [
+            "POLISCI 123D"
+          ],
+          [
+            "POLISCI 124L"
+          ],
+          [
+            "POLISCI 125P"
+          ],
+          [
+            "POLISCI 140P"
+          ],
+          [
+            "POLISCI 141"
+          ],
+          [
+            "POLISCI 147"
+          ],
+          [
+            "POLISCI 220R"
+          ],
+          [
+            "POLISCI 225"
+          ],
+          [
+            "POLISCI 238T"
+          ],
+          [
+            "POLISCI 243"
+          ],
+          [
+            "POLISCI 244A"
+          ],
+          [
+            "POLISCI 244C"
+          ],
+          [
+            "POLISCI 244U"
+          ],
+          [
+            "POLISCI 247G"
+          ],
+          [
+            "PUBLPOL 134"
+          ],
+          [
+            "SOC 136"
+          ],
+          [
+            "SOC 149"
+          ],
+          [
+            "SOC 175"
+          ],
+          [
+            "SOC 179A"
+          ]
+        ]
+      },
+      "why": "\"Complete seven total courses, at least two from each category (Foundation, Intersection, Context). Courses must span at least two social science disciplines (communication, economics, political science, psychology, and sociology). To support students in selecting balanced pathway coursework, students will be required to meet with the data science team to discuss their planned pathway courses and receive final program approval.\" Two from each of three categories is six; the seventh comes from any category. The span of disciplines and the final approval are checked by hand."
+    },
+    {
+      "parent": "ppelaeVg",
+      "node": {
+        "id": "ov-ds-law-approval",
+        "t": "text",
+        "name": "Pathway courses span two social science disciplines and have final program approval",
+        "manual": "approval"
+      },
+      "why": "\"Complete seven total courses, at least two from each category (Foundation, Intersection, Context). Courses must span at least two social science disciplines (communication, economics, political science, psychology, and sociology). To support students in selecting balanced pathway coursework, students will be required to meet with the data science team to discuss their planned pathway courses and receive final program approval.\" Two from each of three categories is six; the seventh comes from any category. The span of disciplines and the final approval are checked by hand."
+    },
+    {
+      "parent": "Kxi0DHWZ",
+      "node": {
+        "id": "ov-ds-media-seventh",
+        "t": "courses",
+        "name": "Seventh pathway course (any category)",
+        "mode": "atLeast",
+        "n": 1,
+        "items": [
+          [
+            "ECON 1"
+          ],
+          [
+            "ECON 47"
+          ],
+          [
+            "POLISCI 1"
+          ],
+          [
+            "POLISCI 102"
+          ],
+          [
+            "POLISCI 124L"
+          ],
+          [
+            "PSYCH 1"
+          ],
+          [
+            "PSYCH 35"
+          ],
+          [
+            "SOC 1"
+          ],
+          [
+            "SOC 126"
+          ],
+          [
+            "COMM 122"
+          ],
+          [
+            "COMM 138"
+          ],
+          [
+            "COMM 177A"
+          ],
+          [
+            "COMM 177B"
+          ],
+          [
+            "COMM 177I"
+          ],
+          [
+            "COMM 177T"
+          ],
+          [
+            "DATASCI 120"
+          ],
+          [
+            "DATASCI 192D"
+          ],
+          [
+            "DATASCI 199"
+          ],
+          [
+            "COMM 104W"
+          ],
+          [
+            "COMM 176"
+          ],
+          [
+            "COMM 177C"
+          ],
+          [
+            "COMM 177D"
+          ],
+          [
+            "COMM 177SW"
+          ],
+          [
+            "COMM 177Y"
+          ],
+          [
+            "ECON 132"
+          ]
+        ]
+      },
+      "why": "\"Complete seven total courses, at least two from each category (Foundation, Intersection, Context). Courses must span at least two social science disciplines (communication, economics, political science, psychology, and sociology). To support students in selecting balanced pathway coursework, students will be required to meet with the data science team to discuss their planned pathway courses and receive final program approval.\" Two from each of three categories is six; the seventh comes from any category. The span of disciplines and the final approval are checked by hand."
+    },
+    {
+      "parent": "Kxi0DHWZ",
+      "node": {
+        "id": "ov-ds-media-approval",
+        "t": "text",
+        "name": "Pathway courses span two social science disciplines and have final program approval",
+        "manual": "approval"
+      },
+      "why": "\"Complete seven total courses, at least two from each category (Foundation, Intersection, Context). Courses must span at least two social science disciplines (communication, economics, political science, psychology, and sociology). To support students in selecting balanced pathway coursework, students will be required to meet with the data science team to discuss their planned pathway courses and receive final program approval.\" Two from each of three categories is six; the seventh comes from any category. The span of disciplines and the final approval are checked by hand."
+    },
+    {
+      "parent": "hSFOm1Ao",
+      "node": {
+        "id": "ov-ds-tech-seventh",
+        "t": "courses",
+        "name": "Seventh pathway course (any category)",
+        "mode": "atLeast",
+        "n": 1,
+        "items": [
+          [
+            "ECON 1"
+          ],
+          [
+            "ECON 40"
+          ],
+          [
+            "ECON 47"
+          ],
+          [
+            "ECON 50"
+          ],
+          [
+            "POLISCI 1"
+          ],
+          [
+            "POLISCI 29N"
+          ],
+          [
+            "POLISCI 102"
+          ],
+          [
+            "PSYCH 1"
+          ],
+          [
+            "PSYCH 35"
+          ],
+          [
+            "SOC 1"
+          ],
+          [
+            "SOC 126"
+          ],
+          [
+            "COMM 122"
+          ],
+          [
+            "COMM 177T"
+          ],
+          [
+            "CS 120"
+          ],
+          [
+            "CS 139"
+          ],
+          [
+            "CS 182"
+          ],
+          [
+            "DATASCI 120"
+          ],
+          [
+            "DATASCI 192D"
+          ],
+          [
+            "DATASCI 199"
+          ],
+          [
+            "MS&E 184"
+          ],
+          [
+            "MS&E 284"
+          ],
+          [
+            "POLISCI 145B"
+          ],
+          [
+            "POLISCI 294"
+          ],
+          [
+            "AMSTUD 1B"
+          ],
+          [
+            "CS 147"
+          ],
+          [
+            "COMM 124"
+          ],
+          [
+            "COMM 154"
+          ],
+          [
+            "COMM 158"
+          ],
+          [
+            "DESIGN 1"
+          ],
+          [
+            "DESIGN 121"
+          ],
+          [
+            "ECON 136"
+          ],
+          [
+            "ENGR 145"
+          ],
+          [
+            "MS&E 165"
+          ],
+          [
+            "MS&E 176"
+          ],
+          [
+            "MS&E 180"
+          ],
+          [
+            "MS&E 230"
+          ]
+        ]
+      },
+      "why": "\"Complete seven total courses, at least two from each category (Foundation, Intersection, Context). Courses must span at least two social science disciplines (communication, economics, political science, psychology, and sociology). To support students in selecting balanced pathway coursework, students will be required to meet with the data science team to discuss their planned pathway courses and receive final program approval.\" Two from each of three categories is six; the seventh comes from any category. The span of disciplines and the final approval are checked by hand."
+    },
+    {
+      "parent": "hSFOm1Ao",
+      "node": {
+        "id": "ov-ds-tech-approval",
+        "t": "text",
+        "name": "Pathway courses span two social science disciplines and have final program approval",
+        "manual": "approval"
+      },
+      "why": "\"Complete seven total courses, at least two from each category (Foundation, Intersection, Context). Courses must span at least two social science disciplines (communication, economics, political science, psychology, and sociology). To support students in selecting balanced pathway coursework, students will be required to meet with the data science team to discuss their planned pathway courses and receive final program approval.\" Two from each of three categories is six; the seventh comes from any category. The span of disciplines and the final approval are checked by hand."
+    },
+    {
+      "parent": "bIo7MbTC",
+      "node": {
+        "id": "ov-ds-urban-seventh",
+        "t": "courses",
+        "name": "Seventh pathway course (any category)",
+        "mode": "atLeast",
+        "n": 1,
+        "items": [
+          [
+            "ECON 1"
+          ],
+          [
+            "ECON 30"
+          ],
+          [
+            "ECON 50"
+          ],
+          [
+            "POLISCI 1"
+          ],
+          [
+            "POLISCI 102"
+          ],
+          [
+            "PSYCH 1"
+          ],
+          [
+            "SOC 1"
+          ],
+          [
+            "SOC 3"
+          ],
+          [
+            "SOC 100"
+          ],
+          [
+            "SOC 126"
+          ],
+          [
+            "DATASCI 120"
+          ],
+          [
+            "DATASCI 192D"
+          ],
+          [
+            "DATASCI 199"
+          ],
+          [
+            "ECON 177"
+          ],
+          [
+            "SOC 12N"
+          ],
+          [
+            "SOC 156A"
+          ],
+          [
+            "CEE 41Q"
+          ],
+          [
+            "CEE 173"
+          ],
+          [
+            "EARTHSYS 112"
+          ],
+          [
+            "EARTHSYS 160"
+          ],
+          [
+            "EARTHSYS 181"
+          ],
+          [
+            "ECON 144"
+          ],
+          [
+            "ECON 155"
+          ],
+          [
+            "EDUC 112"
+          ],
+          [
+            "POLISCI 226"
+          ],
+          [
+            "PUBLPOL 108H"
+          ],
+          [
+            "PUBLPOL 154"
+          ],
+          [
+            "PUBLPOL 174"
+          ],
+          [
+            "SOC 149"
+          ],
+          [
+            "URBANST 103C"
+          ],
+          [
+            "URBANST 141"
+          ],
+          [
+            "URBANST 148"
+          ],
+          [
+            "URBANST 153"
+          ],
+          [
+            "URBANST 169"
+          ]
+        ]
+      },
+      "why": "\"Complete seven total courses, at least two from each category (Foundation, Intersection, Context). Courses must span at least two social science disciplines (communication, economics, political science, psychology, and sociology). To support students in selecting balanced pathway coursework, students will be required to meet with the data science team to discuss their planned pathway courses and receive final program approval.\" Two from each of three categories is six; the seventh comes from any category. The span of disciplines and the final approval are checked by hand."
+    },
+    {
+      "parent": "bIo7MbTC",
+      "node": {
+        "id": "ov-ds-urban-approval",
+        "t": "text",
+        "name": "Pathway courses span two social science disciplines and have final program approval",
+        "manual": "approval"
+      },
+      "why": "\"Complete seven total courses, at least two from each category (Foundation, Intersection, Context). Courses must span at least two social science disciplines (communication, economics, political science, psychology, and sociology). To support students in selecting balanced pathway coursework, students will be required to meet with the data science team to discuss their planned pathway courses and receive final program approval.\" Two from each of three categories is six; the seventh comes from any category. The span of disciplines and the final approval are checked by hand."
+    },
+    {
+      "parent": "zo4H7LXs",
+      "node": {
+        "id": "ov-ds-own-pathway",
+        "t": "text",
+        "name": "Self-designed pathway (seven courses approved by the program)",
+        "manual": "approval",
+        "n": 7
+      },
+      "why": "\"Students must choose one of the following pathways or develop their own, with guidance and approval from the program.\" A self-designed pathway has no list; the student moves its seven courses in (the seven-course count is the one every listed pathway uses)."
+    },
+    {
+      "block": "zqeiUoq9",
+      "node": {
+        "id": "ov-ds-showcase",
+        "t": "text",
+        "name": "Capstone Showcase (spring of senior year)",
+        "manual": "milestone"
+      },
+      "why": "\"In addition, each student must participate in the final Capstone Showcase in spring of their senior year.\""
+    }
+  ]
+}

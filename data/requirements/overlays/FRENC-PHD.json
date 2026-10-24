@@ -1,0 +1,97 @@
+{
+  "code": "FRENC-PHD",
+  "reviewed": "2026-10-23",
+  "summary": "The audit checks the 135 graduate units, all in courses numbered 200 or above, at least 60 units of graduate-level FRENCH courses including five or more courses on French literature and culture, and DLCL 301 and DLCL 369, with required courses taken for a letter grade where one is offered. Faculty expect a B+ or better and review lower grades, which the audit does not treat as failing. Checked by hand: a class of at least 5 units with each of four core faculty members, the qualifying and field exams, candidacy, the University Oral, the dissertation and the language requirement.",
+  "program": {
+    "totals": [
+      { "label": "Only graduate-level courses (200 and above) count toward the 135 units", "maxUnits": 0, "pool": { "anySubject": true, "maxNumber": 199 }, "why": "\"All courses counted toward the 135-unit requirement for the Ph.D. must be at the graduate level.\"" }
+    ]
+  },
+  "nodes": {
+    "HCcXILKP": {
+      "why": "Marked as an overview but states requirements: \"All courses counted toward the 135-unit requirement for the Ph.D. must be at the graduate level\" (the 135 units are the program's minimum). \"Students must take at least 60 units under the FRENCH course designation.\" \"A minimum of five graduate-level courses on French literature and culture are required.\" \"Students in French must complete courses with at least four different core faculty members in their program. From each of these professors, students must take at least one class for at least 5 units.\" Graduate level is courses numbered 200 and above, so the FRENCH pool starts at 200 and a cap keeps lower-numbered courses out of the 135. Grading: \"PhD students in the department must take required courses for a letter grade if available\". The B+ is an expectation that faculty review (\"The grade stands, and the student's academic performance is monitored\"), not a floor.",
+      "replace": {
+        "t": "all",
+        "name": "Course Requirements",
+        "children": [
+          {
+            "id": "ov-frenc-phd-french",
+            "t": "courses",
+            "name": "60 units of FRENCH courses, at least five on French literature and culture",
+            "mode": "atLeast",
+            "n": 5,
+            "units": 60,
+            "pool": {
+              "subjects": [
+                "FRENCH"
+              ],
+              "minNumber": 200
+            },
+            "letter": true
+          },
+          {
+            "id": "ov-frenc-phd-faculty",
+            "t": "text",
+            "name": "A class of at least 5 units with each of four core faculty members",
+            "n": 4,
+            "manual": "approval"
+          }
+        ]
+      }
+    },
+    "EHh2Q23J": {
+      "why": "\"students are granted considerable freedom in structuring a course of study ... Students are encouraged to take courses\": advice, no requirement.",
+      "patch": {
+        "info": true
+      }
+    },
+    "SYJFxMJr": {
+      "why": "\"The Qualifying Exam is an oral exam ... Failure to pass qualifying exams on the second attempt results in dismissal\"",
+      "patch": {
+        "manual": "exam"
+      }
+    },
+    "Mk2pZRUo": {
+      "why": "\"The Field Exam is an oral exam ... takes place in the Spring quarter of the second year\"",
+      "patch": {
+        "manual": "exam"
+      }
+    },
+    "d2BTVRsp": {
+      "why": "\"Although teaching is not a requirement for the degree\"",
+      "patch": {
+        "info": true
+      }
+    },
+    "ylSWJSyP": {
+      "why": "\"A candidacy file must be submitted ... Candidacy is determined by faculty vote.\"",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "vKd1SB8k": {
+      "why": "\"The University Oral Examination in French is a review of the dissertation proposal\"",
+      "patch": {
+        "manual": "exam"
+      }
+    },
+    "8oPleVkS": {
+      "why": "\"Students are expected to submit the dissertation by the end of their fifth year in the program.\"",
+      "patch": {
+        "manual": "thesis"
+      }
+    },
+    "Uk6csUZs": {
+      "why": "\"students are required to achieve a high level of proficiency in one additional foreign language ... demonstrated either by completing a graduate seminar in the language in question, or by passing an OPI exam\"; Latin for some periods.",
+      "patch": {
+        "manual": "exam"
+      }
+    },
+    "itrBes3E": {
+      "why": "Grading: \"PhD students in the department must take required courses for a letter grade if available\". The B+ is an expectation that faculty review (\"The grade stands, and the student's academic performance is monitored\"), not a floor.",
+      "patch": {
+        "letter": true
+      }
+    }
+  }
+}

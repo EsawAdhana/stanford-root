@@ -1,0 +1,190 @@
+{
+  "code": "SLAV-MIN",
+  "reviewed": "2026-10-23",
+  "summary": "You choose Russian Language (three intermediate Russian courses and at least three SLAVIC courses) or Russian Language, Literature, and Culture (three of SLAVIC 145-148 and more SLAVIC courses), at least six courses of 3 units or more and 24 units in all, letter graded where a letter grade is offered. First-year Russian does not count, and approved courses from other departments are moved in by hand. The units cannot count toward another major or minor, and transfer and AP credit are not accepted; you check those yourself.",
+  "nodes": {
+    "ITJFciFy": {
+      "why": "\"First-Year language coursework ... are prerequisites, and will not count toward the minor units requirement. Early in their studies, it is recommended that students take introductory courses ... students should consult the department's Program Worksheet\": prerequisites and advice, not a requirement of the minor.",
+      "patch": {
+        "info": true
+      }
+    },
+    "N97pw433": {
+      "why": "\"First-Year language coursework ... are prerequisites, and will not count toward the minor units requirement. Early in their studies, it is recommended that students take introductory courses ... students should consult the department's Program Worksheet\": prerequisites and advice, not a requirement of the minor.",
+      "patch": {
+        "info": true
+      }
+    },
+    "moi40Xvc": {
+      "why": "\"Students must enroll in at least three SLAVIC courses to meet the degree course and unit minimums, or, with the approval of the department's Director of Undergraduate Studies, elective courses in History, Politics, Linguistics, or other relevant programs.\" Approved courses from other programs are moved in.",
+      "replace": {
+        "t": "courses",
+        "name": "Elective Courses",
+        "mode": "atLeast",
+        "n": 3,
+        "pool": {
+          "subjects": [
+            "SLAVIC"
+          ]
+        }
+      }
+    },
+    "mVqNWV0Z": {
+      "why": "\"Remaining units should be chosen from courses offered by the Slavic Department or relevant courses in other departments with the approval of the department's Director of Undergraduate Studies\". The number of remaining units is not stated. The SLAVIC courses are a pool below; this rule takes approved courses from other departments, moved in by hand.",
+      "patch": {
+        "manual": "approval",
+        "optional": true,
+        "name": "Approved elective courses from other departments"
+      }
+    }
+  },
+  "program": {
+    "letterGrade": true,
+    "why": "Grading: \"All courses must be taken for a letter grade, except where letter grades are not offered.\""
+  },
+  "add": [
+    {
+      "block": "178z75ve",
+      "parent": "3Zh6RwSW",
+      "why": "\"Remaining units should be chosen from courses offered by the Slavic Department\". The 24-unit minimum is the program's.",
+      "node": {
+        "id": "ov-rllc-remaining",
+        "t": "courses",
+        "mode": "any",
+        "pool": {
+          "subjects": [
+            "SLAVIC"
+          ]
+        },
+        "optional": true,
+        "name": "Remaining units: SLAVIC courses"
+      }
+    },
+    {
+      "block": "pmU22vK0",
+      "parent": "KA6bEAVo",
+      "why": "\"or, with the approval of the department's Director of Undergraduate Studies, elective courses in History, Politics, Linguistics, or other relevant programs.\"",
+      "node": {
+        "id": "ov-rl-approved",
+        "t": "text",
+        "manual": "approval",
+        "optional": true,
+        "name": "Approved elective courses from other departments"
+      }
+    },
+    {
+      "block": "pmU22vK0",
+      "parent": "KA6bEAVo",
+      "why": "Requirements Overview: \"Complete at least six courses at three units or more and 24 overall units of coursework in the department.\" The six courses are a count over the same courses, so this rule shares them; an approved course from another department is moved into it by hand too. First-year Russian \"will not count toward the minor\".",
+      "node": {
+        "id": "ov-six-rl",
+        "t": "courses",
+        "name": "At least six courses of 3 units or more",
+        "mode": "any",
+        "n": 6,
+        "minUnitsEach": 3,
+        "shares": true,
+        "items": [
+          [
+            "RUSSLANG 21"
+          ],
+          [
+            "RUSSLANG 22"
+          ],
+          [
+            "RUSSLANG 23"
+          ],
+          [
+            "RUSSLANG 101"
+          ],
+          [
+            "RUSSLANG 102"
+          ],
+          [
+            "RUSSLANG 103"
+          ],
+          [
+            "RUSSLANG 211"
+          ],
+          [
+            "RUSSLANG 212"
+          ],
+          [
+            "RUSSLANG 213"
+          ],
+          [
+            "RUSSLANG 231"
+          ],
+          [
+            "RUSSLANG 232"
+          ],
+          [
+            "RUSSLANG 233"
+          ]
+        ],
+        "pool": {
+          "subjects": [
+            "SLAVIC"
+          ]
+        }
+      }
+    },
+    {
+      "block": "178z75ve",
+      "parent": "3Zh6RwSW",
+      "why": "Requirements Overview: \"Complete at least six courses at three units or more and 24 overall units of coursework in the department.\" The six courses are a count over the same courses, so this rule shares them; an approved course from another department is moved into it by hand too. First-year Russian \"will not count toward the minor\".",
+      "node": {
+        "id": "ov-six-rllc",
+        "t": "courses",
+        "name": "At least six courses of 3 units or more",
+        "mode": "any",
+        "n": 6,
+        "minUnitsEach": 3,
+        "shares": true,
+        "items": [
+          [
+            "RUSSLANG 21"
+          ],
+          [
+            "RUSSLANG 22"
+          ],
+          [
+            "RUSSLANG 23"
+          ],
+          [
+            "RUSSLANG 101"
+          ],
+          [
+            "RUSSLANG 102"
+          ],
+          [
+            "RUSSLANG 103"
+          ],
+          [
+            "RUSSLANG 211"
+          ],
+          [
+            "RUSSLANG 212"
+          ],
+          [
+            "RUSSLANG 213"
+          ],
+          [
+            "RUSSLANG 231"
+          ],
+          [
+            "RUSSLANG 232"
+          ],
+          [
+            "RUSSLANG 233"
+          ]
+        ],
+        "pool": {
+          "subjects": [
+            "SLAVIC"
+          ]
+        }
+      }
+    }
+  ]
+}

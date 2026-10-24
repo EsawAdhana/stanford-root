@@ -1,0 +1,273 @@
+{
+  "code": "ENVSS-MA",
+  "reviewed": "2026-10-23",
+  "summary": "This MA is for students leaving the PhD. You need at least 46 graduate units (the program minimum the Bulletin lists; the overview says 45), every course letter graded where a letter grade is offered, the requirements of your subplan, a 3.0 GPA and one quarter as a TA. Environmental Behavioral Science asks for the theory and methods cores (COMM 318 for 5 units), four Advanced Theory courses totaling 10 units, one data, one ecology and one advanced methods course, two quarters of EBS 298 and six of EBS 300. Global Environmental Policy asks for one causal inference sequence (ECON or POLISCI), CS 229 and a 200-level CS deep learning course, GEP 268 and 269, the economics sequence, the four policy courses (GEP 215, 305, 347 and 365) and GEP 300, plus a science or engineering sequence and open electives you choose with your advisor, five courses in all with one of the two sequences at three. Your advisor confirms the deep learning course, the sequences, the GPA, the TAship, the research plan and the annual reviews.",
+  "program": {
+    "letterGrade": true,
+    "why": "Grading: \"All courses must be taken for a letter grade, if letter grades are offered.\""
+  },
+  "blocks": {
+    "pw5lXOqU": {
+      "kind": "required"
+    }
+  },
+  "nodes": {
+    "GzUEFEwp": {
+      "why": "An overview of the courses the rules below list (three Theory Core, two Methods Core, four Advanced Theory, one Data, one Ecology, one Advanced Methods, WEBS).",
+      "patch": {
+        "info": true
+      }
+    },
+    "aoIHmBlo": {
+      "why": "Notes: \"COMM 318 must be taken for 5 units.\"",
+      "replace": {
+        "t": "all",
+        "name": "Methods Core",
+        "children": [
+          {
+            "id": "ov-envssma-comm318",
+            "t": "courses",
+            "name": "COMM 318 (5 units)",
+            "mode": "all",
+            "minUnitsEach": 5,
+            "items": [
+              [
+                "COMM 318"
+              ]
+            ]
+          },
+          {
+            "id": "ov-envssma-ebs308",
+            "t": "courses",
+            "name": "EBS 308",
+            "mode": "all",
+            "items": [
+              [
+                "EBS 308"
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    "cj9HZl3I": {
+      "why": "\"Complete at least 4 courses and at least 10 units from any EBS 200+-level course\" in addition to the listed courses.",
+      "replace": {
+        "t": "courses",
+        "name": "Advanced Theory Courses",
+        "mode": "atLeast",
+        "n": 4,
+        "units": 10,
+        "items": [
+          [
+            "COMM 308"
+          ],
+          [
+            "EBS 130"
+          ],
+          [
+            "EBS 183"
+          ],
+          [
+            "HISTORY 401A"
+          ],
+          [
+            "LAW 2515"
+          ]
+        ],
+        "pool": {
+          "subjects": [
+            "EBS"
+          ],
+          "minNumber": 200
+        }
+      }
+    },
+    "ygw4qA7R": {
+      "why": "How a course that is not pre-approved can count; the petitioned course is then moved into the rule it fills.",
+      "patch": {
+        "info": true
+      }
+    },
+    "vP8rXoaa": {
+      "why": "Notes: \"EBS 298 must be completed for a minimum of 2 quarters. EBS 300 must be completed for a minimum of 6 quarters.\" Each quarter is one slot.",
+      "patch": {
+        "items": [
+          [
+            "EBS 298"
+          ],
+          [
+            "EBS 298"
+          ],
+          [
+            "EBS 300"
+          ],
+          [
+            "EBS 300"
+          ],
+          [
+            "EBS 300"
+          ],
+          [
+            "EBS 300"
+          ],
+          [
+            "EBS 300"
+          ],
+          [
+            "EBS 300"
+          ]
+        ]
+      }
+    },
+    "RoQWA5vf": {
+      "why": "\"The major product of the PhD student's first year is the Graduate Research Plan (GRP) ... evaluated by the three-person committee\"",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "AqWZSiKC": {
+      "why": "\"the GRP is updated each year as part of the annual report\"; the annual review is with the advisors and committee.",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "tVJd8jI2": {
+      "why": "A description of the subplan's coursework; the rules below list it.",
+      "patch": {
+        "info": true
+      }
+    },
+    "QV2YmYKI": {
+      "why": "\"Complete one causal inference sequence (ECON or POLISCI)\": the ECON courses listed or the POLISCI courses listed, not any one course.",
+      "replace": {
+        "t": "any",
+        "name": "Causal Inference Sequence",
+        "children": [
+          {
+            "id": "ov-envssma-causal-econ",
+            "t": "courses",
+            "name": "ECON sequence",
+            "mode": "all",
+            "items": [
+              [
+                "ECON 270"
+              ],
+              [
+                "ECON 271"
+              ],
+              [
+                "ECON 272"
+              ]
+            ]
+          },
+          {
+            "id": "ov-envssma-causal-polisci",
+            "t": "courses",
+            "name": "POLISCI sequence",
+            "mode": "all",
+            "items": [
+              [
+                "POLISCI 450A"
+              ],
+              [
+                "POLISCI 450B"
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    "dvtXsuqZ": {
+      "why": "\"Complete one CS 200 level course in deep learning (i.e. CS 231N)\". Whether a course is on deep learning is a judgment; the student moves it in.",
+      "patch": {
+        "manual": "approval",
+        "n": 1
+      }
+    },
+    "oRjtHlVB": {
+      "why": "\"Complete a 2-3 course graduate sequence in one area of natural science or engineering, as determined with student's advisor. Can be a 2 course sequence if the student opts for a 3 course Policy Elective Sequence.\" No list: the student moves the courses in.",
+      "patch": {
+        "manual": "approval",
+        "n": 2
+      }
+    },
+    "kIFsdKtl": {
+      "why": "\"Choose 2-3 open elective courses ... to be determined with student's advisor. Can be a 2 course sequence if the student opts for a 3 course Science/Engineering Sequence.\" No list: the student moves the courses in.",
+      "patch": {
+        "manual": "approval",
+        "n": 2
+      }
+    },
+    "uZddSL7K": {
+      "why": "\"Students in the GEP subplan are required to register in GEP 300 throughout all years that they are in the PhD program.\" The number of years is checked by hand.",
+      "replace": {
+        "t": "courses",
+        "name": "Workshop Requirement (GEP 300)",
+        "mode": "all",
+        "items": [
+          [
+            "GEP 300"
+          ]
+        ]
+      }
+    },
+    "Dv49Vp7g": {
+      "why": "\"Students will work with their advisor, dissertation committee, and Director of Graduate Studies (DGS) for GEP to develop a program of study\"",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "gppjfig2": {
+      "why": "\"Students will review their progress annually with their primary advisor and Director of Graduate Studies (DGS)\"",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "hUcvCQeE": {
+      "why": "PhD wording; the MA's own teaching requirement is \"Completion of one quarter of TAship\" (Requirements Overview), encoded once in Program Requirements.",
+      "patch": {
+        "info": true
+      }
+    },
+    "gjoLrAgL": {
+      "why": "PhD wording; the MA's own teaching requirement is \"Completion of one quarter of TAship\" (Requirements Overview), encoded once in Program Requirements.",
+      "patch": {
+        "info": true
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "UxZSNsZw",
+      "why": "One of the two sequences has three courses: \"Can be a 2 course sequence if the student opts for a 3 course Policy Elective Sequence\" and \"Can be a 2 course sequence if the student opts for a 3 course Science/Engineering Sequence.\"",
+      "node": {
+        "id": "ov-envssma-third-course",
+        "t": "text",
+        "name": "Third course in the science/engineering or the open elective sequence",
+        "manual": "approval",
+        "n": 1
+      }
+    },
+    {
+      "block": "pw5lXOqU",
+      "why": "\"To be conferred the Master's degree, students must meet the following criteria and requirements: ... 3.0 grade point average\"",
+      "node": {
+        "id": "ov-envssma-gpa",
+        "t": "text",
+        "name": "3.0 GPA",
+        "manual": "gpa"
+      }
+    },
+    {
+      "block": "pw5lXOqU",
+      "why": "\"Completion of one quarter of TAship\"",
+      "node": {
+        "id": "ov-envssma-ta",
+        "t": "text",
+        "name": "One quarter of TAship",
+        "manual": "milestone"
+      }
+    }
+  ]
+}

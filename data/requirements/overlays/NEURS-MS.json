@@ -1,0 +1,106 @@
+{
+  "code": "NEURS-MS",
+  "reviewed": "2026-10-23",
+  "summary": "The audit checks 45 units of coursework, every course letter graded with a B or better: the NEPR core courses including three quarters of NEPR 280, BIOS 217 and one graduate statistics course of 3 or more units from the list. Checked by hand: six pre-approved units of advanced courses (at least one for 3 units or more), the SIN Boot Camp, the neuroanatomy sessions, the thesis proposal and defense, finishing courses before TGR, and that no course also counts toward a PhD.",
+  "program": {
+    "letterGrade": true,
+    "minGrade": "B",
+    "why": "Grading: \"All courses used for the Neurosciences M.S. must be taken for a letter grade and passed with a 3.0 (B) or better.\""
+  },
+  "nodes": {
+    "xGC5J2VZ": {
+      "why": "\"3 quarters of NEPR 280 (Journal Club) are required.\" NEPR 280 is repeatable, so it is listed three times. The letter grade and B rule (\"All courses used for the Neurosciences M.S. must be taken for a letter grade and passed with a 3.0 (B) or better\") is program-wide.",
+      "patch": {
+        "items": [
+          [
+            "NEPR 201"
+          ],
+          [
+            "NEPR 202"
+          ],
+          [
+            "NEPR 203"
+          ],
+          [
+            "NEPR 204"
+          ],
+          [
+            "NEPR 206"
+          ],
+          [
+            "NEPR 207"
+          ],
+          [
+            "NEPR 208"
+          ],
+          [
+            "NEPR 209"
+          ],
+          [
+            "NEPR 211"
+          ],
+          [
+            "NEPR 212"
+          ],
+          [
+            "NEPR 213"
+          ],
+          [
+            "NEPR 280"
+          ],
+          [
+            "NEPR 280"
+          ],
+          [
+            "NEPR 280"
+          ],
+          [
+            "NEPR 288"
+          ]
+        ]
+      }
+    },
+    "X28z06Gq": {
+      "why": "\"Students must complete [BIOS 217] as well as one (1) graduate statistics course from the list below; pre-approval is required.\" The list reads \"Earn at least 3 credits from the following\": one course, of 3 or more units.",
+      "patch": {
+        "mode": "atLeast",
+        "n": 1,
+        "units": 3
+      }
+    },
+    "8kwksqw0": {
+      "why": "\"Six units of advanced neuroscience coursework are required. To complete the six units, at least one course must be three units or more ... Pre-approval for advanced courses is required.\" No list: the student moves the approved courses in.",
+      "patch": {
+        "manual": "approval"
+      }
+    },
+    "bZYQ9tbW": {
+      "why": "\"The student must defend the thesis project through oral presentation to the Master's thesis committee by the end of the 2nd year.\"",
+      "patch": {
+        "manual": "thesis"
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "dVljQnF0",
+      "why": "\"Students must also complete the Stanford Immersive Neurosciences (SIN) Boot Camp.\"",
+      "node": {
+        "id": "ov-sin-bootcamp",
+        "t": "text",
+        "name": "Stanford Immersive Neurosciences (SIN) Boot Camp",
+        "manual": "milestone"
+      }
+    },
+    {
+      "block": "dVljQnF0",
+      "why": "\"Students must complete special sessions in neuroanatomy.\"",
+      "node": {
+        "id": "ov-neuroanatomy",
+        "t": "text",
+        "name": "Special sessions in neuroanatomy",
+        "manual": "milestone"
+      }
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "code": "ANTHR-PMN",
+  "reviewed": "2026-10-23",
+  "summary": "You pick one area focus: Archaeology or Culture and Society, whose theory course needs a B+ or better, or a self-designed focus whose theory course you move in once the minor advisor approves your plan of study. The audit also checks three 5-unit electives from the list, letter grades on every course, and the 20 units. You check the overall B by hand, since the text does not say whether it is per course or an average.",
+  "program": {
+    "letterGrade": true,
+    "why": "\"Complete 20 units of ANTHRO subject code courses at the 300 level with an overall minimum letter grade of ‘B’, or higher.\" and \"Three Elective Courses (Each elective course is 5 units and must be taken for a letter grade)\""
+  },
+  "nodes": {
+    "fWn4Z1UM": {
+      "why": "\"Complete 20 units of ANTHRO subject code courses at the 300 level with an overall minimum letter grade of ‘B’, or higher.\" The 20 units (the Bulletin's program minimum, which the audit checks) are the theory course and the three 5-unit electives, all ANTHRO 300-level courses encoded below; every course must be letter graded.",
+      "patch": { "info": true }
+    },
+    "M4ONZ4AG": {
+      "why": "Grading: \"Theory courses must receive minimum grade of 'B+'\". \"Completing one of these courses fulfills the Required Theory Course\"",
+      "patch": { "minGrade": "B+" }
+    },
+    "FnZFFhkp": {
+      "why": "Grading: \"Theory courses must receive minimum grade of 'B+'\". \"Completing one of these courses fulfills the Required Theory Course\"",
+      "patch": { "minGrade": "B+" }
+    },
+    "SrRhSQSr": {
+      "why": "\"If choosing a self-designed focus in Anthropology, the PhD Minor Plan of Study must be approved by Minor Advisor. One theoretical ANTHRO graduate course at the 300-level\". The three electives are the Elective Coursework rule.",
+      "patch": { "n": 1, "manual": "approval" }
+    },
+    "pC7S56g2": {
+      "why": "\"Three Elective Courses (Each elective course is 5 units and must be taken for a letter grade)\"",
+      "patch": { "minUnitsEach": 5 }
+    }
+  },
+  "alternatives": [
+    {
+      "id": "ov-anthrpmn-focus",
+      "name": "Area focus",
+      "of": ["M4ONZ4AG", "FnZFFhkp", "SrRhSQSr"],
+      "why": "\"Students will select an area focus in one of three areas.\" \"One theoretical ANTHRO graduate course at the 300-level, from chosen focus\""
+    }
+  ],
+  "add": [
+    {
+      "block": "QKU2WsEf",
+      "why": "GPA: \"Overall minimum letter grade of ‘B’, or higher\": unclear whether each course or the average must be a B, so a person checks it.",
+      "node": { "id": "ov-anthrpmn-grade", "t": "text", "name": "Overall minimum grade of B on the minor courses", "manual": "gpa" }
+    }
+  ]
+}

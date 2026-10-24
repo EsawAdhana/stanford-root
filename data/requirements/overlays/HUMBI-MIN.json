@@ -1,0 +1,776 @@
+{
+  "code": "HUMBI-MIN",
+  "reviewed": "2026-10-23",
+  "summary": "The audit checks the 25 units in at least six courses: three HumBio core courses with at least one A-side and one B-side, then either the electives of a subplan you declare (Global Health, Health Policy or Epidemiology: three listed courses of 3 or more units and, if you like, a fourth listed course of 2 or more units, 10 units in all) or, with no subplan, an individualized plan of one listed HumBio elective and depth electives approved by the HumBio advising team. Every course must be letter graded with a C- or better, taken at Stanford, and not used for another major or minor. Petitions to substitute the core are added by hand.",
+  "blocks": {
+    "SqWFq7xu": {
+      "unlessSubplan": true,
+      "why": "\"This option is for students who do not declare an official subplan.\" The Bulletin lets a student finish without a subplan (subplanRequired false), so this block applies only then."
+    }
+  },
+  "nodes": {
+    "zJ8S5TRz-text": {
+      "why": "\"To earn a minor in Human Biology, undergraduates must complete the minor program of study for at least 25 units, with a minimum of six courses. Core Program Requirement: 15 units / Subplan Elective Requirement: 10 units\". The 25 units are the program minimum and the six courses a program total; the 15 and 10 units are the core and elective rules.",
+      "patch": {
+        "info": true
+      }
+    },
+    "QD5o1GYG": {
+      "why": "\"Complete three courses from the HumBio Core with at least one A-side and at least one B-side class.\" The Bulletin entered only one A-side and one B-side course; the third may be from either side.",
+      "replace": {
+        "t": "all",
+        "name": "HumBio Core Sequence (3 courses, 15 units required)",
+        "children": [
+          {
+            "id": "zY63DRGx",
+            "t": "courses",
+            "name": "HumBio Core Sequence (A-side)",
+            "mode": "atLeast",
+            "n": 1,
+            "items": [
+              [
+                "HUMBIO 2A"
+              ],
+              [
+                "HUMBIO 3A"
+              ],
+              [
+                "HUMBIO 4A"
+              ]
+            ]
+          },
+          {
+            "id": "43yiScqa",
+            "t": "courses",
+            "name": "HumBio Core Sequence (B-side)",
+            "mode": "atLeast",
+            "n": 1,
+            "items": [
+              [
+                "HUMBIO 2B"
+              ],
+              [
+                "HUMBIO 3B"
+              ],
+              [
+                "HUMBIO 4B"
+              ]
+            ]
+          },
+          {
+            "id": "ov-core-third",
+            "t": "courses",
+            "name": "A third HumBio core course (either side)",
+            "mode": "atLeast",
+            "n": 1,
+            "items": [
+              [
+                "HUMBIO 2A"
+              ],
+              [
+                "HUMBIO 3A"
+              ],
+              [
+                "HUMBIO 4A"
+              ],
+              [
+                "HUMBIO 2B"
+              ],
+              [
+                "HUMBIO 3B"
+              ],
+              [
+                "HUMBIO 4B"
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    "bWI5faOn": {
+      "why": "\"Students must complete three (3) elective courses, each with three or more units, totaling ten or more units, within the chosen subplan. A fourth elective course may be taken for two units.\" Three courses of 3 or more units, and an optional fourth course of 2 or more units, together make the 10 units.",
+      "replace": {
+        "t": "all",
+        "name": "Global Health Upper Level Electives (3 courses, 10 units required)",
+        "units": 10,
+        "children": [
+          {
+            "id": "ov-humbi-min-gh-three",
+            "t": "courses",
+            "name": "Three elective courses of 3 or more units",
+            "mode": "atLeast",
+            "n": 3,
+            "minUnitsEach": 3,
+            "items": [
+              [
+                "AFRICAAM 41"
+              ],
+              [
+                "ANTHRO 151"
+              ],
+              [
+                "BIO 103"
+              ],
+              [
+                "BIOE 122"
+              ],
+              [
+                "EARTHSYS 162"
+              ],
+              [
+                "EASTASN 117"
+              ],
+              [
+                "EPI 231"
+              ],
+              [
+                "EPI 237"
+              ],
+              [
+                "HISTORY 243G"
+              ],
+              [
+                "HUMBIO 29",
+                "COMPMED 84Q",
+                "HUMBIO 26",
+                "MED 54Q",
+                "MED 194",
+                "MED 25N"
+              ],
+              [
+                "HUMBIO 114"
+              ],
+              [
+                "HUMBIO 122M"
+              ],
+              [
+                "HUMBIO 123G"
+              ],
+              [
+                "HUMBIO 124C"
+              ],
+              [
+                "HUMBIO 176A"
+              ],
+              [
+                "HUMBIO 179B"
+              ],
+              [
+                "HUMRTS 117"
+              ],
+              [
+                "HUMRTS 122"
+              ],
+              [
+                "MED 171"
+              ],
+              [
+                "MED 224"
+              ],
+              [
+                "MED 232"
+              ],
+              [
+                "OSPCPTWN 43"
+              ],
+              [
+                "OSPCPTWN 49"
+              ],
+              [
+                "OSPOXFRD 67"
+              ],
+              [
+                "PEDS 223"
+              ],
+              [
+                "RELIGST 103"
+              ],
+              [
+                "SOMGEN 207"
+              ]
+            ]
+          },
+          {
+            "id": "ov-humbi-min-gh-fourth",
+            "t": "courses",
+            "name": "An optional fourth elective course of 2 or more units",
+            "mode": "any",
+            "optional": true,
+            "minUnitsEach": 2,
+            "items": [
+              [
+                "AFRICAAM 41"
+              ],
+              [
+                "ANTHRO 151"
+              ],
+              [
+                "BIO 103"
+              ],
+              [
+                "BIOE 122"
+              ],
+              [
+                "EARTHSYS 162"
+              ],
+              [
+                "EASTASN 117"
+              ],
+              [
+                "EPI 231"
+              ],
+              [
+                "EPI 237"
+              ],
+              [
+                "HISTORY 243G"
+              ],
+              [
+                "HUMBIO 29",
+                "COMPMED 84Q",
+                "HUMBIO 26",
+                "MED 54Q",
+                "MED 194",
+                "MED 25N"
+              ],
+              [
+                "HUMBIO 114"
+              ],
+              [
+                "HUMBIO 122M"
+              ],
+              [
+                "HUMBIO 123G"
+              ],
+              [
+                "HUMBIO 124C"
+              ],
+              [
+                "HUMBIO 176A"
+              ],
+              [
+                "HUMBIO 179B"
+              ],
+              [
+                "HUMRTS 117"
+              ],
+              [
+                "HUMRTS 122"
+              ],
+              [
+                "MED 171"
+              ],
+              [
+                "MED 224"
+              ],
+              [
+                "MED 232"
+              ],
+              [
+                "OSPCPTWN 43"
+              ],
+              [
+                "OSPCPTWN 49"
+              ],
+              [
+                "OSPOXFRD 67"
+              ],
+              [
+                "PEDS 223"
+              ],
+              [
+                "RELIGST 103"
+              ],
+              [
+                "SOMGEN 207"
+              ]
+            ],
+            "limits": [
+              {
+                "label": "one fourth course",
+                "max": 1,
+                "codes": [
+                  "AFRICAAM 41",
+                  "ANTHRO 151",
+                  "BIO 103",
+                  "BIOE 122",
+                  "COMPMED 84Q",
+                  "EARTHSYS 162",
+                  "EASTASN 117",
+                  "EPI 231",
+                  "EPI 237",
+                  "HISTORY 243G",
+                  "HUMBIO 114",
+                  "HUMBIO 122M",
+                  "HUMBIO 123G",
+                  "HUMBIO 124C",
+                  "HUMBIO 176A",
+                  "HUMBIO 179B",
+                  "HUMBIO 26",
+                  "HUMBIO 29",
+                  "HUMRTS 117",
+                  "HUMRTS 122",
+                  "MED 171",
+                  "MED 194",
+                  "MED 224",
+                  "MED 232",
+                  "MED 25N",
+                  "MED 54Q",
+                  "OSPCPTWN 43",
+                  "OSPCPTWN 49",
+                  "OSPOXFRD 67",
+                  "PEDS 223",
+                  "RELIGST 103",
+                  "SOMGEN 207"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "me9AgiLx": {
+      "why": "\"Students must complete three (3) elective courses, each with three or more units, totaling ten or more units, within the chosen subplan. A fourth elective course may be taken for two units.\" Three courses of 3 or more units, and an optional fourth course of 2 or more units, together make the 10 units.",
+      "replace": {
+        "t": "all",
+        "name": "Health Policy Upper Level Electives (3 courses, 10 units required)",
+        "units": 10,
+        "children": [
+          {
+            "id": "ov-humbi-min-hp-three",
+            "t": "courses",
+            "name": "Three elective courses of 3 or more units",
+            "mode": "atLeast",
+            "n": 3,
+            "minUnitsEach": 3,
+            "items": [
+              [
+                "ANTHRO 131W"
+              ],
+              [
+                "CIM 203"
+              ],
+              [
+                "EASTASN 117"
+              ],
+              [
+                "EPI 220"
+              ],
+              [
+                "FEMGEN 140"
+              ],
+              [
+                "GENE 104Q",
+                "OBGYN 82Q",
+                "GENE 105N"
+              ],
+              [
+                "HUMBIO 122"
+              ],
+              [
+                "HUMBIO 122A"
+              ],
+              [
+                "HUMBIO 122E"
+              ],
+              [
+                "HUMBIO 122M"
+              ],
+              [
+                "SOC 152"
+              ],
+              [
+                "HUMBIO 123G"
+              ],
+              [
+                "HUMBIO 127"
+              ],
+              [
+                "HUMBIO 163"
+              ],
+              [
+                "HUMBIO 172"
+              ],
+              [
+                "HRP 211"
+              ],
+              [
+                "HRP 221"
+              ],
+              [
+                "HRP 249"
+              ],
+              [
+                "HRP 252"
+              ],
+              [
+                "HRP 256"
+              ],
+              [
+                "HRP 391"
+              ],
+              [
+                "MS&E 292"
+              ],
+              [
+                "OB 348"
+              ],
+              [
+                "PUBLPOL 50"
+              ],
+              [
+                "PUBLPOL 155"
+              ]
+            ]
+          },
+          {
+            "id": "ov-humbi-min-hp-fourth",
+            "t": "courses",
+            "name": "An optional fourth elective course of 2 or more units",
+            "mode": "any",
+            "optional": true,
+            "minUnitsEach": 2,
+            "items": [
+              [
+                "ANTHRO 131W"
+              ],
+              [
+                "CIM 203"
+              ],
+              [
+                "EASTASN 117"
+              ],
+              [
+                "EPI 220"
+              ],
+              [
+                "FEMGEN 140"
+              ],
+              [
+                "GENE 104Q",
+                "OBGYN 82Q",
+                "GENE 105N"
+              ],
+              [
+                "HUMBIO 122"
+              ],
+              [
+                "HUMBIO 122A"
+              ],
+              [
+                "HUMBIO 122E"
+              ],
+              [
+                "HUMBIO 122M"
+              ],
+              [
+                "SOC 152"
+              ],
+              [
+                "HUMBIO 123G"
+              ],
+              [
+                "HUMBIO 127"
+              ],
+              [
+                "HUMBIO 163"
+              ],
+              [
+                "HUMBIO 172"
+              ],
+              [
+                "HRP 211"
+              ],
+              [
+                "HRP 221"
+              ],
+              [
+                "HRP 249"
+              ],
+              [
+                "HRP 252"
+              ],
+              [
+                "HRP 256"
+              ],
+              [
+                "HRP 391"
+              ],
+              [
+                "MS&E 292"
+              ],
+              [
+                "OB 348"
+              ],
+              [
+                "PUBLPOL 50"
+              ],
+              [
+                "PUBLPOL 155"
+              ]
+            ],
+            "limits": [
+              {
+                "label": "one fourth course",
+                "max": 1,
+                "codes": [
+                  "ANTHRO 131W",
+                  "CIM 203",
+                  "EASTASN 117",
+                  "EPI 220",
+                  "FEMGEN 140",
+                  "GENE 104Q",
+                  "GENE 105N",
+                  "HRP 211",
+                  "HRP 221",
+                  "HRP 249",
+                  "HRP 252",
+                  "HRP 256",
+                  "HRP 391",
+                  "HUMBIO 122",
+                  "HUMBIO 122A",
+                  "HUMBIO 122E",
+                  "HUMBIO 122M",
+                  "HUMBIO 123G",
+                  "HUMBIO 127",
+                  "HUMBIO 163",
+                  "HUMBIO 172",
+                  "MS&E 292",
+                  "OB 348",
+                  "OBGYN 82Q",
+                  "PUBLPOL 155",
+                  "PUBLPOL 50",
+                  "SOC 152"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "ANS3sbGs": {
+      "why": "\"Students must complete three (3) elective courses, each with three or more units, totaling ten or more units, within the chosen subplan. A fourth elective course may be taken for two units.\" Three courses of 3 or more units, and an optional fourth course of 2 or more units, together make the 10 units.",
+      "replace": {
+        "t": "all",
+        "name": "Epidemiology Upper Level Electives (3 courses, 10 units required)",
+        "units": 10,
+        "children": [
+          {
+            "id": "ov-humbi-min-epi-three",
+            "t": "courses",
+            "name": "Three elective courses of 3 or more units",
+            "mode": "atLeast",
+            "n": 3,
+            "minUnitsEach": 3,
+            "items": [
+              [
+                "BMDS 202"
+              ],
+              [
+                "CHPR 207"
+              ],
+              [
+                "CHPR 211"
+              ],
+              [
+                "CHPR 288"
+              ],
+              [
+                "CS 171"
+              ],
+              [
+                "EPI 206"
+              ],
+              [
+                "EPI 207"
+              ],
+              [
+                "EPI 219"
+              ],
+              [
+                "EPI 225"
+              ],
+              [
+                "EPI 231"
+              ],
+              [
+                "EPI 240"
+              ],
+              [
+                "EPI 259"
+              ],
+              [
+                "EPI 272"
+              ],
+              [
+                "HUMBIO 57",
+                "COMPMED 84Q",
+                "PEDS 220"
+              ],
+              [
+                "HUMBIO 114"
+              ],
+              [
+                "HUMBIO 154B"
+              ],
+              [
+                "HUMBIO 154C"
+              ],
+              [
+                "HUMBIO 159"
+              ],
+              [
+                "HUMBIO 75"
+              ],
+              [
+                "OSPSANTG 25"
+              ],
+              [
+                "PUBLPOL 155"
+              ]
+            ]
+          },
+          {
+            "id": "ov-humbi-min-epi-fourth",
+            "t": "courses",
+            "name": "An optional fourth elective course of 2 or more units",
+            "mode": "any",
+            "optional": true,
+            "minUnitsEach": 2,
+            "items": [
+              [
+                "BMDS 202"
+              ],
+              [
+                "CHPR 207"
+              ],
+              [
+                "CHPR 211"
+              ],
+              [
+                "CHPR 288"
+              ],
+              [
+                "CS 171"
+              ],
+              [
+                "EPI 206"
+              ],
+              [
+                "EPI 207"
+              ],
+              [
+                "EPI 219"
+              ],
+              [
+                "EPI 225"
+              ],
+              [
+                "EPI 231"
+              ],
+              [
+                "EPI 240"
+              ],
+              [
+                "EPI 259"
+              ],
+              [
+                "EPI 272"
+              ],
+              [
+                "HUMBIO 57",
+                "COMPMED 84Q",
+                "PEDS 220"
+              ],
+              [
+                "HUMBIO 114"
+              ],
+              [
+                "HUMBIO 154B"
+              ],
+              [
+                "HUMBIO 154C"
+              ],
+              [
+                "HUMBIO 159"
+              ],
+              [
+                "HUMBIO 75"
+              ],
+              [
+                "OSPSANTG 25"
+              ],
+              [
+                "PUBLPOL 155"
+              ]
+            ],
+            "limits": [
+              {
+                "label": "one fourth course",
+                "max": 1,
+                "codes": [
+                  "BMDS 202",
+                  "CHPR 207",
+                  "CHPR 211",
+                  "CHPR 288",
+                  "COMPMED 84Q",
+                  "CS 171",
+                  "EPI 206",
+                  "EPI 207",
+                  "EPI 219",
+                  "EPI 225",
+                  "EPI 231",
+                  "EPI 240",
+                  "EPI 259",
+                  "EPI 272",
+                  "HUMBIO 114",
+                  "HUMBIO 154B",
+                  "HUMBIO 154C",
+                  "HUMBIO 159",
+                  "HUMBIO 57",
+                  "HUMBIO 75",
+                  "OSPSANTG 25",
+                  "PEDS 220",
+                  "PUBLPOL 155"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "HK8SR4va": {
+      "why": "\"you must complete 3 courses, totaling a minimum of 10 units ... Elective courses for an individualized plan must be pre-approved by the HumBio advising team.\"",
+      "patch": {
+        "units": 10
+      }
+    },
+    "fnFdOtGL": {
+      "why": "\"Depth elective courses must be related to the chosen HumBio Elective course\": one HumBio elective from the list, not all 51. Notes: \"A minimum of three courses must be taken for at least three units.\"",
+      "patch": {
+        "mode": "atLeast",
+        "n": 1,
+        "minUnitsEach": 3
+      }
+    },
+    "ehAqLeu3": {
+      "why": "\"Complete 2-3 elective courses to meet the 10 unit minimum\" and \"must be pre-approved by the HumBio advising team\"; no list, so the student moves them in.",
+      "patch": {
+        "manual": "approval",
+        "n": 2
+      }
+    }
+  },
+  "program": {
+    "letterGrade": true,
+    "minGrade": "C-",
+    "why": "Grading: \"All courses must be taken for a letter grade and completed with a minimum of C- grade.\"",
+    "totals": [
+      {
+        "label": "Six courses",
+        "minCourses": 6,
+        "why": "\"To earn a minor in Human Biology, undergraduates must complete the minor program of study for at least 25 units, with a minimum of six courses.\""
+      }
+    ]
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "code": "BIO-MS",
+  "reviewed": "2026-10-23",
+  "summary": "The audit checks 45 units from Biology courses numbered 100 and above, the approved out-of-department electives (PATH 151 counts only with PATH 151A-D, and BIOE 450 only once), research, teaching and foundational breadth, with a B- or better in every course. At least 23 units must be in courses designated for graduate students, at most 18 units may be research, directed reading and teaching, and courses below the 100 level do not count. You check by hand the advisor-signed program proposal, the 3.0 GPA, at most six units taken CR/NC (S/NC is not limited), and up to nine petitioned units of other Stanford coursework, which you move in.",
+  "program": {
+    "minGrade": "B-",
+    "why": "Grading: \"Students must receive a B- or better grade in all courses taken for the degree.\"",
+    "totals": [
+      {
+        "label": "Courses below the 100 level",
+        "maxUnits": 0,
+        "pool": { "anySubject": true, "maxNumber": 99 },
+        "why": "\"totaling at least 45 units at or above the 100-level\""
+      },
+      {
+        "label": "23 units in courses for graduate students",
+        "minUnits": 23,
+        "pool": { "anySubject": true, "onlyGraduate": true },
+        "why": "\"At least 23 of the 45 units must be courses designated primarily for graduate students.\""
+      },
+      {
+        "label": "Biology research, directed reading and teaching",
+        "maxUnits": 18,
+        "codes": ["BIO 198", "BIO 198X", "BIO 290", "BIO 300", "BIO 300X", "OCEANS 198H", "OCEANS 290H", "OCEANS 300"],
+        "why": "\"A maximum of 18 units may be a combination of Biology research, directed reading, and/or teaching\""
+      }
+    ]
+  },
+  "nodes": {
+    "IzP4Dt6G": {
+      "why": "\"Department of Biology and/or Hopkins Marine Station course work, approved out-of-department electives, and foundational breadth courses totaling at least 45 units at or above the 100-level ... These 45 units can be chosen among offerings in the Department of Biology (BIO), the list of approved out-of-department electives (outlined below), research, teaching, and/or foundational breadth courses.\" \"A maximum of 18 units may be a combination of Biology research, directed reading, and/or teaching\" (the research, reading and teaching courses the Bulletin lists under BIO Courses). \"At least 23 of the 45 units must be courses designated primarily for graduate students\" is encoded as at most 22 units from courses not listed as graduate courses. Hopkins courses not cross-listed in BIO, and the up to nine units of \"Other Stanford coursework ... Using the General Petition form\", are moved in by hand. The Genetics list ends with one option, \"PATH 151 AND PATH 151B AND PATH 151A AND PATH 151C AND PATH 151D\", which counts only as the full set. \"BIOE 450 (same as CHEMENG 450) may only count toward the Biology requirements once.\"",
+      "replace": {
+        "t": "all",
+        "name": "Biology, approved electives, research, teaching and foundational breadth (45 units)",
+        "units": 45,
+        "children": [
+          {
+            "id": "ov-bioms-pool",
+            "t": "courses",
+            "name": "BIO courses numbered 100 and above, approved out-of-department electives, research and teaching",
+            "mode": "any",
+            "pool": { "subjects": ["BIO"], "minNumber": 100 },
+            "items": [["BIOC 241"], ["BIOE 214"], ["BIOE 217"], ["BIOE 220"], ["BIOE 241"], ["BIOE 279"], ["BIOE 450"], ["BMDS 210"], ["BMDS 214"], ["BMDS 217"], ["BMDS 173A"], ["BIOMEDIN 273B"], ["BMDS 245"], ["BMDS 273"], ["BIOPHYS 241"], ["BIOPHYS 279"], ["CBIO 240"], ["CBIO 275"], ["CHEMENG 450"], ["CEE 274D"], ["CS 270"], ["CS 173A"], ["CS 237B"], ["CS 274"], ["CS 275A"], ["DBIO 173A"], ["DBIO 210"], ["EARTHSYS 240"], ["ENERGY 240"], ["ESS 239"], ["GENE 202"], ["GENE 211"], ["GENE 214"], ["GENE 217"], ["GENE 212"], ["GENE 235"], ["GENE 236"], ["BIOE 101"], ["BIOE 103"], ["BIOE 231"], ["CBIO 101"], ["CHEM 141"], ["CHEM 143"], ["CHEM 181"], ["CHEM 183"], ["CHEM 184"], ["CHEM 185"], ["CEE 162I"], ["CEE 177"], ["CS 109"], ["CS 279"], ["EARTHSYS 114"], ["EARTHSYS 132"], ["EARTHSYS 141"], ["EARTHSYS 142"], ["EARTHSYS 144"], ["EARTHSYS 146B"], ["EARTHSYS 151"], ["EARTHSYS 152"], ["EARTHSYS 155"], ["EARTHSYS 158"], ["ESS 141"], ["ESS 151"], ["ESS 152"], ["ESS 155"], ["ESS 158"], ["ESS 162"], ["ESS 164"], ["OCEANS 198H"], ["OCEANS 290H"], ["OCEANS 300"]],
+            "limits": [
+              {
+                "label": "Biology research, directed reading and teaching",
+                "maxUnits": 18,
+                "codes": ["BIO 198", "BIO 198X", "BIO 290", "BIO 300", "BIO 300X", "OCEANS 198H", "OCEANS 290H", "OCEANS 300"]
+              },
+              {
+                "label": "courses not designated for graduate students (at least 23 of the 45 units must be)",
+                "maxUnits": 22,
+                "pool": { "subjects": [], "anySubject": true, "excludeGraduate": true }
+              },
+              { "label": "BIOE 450 / CHEMENG 450 (counts once)", "max": 1, "codes": ["BIOE 450", "CHEMENG 450"] }
+            ]
+          },
+          {
+            "id": "ov-bioms-path151",
+            "t": "courses",
+            "name": "PATH 151 with PATH 151A, 151B, 151C and 151D",
+            "mode": "all",
+            "optional": true,
+            "items": [["PATH 151"], ["PATH 151B"], ["PATH 151A"], ["PATH 151C"], ["PATH 151D"]]
+          }
+        ]
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "mAbEGmbJ",
+      "why": "\"In addition to the unit requirements outlined above, students must adhere to the following: A program proposal, signed by the student's advisor.\"",
+      "node": { "id": "ov-proposal", "t": "text", "name": "Program proposal signed by the advisor", "manual": "approval" }
+    },
+    {
+      "block": "mAbEGmbJ",
+      "why": "\"Students must maintain a GPA of 3.0 or higher.\"",
+      "node": { "id": "ov-gpa", "t": "text", "name": "GPA of 3.0 or higher", "manual": "gpa" }
+    },
+    {
+      "block": "mAbEGmbJ",
+      "why": "\"Students may take only six units CR/NC. (This is separate from Satisfactory/No Credit. There is no limit to Satisfactory/No Credit)\" The audit cannot tell CR/NC from S/NC, which has no limit.",
+      "node": { "id": "ov-crnc", "t": "text", "name": "At most six units taken CR/NC", "manual": "other" }
+    }
+  ]
+}

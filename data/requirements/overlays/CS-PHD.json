@@ -1,0 +1,197 @@
+{
+  "code": "CS-PHD",
+  "reviewed": "2026-10-23",
+  "summary": "You need 135 graduate units, of which at most 10 units of PE courses count, plus CS 300, at least three units of CS 499, and the foundation courses CS 103, 109, 111 and 161 (taken or waived; a waiver is marked by hand). Breadth takes three courses from three different areas, each letter graded with a B+ or better. CPT units (CS 390A-C) are optional. You check by hand the 3.0 GPA, three units of coursework with each of four faculty members, the qualifying exam, reading committee, thesis proposal, teaching, candidacy, oral exam and dissertation. The B+ floor is applied to breadth only, because the text gives it only there.",
+  "program": {
+    "totals": [
+      {
+        "label": "PE courses (at most 10 units count)",
+        "maxUnits": 10,
+        "pool": {
+          "subjects": [
+            "ATHLETIC",
+            "PE",
+            "PHYSWELL"
+          ]
+        },
+        "why": "Overview: \"A student must complete 135 course units for graduation (a total of 10 units of PE courses can be counted towards this).\""
+      }
+    ]
+  },
+  "blocks": {
+    "MpK9cbqm": {
+      "kind": "required"
+    },
+    "ofqDwlr6": {
+      "kind": "required"
+    },
+    "iwHWtFFx": {
+      "kind": "required"
+    }
+  },
+  "nodes": {
+    "zyme4ixu": {
+      "why": "Overview. \"A student must complete 135 course units for graduation\" is program.unitsMin; \"A 3.0 GPA must be maintained\" is ov-gpa; \"Students must also complete at least three units of coursework with at least four different faculty members\" is ov-four-faculty; the exams and milestones are their own rules below.",
+      "patch": {
+        "info": true
+      }
+    },
+    "JZq14XaL": {
+      "why": "Overview: \"There are NO courses explicitly required by the CS PhD program except for the 1 unit course Departmental Lecture Series and at least three (3) CS499 (Advanced Reading and Research) or its equivalent.\" Notes: \"All PhD students must enroll in at least three units of CS 499/CS499P or equivalent ... for all quarters.\" The per-quarter enrollment is not counted; an equivalent research course in another department is moved in by hand.",
+      "patch": {
+        "units": 3
+      }
+    },
+    "ocnEYn2N": {
+      "why": "Breadth: \"Students need to pass the courses with a grade of B+ or higher.\" A CR is not a grade of B+, so the course is letter graded. The area's notes list CS334a as further courses in the area.",
+      "patch": {
+        "minGrade": "B+",
+        "addItems": [
+          [
+            "CS 334A"
+          ]
+        ],
+        "letter": true
+      }
+    },
+    "pqdWylM0": {
+      "why": "Breadth: \"Students need to pass the courses with a grade of B+ or higher.\" A CR is not a grade of B+, so the course is letter graded. The area's notes list CS273A, CS371 and CS373 as further courses in the area.",
+      "patch": {
+        "minGrade": "B+",
+        "addItems": [
+          [
+            "CS 273A"
+          ],
+          [
+            "CS 371"
+          ],
+          [
+            "CS 373"
+          ]
+        ],
+        "letter": true
+      }
+    },
+    "3JVhX8z3": {
+      "why": "Breadth: \"Students need to pass the courses with a grade of B+ or higher.\" A CR is not a grade of B+, so the course is letter graded. The area's notes list EE382E as further courses in the area.",
+      "patch": {
+        "minGrade": "B+",
+        "addItems": [
+          [
+            "EE 382E"
+          ]
+        ],
+        "letter": true
+      }
+    },
+    "inooZajC": {
+      "why": "Breadth: \"Students need to pass the courses with a grade of B+ or higher.\" A CR is not a grade of B+, so the course is letter graded. The area's notes list ANTHRO 132D, ENGLISH 184D, INTLPOL362, LAW 4039, LAW 807Z, ME 177, MS&E 231 and MS&E 234 as further courses in the area.",
+      "patch": {
+        "minGrade": "B+",
+        "addItems": [
+          [
+            "ANTHRO 132D"
+          ],
+          [
+            "ENGLISH 184D"
+          ],
+          [
+            "INTLPOL 362"
+          ],
+          [
+            "LAW 4039"
+          ],
+          [
+            "LAW 807Z"
+          ],
+          [
+            "ME 177"
+          ],
+          [
+            "MS&E 231"
+          ],
+          [
+            "MS&E 234"
+          ]
+        ],
+        "letter": true
+      }
+    },
+    "wNuAukvY": {
+      "why": "\"The Computer Science Department allows only up to a maximum of three units (one unit each summer) of Curriculum Practical Training (CPT)\" \"This information is designed for students in F-1 status.\" CPT is allowed, not required.",
+      "patch": {
+        "optional": true
+      }
+    },
+    "0QmkQQRI": {
+      "why": "\"A student should pass a qualifying exam no later than the end of their third year.\"",
+      "patch": {
+        "manual": "exam"
+      }
+    },
+    "zvVSHqM3": {
+      "why": "\"the student must form a Dissertation Reading Committee composed of the principal dissertation advisor and at least two additional readers ... The Reading Committee Form should be signed by all the committee members and submitted ... no later than one year after passing a qualifying exam.\"",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "gxwTiVwR": {
+      "why": "\"The student must present an oral thesis proposal and submit the form to their full Reading Committee by the spring quarter of the fourth year.\"",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "DoQqFgAj": {
+      "why": "\"CS PhD Students are required to complete course assistantships (CA) or teaching fellow (TF) during their academic career for courses in Computer Science numbered 100 or above. This requirement can be completed with either two (2) 50% appointments or four (4) 25% appointments\". The Certificate of Distinction in Teaching is an optional award.",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "tCdB64rj": {
+      "why": "\"Students are expected to be admitted to candidacy by the end of their second year of doctoral study.\" Eligibility includes aligning with an advisor, three foundation/breadth requirements, and \"at least a three-unit graduate-level course with each of the four instructors who are members of the academic council\".",
+      "patch": {
+        "info": null,
+        "name": "Advancement to candidacy",
+        "manual": "milestone"
+      }
+    },
+    "e37YNi3D": {
+      "why": "\"Stanford University requires an Oral Examination for the PhD Program ... In the Computer Science Department, it is a Defense of the dissertation.\"",
+      "patch": {
+        "info": null,
+        "name": "University Oral Examination",
+        "manual": "exam"
+      }
+    },
+    "RHyizYUu": {
+      "why": "\"The most important requirement for the PhD degree is the dissertation\"",
+      "patch": {
+        "info": null,
+        "name": "Dissertation",
+        "manual": "thesis"
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "0GzLObTh",
+      "node": {
+        "id": "ov-gpa",
+        "t": "text",
+        "name": "GPA of 3.0 or better",
+        "manual": "gpa"
+      },
+      "why": "Overview: \"A 3.0 GPA must be maintained.\""
+    },
+    {
+      "block": "0GzLObTh",
+      "node": {
+        "id": "ov-four-faculty",
+        "t": "text",
+        "name": "Three units of coursework with each of four faculty members",
+        "manual": "milestone"
+      },
+      "why": "Overview: \"Students must also complete at least three units of coursework with at least four different faculty members.\" Who taught a course is not in the record."
+    }
+  ]
+}

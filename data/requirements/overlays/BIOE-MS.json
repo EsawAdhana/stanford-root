@@ -1,0 +1,60 @@
+{
+  "code": "BIOE-MS",
+  "reviewed": "2026-10-23",
+  "summary": "Every course must be taken for a letter grade when the instructor offers one, toward 45 units taken at Stanford. The audit checks two lab courses (4 units), two quantitative courses (6 units), 18 units of biology or technical electives (any BIOE lecture or lab course numbered 200 or above also counts, with at most one ethics course and six units of research or teaching practicum), BIOE 393 and MED 255, three more BIOE lecture courses numbered 200 or above for at least 9 units, and six units of unrestricted electives at the 100 level or above. You check the 3.0 GPA and the advisor-approved program proposal by hand, and move in Intranet-listed technical electives.",
+  "program": {
+    "letterGrade": true,
+    "why": "Grading: \"All courses taken for the program requirements must be taken for a letter grade if the instructor offers that option.\""
+  },
+  "nodes": {
+    "FgFUKAbo": {
+      "why": "\"Select three or more Biology & Technical electives\" (heading: minimum 18 units). \"All lecture and lab-based BioE courses at the 200+ level and above are considered Technical Electives. One of these courses may be an ethics course from the following: BioE 131, BioE 177, CS152, CS182, CS184, CS256, CS278, or CS281. Six of these units may be directed research units or teaching practicum units (e.g., BIOE 391, BIOE 392). BIOE 296 ... may also fulfill this requirement.\" Counted as 18 units: every listed course other than research carries at most 5 units and research counts for at most 6, so 18 units always takes three or more courses. Seminars, colloquia, practical training and thesis units are not lecture or lab courses and stay out of the BIOE pool. Courses on the BioE Intranet list but not here are moved in by hand.",
+      "patch": {
+        "mode": "units",
+        "n": null,
+        "addItems": [["BIOE 177"], ["CS 256"], ["BIOE 296"]],
+        "pool": { "subjects": ["BIOE"], "minNumber": 200, "exclude": ["BIOE 293", "BIOE 393", "BIOE 459", "BIOE 299B", "BIOE 500", "BIOE 802"] },
+        "limits": [
+          { "label": "ethics courses", "max": 1, "codes": ["BIOE 131", "BIOE 177", "CS 152", "CS 182", "CS 184", "CS 256", "CS 278", "CS 281"] },
+          { "label": "directed research and teaching practicum units", "maxUnits": 6, "codes": ["BIOE 391", "BIOE 392", "BIOE 399", "BIOE 370"] }
+        ]
+      }
+    },
+    "miOKyK61": {
+      "why": "\"Select an additional three (3) Bioengineering 200+ graduate-level lecture courses. These courses cannot be seminars or research units.\" (heading: minimum 9 units). Seminars, colloquia, research, teaching practicum, thesis units and the lab courses (titles naming a lab) are excluded. Three courses and the heading's 9 units, so three 2-unit courses do not pass.",
+      "replace": {
+        "t": "courses",
+        "name": "Additional BioE Courses 200+ (minimum 9 units)",
+        "mode": "atLeast",
+        "n": 3,
+        "units": 9,
+        "pool": {
+          "subjects": ["BIOE"],
+          "minNumber": 200,
+          "exclude": ["BIOE 293", "BIOE 393", "BIOE 459", "BIOE 267", "BIOE 296", "BIOE 299B", "BIOE 370", "BIOE 391", "BIOE 392", "BIOE 399", "BIOE 500", "BIOE 802", "BIOE 201C", "BIOE 232", "BIOE 248", "BIOE 261", "BIOE 301A", "BIOE 301C", "BIOE 301D", "BIOE 301E"]
+        }
+      }
+    },
+    "NnChnqXy": {
+      "why": "\"Six units of unrestricted electives at the 100 level or above. A maximum of 6 units can be Directed Study & Research or Teaching Practicum units\" (all six may be, so no cap applies).",
+      "replace": {
+        "t": "courses",
+        "name": "Unrestricted Electives (6 units)",
+        "mode": "units",
+        "units": 6,
+        "pool": { "subjects": [], "anySubject": true, "minNumber": 100 }
+      }
+    },
+    "mzrjJHLX": {
+      "why": "\"Submit an advisor-approved Program Proposal for a Master's Degree form to the student services office during the first month of the first quarter of enrollment\"",
+      "patch": { "manual": "approval" }
+    }
+  },
+  "add": [
+    {
+      "block": "mAbEGmbJ",
+      "why": "GPA: \"The minimum cumulative GPA for all courses is 3.0.\"",
+      "node": { "id": "ov-gpa", "t": "text", "name": "Cumulative GPA of 3.0 or higher", "manual": "gpa" }
+    }
+  ]
+}

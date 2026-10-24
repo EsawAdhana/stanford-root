@@ -1,0 +1,103 @@
+{
+  "code": "EASYS-MS",
+  "reviewed": "2026-10-23",
+  "summary": "Every course must be letter graded. You complete one set of prerequisites, which do not count toward the 45 units, and then 45 units of program coursework: the Master's Seminar and at least 34 units at the 200 level or above, with the rest at the 100 level or above. At most 9 units of research (EARTHSYS 297 and 250), 8 units of Stanford at Sea (EARTHSYS 323) and 8 units of thesis (EARTHSYS 299) count. Your advisor checks the 3.4 GPA and any course approved without a letter grade.",
+  "program": {
+    "letterGrade": true,
+    "why": "Grading: \"All courses for the master's program must be taken for a letter grade; courses not taken for a letter grade must be approved by the master's advisor and Director of Earth Systems.\" An approved exception is moved in by hand.",
+    "totals": [
+      {
+        "label": "Research units (EARTHSYS 297, EARTHSYS 250)",
+        "maxUnits": 9,
+        "codes": [
+          "EARTHSYS 297",
+          "EARTHSYS 250"
+        ],
+        "inRules": true,
+        "why": "\"Up to nine units of research (Earthsys 297 and/or Earthsys 250) may be completed with their Master's Advisor.\" One cap across both coursework rules, so research split between them is still held to 9."
+      },
+      {
+        "label": "EARTHSYS 323 (Stanford at Sea)",
+        "maxUnits": 8,
+        "codes": [
+          "EARTHSYS 323"
+        ],
+        "inRules": true,
+        "why": "\"Students may use 8 units of Earthsys 323: Stanford at Sea towards the required 45 units. Please note- Although the entire 16 unit course must be in your graduate career, only 8 units will be applied towards the required 45 units.\""
+      },
+      {
+        "label": "EARTHSYS 299 (M.S. thesis)",
+        "maxUnits": 8,
+        "codes": [
+          "EARTHSYS 299"
+        ],
+        "inRules": true,
+        "why": "\"Students who choose to prepare an M.S. thesis, which is not required for the degree, may take up to 8 units of EARTHSYS 299 with their master's advisor\""
+      }
+    ]
+  },
+  "blocks": {
+    "bjqRufW7": {
+      "units": 45
+    }
+  },
+  "nodes": {
+    "llTa5ajC": {
+      "why": "\"At least 34 units of the student's coursework for the master's program must be at the 200-level or above.\" The Master's Seminar (EARTHSYS 290) is 200-level coursework, so it sits inside the 34-unit floor alongside the other 200-level courses.",
+      "replace": {
+        "t": "all",
+        "name": "Master's Seminar and 34 units at the 200 level or above",
+        "units": 34,
+        "children": [
+          {
+            "id": "ov-easys-seminar",
+            "t": "courses",
+            "name": "Master's Seminar",
+            "mode": "all",
+            "items": [
+              [
+                "EARTHSYS 290"
+              ]
+            ]
+          },
+          {
+            "id": "ov-easys-200",
+            "t": "courses",
+            "name": "Coursework at the 200 level or above",
+            "mode": "any",
+            "pool": {
+              "subjects": [],
+              "anySubject": true,
+              "minNumber": 200
+            }
+          }
+        ]
+      }
+    },
+    "Za9a0Tid": {
+      "why": "\"A minimum of 45 units of coursework and/or research credit (upon approval).\" (the 45 is the floor on block bjqRufW7 and program unitsMin) \"All remaining coursework must be at the 100-level or above.\" The research, Stanford at Sea and thesis limits are program caps that bind both coursework rules.",
+      "replace": {
+        "t": "courses",
+        "name": "Remaining coursework at the 100 level or above",
+        "mode": "any",
+        "pool": {
+          "subjects": [],
+          "anySubject": true,
+          "minNumber": 100
+        }
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "bjqRufW7",
+      "why": "GPA: \"A minimum overall GPA of 3.4 must be maintained.\"",
+      "node": {
+        "id": "ov-easys-gpa",
+        "t": "text",
+        "name": "Overall GPA of at least 3.4",
+        "manual": "gpa"
+      }
+    }
+  ]
+}

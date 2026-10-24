@@ -1,0 +1,181 @@
+{
+  "code": "SOCIO-PHD",
+  "reviewed": "2026-10-23",
+  "summary": "You take the proseminar twice, the colloquium, the theory and methods sequences, four survey courses, SOC 300, six quarters of SOC 394 and the SOC 386 practicum, and 60 units of Sociology coursework not counting workshops, independent study or directed research, within the 135 units of the PhD. Required courses need a letter grade (unless offered only S/NC) and a B+ or better; the 60 units count only letter-graded courses, and the B+ on the ones no rule requires is checked by hand. Workshops each quarter, colloquium enrollment every quarter, the qualifying exams, the publishable paper, presentations, prospectus, candidacy, oral exam and dissertation are checked by hand.",
+  "program": {
+    "why": "Grading: \"Students are expected to enroll in all required courses and any courses that count toward the minimum required 60 units of Sociology coursework for a letter grade unless that option is not available. Students must receive a B+in any required courses and any courses that count toward the minimum required 60 units of Sociology coursework.\" The rule covers required courses and the 60 units, not every course toward the university's 135, so the letter grade and B+ are set on the required rules and the 60-unit total counts only letter-graded courses. Courses offered only S/NC count with an S.",
+    "totals": [
+      {
+        "label": "60 units of Sociology coursework",
+        "minUnits": 60,
+        "pool": {
+          "subjects": [
+            "SOC"
+          ],
+          "exclude": [
+            "SOC 300",
+            "SOC 311A",
+            "SOC 315W",
+            "SOC 321W",
+            "SOC 325W",
+            "SOC 341W",
+            "SOC 343W",
+            "SOC 350W",
+            "SOC 361W",
+            "SOC 368W",
+            "SOC 375W",
+            "SOC 380W",
+            "SOC 391",
+            "SOC 390"
+          ]
+        },
+        "why": "\"Students are required to complete 60 units of coursework in Sociology. ... Coursework excludes workshops, independent study, and directed research units.\" Excluded: the SOC workshops, SOC 390 Graduate Individual Study and SOC 391 Graduate Directed Research. Grading: \"Students are expected to enroll in all required courses and any courses that count toward the minimum required 60 units of Sociology coursework for a letter grade unless that option is not available. Students must receive a B+in any required courses and any courses that count toward the minimum required 60 units of Sociology coursework.\"",
+        "grading": "letter"
+      }
+    ]
+  },
+  "nodes": {
+    "gZOKnmzj": {
+      "why": "\"Students are required to enroll in the Graduate Proseminar in autumn and winter quarters of the first year.\": two enrollments of the repeatable SOC 305. Grading: \"Students are expected to enroll in all required courses and any courses that count toward the minimum required 60 units of Sociology coursework for a letter grade unless that option is not available. Students must receive a B+in any required courses and any courses that count toward the minimum required 60 units of Sociology coursework.\"",
+      "patch": {
+        "items": [
+          [
+            "SOC 305"
+          ],
+          [
+            "SOC 305"
+          ]
+        ],
+        "letter": true,
+        "minGrade": "B+"
+      }
+    },
+    "vHEf8LSy": {
+      "why": "\"Students must complete a two-year, six-quarter research apprenticeship coursework sequence ... enrolling in the Research Apprenticeship course each academic quarter (Autumn, Winter and Spring) in years one and two.\" and \"a two-year, five-quarter research practicum coursework sequence\" (SOC 386A-E). Six enrollments of the repeatable SOC 394. Grading: \"Students are expected to enroll in all required courses and any courses that count toward the minimum required 60 units of Sociology coursework for a letter grade unless that option is not available. Students must receive a B+in any required courses and any courses that count toward the minimum required 60 units of Sociology coursework.\"",
+      "patch": {
+        "items": [
+          [
+            "SOC 394"
+          ],
+          [
+            "SOC 394"
+          ],
+          [
+            "SOC 394"
+          ],
+          [
+            "SOC 394"
+          ],
+          [
+            "SOC 394"
+          ],
+          [
+            "SOC 394"
+          ],
+          [
+            "SOC 386A"
+          ],
+          [
+            "SOC 386B"
+          ],
+          [
+            "SOC 386C"
+          ],
+          [
+            "SOC 386D"
+          ],
+          [
+            "SOC 386E"
+          ]
+        ],
+        "letter": true,
+        "minGrade": "B+"
+      }
+    },
+    "BXAF1Mxk": {
+      "why": "\"Students are required to enroll in at least one workshop each quarter in years two and three. Beginning in year four and continuing until the degree is conferred, students are expected to enroll in at least one workshop course each quarter.\" A per-quarter enrollment record, checked by a person; the list is \"the complete list of workshop courses\" in the Graduate Handbook.",
+      "replace": {
+        "t": "text",
+        "name": "Workshops (one each quarter in years two and three)",
+        "manual": "milestone"
+      }
+    },
+    "EWvgT1oW": {
+      "why": "\"Students must satisfactorily pass the following qualifying exams: Qualifying Exam #1 ... #2A ... #2B ... #3\"",
+      "patch": {
+        "manual": "exam"
+      }
+    },
+    "ylL9TJaY": {
+      "why": "\"Students are required to provide proof of submission of at least one paper of publishable quality to a peer-reviewed journal or other appropriate venue by the end of summer quarter of year three.\"",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "BJIPKohj": {
+      "why": "\"Students are expected to present at least two papers at major professional meetings (e.g., ASA), department workshops, or a combination of the two in their first five years of graduate study.\"",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "o5WCWXIT": {
+      "why": "\"students must prepare and successfully defend a dissertation prospectus by the end of the fourth year in residence\"",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "L22hY2Rw": {
+      "why": "\"Students are expected to complete qualifying procedures and apply for candidacy by the spring quarter of their second year in the program.\"",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "Y9gIMnGJ": {
+      "why": "\"the oral exam is a defense of the dissertation presented upon the completion of a substantial portion of the dissertation or upon completion of a pre-final draft.\"",
+      "patch": {
+        "manual": "exam"
+      }
+    },
+    "CnIH7X5Q": {
+      "why": "\"the dissertation requirement may be met either by: Book-length document ... Three independent papers\"",
+      "patch": {
+        "manual": "thesis"
+      }
+    },
+    "42ggUAIn": {
+      "patch": {
+        "letter": true,
+        "minGrade": "B+"
+      },
+      "why": "Grading: \"Students are expected to enroll in all required courses and any courses that count toward the minimum required 60 units of Sociology coursework for a letter grade unless that option is not available. Students must receive a B+in any required courses and any courses that count toward the minimum required 60 units of Sociology coursework.\""
+    },
+    "T1WoSo1r": {
+      "patch": {
+        "letter": true,
+        "minGrade": "B+"
+      },
+      "why": "Grading: \"Students are expected to enroll in all required courses and any courses that count toward the minimum required 60 units of Sociology coursework for a letter grade unless that option is not available. Students must receive a B+in any required courses and any courses that count toward the minimum required 60 units of Sociology coursework.\""
+    },
+    "pUzruNKK": {
+      "patch": {
+        "letter": true,
+        "minGrade": "B+"
+      },
+      "why": "Grading: \"Students are expected to enroll in all required courses and any courses that count toward the minimum required 60 units of Sociology coursework for a letter grade unless that option is not available. Students must receive a B+in any required courses and any courses that count toward the minimum required 60 units of Sociology coursework.\""
+    },
+    "8EvxfYfS": {
+      "patch": {
+        "letter": true,
+        "minGrade": "B+"
+      },
+      "why": "Grading: \"Students are expected to enroll in all required courses and any courses that count toward the minimum required 60 units of Sociology coursework for a letter grade unless that option is not available. Students must receive a B+in any required courses and any courses that count toward the minimum required 60 units of Sociology coursework.\""
+    },
+    "iDKRqLYD": {
+      "patch": {
+        "letter": true,
+        "minGrade": "B+"
+      },
+      "why": "Grading: \"Students are expected to enroll in all required courses and any courses that count toward the minimum required 60 units of Sociology coursework for a letter grade unless that option is not available. Students must receive a B+in any required courses and any courses that count toward the minimum required 60 units of Sociology coursework.\""
+    }
+  }
+}

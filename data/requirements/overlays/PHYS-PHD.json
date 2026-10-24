@@ -1,0 +1,92 @@
+{
+  "code": "PHYS-PHD",
+  "reviewed": "2026-10-23",
+  "summary": "The required, quantum and breadth courses must be letter graded with a B+ or better (PHYSICS 290 and 294 are offered only S/NC and count with an S), and quantum and breadth courses must be taken for at least 3 units. The research and colloquium courses are not held to a letter grade, and the 135-unit total counts every graduate course. Your 3.3 GPA, the two breadth areas outside your own research, the proposal, presentation, teaching, qualifying exam, oral exam and dissertation are checked by hand.",
+  "nodes": {
+    "BsMxXBeH": {
+      "why": "Overview note: \"All courses to fulfill the Physics PhD degree requirements must be taken for a letter grade, except for PHYSICS 290 and PHYSICS 294, which are only offered for Satisfactory/No Credit.\" (The audit already accepts S for a course offered only S/NC.) GPA: \"all courses taken toward the degree must receive a grade of 3.3 (B+) or higher in order to count towards program requirements.\"",
+      "patch": {
+        "letter": true,
+        "minGrade": "B+"
+      }
+    },
+    "kdnAjtMm": {
+      "why": "\"All courses to fulfill the Physics PhD degree requirements must be taken for a letter grade\"; Grading: \"must be taken for at least 3 units and letter grade\"; GPA: \"all courses taken toward the degree must receive a grade of 3.3 (B+) or higher in order to count towards program requirements.\"",
+      "patch": {
+        "letter": true,
+        "minGrade": "B+",
+        "minUnitsEach": 3
+      }
+    },
+    "R3IGo6wH": {
+      "why": "\"only courses that are graduate level, and taken for at least 3 units and letter-grade may count as a breadth course, and students must receive a grade of B+ or higher for it to count towards their requirements.\" The two areas must be outside the student's own research area, which is checked by hand.",
+      "patch": {
+        "letter": true,
+        "minUnitsEach": 3,
+        "minGrade": "B+"
+      }
+    },
+    "IDOMM5O2": {
+      "why": "\"A thesis proposal must also be submitted during the third year, reviewed and signed by the student's reading committee.\"",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "Aa9meYYC": {
+      "why": "\"Fourth-year students are required to give a 45-minute oral presentation to their Ph.D. reading committees.\"",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "nJyfBa5d": {
+      "why": "\"All students are required to complete at least three quarters of teaching experience by the end of the fourth year in the program\"",
+      "patch": {
+        "manual": "milestone",
+        "name": "Three quarters of teaching"
+      }
+    },
+    "qrf54A2v": {
+      "why": "\"Prior to making an application for candidacy, each student is required to pass a comprehensive oral qualifying examination.\"",
+      "patch": {
+        "manual": "exam",
+        "name": "Qualifying examination"
+      }
+    },
+    "jeTeewHi": {
+      "why": "\"the oral exam is a defense of the dissertation presented upon the completion of a substantial portion of the dissertation\"",
+      "patch": {
+        "manual": "exam",
+        "name": "Oral exam (dissertation defense)"
+      }
+    },
+    "E5gDoe9b": {
+      "why": "\"students must submit their dissertation before the PhD can be conferred. The dissertation must be signed and approved by every member of the student's dissertation reading committee.\"",
+      "patch": {
+        "manual": "thesis",
+        "name": "Dissertation"
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "0GzLObTh",
+      "why": "GPA: \"A grade point average (GPA) of at least 3.3 (B+) is required to be maintained across all letter grade courses taken\"",
+      "node": {
+        "id": "ov-gpa",
+        "t": "text",
+        "name": "GPA of 3.3 across all letter-graded courses",
+        "manual": "gpa"
+      }
+    },
+    {
+      "block": "0GzLObTh",
+      "node": {
+        "id": "ov-breadth-areas",
+        "t": "text",
+        "name": "Breadth courses from two different areas outside your research area",
+        "manual": "approval"
+      },
+      "why": "\"Students must take at least one course from each of two subject areas outside the student's primary area of research (among Biophysics, Condensed Matter, Quantum Optics and Atomic Physics, Astrophysics and Gravitation, Nuclear and Particle Physics. Quantum Information, and Other).\" \"Please consult the breadth requirement table on our website to see the area that each course is categorized as.\" The breadth rule counts the two courses; their areas are checked by hand."
+    }
+  ]
+}

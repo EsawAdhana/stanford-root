@@ -1,0 +1,536 @@
+{
+  "code": "EASST-BA",
+  "reviewed": "2026-10-23",
+  "summary": "Without a subplan you show second-year proficiency in Chinese, Japanese or Korean; a subplan instead asks for third-year proficiency and adds its own courses. Everyone takes three area courses (humanities, history, social sciences), four thematically coherent East Asia courses with one numbered 200 or above (moved in by hand), a WIM course, and the Senior Colloquium (EALC 198) with a Senior Research course and a capstone essay, project or honors thesis. Courses outside the language requirement must be letter graded and at least 3 units. The major needs 78 units: other courses in the eligible subjects count toward them, at most 30 units of language courses count, and courses from other related departments are moved in by hand with the DUS's approval. You check by hand the 2.0 GPA, that each non-language course is taught by a faculty member with an EALC appointment, the subplans' approved content courses, and proficiency shown by exam; honors adds a 3.5 GPA, an approved proposal, an advanced seminar and the thesis. With the China, Japan or Korea subplan the WIM course must be CHINA 111, JAPAN 138 or KOREA 120 respectively; the East Asian Languages subplan's additional courses can come from any one of its four categories.",
+  "program": {
+    "totals": [
+      {
+        "label": "Language courses",
+        "maxUnits": 30,
+        "pool": {
+          "subjects": [
+            "CHINLANG",
+            "JAPANLNG",
+            "KORLANG"
+          ]
+        },
+        "why": "Language Proficiency Requirement notes: \"No more than 30 units of language courses may be counted toward the major.\""
+      }
+    ]
+  },
+  "nodes": {
+    "AiTTYlUt": {
+      "why": "\"This requirement applies to students who do not declare a subplan. Demonstrate proficiency in Chinese, Japanese, or Korean language at the second-year level or above, to be met either by coursework or examination.\" The format cannot drop a rule when a subplan is chosen, so the third-year courses every subplan requires also meet it (\"or above\"), and it shares them. Proficiency by examination is marked done by hand. It applies only without a subplan (block nKhTrBNR is unlessSubplan), so it no longer shares its course with a subplan's language rule.",
+      "patch": {
+        "items": [
+          [
+            "CHINLANG 23",
+            "CHINLANG 23B",
+            "JAPANLNG 23",
+            "KORLANG 23",
+            "CHINLANG 103",
+            "CHINLANG 103B",
+            "JAPANLNG 103",
+            "KORLANG 103"
+          ]
+        ]
+      }
+    },
+    "yQrianD8": {
+      "why": "\"Complete four courses with a thematic coherence on East Asia, at least one of which must be numbered at the 200-level or above.\" Thematic coherence is a judgment, so the student moves the four courses in; the 200-level course is part of that check.",
+      "patch": {
+        "name": "Four thematically coherent East Asia courses (one numbered 200 or above)",
+        "manual": "approval",
+        "n": 4
+      }
+    },
+    "fApyJ12R": {
+      "why": "\"Majors with an overall grade point average (GPA) of 3.5 may apply for the honors program by submitting a senior thesis proposal to the Director of Undergraduate Studies ... one advanced-level colloquium or seminar dealing with China, Japan, or Korea is required ... Students must discuss the honors project with the DUS and receive approval before conducting honors research.\" The capstone text names the \"Honors Thesis (~15,000 words)\". Grading: \"All courses used in fulfillment of non-language requirements must be taken for letter grading and at least 3 units each.\"",
+      "replace": {
+        "t": "all",
+        "name": "Honors Requirement",
+        "children": [
+          {
+            "id": "fApyJ12R-courses",
+            "t": "courses",
+            "name": "Senior Colloquium and Senior Research",
+            "mode": "all",
+            "items": [
+              [
+                "EALC 198"
+              ],
+              [
+                "EALC 198C",
+                "EALC 198H",
+                "EALC 199"
+              ]
+            ],
+            "letter": true,
+            "minUnitsEach": 3
+          },
+          {
+            "id": "fApyJ12R-proposal",
+            "t": "text",
+            "name": "Senior thesis proposal approved by the DUS (junior year)",
+            "manual": "approval"
+          },
+          {
+            "id": "fApyJ12R-gpa",
+            "t": "text",
+            "name": "Overall GPA of 3.5",
+            "manual": "gpa"
+          },
+          {
+            "id": "fApyJ12R-seminar",
+            "t": "text",
+            "name": "One advanced-level colloquium or seminar on China, Japan or Korea",
+            "manual": "approval",
+            "n": 1
+          },
+          {
+            "id": "fApyJ12R-thesis",
+            "t": "text",
+            "name": "Honors thesis (~15,000 words)",
+            "manual": "thesis"
+          }
+        ]
+      }
+    },
+    "bgjZ86GD": {
+      "why": "\"To bring the total number of units counted towards the major to 78, complete the following courses selected with approval by the SSO, DUS, and/or advisor. Three CHINA courses at the 100-level, with one in each of the following areas: pre-modern China, modern China, and Chinese linguistics. Four other content courses, as approved by the advisor, DUS, or SSO. One of these should be a History course offered by the Department of History. All students take course as part of the Writing in the Major (WIM) requirement.\" \"At the 100-level\" is read as numbered 100-199; the three areas and the content courses are approved by hand, and the WIM course is the WIM block's. The 78-unit total, stated in every subplan (\"To bring the total number of units counted towards the major to 78\"), is the Bulletin's unit minimum; the rest of the 78 units go to the optional pool ov-easst-remaining. Grading: \"All courses used in fulfillment of non-language requirements must be taken for letter grading and at least 3 units each.\"",
+      "replace": {
+        "t": "all",
+        "name": "Additional Courses Requirement",
+        "children": [
+          {
+            "id": "bgjZ86GD-subject",
+            "t": "courses",
+            "name": "Three 100-level CHINA courses (pre-modern China, modern China, and Chinese linguistics)",
+            "mode": "atLeast",
+            "n": 3,
+            "pool": {
+              "subjects": [
+                "CHINA"
+              ],
+              "minNumber": 100,
+              "maxNumber": 199
+            },
+            "letter": true,
+            "minUnitsEach": 3
+          },
+          {
+            "id": "bgjZ86GD-history",
+            "t": "courses",
+            "name": "One History course offered by the Department of History",
+            "mode": "atLeast",
+            "n": 1,
+            "pool": {
+              "subjects": [
+                "HISTORY"
+              ]
+            },
+            "letter": true,
+            "minUnitsEach": 3
+          },
+          {
+            "id": "bgjZ86GD-content",
+            "t": "text",
+            "name": "Three more content courses approved by the advisor, DUS or SSO",
+            "manual": "approval",
+            "n": 3
+          }
+        ]
+      }
+    },
+    "Ctkjbvzb": {
+      "why": "\"To bring the total number of units counted towards the major to 78, complete the following courses selected with approval by the SSO, DUS, and/or advisor. Three JAPAN courses at the 100-level, with one in each of the following areas: pre-modern Japan, modern Japan, and Japanese linguistics. Four other content courses, as approved by the advisor, DUS, or SSO. One of these should be a History course offered by the Department of History. All students take course as part of the Writing in the Major (WIM) requirement.\" \"At the 100-level\" is read as numbered 100-199; the three areas and the content courses are approved by hand, and the WIM course is the WIM block's. The 78-unit total, stated in every subplan (\"To bring the total number of units counted towards the major to 78\"), is the Bulletin's unit minimum; the rest of the 78 units go to the optional pool ov-easst-remaining. Grading: \"All courses used in fulfillment of non-language requirements must be taken for letter grading and at least 3 units each.\"",
+      "replace": {
+        "t": "all",
+        "name": "Additional Courses Requirement",
+        "children": [
+          {
+            "id": "Ctkjbvzb-subject",
+            "t": "courses",
+            "name": "Three 100-level JAPAN courses (pre-modern Japan, modern Japan, and Japanese linguistics)",
+            "mode": "atLeast",
+            "n": 3,
+            "pool": {
+              "subjects": [
+                "JAPAN"
+              ],
+              "minNumber": 100,
+              "maxNumber": 199
+            },
+            "letter": true,
+            "minUnitsEach": 3
+          },
+          {
+            "id": "Ctkjbvzb-history",
+            "t": "courses",
+            "name": "One History course offered by the Department of History",
+            "mode": "atLeast",
+            "n": 1,
+            "pool": {
+              "subjects": [
+                "HISTORY"
+              ]
+            },
+            "letter": true,
+            "minUnitsEach": 3
+          },
+          {
+            "id": "Ctkjbvzb-content",
+            "t": "text",
+            "name": "Three more content courses approved by the advisor, DUS or SSO",
+            "manual": "approval",
+            "n": 3
+          }
+        ]
+      }
+    },
+    "tgSvTz0d": {
+      "why": "\"Six content courses on Korea and/or East Asia at the 100-level, at least two of which must bear the KOREA subject code. All students take course as part of the Writing in the Major (WIM) requirement.\" \"At the 100-level\" is read as numbered 100-199; the other four are approved by hand. The 78-unit total, stated in every subplan (\"To bring the total number of units counted towards the major to 78\"), is the Bulletin's unit minimum; the rest of the 78 units go to the optional pool ov-easst-remaining. Grading: \"All courses used in fulfillment of non-language requirements must be taken for letter grading and at least 3 units each.\"",
+      "replace": {
+        "t": "all",
+        "name": "Additional Courses Requirement",
+        "children": [
+          {
+            "id": "tgSvTz0d-korea",
+            "t": "courses",
+            "name": "Two 100-level KOREA courses",
+            "mode": "atLeast",
+            "n": 2,
+            "pool": {
+              "subjects": [
+                "KOREA"
+              ],
+              "minNumber": 100,
+              "maxNumber": 199
+            },
+            "letter": true,
+            "minUnitsEach": 3
+          },
+          {
+            "id": "tgSvTz0d-content",
+            "t": "text",
+            "name": "Four more 100-level content courses on Korea and/or East Asia",
+            "manual": "approval",
+            "n": 4
+          }
+        ]
+      }
+    },
+    "QlCPlHwv": {
+      "why": "\"To bring the total number of units counted towards the major to 78, complete the following courses selected with approval by the SSO, DUS, and/or advisor. Fulfill ANY of the following requirements: Additional East Asian Language Proficiency OR Advanced Courses OR Classical East Asian Language Courses OR East Asian Cultural Content Courses.\" Any one of the four categories meets the rule; the rest of the 78 units come from further eligible courses. The two categories with no course list (another East Asian language, fourth-year or conversational courses) are approved and moved in by hand. Grading: \"All courses used in fulfillment of non-language requirements must be taken for letter grading and at least 3 units each\" applies to the cultural content courses; the classical language courses are language courses, as in the China subplan's classical requirement.",
+      "replace": {
+        "t": "any",
+        "name": "Additional Courses Requirement",
+        "children": [
+          {
+            "id": "qHXOCUf0",
+            "t": "text",
+            "name": "Additional East Asian Language Proficiency",
+            "manual": "approval",
+            "desc": "An additional East Asian language separate from the one used in fulfillment of the Language Proficiency Requirement for a maximum of 3 additional quarters beyond the tested proficiency level"
+          },
+          {
+            "id": "HvWpUbio",
+            "t": "text",
+            "name": "Advanced Courses",
+            "manual": "approval",
+            "desc": "East Asian Advanced (Fourth-Year or Above) and/or Conversational Language Courses"
+          },
+          {
+            "id": "jlhWw33p",
+            "t": "courses",
+            "name": "Classical East Asian Language Courses",
+            "mode": "any",
+            "items": [
+              [
+                "CHINA 105"
+              ],
+              [
+                "CHINA 205"
+              ],
+              [
+                "CHINA 106"
+              ],
+              [
+                "CHINA 206"
+              ],
+              [
+                "CHINA 107"
+              ],
+              [
+                "CHINA 207"
+              ],
+              [
+                "CHINA 208"
+              ],
+              [
+                "CHINA 209"
+              ],
+              [
+                "JAPAN 164"
+              ],
+              [
+                "JAPAN 264"
+              ],
+              [
+                "JAPAN 165"
+              ],
+              [
+                "JAPAN 265"
+              ],
+              [
+                "JAPAN 389"
+              ]
+            ]
+          },
+          {
+            "id": "CyiOZne8",
+            "t": "courses",
+            "name": "East Asian Cultural Content Courses",
+            "mode": "any",
+            "items": [
+              [
+                "CHINLANG 125"
+              ],
+              [
+                "CHINA 81N"
+              ],
+              [
+                "CHINA 166"
+              ],
+              [
+                "CHINA 185"
+              ],
+              [
+                "CHINA 190"
+              ],
+              [
+                "CHINA 191"
+              ],
+              [
+                "CHINA 380"
+              ],
+              [
+                "JAPAN 191"
+              ],
+              [
+                "JAPAN 192"
+              ],
+              [
+                "JAPAN 193"
+              ],
+              [
+                "JAPAN 194"
+              ],
+              [
+                "JAPAN 197"
+              ],
+              [
+                "JAPAN 235"
+              ],
+              [
+                "JAPAN 279"
+              ],
+              [
+                "JAPAN 298"
+              ],
+              [
+                "KOREA 120"
+              ],
+              [
+                "KOREA 250"
+              ]
+            ],
+            "desc": "Complete one or more of the following courses and/or other translation/poetry/readings courses applicable to the primary language.",
+            "letter": true,
+            "minUnitsEach": 3
+          }
+        ]
+      }
+    },
+    "WYsn6jst": {
+      "why": "Grading: \"All courses used in fulfillment of non-language requirements must be taken for letter grading and at least 3 units each.\"",
+      "patch": {
+        "letter": true,
+        "minUnitsEach": 3
+      }
+    },
+    "W51qL0Oy": {
+      "why": "Grading: \"All courses used in fulfillment of non-language requirements must be taken for letter grading and at least 3 units each.\"",
+      "patch": {
+        "letter": true,
+        "minUnitsEach": 3
+      }
+    },
+    "zU5hFsIH": {
+      "why": "Grading: \"All courses used in fulfillment of non-language requirements must be taken for letter grading and at least 3 units each.\"",
+      "patch": {
+        "letter": true,
+        "minUnitsEach": 3
+      }
+    },
+    "ZmY6iw23": {
+      "why": "Grading: \"All courses used in fulfillment of non-language requirements must be taken for letter grading and at least 3 units each.\"",
+      "patch": {
+        "letter": true,
+        "minUnitsEach": 3
+      }
+    },
+    "Jvcthjlg": {
+      "why": "Grading: \"All courses used in fulfillment of non-language requirements must be taken for letter grading and at least 3 units each.\"",
+      "patch": {
+        "letter": true,
+        "minUnitsEach": 3
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "4bu7kg82",
+      "node": {
+        "id": "ov-easst-capstone-project",
+        "t": "text",
+        "name": "Capstone essay, alternate project or honors thesis, presented in spring",
+        "manual": "thesis"
+      },
+      "why": "\"Submit one of the following as agreed upon by the DUS, faculty advisor, and student, and present the research to EALC peers and faculty: Capstone Essay (~7,500 words); Equivalent Alternate Project ...; Honors Thesis (~15,000 words)\" and \"Students must present as part of their final project.\""
+    },
+    {
+      "block": "ak3hbjkZ",
+      "node": {
+        "id": "ov-gpa",
+        "t": "text",
+        "name": "GPA of 2.0 in major courses and their prerequisites",
+        "manual": "gpa"
+      },
+      "why": "GPA: \"Courses as well as their prerequisites must be completed with a grade point average (GPA) of 2.0 or better.\""
+    },
+    {
+      "block": "CBrxzxui",
+      "node": {
+        "id": "ov-easst-remaining",
+        "t": "courses",
+        "mode": "any",
+        "optional": true,
+        "letter": true,
+        "minUnitsEach": 3,
+        "name": "Remaining units of the 78-unit minimum (eligible subjects)",
+        "pool": {
+          "subjects": [
+            "CHINA",
+            "CHINLANG",
+            "JAPAN",
+            "JAPANLNG",
+            "KOREA",
+            "KORLANG",
+            "EALC",
+            "EASTASN",
+            "ANTHRO",
+            "ARTHIST",
+            "ASNAMST",
+            "COMPLIT",
+            "DLCL",
+            "ETHICSOC",
+            "FEMGEN",
+            "FILMEDIA",
+            "GLOBAL",
+            "HUMSCI",
+            "HUMCORE",
+            "INTLPOL",
+            "INTNLREL",
+            "LINGUIST",
+            "MTL",
+            "PHIL",
+            "POLISCI",
+            "PUBLPOL",
+            "RELIGST",
+            "STS",
+            "SOC",
+            "TAPS",
+            "URBANST",
+            "OSPBEIJ",
+            "OSPHONGK",
+            "OSPKYOTO",
+            "OSPKYOCT"
+          ]
+        }
+      },
+      "why": "Policies: \"The courses taken for the major must add up to at least 78 units ... all taken for a letter grade. Courses must be at least three units and taken with a letter grade to be counted towards the degree.\" and \"Eligible subject codes for courses used in fulfillment of requirements include: CHINA, CHINLANG, JAPAN, JAPANLNG, KOREA, KORLANG, EALC, EASTASN, ANTHRO, ARTHIST, ASNAMST, COMPLIT, DLCL, ETHICSOC, FEMGEN, FILMEDIA, GLOBAL, HUMSCI, HUMCORE, INTLPOL, INTNLREL, LINGUIST, MTL, PHIL, POLISCI, PUBLPOL, RELIGST, STS, SOC, TAPS, URBANST, OSPBEIJ, OSPHONGK, OSPKYOTO, OSPKYOCT, and/or other related departments.\" The rules above do not reach 78 units, so this takes the rest; the 78-unit program total does the checking."
+    },
+    {
+      "block": "CBrxzxui",
+      "node": {
+        "id": "ov-easst-remaining-other",
+        "t": "text",
+        "manual": "approval",
+        "optional": true,
+        "name": "Remaining units from other related departments, approved by the DUS"
+      },
+      "why": "Policies: \"... and/or other related departments.\" and \"The Director of Undergraduate Studies (DUS) may approve changes or substitutions to the fulfillment of requirements.\""
+    },
+    {
+      "block": "jWkUOZoe",
+      "why": "China subplan: \"All students take [CHINA 111] as part of the Writing in the Major (WIM) requirement.\" The page names the course through its course link (the rendered text reads \"All students take course\"); the WIM section adds \"The course you choose should align with your declared subplan\".",
+      "node": {
+        "id": "ov-easst-china-wim",
+        "t": "courses",
+        "name": "WIM course for the China subplan: CHINA 111",
+        "mode": "all",
+        "items": [
+          [
+            "CHINA 111"
+          ]
+        ],
+        "shares": true,
+        "letter": true,
+        "minUnitsEach": 3
+      }
+    },
+    {
+      "block": "bhn65K6s",
+      "why": "Japan subplan: \"All students take [JAPAN 138] as part of the Writing in the Major (WIM) requirement.\" The page names the course through its course link (the rendered text reads \"All students take course\"); the WIM section adds \"The course you choose should align with your declared subplan\".",
+      "node": {
+        "id": "ov-easst-japan-wim",
+        "t": "courses",
+        "name": "WIM course for the Japan subplan: JAPAN 138",
+        "mode": "all",
+        "items": [
+          [
+            "JAPAN 138"
+          ]
+        ],
+        "shares": true,
+        "letter": true,
+        "minUnitsEach": 3
+      }
+    },
+    {
+      "block": "b8ryU5wp",
+      "why": "Korea subplan: \"All students take [KOREA 120] as part of the Writing in the Major (WIM) requirement.\" The page names the course through its course link (the rendered text reads \"All students take course\"); the WIM section adds \"The course you choose should align with your declared subplan\".",
+      "node": {
+        "id": "ov-easst-korea-wim",
+        "t": "courses",
+        "name": "WIM course for the Korea subplan: KOREA 120",
+        "mode": "all",
+        "items": [
+          [
+            "KOREA 120"
+          ]
+        ],
+        "shares": true,
+        "letter": true,
+        "minUnitsEach": 3
+      }
+    }
+  ],
+  "blocks": {
+    "nKhTrBNR": {
+      "unlessSubplan": true,
+      "why": "\"This requirement applies to students who do not declare a subplan.\" Each subplan has its own language requirement."
+    }
+  }
+}

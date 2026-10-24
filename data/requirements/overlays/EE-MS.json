@@ -1,0 +1,2796 @@
+{
+  "code": "EE-MS",
+  "reviewed": "2026-10-23",
+  "summary": "You pick one of the five depth areas and take 12 letter-graded units from its list, at least 6 at the 300 level (BIOE 300B counts as 200-level), plus 9 letter-graded breadth units from the other areas' lists, not counting any course on your own area's list. You also need 15 units of technical courses, which you move in by hand because which courses count is your advisor's call, and 9 more units at the 100 level or above, for 45 units in all; courses below the 100 level, Athletics and EFSLANG do not count toward the 45. Your advisor checks the technical courses' letter grades, 200-level lecture units and independent study cap, and that all units were taken at Stanford. The optional distinction in research adds 3 letter-graded units of EE 300 or EE 391, half-time research over three quarters, a 3.0 GPA and a research report.",
+  "program": {
+    "totals": [
+      { "label": "Courses below the 100 level", "maxUnits": 0, "pool": { "subjects": [], "anySubject": true, "maxNumber": 99 }, "why": "\"All units must be at the 100 level or higher. No courses numbered below the 100 level can count toward a graduate degree.\"" },
+      { "label": "Athletics and EFSLANG courses", "maxUnits": 0, "pool": { "subjects": ["ATHLETIC", "EFSLANG"] }, "why": "\"Athletics courses do not count toward the 45 units. EFSLANG (English for Foreign Students) courses do not count toward the 45 units.\"" }
+    ]
+  },
+  "nodes": {
+    "vH5hobct": {
+      "why": "Moved into each depth-area choice, which now carries its own breadth rule (see 89egKyQG).",
+      "remove": true
+    },
+    "89egKyQG": {
+      "why": "\"Complete 12 units from only one of the five (5) area lists. All depth courses must be 200-level and above. At least six units must be at the 300-level or above.\" \"All depth units must be letter graded.\" \"BIOE 300B: This course can only be used as a 200-level course.\" Breadth: \"Completing nine additional units from any area list other than the chosen depth area\" \"All breadth units must be letter graded and at the 200-level or above\" \"If a course is listed in the chosen depth area, it cannot be used to count in the breadth area\". Stored as all five areas, four courses each. Each choice pairs one depth area with breadth from the other lists minus its own courses; every listed course is at the 200 level or above.",
+      "replace": {
+        "t": "any",
+        "name": "Depth and Breadth Requirements",
+        "desc": "Complete 12 units from only one of the five (5) area lists. All depth courses must be 200-level and above. At least six units must be at the 300-level or above.",
+        "children": [
+          {
+            "id": "ov-eems-path1",
+            "t": "all",
+            "name": "Depth Area 1: Circuits, with breadth from the other areas",
+            "children": [
+              {
+                "id": "0XkzYlXt",
+                "t": "all",
+                "name": "Depth Area 1: Circuits",
+                "units": 12,
+                "children": [
+                  {
+                    "id": "ov-eems-d1-300",
+                    "t": "courses",
+                    "name": "6 units at the 300 level or above",
+                    "mode": "units",
+                    "units": 6,
+                    "items": [
+                      [
+                        "EE 303"
+                      ],
+                      [
+                        "EE 308"
+                      ],
+                      [
+                        "EE 309A"
+                      ],
+                      [
+                        "EE 314A"
+                      ],
+                      [
+                        "EE 315"
+                      ],
+                      [
+                        "EE 356A"
+                      ],
+                      [
+                        "EE 356B"
+                      ],
+                      [
+                        "EE 372D"
+                      ]
+                    ],
+                    "letter": true
+                  },
+                  {
+                    "id": "ov-eems-d1-rest",
+                    "t": "courses",
+                    "name": "Other depth courses",
+                    "mode": "any",
+                    "items": [
+                      [
+                        "EE 207"
+                      ],
+                      [
+                        "EE 214A"
+                      ],
+                      [
+                        "EE 214B"
+                      ],
+                      [
+                        "EE 216"
+                      ],
+                      [
+                        "EE 233"
+                      ],
+                      [
+                        "EE 251"
+                      ],
+                      [
+                        "EE 253"
+                      ],
+                      [
+                        "EE 254"
+                      ],
+                      [
+                        "EE 256"
+                      ],
+                      [
+                        "EE 271"
+                      ],
+                      [
+                        "EE 272"
+                      ],
+                      [
+                        "EE 273"
+                      ],
+                      [
+                        "EE 303"
+                      ],
+                      [
+                        "EE 308"
+                      ],
+                      [
+                        "EE 309A"
+                      ],
+                      [
+                        "EE 314A"
+                      ],
+                      [
+                        "EE 315"
+                      ],
+                      [
+                        "EE 356A"
+                      ],
+                      [
+                        "EE 356B"
+                      ],
+                      [
+                        "EE 372D"
+                      ]
+                    ],
+                    "letter": true
+                  }
+                ]
+              },
+              {
+                "id": "ov-eems-b1",
+                "t": "courses",
+                "name": "Breadth: 9 units from the other area lists",
+                "mode": "units",
+                "units": 9,
+                "items": [
+                  [
+                    "BMDS 270"
+                  ],
+                  [
+                    "CS 221"
+                  ],
+                  [
+                    "CS 228"
+                  ],
+                  [
+                    "CS 229"
+                  ],
+                  [
+                    "CS 230"
+                  ],
+                  [
+                    "CS 231A"
+                  ],
+                  [
+                    "CS 231N"
+                  ],
+                  [
+                    "CS 236"
+                  ],
+                  [
+                    "CS 240"
+                  ],
+                  [
+                    "CS 243"
+                  ],
+                  [
+                    "CS 244"
+                  ],
+                  [
+                    "CS 245"
+                  ],
+                  [
+                    "CS 246"
+                  ],
+                  [
+                    "CS 248A"
+                  ],
+                  [
+                    "CS 248B"
+                  ],
+                  [
+                    "CS 255"
+                  ],
+                  [
+                    "CS 347"
+                  ],
+                  [
+                    "CS 348B"
+                  ],
+                  [
+                    "CS 348K"
+                  ],
+                  [
+                    "CS 354"
+                  ],
+                  [
+                    "CS 357S"
+                  ],
+                  [
+                    "EE 217"
+                  ],
+                  [
+                    "EE 282"
+                  ],
+                  [
+                    "EE 284"
+                  ],
+                  [
+                    "EE 284A"
+                  ],
+                  [
+                    "EE 285"
+                  ],
+                  [
+                    "EE 292D"
+                  ],
+                  [
+                    "EE 349"
+                  ],
+                  [
+                    "EE 382A"
+                  ],
+                  [
+                    "EE 382C"
+                  ],
+                  [
+                    "ME 218A"
+                  ],
+                  [
+                    "ME 218B"
+                  ],
+                  [
+                    "ME 218C"
+                  ],
+                  [
+                    "EE 247"
+                  ],
+                  [
+                    "EE 274"
+                  ],
+                  [
+                    "EE 276"
+                  ],
+                  [
+                    "EE 279"
+                  ],
+                  [
+                    "EE 348"
+                  ],
+                  [
+                    "EE 358"
+                  ],
+                  [
+                    "EE 359"
+                  ],
+                  [
+                    "EE 374"
+                  ],
+                  [
+                    "EE 376C"
+                  ],
+                  [
+                    "EE 379"
+                  ],
+                  [
+                    "EE 379A"
+                  ],
+                  [
+                    "EE 379B"
+                  ],
+                  [
+                    "EE 392AA"
+                  ],
+                  [
+                    "EE 384A"
+                  ],
+                  [
+                    "EE 384S"
+                  ],
+                  [
+                    "EE 387"
+                  ],
+                  [
+                    "MS&E 335"
+                  ],
+                  [
+                    "BIOE 300B"
+                  ],
+                  [
+                    "EE 212"
+                  ],
+                  [
+                    "EE 218"
+                  ],
+                  [
+                    "EE 219"
+                  ],
+                  [
+                    "EE 222"
+                  ],
+                  [
+                    "EE 223"
+                  ],
+                  [
+                    "EE 224"
+                  ],
+                  [
+                    "EE 225"
+                  ],
+                  [
+                    "EE 234"
+                  ],
+                  [
+                    "EE 235A"
+                  ],
+                  [
+                    "EE 236A"
+                  ],
+                  [
+                    "EE 236B"
+                  ],
+                  [
+                    "EE 236C"
+                  ],
+                  [
+                    "EE 237"
+                  ],
+                  [
+                    "EE 238"
+                  ],
+                  [
+                    "EE 242"
+                  ],
+                  [
+                    "EE 258"
+                  ],
+                  [
+                    "EE 259"
+                  ],
+                  [
+                    "EE 292L"
+                  ],
+                  [
+                    "EE 293B"
+                  ],
+                  [
+                    "EE 309B"
+                  ],
+                  [
+                    "EE 311"
+                  ],
+                  [
+                    "EE 312"
+                  ],
+                  [
+                    "EE 316"
+                  ],
+                  [
+                    "EE 317"
+                  ],
+                  [
+                    "EE 323"
+                  ],
+                  [
+                    "EE 329"
+                  ],
+                  [
+                    "EE 332"
+                  ],
+                  [
+                    "EE 336"
+                  ],
+                  [
+                    "EE 340"
+                  ],
+                  [
+                    "EE 346"
+                  ],
+                  [
+                    "EE 347"
+                  ],
+                  [
+                    "ENERGY 201C"
+                  ],
+                  [
+                    "ENGR 240"
+                  ],
+                  [
+                    "ENGR 241"
+                  ],
+                  [
+                    "MATSCI 209"
+                  ],
+                  [
+                    "ME 220"
+                  ],
+                  [
+                    "OPHT 207"
+                  ],
+                  [
+                    "RAD 235"
+                  ],
+                  [
+                    "AA 203"
+                  ],
+                  [
+                    "AA 212"
+                  ],
+                  [
+                    "CEE 272R"
+                  ],
+                  [
+                    "CS 234"
+                  ],
+                  [
+                    "CS 238"
+                  ],
+                  [
+                    "CS 326"
+                  ],
+                  [
+                    "EE 227"
+                  ],
+                  [
+                    "EE 260A"
+                  ],
+                  [
+                    "EE 260B"
+                  ],
+                  [
+                    "EE 261"
+                  ],
+                  [
+                    "EE 263"
+                  ],
+                  [
+                    "EE 264"
+                  ],
+                  [
+                    "EE 267"
+                  ],
+                  [
+                    "EE 268"
+                  ],
+                  [
+                    "EE 269"
+                  ],
+                  [
+                    "EE 278"
+                  ],
+                  [
+                    "EE 230"
+                  ],
+                  [
+                    "EE 355"
+                  ],
+                  [
+                    "EE 363"
+                  ],
+                  [
+                    "EE 364A"
+                  ],
+                  [
+                    "EE 364B"
+                  ],
+                  [
+                    "EE 367"
+                  ],
+                  [
+                    "EE 368"
+                  ],
+                  [
+                    "EE 369A"
+                  ],
+                  [
+                    "EE 369B"
+                  ],
+                  [
+                    "EE 369C"
+                  ],
+                  [
+                    "EE 383"
+                  ],
+                  [
+                    "EE 377"
+                  ],
+                  [
+                    "EE 378A"
+                  ],
+                  [
+                    "EE 381"
+                  ],
+                  [
+                    "EE 469B"
+                  ],
+                  [
+                    "ENGR 205"
+                  ],
+                  [
+                    "ENGR 209A"
+                  ],
+                  [
+                    "MS&E 310"
+                  ],
+                  [
+                    "MS&E 311"
+                  ],
+                  [
+                    "MS&E 321"
+                  ],
+                  [
+                    "MS&E 322"
+                  ],
+                  [
+                    "MUSIC 422"
+                  ],
+                  [
+                    "OIT 604"
+                  ],
+                  [
+                    "PSYCH 221"
+                  ],
+                  [
+                    "STATS 315A"
+                  ],
+                  [
+                    "STATS 315B"
+                  ]
+                ],
+                "letter": true
+              }
+            ]
+          },
+          {
+            "id": "ov-eems-path2",
+            "t": "all",
+            "name": "Depth Area 2: Software and Hardware Systems, with breadth from the other areas",
+            "children": [
+              {
+                "id": "XFpPgm7X",
+                "t": "all",
+                "name": "Depth Area 2: Software and Hardware Systems",
+                "units": 12,
+                "children": [
+                  {
+                    "id": "ov-eems-d2-300",
+                    "t": "courses",
+                    "name": "6 units at the 300 level or above",
+                    "mode": "units",
+                    "units": 6,
+                    "items": [
+                      [
+                        "CS 347"
+                      ],
+                      [
+                        "CS 348B"
+                      ],
+                      [
+                        "CS 348K"
+                      ],
+                      [
+                        "CS 354"
+                      ],
+                      [
+                        "CS 357S"
+                      ],
+                      [
+                        "EE 349"
+                      ],
+                      [
+                        "EE 372D"
+                      ],
+                      [
+                        "EE 382A"
+                      ],
+                      [
+                        "EE 382C"
+                      ]
+                    ],
+                    "letter": true
+                  },
+                  {
+                    "id": "ov-eems-d2-rest",
+                    "t": "courses",
+                    "name": "Other depth courses",
+                    "mode": "any",
+                    "items": [
+                      [
+                        "BMDS 270"
+                      ],
+                      [
+                        "CS 221"
+                      ],
+                      [
+                        "CS 228"
+                      ],
+                      [
+                        "CS 229"
+                      ],
+                      [
+                        "CS 230"
+                      ],
+                      [
+                        "CS 231A"
+                      ],
+                      [
+                        "CS 231N"
+                      ],
+                      [
+                        "CS 236"
+                      ],
+                      [
+                        "CS 240"
+                      ],
+                      [
+                        "CS 243"
+                      ],
+                      [
+                        "CS 244"
+                      ],
+                      [
+                        "CS 245"
+                      ],
+                      [
+                        "CS 246"
+                      ],
+                      [
+                        "CS 248A"
+                      ],
+                      [
+                        "CS 248B"
+                      ],
+                      [
+                        "CS 255"
+                      ],
+                      [
+                        "CS 347"
+                      ],
+                      [
+                        "CS 348B"
+                      ],
+                      [
+                        "CS 348K"
+                      ],
+                      [
+                        "CS 354"
+                      ],
+                      [
+                        "CS 357S"
+                      ],
+                      [
+                        "EE 217"
+                      ],
+                      [
+                        "EE 272"
+                      ],
+                      [
+                        "EE 273"
+                      ],
+                      [
+                        "EE 282"
+                      ],
+                      [
+                        "EE 284"
+                      ],
+                      [
+                        "EE 284A"
+                      ],
+                      [
+                        "EE 285"
+                      ],
+                      [
+                        "EE 292D"
+                      ],
+                      [
+                        "EE 349"
+                      ],
+                      [
+                        "EE 372D"
+                      ],
+                      [
+                        "EE 382A"
+                      ],
+                      [
+                        "EE 382C"
+                      ],
+                      [
+                        "ME 218A"
+                      ],
+                      [
+                        "ME 218B"
+                      ],
+                      [
+                        "ME 218C"
+                      ]
+                    ],
+                    "letter": true
+                  }
+                ]
+              },
+              {
+                "id": "ov-eems-b2",
+                "t": "courses",
+                "name": "Breadth: 9 units from the other area lists",
+                "mode": "units",
+                "units": 9,
+                "items": [
+                  [
+                    "EE 207"
+                  ],
+                  [
+                    "EE 214A"
+                  ],
+                  [
+                    "EE 214B"
+                  ],
+                  [
+                    "EE 216"
+                  ],
+                  [
+                    "EE 233"
+                  ],
+                  [
+                    "EE 251"
+                  ],
+                  [
+                    "EE 253"
+                  ],
+                  [
+                    "EE 254"
+                  ],
+                  [
+                    "EE 256"
+                  ],
+                  [
+                    "EE 271"
+                  ],
+                  [
+                    "EE 303"
+                  ],
+                  [
+                    "EE 308"
+                  ],
+                  [
+                    "EE 309A"
+                  ],
+                  [
+                    "EE 314A"
+                  ],
+                  [
+                    "EE 315"
+                  ],
+                  [
+                    "EE 356A"
+                  ],
+                  [
+                    "EE 356B"
+                  ],
+                  [
+                    "EE 247"
+                  ],
+                  [
+                    "EE 274"
+                  ],
+                  [
+                    "EE 276"
+                  ],
+                  [
+                    "EE 279"
+                  ],
+                  [
+                    "EE 348"
+                  ],
+                  [
+                    "EE 358"
+                  ],
+                  [
+                    "EE 359"
+                  ],
+                  [
+                    "EE 374"
+                  ],
+                  [
+                    "EE 376C"
+                  ],
+                  [
+                    "EE 379"
+                  ],
+                  [
+                    "EE 379A"
+                  ],
+                  [
+                    "EE 379B"
+                  ],
+                  [
+                    "EE 392AA"
+                  ],
+                  [
+                    "EE 384A"
+                  ],
+                  [
+                    "EE 384S"
+                  ],
+                  [
+                    "EE 387"
+                  ],
+                  [
+                    "MS&E 335"
+                  ],
+                  [
+                    "BIOE 300B"
+                  ],
+                  [
+                    "EE 212"
+                  ],
+                  [
+                    "EE 218"
+                  ],
+                  [
+                    "EE 219"
+                  ],
+                  [
+                    "EE 222"
+                  ],
+                  [
+                    "EE 223"
+                  ],
+                  [
+                    "EE 224"
+                  ],
+                  [
+                    "EE 225"
+                  ],
+                  [
+                    "EE 234"
+                  ],
+                  [
+                    "EE 235A"
+                  ],
+                  [
+                    "EE 236A"
+                  ],
+                  [
+                    "EE 236B"
+                  ],
+                  [
+                    "EE 236C"
+                  ],
+                  [
+                    "EE 237"
+                  ],
+                  [
+                    "EE 238"
+                  ],
+                  [
+                    "EE 242"
+                  ],
+                  [
+                    "EE 258"
+                  ],
+                  [
+                    "EE 259"
+                  ],
+                  [
+                    "EE 292L"
+                  ],
+                  [
+                    "EE 293B"
+                  ],
+                  [
+                    "EE 309B"
+                  ],
+                  [
+                    "EE 311"
+                  ],
+                  [
+                    "EE 312"
+                  ],
+                  [
+                    "EE 316"
+                  ],
+                  [
+                    "EE 317"
+                  ],
+                  [
+                    "EE 323"
+                  ],
+                  [
+                    "EE 329"
+                  ],
+                  [
+                    "EE 332"
+                  ],
+                  [
+                    "EE 336"
+                  ],
+                  [
+                    "EE 340"
+                  ],
+                  [
+                    "EE 346"
+                  ],
+                  [
+                    "EE 347"
+                  ],
+                  [
+                    "ENERGY 201C"
+                  ],
+                  [
+                    "ENGR 240"
+                  ],
+                  [
+                    "ENGR 241"
+                  ],
+                  [
+                    "MATSCI 209"
+                  ],
+                  [
+                    "ME 220"
+                  ],
+                  [
+                    "OPHT 207"
+                  ],
+                  [
+                    "RAD 235"
+                  ],
+                  [
+                    "AA 203"
+                  ],
+                  [
+                    "AA 212"
+                  ],
+                  [
+                    "CEE 272R"
+                  ],
+                  [
+                    "CS 234"
+                  ],
+                  [
+                    "CS 238"
+                  ],
+                  [
+                    "CS 326"
+                  ],
+                  [
+                    "EE 227"
+                  ],
+                  [
+                    "EE 260A"
+                  ],
+                  [
+                    "EE 260B"
+                  ],
+                  [
+                    "EE 261"
+                  ],
+                  [
+                    "EE 263"
+                  ],
+                  [
+                    "EE 264"
+                  ],
+                  [
+                    "EE 267"
+                  ],
+                  [
+                    "EE 268"
+                  ],
+                  [
+                    "EE 269"
+                  ],
+                  [
+                    "EE 278"
+                  ],
+                  [
+                    "EE 230"
+                  ],
+                  [
+                    "EE 355"
+                  ],
+                  [
+                    "EE 363"
+                  ],
+                  [
+                    "EE 364A"
+                  ],
+                  [
+                    "EE 364B"
+                  ],
+                  [
+                    "EE 367"
+                  ],
+                  [
+                    "EE 368"
+                  ],
+                  [
+                    "EE 369A"
+                  ],
+                  [
+                    "EE 369B"
+                  ],
+                  [
+                    "EE 369C"
+                  ],
+                  [
+                    "EE 383"
+                  ],
+                  [
+                    "EE 377"
+                  ],
+                  [
+                    "EE 378A"
+                  ],
+                  [
+                    "EE 381"
+                  ],
+                  [
+                    "EE 469B"
+                  ],
+                  [
+                    "ENGR 205"
+                  ],
+                  [
+                    "ENGR 209A"
+                  ],
+                  [
+                    "MS&E 310"
+                  ],
+                  [
+                    "MS&E 311"
+                  ],
+                  [
+                    "MS&E 321"
+                  ],
+                  [
+                    "MS&E 322"
+                  ],
+                  [
+                    "MUSIC 422"
+                  ],
+                  [
+                    "OIT 604"
+                  ],
+                  [
+                    "PSYCH 221"
+                  ],
+                  [
+                    "STATS 315A"
+                  ],
+                  [
+                    "STATS 315B"
+                  ]
+                ],
+                "letter": true
+              }
+            ]
+          },
+          {
+            "id": "ov-eems-path3",
+            "t": "all",
+            "name": "Depth Area 3: Communications and Networking, with breadth from the other areas",
+            "children": [
+              {
+                "id": "JTvCrtjW",
+                "t": "all",
+                "name": "Depth Area 3: Communications and Networking",
+                "units": 12,
+                "children": [
+                  {
+                    "id": "ov-eems-d3-300",
+                    "t": "courses",
+                    "name": "6 units at the 300 level or above",
+                    "mode": "units",
+                    "units": 6,
+                    "items": [
+                      [
+                        "EE 348"
+                      ],
+                      [
+                        "EE 358"
+                      ],
+                      [
+                        "EE 359"
+                      ],
+                      [
+                        "EE 374"
+                      ],
+                      [
+                        "EE 376C"
+                      ],
+                      [
+                        "EE 379"
+                      ],
+                      [
+                        "EE 379A"
+                      ],
+                      [
+                        "EE 379B"
+                      ],
+                      [
+                        "EE 392AA"
+                      ],
+                      [
+                        "EE 382C"
+                      ],
+                      [
+                        "EE 384A"
+                      ],
+                      [
+                        "EE 384S"
+                      ],
+                      [
+                        "EE 387"
+                      ],
+                      [
+                        "MS&E 335"
+                      ]
+                    ],
+                    "letter": true
+                  },
+                  {
+                    "id": "ov-eems-d3-rest",
+                    "t": "courses",
+                    "name": "Other depth courses",
+                    "mode": "any",
+                    "items": [
+                      [
+                        "CS 244"
+                      ],
+                      [
+                        "EE 247"
+                      ],
+                      [
+                        "EE 274"
+                      ],
+                      [
+                        "EE 276"
+                      ],
+                      [
+                        "EE 279"
+                      ],
+                      [
+                        "EE 284"
+                      ],
+                      [
+                        "EE 284A"
+                      ],
+                      [
+                        "EE 348"
+                      ],
+                      [
+                        "EE 358"
+                      ],
+                      [
+                        "EE 359"
+                      ],
+                      [
+                        "EE 374"
+                      ],
+                      [
+                        "EE 376C"
+                      ],
+                      [
+                        "EE 379"
+                      ],
+                      [
+                        "EE 379A"
+                      ],
+                      [
+                        "EE 379B"
+                      ],
+                      [
+                        "EE 392AA"
+                      ],
+                      [
+                        "EE 382C"
+                      ],
+                      [
+                        "EE 384A"
+                      ],
+                      [
+                        "EE 384S"
+                      ],
+                      [
+                        "EE 387"
+                      ],
+                      [
+                        "MS&E 335"
+                      ]
+                    ],
+                    "letter": true
+                  }
+                ]
+              },
+              {
+                "id": "ov-eems-b3",
+                "t": "courses",
+                "name": "Breadth: 9 units from the other area lists",
+                "mode": "units",
+                "units": 9,
+                "items": [
+                  [
+                    "EE 207"
+                  ],
+                  [
+                    "EE 214A"
+                  ],
+                  [
+                    "EE 214B"
+                  ],
+                  [
+                    "EE 216"
+                  ],
+                  [
+                    "EE 233"
+                  ],
+                  [
+                    "EE 251"
+                  ],
+                  [
+                    "EE 253"
+                  ],
+                  [
+                    "EE 254"
+                  ],
+                  [
+                    "EE 256"
+                  ],
+                  [
+                    "EE 271"
+                  ],
+                  [
+                    "EE 272"
+                  ],
+                  [
+                    "EE 273"
+                  ],
+                  [
+                    "EE 303"
+                  ],
+                  [
+                    "EE 308"
+                  ],
+                  [
+                    "EE 309A"
+                  ],
+                  [
+                    "EE 314A"
+                  ],
+                  [
+                    "EE 315"
+                  ],
+                  [
+                    "EE 356A"
+                  ],
+                  [
+                    "EE 356B"
+                  ],
+                  [
+                    "EE 372D"
+                  ],
+                  [
+                    "BMDS 270"
+                  ],
+                  [
+                    "CS 221"
+                  ],
+                  [
+                    "CS 228"
+                  ],
+                  [
+                    "CS 229"
+                  ],
+                  [
+                    "CS 230"
+                  ],
+                  [
+                    "CS 231A"
+                  ],
+                  [
+                    "CS 231N"
+                  ],
+                  [
+                    "CS 236"
+                  ],
+                  [
+                    "CS 240"
+                  ],
+                  [
+                    "CS 243"
+                  ],
+                  [
+                    "CS 245"
+                  ],
+                  [
+                    "CS 246"
+                  ],
+                  [
+                    "CS 248A"
+                  ],
+                  [
+                    "CS 248B"
+                  ],
+                  [
+                    "CS 255"
+                  ],
+                  [
+                    "CS 347"
+                  ],
+                  [
+                    "CS 348B"
+                  ],
+                  [
+                    "CS 348K"
+                  ],
+                  [
+                    "CS 354"
+                  ],
+                  [
+                    "CS 357S"
+                  ],
+                  [
+                    "EE 217"
+                  ],
+                  [
+                    "EE 282"
+                  ],
+                  [
+                    "EE 285"
+                  ],
+                  [
+                    "EE 292D"
+                  ],
+                  [
+                    "EE 349"
+                  ],
+                  [
+                    "EE 382A"
+                  ],
+                  [
+                    "ME 218A"
+                  ],
+                  [
+                    "ME 218B"
+                  ],
+                  [
+                    "ME 218C"
+                  ],
+                  [
+                    "BIOE 300B"
+                  ],
+                  [
+                    "EE 212"
+                  ],
+                  [
+                    "EE 218"
+                  ],
+                  [
+                    "EE 219"
+                  ],
+                  [
+                    "EE 222"
+                  ],
+                  [
+                    "EE 223"
+                  ],
+                  [
+                    "EE 224"
+                  ],
+                  [
+                    "EE 225"
+                  ],
+                  [
+                    "EE 234"
+                  ],
+                  [
+                    "EE 235A"
+                  ],
+                  [
+                    "EE 236A"
+                  ],
+                  [
+                    "EE 236B"
+                  ],
+                  [
+                    "EE 236C"
+                  ],
+                  [
+                    "EE 237"
+                  ],
+                  [
+                    "EE 238"
+                  ],
+                  [
+                    "EE 242"
+                  ],
+                  [
+                    "EE 258"
+                  ],
+                  [
+                    "EE 259"
+                  ],
+                  [
+                    "EE 292L"
+                  ],
+                  [
+                    "EE 293B"
+                  ],
+                  [
+                    "EE 309B"
+                  ],
+                  [
+                    "EE 311"
+                  ],
+                  [
+                    "EE 312"
+                  ],
+                  [
+                    "EE 316"
+                  ],
+                  [
+                    "EE 317"
+                  ],
+                  [
+                    "EE 323"
+                  ],
+                  [
+                    "EE 329"
+                  ],
+                  [
+                    "EE 332"
+                  ],
+                  [
+                    "EE 336"
+                  ],
+                  [
+                    "EE 340"
+                  ],
+                  [
+                    "EE 346"
+                  ],
+                  [
+                    "EE 347"
+                  ],
+                  [
+                    "ENERGY 201C"
+                  ],
+                  [
+                    "ENGR 240"
+                  ],
+                  [
+                    "ENGR 241"
+                  ],
+                  [
+                    "MATSCI 209"
+                  ],
+                  [
+                    "ME 220"
+                  ],
+                  [
+                    "OPHT 207"
+                  ],
+                  [
+                    "RAD 235"
+                  ],
+                  [
+                    "AA 203"
+                  ],
+                  [
+                    "AA 212"
+                  ],
+                  [
+                    "CEE 272R"
+                  ],
+                  [
+                    "CS 234"
+                  ],
+                  [
+                    "CS 238"
+                  ],
+                  [
+                    "CS 326"
+                  ],
+                  [
+                    "EE 227"
+                  ],
+                  [
+                    "EE 260A"
+                  ],
+                  [
+                    "EE 260B"
+                  ],
+                  [
+                    "EE 261"
+                  ],
+                  [
+                    "EE 263"
+                  ],
+                  [
+                    "EE 264"
+                  ],
+                  [
+                    "EE 267"
+                  ],
+                  [
+                    "EE 268"
+                  ],
+                  [
+                    "EE 269"
+                  ],
+                  [
+                    "EE 278"
+                  ],
+                  [
+                    "EE 230"
+                  ],
+                  [
+                    "EE 355"
+                  ],
+                  [
+                    "EE 363"
+                  ],
+                  [
+                    "EE 364A"
+                  ],
+                  [
+                    "EE 364B"
+                  ],
+                  [
+                    "EE 367"
+                  ],
+                  [
+                    "EE 368"
+                  ],
+                  [
+                    "EE 369A"
+                  ],
+                  [
+                    "EE 369B"
+                  ],
+                  [
+                    "EE 369C"
+                  ],
+                  [
+                    "EE 383"
+                  ],
+                  [
+                    "EE 377"
+                  ],
+                  [
+                    "EE 378A"
+                  ],
+                  [
+                    "EE 381"
+                  ],
+                  [
+                    "EE 469B"
+                  ],
+                  [
+                    "ENGR 205"
+                  ],
+                  [
+                    "ENGR 209A"
+                  ],
+                  [
+                    "MS&E 310"
+                  ],
+                  [
+                    "MS&E 311"
+                  ],
+                  [
+                    "MS&E 321"
+                  ],
+                  [
+                    "MS&E 322"
+                  ],
+                  [
+                    "MUSIC 422"
+                  ],
+                  [
+                    "OIT 604"
+                  ],
+                  [
+                    "PSYCH 221"
+                  ],
+                  [
+                    "STATS 315A"
+                  ],
+                  [
+                    "STATS 315B"
+                  ]
+                ],
+                "letter": true
+              }
+            ]
+          },
+          {
+            "id": "ov-eems-path4",
+            "t": "all",
+            "name": "Depth Area 4: Physical Technology and Science, with breadth from the other areas",
+            "children": [
+              {
+                "id": "cTTwTga5",
+                "t": "all",
+                "name": "Depth Area 4: Physical Technology and Science",
+                "units": 12,
+                "children": [
+                  {
+                    "id": "ov-eems-d4-300",
+                    "t": "courses",
+                    "name": "6 units at the 300 level or above",
+                    "mode": "units",
+                    "units": 6,
+                    "items": [
+                      [
+                        "EE 303"
+                      ],
+                      [
+                        "EE 309A"
+                      ],
+                      [
+                        "EE 309B"
+                      ],
+                      [
+                        "EE 311"
+                      ],
+                      [
+                        "EE 312"
+                      ],
+                      [
+                        "EE 316"
+                      ],
+                      [
+                        "EE 317"
+                      ],
+                      [
+                        "EE 323"
+                      ],
+                      [
+                        "EE 329"
+                      ],
+                      [
+                        "EE 332"
+                      ],
+                      [
+                        "EE 336"
+                      ],
+                      [
+                        "EE 340"
+                      ],
+                      [
+                        "EE 346"
+                      ],
+                      [
+                        "EE 347"
+                      ],
+                      [
+                        "EE 348"
+                      ]
+                    ],
+                    "letter": true
+                  },
+                  {
+                    "id": "ov-eems-d4-rest",
+                    "t": "courses",
+                    "name": "Other depth courses",
+                    "mode": "any",
+                    "items": [
+                      [
+                        "BIOE 300B"
+                      ],
+                      [
+                        "EE 212"
+                      ],
+                      [
+                        "EE 216"
+                      ],
+                      [
+                        "EE 218"
+                      ],
+                      [
+                        "EE 219"
+                      ],
+                      [
+                        "EE 222"
+                      ],
+                      [
+                        "EE 223"
+                      ],
+                      [
+                        "EE 224"
+                      ],
+                      [
+                        "EE 225"
+                      ],
+                      [
+                        "EE 234"
+                      ],
+                      [
+                        "EE 235A"
+                      ],
+                      [
+                        "EE 236A"
+                      ],
+                      [
+                        "EE 236B"
+                      ],
+                      [
+                        "EE 236C"
+                      ],
+                      [
+                        "EE 237"
+                      ],
+                      [
+                        "EE 238"
+                      ],
+                      [
+                        "EE 242"
+                      ],
+                      [
+                        "EE 247"
+                      ],
+                      [
+                        "EE 258"
+                      ],
+                      [
+                        "EE 259"
+                      ],
+                      [
+                        "EE 292L"
+                      ],
+                      [
+                        "EE 293B"
+                      ],
+                      [
+                        "EE 303"
+                      ],
+                      [
+                        "EE 309A"
+                      ],
+                      [
+                        "EE 309B"
+                      ],
+                      [
+                        "EE 311"
+                      ],
+                      [
+                        "EE 312"
+                      ],
+                      [
+                        "EE 316"
+                      ],
+                      [
+                        "EE 317"
+                      ],
+                      [
+                        "EE 323"
+                      ],
+                      [
+                        "EE 329"
+                      ],
+                      [
+                        "EE 332"
+                      ],
+                      [
+                        "EE 336"
+                      ],
+                      [
+                        "EE 340"
+                      ],
+                      [
+                        "EE 346"
+                      ],
+                      [
+                        "EE 347"
+                      ],
+                      [
+                        "EE 348"
+                      ],
+                      [
+                        "ENERGY 201C"
+                      ],
+                      [
+                        "ENGR 240"
+                      ],
+                      [
+                        "ENGR 241"
+                      ],
+                      [
+                        "MATSCI 209"
+                      ],
+                      [
+                        "ME 220"
+                      ],
+                      [
+                        "OPHT 207"
+                      ],
+                      [
+                        "RAD 235"
+                      ]
+                    ],
+                    "letter": true
+                  }
+                ],
+                "notes": "BIOE 300B: This course can only be used as a 200-level course."
+              },
+              {
+                "id": "ov-eems-b4",
+                "t": "courses",
+                "name": "Breadth: 9 units from the other area lists",
+                "mode": "units",
+                "units": 9,
+                "items": [
+                  [
+                    "EE 207"
+                  ],
+                  [
+                    "EE 214A"
+                  ],
+                  [
+                    "EE 214B"
+                  ],
+                  [
+                    "EE 233"
+                  ],
+                  [
+                    "EE 251"
+                  ],
+                  [
+                    "EE 253"
+                  ],
+                  [
+                    "EE 254"
+                  ],
+                  [
+                    "EE 256"
+                  ],
+                  [
+                    "EE 271"
+                  ],
+                  [
+                    "EE 272"
+                  ],
+                  [
+                    "EE 273"
+                  ],
+                  [
+                    "EE 308"
+                  ],
+                  [
+                    "EE 314A"
+                  ],
+                  [
+                    "EE 315"
+                  ],
+                  [
+                    "EE 356A"
+                  ],
+                  [
+                    "EE 356B"
+                  ],
+                  [
+                    "EE 372D"
+                  ],
+                  [
+                    "BMDS 270"
+                  ],
+                  [
+                    "CS 221"
+                  ],
+                  [
+                    "CS 228"
+                  ],
+                  [
+                    "CS 229"
+                  ],
+                  [
+                    "CS 230"
+                  ],
+                  [
+                    "CS 231A"
+                  ],
+                  [
+                    "CS 231N"
+                  ],
+                  [
+                    "CS 236"
+                  ],
+                  [
+                    "CS 240"
+                  ],
+                  [
+                    "CS 243"
+                  ],
+                  [
+                    "CS 244"
+                  ],
+                  [
+                    "CS 245"
+                  ],
+                  [
+                    "CS 246"
+                  ],
+                  [
+                    "CS 248A"
+                  ],
+                  [
+                    "CS 248B"
+                  ],
+                  [
+                    "CS 255"
+                  ],
+                  [
+                    "CS 347"
+                  ],
+                  [
+                    "CS 348B"
+                  ],
+                  [
+                    "CS 348K"
+                  ],
+                  [
+                    "CS 354"
+                  ],
+                  [
+                    "CS 357S"
+                  ],
+                  [
+                    "EE 217"
+                  ],
+                  [
+                    "EE 282"
+                  ],
+                  [
+                    "EE 284"
+                  ],
+                  [
+                    "EE 284A"
+                  ],
+                  [
+                    "EE 285"
+                  ],
+                  [
+                    "EE 292D"
+                  ],
+                  [
+                    "EE 349"
+                  ],
+                  [
+                    "EE 382A"
+                  ],
+                  [
+                    "EE 382C"
+                  ],
+                  [
+                    "ME 218A"
+                  ],
+                  [
+                    "ME 218B"
+                  ],
+                  [
+                    "ME 218C"
+                  ],
+                  [
+                    "EE 274"
+                  ],
+                  [
+                    "EE 276"
+                  ],
+                  [
+                    "EE 279"
+                  ],
+                  [
+                    "EE 358"
+                  ],
+                  [
+                    "EE 359"
+                  ],
+                  [
+                    "EE 374"
+                  ],
+                  [
+                    "EE 376C"
+                  ],
+                  [
+                    "EE 379"
+                  ],
+                  [
+                    "EE 379A"
+                  ],
+                  [
+                    "EE 379B"
+                  ],
+                  [
+                    "EE 392AA"
+                  ],
+                  [
+                    "EE 384A"
+                  ],
+                  [
+                    "EE 384S"
+                  ],
+                  [
+                    "EE 387"
+                  ],
+                  [
+                    "MS&E 335"
+                  ],
+                  [
+                    "AA 203"
+                  ],
+                  [
+                    "AA 212"
+                  ],
+                  [
+                    "CEE 272R"
+                  ],
+                  [
+                    "CS 234"
+                  ],
+                  [
+                    "CS 238"
+                  ],
+                  [
+                    "CS 326"
+                  ],
+                  [
+                    "EE 227"
+                  ],
+                  [
+                    "EE 260A"
+                  ],
+                  [
+                    "EE 260B"
+                  ],
+                  [
+                    "EE 261"
+                  ],
+                  [
+                    "EE 263"
+                  ],
+                  [
+                    "EE 264"
+                  ],
+                  [
+                    "EE 267"
+                  ],
+                  [
+                    "EE 268"
+                  ],
+                  [
+                    "EE 269"
+                  ],
+                  [
+                    "EE 278"
+                  ],
+                  [
+                    "EE 230"
+                  ],
+                  [
+                    "EE 355"
+                  ],
+                  [
+                    "EE 363"
+                  ],
+                  [
+                    "EE 364A"
+                  ],
+                  [
+                    "EE 364B"
+                  ],
+                  [
+                    "EE 367"
+                  ],
+                  [
+                    "EE 368"
+                  ],
+                  [
+                    "EE 369A"
+                  ],
+                  [
+                    "EE 369B"
+                  ],
+                  [
+                    "EE 369C"
+                  ],
+                  [
+                    "EE 383"
+                  ],
+                  [
+                    "EE 377"
+                  ],
+                  [
+                    "EE 378A"
+                  ],
+                  [
+                    "EE 381"
+                  ],
+                  [
+                    "EE 469B"
+                  ],
+                  [
+                    "ENGR 205"
+                  ],
+                  [
+                    "ENGR 209A"
+                  ],
+                  [
+                    "MS&E 310"
+                  ],
+                  [
+                    "MS&E 311"
+                  ],
+                  [
+                    "MS&E 321"
+                  ],
+                  [
+                    "MS&E 322"
+                  ],
+                  [
+                    "MUSIC 422"
+                  ],
+                  [
+                    "OIT 604"
+                  ],
+                  [
+                    "PSYCH 221"
+                  ],
+                  [
+                    "STATS 315A"
+                  ],
+                  [
+                    "STATS 315B"
+                  ]
+                ],
+                "letter": true
+              }
+            ]
+          },
+          {
+            "id": "ov-eems-path5",
+            "t": "all",
+            "name": "Depth Area 5: Signal Processing, Control and Optimization, with breadth from the other areas",
+            "children": [
+              {
+                "id": "rA9Yh2Wn",
+                "t": "all",
+                "name": "Depth Area 5: Signal Processing, Control and Optimization",
+                "units": 12,
+                "children": [
+                  {
+                    "id": "ov-eems-d5-300",
+                    "t": "courses",
+                    "name": "6 units at the 300 level or above",
+                    "mode": "units",
+                    "units": 6,
+                    "items": [
+                      [
+                        "CS 326"
+                      ],
+                      [
+                        "EE 355"
+                      ],
+                      [
+                        "EE 363"
+                      ],
+                      [
+                        "EE 364A"
+                      ],
+                      [
+                        "EE 364B"
+                      ],
+                      [
+                        "EE 367"
+                      ],
+                      [
+                        "EE 368"
+                      ],
+                      [
+                        "EE 369A"
+                      ],
+                      [
+                        "EE 369B"
+                      ],
+                      [
+                        "EE 369C"
+                      ],
+                      [
+                        "EE 383"
+                      ],
+                      [
+                        "EE 377"
+                      ],
+                      [
+                        "EE 378A"
+                      ],
+                      [
+                        "EE 381"
+                      ],
+                      [
+                        "EE 469B"
+                      ],
+                      [
+                        "MS&E 310"
+                      ],
+                      [
+                        "MS&E 311"
+                      ],
+                      [
+                        "MS&E 321"
+                      ],
+                      [
+                        "MS&E 322"
+                      ],
+                      [
+                        "MUSIC 422"
+                      ],
+                      [
+                        "OIT 604"
+                      ],
+                      [
+                        "STATS 315A"
+                      ],
+                      [
+                        "STATS 315B"
+                      ]
+                    ],
+                    "letter": true
+                  },
+                  {
+                    "id": "ov-eems-d5-rest",
+                    "t": "courses",
+                    "name": "Other depth courses",
+                    "mode": "any",
+                    "items": [
+                      [
+                        "AA 203"
+                      ],
+                      [
+                        "AA 212"
+                      ],
+                      [
+                        "CEE 272R"
+                      ],
+                      [
+                        "CS 234"
+                      ],
+                      [
+                        "CS 238"
+                      ],
+                      [
+                        "CS 326"
+                      ],
+                      [
+                        "EE 227"
+                      ],
+                      [
+                        "EE 258"
+                      ],
+                      [
+                        "EE 259"
+                      ],
+                      [
+                        "EE 260A"
+                      ],
+                      [
+                        "EE 260B"
+                      ],
+                      [
+                        "EE 261"
+                      ],
+                      [
+                        "EE 263"
+                      ],
+                      [
+                        "EE 264"
+                      ],
+                      [
+                        "EE 267"
+                      ],
+                      [
+                        "EE 268"
+                      ],
+                      [
+                        "EE 269"
+                      ],
+                      [
+                        "EE 278"
+                      ],
+                      [
+                        "EE 219"
+                      ],
+                      [
+                        "EE 230"
+                      ],
+                      [
+                        "EE 355"
+                      ],
+                      [
+                        "EE 363"
+                      ],
+                      [
+                        "EE 364A"
+                      ],
+                      [
+                        "EE 364B"
+                      ],
+                      [
+                        "EE 367"
+                      ],
+                      [
+                        "EE 368"
+                      ],
+                      [
+                        "EE 369A"
+                      ],
+                      [
+                        "EE 369B"
+                      ],
+                      [
+                        "EE 369C"
+                      ],
+                      [
+                        "EE 383"
+                      ],
+                      [
+                        "EE 377"
+                      ],
+                      [
+                        "EE 378A"
+                      ],
+                      [
+                        "EE 381"
+                      ],
+                      [
+                        "EE 469B"
+                      ],
+                      [
+                        "ENGR 205"
+                      ],
+                      [
+                        "ENGR 209A"
+                      ],
+                      [
+                        "MS&E 310"
+                      ],
+                      [
+                        "MS&E 311"
+                      ],
+                      [
+                        "MS&E 321"
+                      ],
+                      [
+                        "MS&E 322"
+                      ],
+                      [
+                        "MUSIC 422"
+                      ],
+                      [
+                        "OIT 604"
+                      ],
+                      [
+                        "PSYCH 221"
+                      ],
+                      [
+                        "STATS 315A"
+                      ],
+                      [
+                        "STATS 315B"
+                      ]
+                    ],
+                    "letter": true
+                  }
+                ]
+              },
+              {
+                "id": "ov-eems-b5",
+                "t": "courses",
+                "name": "Breadth: 9 units from the other area lists",
+                "mode": "units",
+                "units": 9,
+                "items": [
+                  [
+                    "EE 207"
+                  ],
+                  [
+                    "EE 214A"
+                  ],
+                  [
+                    "EE 214B"
+                  ],
+                  [
+                    "EE 216"
+                  ],
+                  [
+                    "EE 233"
+                  ],
+                  [
+                    "EE 251"
+                  ],
+                  [
+                    "EE 253"
+                  ],
+                  [
+                    "EE 254"
+                  ],
+                  [
+                    "EE 256"
+                  ],
+                  [
+                    "EE 271"
+                  ],
+                  [
+                    "EE 272"
+                  ],
+                  [
+                    "EE 273"
+                  ],
+                  [
+                    "EE 303"
+                  ],
+                  [
+                    "EE 308"
+                  ],
+                  [
+                    "EE 309A"
+                  ],
+                  [
+                    "EE 314A"
+                  ],
+                  [
+                    "EE 315"
+                  ],
+                  [
+                    "EE 356A"
+                  ],
+                  [
+                    "EE 356B"
+                  ],
+                  [
+                    "EE 372D"
+                  ],
+                  [
+                    "BMDS 270"
+                  ],
+                  [
+                    "CS 221"
+                  ],
+                  [
+                    "CS 228"
+                  ],
+                  [
+                    "CS 229"
+                  ],
+                  [
+                    "CS 230"
+                  ],
+                  [
+                    "CS 231A"
+                  ],
+                  [
+                    "CS 231N"
+                  ],
+                  [
+                    "CS 236"
+                  ],
+                  [
+                    "CS 240"
+                  ],
+                  [
+                    "CS 243"
+                  ],
+                  [
+                    "CS 244"
+                  ],
+                  [
+                    "CS 245"
+                  ],
+                  [
+                    "CS 246"
+                  ],
+                  [
+                    "CS 248A"
+                  ],
+                  [
+                    "CS 248B"
+                  ],
+                  [
+                    "CS 255"
+                  ],
+                  [
+                    "CS 347"
+                  ],
+                  [
+                    "CS 348B"
+                  ],
+                  [
+                    "CS 348K"
+                  ],
+                  [
+                    "CS 354"
+                  ],
+                  [
+                    "CS 357S"
+                  ],
+                  [
+                    "EE 217"
+                  ],
+                  [
+                    "EE 282"
+                  ],
+                  [
+                    "EE 284"
+                  ],
+                  [
+                    "EE 284A"
+                  ],
+                  [
+                    "EE 285"
+                  ],
+                  [
+                    "EE 292D"
+                  ],
+                  [
+                    "EE 349"
+                  ],
+                  [
+                    "EE 382A"
+                  ],
+                  [
+                    "EE 382C"
+                  ],
+                  [
+                    "ME 218A"
+                  ],
+                  [
+                    "ME 218B"
+                  ],
+                  [
+                    "ME 218C"
+                  ],
+                  [
+                    "EE 247"
+                  ],
+                  [
+                    "EE 274"
+                  ],
+                  [
+                    "EE 276"
+                  ],
+                  [
+                    "EE 279"
+                  ],
+                  [
+                    "EE 348"
+                  ],
+                  [
+                    "EE 358"
+                  ],
+                  [
+                    "EE 359"
+                  ],
+                  [
+                    "EE 374"
+                  ],
+                  [
+                    "EE 376C"
+                  ],
+                  [
+                    "EE 379"
+                  ],
+                  [
+                    "EE 379A"
+                  ],
+                  [
+                    "EE 379B"
+                  ],
+                  [
+                    "EE 392AA"
+                  ],
+                  [
+                    "EE 384A"
+                  ],
+                  [
+                    "EE 384S"
+                  ],
+                  [
+                    "EE 387"
+                  ],
+                  [
+                    "MS&E 335"
+                  ],
+                  [
+                    "BIOE 300B"
+                  ],
+                  [
+                    "EE 212"
+                  ],
+                  [
+                    "EE 218"
+                  ],
+                  [
+                    "EE 222"
+                  ],
+                  [
+                    "EE 223"
+                  ],
+                  [
+                    "EE 224"
+                  ],
+                  [
+                    "EE 225"
+                  ],
+                  [
+                    "EE 234"
+                  ],
+                  [
+                    "EE 235A"
+                  ],
+                  [
+                    "EE 236A"
+                  ],
+                  [
+                    "EE 236B"
+                  ],
+                  [
+                    "EE 236C"
+                  ],
+                  [
+                    "EE 237"
+                  ],
+                  [
+                    "EE 238"
+                  ],
+                  [
+                    "EE 242"
+                  ],
+                  [
+                    "EE 292L"
+                  ],
+                  [
+                    "EE 293B"
+                  ],
+                  [
+                    "EE 309B"
+                  ],
+                  [
+                    "EE 311"
+                  ],
+                  [
+                    "EE 312"
+                  ],
+                  [
+                    "EE 316"
+                  ],
+                  [
+                    "EE 317"
+                  ],
+                  [
+                    "EE 323"
+                  ],
+                  [
+                    "EE 329"
+                  ],
+                  [
+                    "EE 332"
+                  ],
+                  [
+                    "EE 336"
+                  ],
+                  [
+                    "EE 340"
+                  ],
+                  [
+                    "EE 346"
+                  ],
+                  [
+                    "EE 347"
+                  ],
+                  [
+                    "ENERGY 201C"
+                  ],
+                  [
+                    "ENGR 240"
+                  ],
+                  [
+                    "ENGR 241"
+                  ],
+                  [
+                    "MATSCI 209"
+                  ],
+                  [
+                    "ME 220"
+                  ],
+                  [
+                    "OPHT 207"
+                  ],
+                  [
+                    "RAD 235"
+                  ]
+                ],
+                "letter": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "MIZ1scTh": {
+      "why": "\"Completion of 15 units of courses in engineering, natural sciences, mathematics, or statistics\" \"Mathematics, natural sciences, or engineering courses are acceptable, provided they use quantitative or scientific methods ... Consult with your advisor or the Degree Progress Officer before selecting courses\" Which departments count is a judgment the text leaves to the advisor, so the 15 units are moved in by hand; the letter grade, 200-level lecture, and independent study caps are checked with them.",
+      "patch": {
+        "manual": "approval",
+        "units": 15
+      }
+    },
+    "BIlKA9A7": {
+      "why": "\"Completion of at least nine additional units. These units must be at the 100-level or above and letter-graded or CR/NC in EE or other departments relevant to the EE MS degree\" \"Athletics courses do not count toward the 45 units. EFSLANG (English for Foreign Students) courses do not count toward the 45 units.\" Relevance to the degree is checked by hand.",
+      "replace": {
+        "t": "courses",
+        "name": "Other Courses",
+        "mode": "units",
+        "units": 9,
+        "pool": {
+          "subjects": [],
+          "anySubject": true,
+          "minNumber": 100,
+          "excludeSubjects": [
+            "ATHLETIC",
+            "EFSLANG"
+          ]
+        }
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "k7wUJS2M",
+      "why": "\"Research Experience – The program must include significant research experience at the level of a half-time commitment over the three academic quarters.\"",
+      "node": {
+        "id": "ov-eems-dist-research",
+        "t": "text",
+        "name": "Half-time research experience over three quarters",
+        "manual": "milestone"
+      }
+    },
+    {
+      "block": "k7wUJS2M",
+      "why": "\"students must enroll in at least three (3) units of independent research (EE 300 or EE 391) under the direction of their primary or secondary advisor\" \"The writing and research units ... may be counted toward the 45 units required for the degree.\" \"All independent study units (EE 300 or EE 391) must be taken for letter grades\"",
+      "node": {
+        "id": "ov-eems-dist-writing",
+        "t": "courses",
+        "name": "Supervised Writing and Research (3 units)",
+        "mode": "all",
+        "items": [
+          [
+            "EE 300",
+            "EE 391"
+          ]
+        ],
+        "units": 3,
+        "letter": true,
+        "shares": true
+      }
+    },
+    {
+      "block": "k7wUJS2M",
+      "why": "\"a GPA of 3.0 (B) or better must be maintained\"",
+      "node": {
+        "id": "ov-eems-dist-gpa",
+        "t": "text",
+        "name": "GPA of 3.0",
+        "manual": "gpa"
+      }
+    },
+    {
+      "block": "k7wUJS2M",
+      "why": "\"Research Report – Students must complete a significant report describing their research and its conclusions.\" \"The primary and secondary advisors must approve the research report\"",
+      "node": {
+        "id": "ov-eems-dist-report",
+        "t": "text",
+        "name": "Research report",
+        "manual": "thesis"
+      }
+    }
+  ]
+}

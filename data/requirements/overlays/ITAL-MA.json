@@ -1,0 +1,39 @@
+{
+  "code": "ITAL-MA",
+  "reviewed": "2026-10-23",
+  "summary": "The audit checks the 45 graduate units, every one taken for a letter grade, and DLCL 311, all at Stanford. Checked by hand: the 3.3 GPA and the master's examination.",
+  "program": {
+    "letterGrade": true,
+    "why": "\"Candidates must complete a minimum of 45 units of graduate work with all courses being taken for a letter grade\""
+  },
+  "nodes": {
+    "t6aYSVOS": {
+      "why": "\"Candidates must complete a minimum of 45 units of graduate work with all courses being taken for a letter grade\": the 45 units are the program's minimum and letter grades apply to every course.",
+      "patch": {
+        "name": "DLCL 311"
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "mAbEGmbJ",
+      "node": {
+        "id": "ov-gpa",
+        "t": "text",
+        "name": "Minimum GPA of 3.3",
+        "manual": "gpa"
+      },
+      "why": "\"a minimum grade point average (GPA) of 3.3\""
+    },
+    {
+      "block": "mAbEGmbJ",
+      "node": {
+        "id": "ov-exam",
+        "t": "text",
+        "name": "Master's examination",
+        "manual": "exam"
+      },
+      "why": "\"pass the master's examination at the end of their studies\""
+    }
+  ]
+}

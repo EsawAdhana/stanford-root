@@ -1,0 +1,395 @@
+{
+  "code": "CME-PHD",
+  "reviewed": "2026-10-23",
+  "summary": "The audit checks the first-year, general and programming cores, letter graded, the three seminar units (CME 300, CME 500 or 510, and one more listed seminar), nine units of research rotations, the programming, computational and depth electives, 60 units of CME 400, 18 more units of CME 400 or depth electives, and 135 units in all. You check by hand the 3.5 GPA in courses counted toward the PhD, enrolling in 8-10 units each academic-year quarter and full time in your first summer, any petitioned elective, and the qualifying exams, research forum talk, advisor alignment, candidacy form, reading committee, Green Light meeting, oral exam and dissertation.",
+  "nodes": {
+    "QABmiAAe-text": {
+      "why": "\"The coursework requirements for the ICME PhD total 57 units. Students are additionally required to take a minimum of 60 units of CME 400 ... The remaining 18 units ... can be a combination of CME 400 and additional elective courses.\" Those are the rules below and the 135-unit minimum; the yearly coursework deadlines are timing the audit does not check. What is left is enrollment, checked by hand: \"ICME PhD students are required to take 8-10 units per quarter during the academic year.\" and \"First-year PhD students are required to enroll full-time during their first summer quarter.\"",
+      "patch": { "name": "Enroll in 8-10 units each academic-year quarter and full time in your first summer", "manual": "residency" }
+    },
+    "ys6ByNCX": {
+      "why": "Notes: \"First-year core classes must be taken for a letter grade.\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "jR6gkQL4": {
+      "why": "Notes: \"Course must be taken for a letter grade.\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "ssH5lgPf": {
+      "why": "\"Complete three units of seminars before advancing to candidacy at the end of year 2. One unit must come from CME 300, one unit from either CME 500 or CME 510, and the remaining unit can come from any other listed seminar.\" The data asked for one course from any slot.",
+      "patch": {
+        "mode": "all",
+        "units": 3
+      }
+    },
+    "ulJnT9Sk": {
+      "why": "Notes: \"Courses must be taken for a letter grade.\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "baqHUqIM": {
+      "why": "Notes: \"Course must be taken for a letter grade.\" A petitioned replacement is moved in by hand.",
+      "patch": {
+        "letter": true
+      }
+    },
+    "WUE2mqCY": {
+      "why": "Notes: \"Courses must be taken for a letter grade.\" Petitioned courses are moved in by hand.",
+      "patch": {
+        "letter": true
+      }
+    },
+    "dzkLeW9C": {
+      "why": "Notes: \"Courses must be taken for a letter grade.\" Petitioned courses are moved in by hand.",
+      "patch": {
+        "letter": true
+      }
+    },
+    "l55Vu9WF": {
+      "why": "\"To fulfill the remaining 18 units of your PhD program, please complete any combination of CME 400 and/or any classes listed in the Specialized Depth Electives section.\"",
+      "replace": {
+        "t": "courses",
+        "name": "Additional Units: Depth and/or Dissertation",
+        "mode": "units",
+        "units": 18,
+        "items": [
+          [
+            "CME 400"
+          ],
+          [
+            "APPPHYS 229"
+          ],
+          [
+            "APPPHYS 237"
+          ],
+          [
+            "CME 262"
+          ],
+          [
+            "CME 279"
+          ],
+          [
+            "CME 285"
+          ],
+          [
+            "CME 309"
+          ],
+          [
+            "CME 330"
+          ],
+          [
+            "CME 364A"
+          ],
+          [
+            "CME 364B"
+          ],
+          [
+            "CME 369"
+          ],
+          [
+            "CS 205L"
+          ],
+          [
+            "CS 221"
+          ],
+          [
+            "CS 224N"
+          ],
+          [
+            "CS 224W"
+          ],
+          [
+            "CS 228"
+          ],
+          [
+            "CS 229"
+          ],
+          [
+            "CS 229M"
+          ],
+          [
+            "CS 231N"
+          ],
+          [
+            "CS 234"
+          ],
+          [
+            "CS 236"
+          ],
+          [
+            "CS 238"
+          ],
+          [
+            "CS 246"
+          ],
+          [
+            "CS 251"
+          ],
+          [
+            "CS 264"
+          ],
+          [
+            "CS 271"
+          ],
+          [
+            "CS 328"
+          ],
+          [
+            "CS 329S"
+          ],
+          [
+            "CS 331X"
+          ],
+          [
+            "CS 336"
+          ],
+          [
+            "CS 361"
+          ],
+          [
+            "CS 448I"
+          ],
+          [
+            "ECON 273"
+          ],
+          [
+            "ECON 274"
+          ],
+          [
+            "EE 368"
+          ],
+          [
+            "ENERGY 223"
+          ],
+          [
+            "ENERGY 224"
+          ],
+          [
+            "ESS 239"
+          ],
+          [
+            "ESS 271"
+          ],
+          [
+            "MATH 205A"
+          ],
+          [
+            "MATH 205B"
+          ],
+          [
+            "MATH 205C"
+          ],
+          [
+            "MATH 210A"
+          ],
+          [
+            "MATH 210B"
+          ],
+          [
+            "MATH 215A"
+          ],
+          [
+            "MATH 215B"
+          ],
+          [
+            "MATH 236"
+          ],
+          [
+            "MATH 238"
+          ],
+          [
+            "MATH 273A"
+          ],
+          [
+            "MATH 273B"
+          ],
+          [
+            "MATH 275A"
+          ],
+          [
+            "MATH 275B"
+          ],
+          [
+            "MATH 275C"
+          ],
+          [
+            "MATSCI 331"
+          ],
+          [
+            "ME 334"
+          ],
+          [
+            "ME 335A"
+          ],
+          [
+            "ME 336"
+          ],
+          [
+            "ME 344"
+          ],
+          [
+            "ME 346A"
+          ],
+          [
+            "ME 351A"
+          ],
+          [
+            "ME 351B"
+          ],
+          [
+            "ME 361"
+          ],
+          [
+            "ME 408"
+          ],
+          [
+            "ME 470"
+          ],
+          [
+            "MS&E 228"
+          ],
+          [
+            "MS&E 232H"
+          ],
+          [
+            "MS&E 235B"
+          ],
+          [
+            "MS&E 321"
+          ],
+          [
+            "MS&E 323"
+          ],
+          [
+            "MS&E 325"
+          ],
+          [
+            "MS&E 328"
+          ],
+          [
+            "MS&E 334"
+          ],
+          [
+            "MS&E 338"
+          ],
+          [
+            "MS&E 349"
+          ],
+          [
+            "PHYSICS 234"
+          ],
+          [
+            "STATS 203"
+          ],
+          [
+            "STATS 217"
+          ],
+          [
+            "STATS 218"
+          ],
+          [
+            "STATS 219"
+          ],
+          [
+            "STATS 300A"
+          ],
+          [
+            "STATS 300B"
+          ],
+          [
+            "STATS 300C"
+          ],
+          [
+            "STATS 305A"
+          ],
+          [
+            "STATS 305B"
+          ],
+          [
+            "STATS 305C"
+          ],
+          [
+            "STATS 318"
+          ],
+          [
+            "STATS 354"
+          ],
+          [
+            "STATS 370"
+          ]
+        ]
+      }
+    },
+    "EqtNY3ib": {
+      "why": "\"Pass the ICME qualifying exams at the end of the first year.\"",
+      "patch": {
+        "manual": "exam"
+      }
+    },
+    "FFgvNbG8": {
+      "why": "\"Present at a research forum organized by the institute during the second year of the PhD.\"",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "5QD4b5mK": {
+      "why": "\"Align with a permanent research advisor no later than the summer quarter of year one. Students must submit the signed advisor agreement to ICME student services before the start of their second year.\"",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "YAgbwYQq": {
+      "why": "\"It is strongly recommended that students submit a dissertation proposal to their advisor in conjunction with advancing to candidacy.\" A recommendation, not a requirement.",
+      "patch": {
+        "info": true
+      }
+    },
+    "D2z2qF3s": {
+      "why": "\"Submit the completed candidacy form to the ICME student services team by the end of spring quarter in year two.\"",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "bsQyW7N8": {
+      "why": "\"In consultation with the advisor, the student must form a Reading Committee. A Reading Committee Form must be completed and filed with the ICME student services office before the approval of TGR status.\"",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "izvVVYbu": {
+      "why": "\"At least six months before the planned PhD Defense, the student and the Reading Committee must set a Green Light Meeting.\"",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "fyZ93Jl4": {
+      "why": "\"the student may schedule the University Oral Examination (Dissertation Defense)\"",
+      "patch": {
+        "manual": "exam"
+      }
+    },
+    "NXw3rMHJ": {
+      "why": "\"ICME PhD students are required to complete a dissertation.\"",
+      "patch": {
+        "manual": "thesis"
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "0GzLObTh",
+      "node": {
+        "id": "ov-gpa",
+        "t": "text",
+        "name": "GPA of 3.5 or higher in courses counted toward the PhD",
+        "manual": "gpa"
+      },
+      "why": "GPA: \"Maintain a grade point average of 3.5 or higher in coursework being counted toward the CME-PhD.\""
+    }
+  ]
+}

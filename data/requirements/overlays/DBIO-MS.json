@@ -1,0 +1,77 @@
+{
+  "code": "DBIO-MS",
+  "reviewed": "2026-10-23",
+  "summary": "The audit checks the 45 graduate units (your DBIO 399 or GENE 399 research units count toward them), DBIO 210, two more Developmental Biology lecture courses and three courses outside the department. You check by hand that the DBIO courses you count are lecture courses, your attendance at Developmental Biology seminars and journal clubs, and the research paper.",
+  "nodes": {
+    "uxGwvR8L": {
+      "why": "\"Students can adjust the units of their graduate research course (DBIO 399 or GENE 399) to 10 units per quarter (before reaching TGR) or 3 units per quarter (after advancing to TGR) to reach 45 units.\" The 45 units are the Bulletin's program minimum, counted over the graduate career, not 45 units of research.",
+      "patch": {
+        "units": null
+      }
+    },
+    "WxQ4AxwU": {
+      "why": "\"Each candidate must complete a research paper proposing a specific experimental approach and background in an area of science relative to developmental biology.\"",
+      "patch": {
+        "manual": "thesis"
+      }
+    }
+  },
+  "add": [
+    {
+      "parent": "dbbKzln4",
+      "node": {
+        "id": "ov-dbio-ms-lectures",
+        "t": "courses",
+        "name": "Two more Developmental Biology lecture courses",
+        "mode": "atLeast",
+        "n": 2,
+        "pool": {
+          "subjects": [
+            "DBIO"
+          ],
+          "exclude": [
+            "DBIO 210",
+            "DBIO 199",
+            "DBIO 299",
+            "DBIO 299C",
+            "DBIO 370",
+            "DBIO 399",
+            "DBIO 802"
+          ]
+        }
+      },
+      "why": "\"Students must satisfactorily complete at least three lecture courses the department offers, including course Developmental Biology.\" DBIO 210 is the core course, so two more. The Bulletin does not say which DBIO courses are lecture courses; the pool leaves out only the research, directed reading, practical training and TGR listings."
+    },
+    {
+      "parent": "dbbKzln4",
+      "node": {
+        "id": "ov-dbio-ms-outside",
+        "t": "courses",
+        "name": "Three courses outside the department",
+        "mode": "atLeast",
+        "n": 3,
+        "pool": {
+          "subjects": [],
+          "anySubject": true,
+          "excludeSubjects": [
+            "DBIO"
+          ],
+          "exclude": [
+            "GENE 399"
+          ]
+        }
+      },
+      "why": "\"In addition, students are required to take three courses outside the department.\" GENE 399 is left out because the program lists it as the graduate research course."
+    },
+    {
+      "parent": "dbbKzln4",
+      "node": {
+        "id": "ov-dbio-ms-seminars",
+        "t": "text",
+        "name": "Attend Developmental Biology seminars and journal clubs",
+        "manual": "milestone"
+      },
+      "why": "\"Students are also expected to attend Developmental Biology seminars and journal clubs.\""
+    }
+  ]
+}

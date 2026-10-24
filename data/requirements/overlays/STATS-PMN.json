@@ -1,0 +1,94 @@
+{
+  "code": "STATS-PMN",
+  "reviewed": "2026-10-23",
+  "summary": "You take 20 units of STATS courses numbered 300 and above (not 301, 302, 303, 398 or 399) and 10 more units of STATS courses at 200 and above, without research units and with at most one unit of the Consulting Workshop, each letter graded with a B or better. The Statistics department's approval of your courses and both departments' approval of the minor form are checked by hand.",
+  "program": {
+    "letterGrade": true,
+    "minGrade": "B",
+    "why": "\"All courses must be taken for a letter grade when offered (minimum grade of B for each course).\"",
+    "totals": [
+      {
+        "label": "Consulting Workshop",
+        "maxUnits": 1,
+        "codes": [
+          "STATS 390"
+        ],
+        "why": "Block notes: \"Students may not include research units (299/399) or more than one unit of STATS 390, Consulting Workshop, toward the 30 units.\" The cap binds the rules too, so a second unit of STATS 390 cannot fill one rule while the first fills the other.",
+        "inRules": true
+      }
+    ]
+  },
+  "nodes": {
+    "416JAc2P": {
+      "why": "\"20 units must be from Statistics courses numbered 300 and above (not including 301, 302, 303, 398, or 399).\" Block notes: \"Students may not include research units (299/399) or more than one unit of course, Consulting Workshop\" (STATS 390).",
+      "replace": {
+        "t": "courses",
+        "name": "20 units of STATS courses numbered 300 and above",
+        "mode": "units",
+        "units": 20,
+        "pool": {
+          "subjects": [
+            "STATS"
+          ],
+          "minNumber": 300,
+          "exclude": [
+            "STATS 301",
+            "STATS 302",
+            "STATS 303",
+            "STATS 398",
+            "STATS 399"
+          ]
+        },
+        "limits": [
+          {
+            "label": "Consulting Workshop",
+            "maxUnits": 1,
+            "codes": [
+              "STATS 390"
+            ]
+          }
+        ]
+      }
+    },
+    "RpGGMREK": {
+      "why": "\"The remaining 10 units of Statistics courses can be 200 level and above.\" Block notes: \"Students may not include research units (299/399) or more than one unit of course, Consulting Workshop\".",
+      "replace": {
+        "t": "courses",
+        "name": "10 units of STATS courses numbered 200 and above",
+        "mode": "units",
+        "units": 10,
+        "pool": {
+          "subjects": [
+            "STATS"
+          ],
+          "minNumber": 200,
+          "exclude": [
+            "STATS 299",
+            "STATS 399"
+          ]
+        },
+        "limits": [
+          {
+            "label": "Consulting Workshop",
+            "maxUnits": 1,
+            "codes": [
+              "STATS 390"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "msbW45AQ",
+      "node": {
+        "id": "ov-approval",
+        "t": "text",
+        "name": "Course selection approved by Statistics; minor form approved by both departments",
+        "manual": "approval"
+      },
+      "why": "\"The selection of courses must be approved by the Statistics department, and the application form must be approved by both the student's Ph.D. department and the Statistics department.\""
+    }
+  ]
+}

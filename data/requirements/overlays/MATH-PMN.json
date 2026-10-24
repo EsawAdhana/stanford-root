@@ -1,0 +1,83 @@
+{
+  "code": "MATH-PMN",
+  "reviewed": "2026-10-23",
+  "summary": "The audit checks two sequences, Sequence 1 and Sequence 2, or one of them plus a third sequence the Director of Graduate Studies approves, and 21 units of letter-graded Math graduate courses numbered 200-297. The 100-level sequence courses may come from your undergraduate study or another university. Checked by hand: the Director of Graduate Studies approves the 200-level courses in advance.",
+  "nodes": {
+    "oUujfiBV": {
+      "why": "\"Complete both of the following Sequences: 1, 2\" and the note \"A third coherent sequence designed by the student, subject to the approval of the Director of Graduate Studies, may be considered a substitute for Sequence 1 or 2.\" So two of: Sequence 1, Sequence 2, an approved third sequence.",
+      "replace": {
+        "t": "some",
+        "n": 2,
+        "name": "Two sequences: Sequence 1, Sequence 2, or an approved substitute",
+        "children": [
+          {
+            "id": "GUjkc0VJ",
+            "t": "courses",
+            "name": "Sequence 1",
+            "mode": "all",
+            "items": [
+              [
+                "MATH 106",
+                "MATH 116"
+              ],
+              [
+                "MATH 131P"
+              ]
+            ]
+          },
+          {
+            "id": "cDENX8u5",
+            "t": "courses",
+            "name": "Sequence 2",
+            "mode": "all",
+            "items": [
+              [
+                "MATH 113"
+              ],
+              [
+                "MATH 120",
+                "MATH 152"
+              ]
+            ]
+          },
+          {
+            "id": "oUujfiBV-third",
+            "t": "text",
+            "name": "Third coherent sequence approved by the Director of Graduate Studies",
+            "manual": "approval"
+          }
+        ]
+      }
+    },
+    "lf5BEIzM": {
+      "why": "\"Complete 21 units of Math graduate courses numbered between 200 and 297\" \"The courses must be taken at Stanford for a letter grade and be approved in advance by the Director of Graduate Studies.\"",
+      "replace": {
+        "t": "all",
+        "name": "Additional Courses",
+        "children": [
+          {
+            "id": "lf5BEIzM-21",
+            "t": "courses",
+            "name": "21 units of Math graduate courses numbered 200-297",
+            "mode": "units",
+            "units": 21,
+            "letter": true,
+            "pool": {
+              "subjects": [
+                "MATH"
+              ],
+              "minNumber": 200,
+              "maxNumber": 297
+            }
+          },
+          {
+            "id": "lf5BEIzM-approval",
+            "t": "text",
+            "name": "Courses approved in advance by the Director of Graduate Studies",
+            "manual": "approval"
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,598 @@
+{
+  "code": "ED-PHD",
+  "reviewed": "2026-10-23",
+  "summary": "Every student takes the IDEAS seminars and the research methods core, picks a base area (CTE, DAPS or SHIPS), and reaches 135 graduate units. LSTD and RILE are optional cross-area specializations on top of the base area: LSTD needs nine quarters of EDUC 291 and proficiency, shown by courses or prior work your advisor accepts, in research methods, design, learning, technology perspectives and disciplinary learning, and RILE needs six quarters of EDUC 489 and five distribution courses that may also count elsewhere. In SHIPS you choose one program option (an HSS discipline, one of the IDE areas, or a dual specialization), and Education Data Science needs one course in three of its five tracks. The research methods course of your choice, the advanced methods course, the master's or minor outside the GSE, the 3.0 GPA, transfer units, the research apprenticeship with a faculty member, at least three TAships (from the Fall 2024 cohort), reviews, qualifying papers, candidacy, the proposal, the oral exam and the dissertation are checked by your advisor and the department.",
+  "blocks": {
+    "MpK9cbqm": {
+      "kind": "required"
+    },
+    "ofqDwlr6": {
+      "kind": "required"
+    },
+    "cHrAaOYm": {
+      "kind": "optional"
+    },
+    "ez2U2OvH": {
+      "kind": "optional"
+    }
+  },
+  "nodes": {
+    "PGtlOm3w-text": {
+      "why": "\"Starting with the Fall 2024 entering cohort, students are expected to complete a minimum of 3 TAships as part of their academic and professional training ... Students funded on full fellowships are expected to complete this requirement via unpaid mentored teaching experiences without appointment to a TA position.\"",
+      "patch": { "name": "At least three TAships (from the Fall 2024 cohort), or unpaid mentored teaching on a full fellowship", "manual": "milestone" }
+    },
+    "lp394VJI-text": {
+      "why": "\"Our expectation is that students work with a faculty member on their projects, and in turn, a faculty member provides apprenticeship opportunities for their advisees.\" The page calls the apprenticeship \"a required component of the overall learning experience\". Checked by the advisor.",
+      "patch": { "name": "Research apprenticeship with a faculty member", "manual": "milestone" }
+    },
+    "EfsKGV1W": {
+      "why": "\"Students must complete a research methods course chosen by the student in consultation with their advisor (the course must be at least three units, be at or above the 200 level, and have a research methods focus).\" Whether a course has a research methods focus is the advisor's call.",
+      "patch": {
+        "manual": "approval",
+        "n": 1
+      }
+    },
+    "aE0I1f73": {
+      "why": "\"Advanced Research Methods (at least one course)\" No list is given; the student moves the course in.",
+      "patch": {
+        "manual": "approval",
+        "n": 1
+      }
+    },
+    "kh3PARZ1": {
+      "why": "\"require specific courses, depending upon a student's emphasis or concentration. See the applicable Area sections for more details.\" A pointer to the Area subplans, which carry those courses.",
+      "patch": {
+        "info": true
+      }
+    },
+    "fn8eRcnE": {
+      "why": "\"At the end of the first year ... students complete a review of their first year's work\"",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "SCTS6ljn": {
+      "why": "\"Doctoral students are expected to complete their second year review/qualifying paper and advance to candidacy at the end of their second year\"",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "KmkX65T7": {
+      "why": "\"Students must advance to candidacy by the end of the second year, as stated in University policy.\" Stored as information; it is a required milestone.",
+      "patch": {
+        "manual": "milestone",
+        "info": null,
+        "name": "Advancement to Candidacy"
+      }
+    },
+    "PZ4rGx3n": {
+      "why": "\"University and GSE policies require an oral examination (i.e., a defense of the dissertation) for the PhD\" Stored as information; it is a required exam.",
+      "patch": {
+        "manual": "exam",
+        "info": null,
+        "name": "Oral Exam"
+      }
+    },
+    "MdFxQC0L": {
+      "why": "\"In student's fourth year, they are expected to complete the dissertation proposal\"",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "bHZMWISZ": {
+      "why": "\"In students' fifth year, they are expected to complete the dissertation\" \"A doctoral dissertation makes an original contribution to knowledge\"",
+      "patch": {
+        "manual": "thesis"
+      }
+    },
+    "SuwIhCbH": {
+      "why": "\"The CTE review portfolio should contain the following materials\"",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "A1XYXibL": {
+      "why": "\"The Second-Year Review is the qualifying process for advancement to doctoral candidacy.\"",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "thJw084g": {
+      "why": "\"The qualifying paper (QP) must be a work of original research.\"",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "56V4GSJt": {
+      "why": "\"Course Offerings in CTE\": a list of offerings with no requirement attached.",
+      "patch": {
+        "optional": true
+      }
+    },
+    "N99Uk5KI": {
+      "why": "\"The program in Developmental and Psychological Sciences (DAPS) emphasizes disciplined inquiry\": a program description.",
+      "patch": {
+        "info": true
+      }
+    },
+    "VzojlVxw": {
+      "why": "\"The Preliminary Review is a comprehensive review of all aspects of a student's graduate work.\"",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "Ewqe5XRe": {
+      "why": "\"students are expected to become engaged in a research project during their first year\" \"all DAPS/LSTD students in the autumn of their second year will participate in a poster session presentation\" \"writing a First Year research report\"",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "Q9ernaCF": {
+      "why": "\"Upon successful completion of the Specialty Review, students must apply for Advancement to Candidacy.\"",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "L8LsPWkB": {
+      "why": "\"Additional Courses Offered by DAPS Faculty\": a list of offerings with no requirement attached.",
+      "patch": {
+        "optional": true
+      }
+    },
+    "gpvo0vep": {
+      "why": "\"Students must take LSTD Proseminar EDUC 291 (autumn, winter, and spring quarters of the first year, and then again for an overall total of nine quarters).\" Nine enrollments; the five quarters in years one and two are checked by hand.",
+      "patch": {
+        "items": [
+          [
+            "EDUC 291"
+          ],
+          [
+            "EDUC 291"
+          ],
+          [
+            "EDUC 291"
+          ],
+          [
+            "EDUC 291"
+          ],
+          [
+            "EDUC 291"
+          ],
+          [
+            "EDUC 291"
+          ],
+          [
+            "EDUC 291"
+          ],
+          [
+            "EDUC 291"
+          ],
+          [
+            "EDUC 291"
+          ]
+        ]
+      }
+    },
+    "tWwmv49y": {
+      "why": "\"LSTD students will complete and write up a first-year project that constitutes a significant component of their first-year review\"",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "vRxgbaq3": {
+      "why": "\"Recent Course Offerings within LSTD (and *GSE-wide)\": a list of offerings with no requirement attached.",
+      "patch": {
+        "optional": true
+      }
+    },
+    "mf6V9CjC": {
+      "why": "\"RILE students should take the Colloquium (EDUC 489) during the first year's autumn, winter, and spring quarters and then again for an overall total of at least six quarters.\"",
+      "patch": {
+        "items": [
+          [
+            "EDUC 489"
+          ],
+          [
+            "EDUC 489"
+          ],
+          [
+            "EDUC 489"
+          ],
+          [
+            "EDUC 489"
+          ],
+          [
+            "EDUC 489"
+          ],
+          [
+            "EDUC 489"
+          ]
+        ]
+      }
+    },
+    "EFX8ONG9": {
+      "why": "\"The RILE courses may double count with courses that satisfy other area and school requirements\"",
+      "patch": {
+        "shares": true
+      }
+    },
+    "kB5HTXqZ": {
+      "why": "\"The RILE courses may double count with courses that satisfy other area and school requirements\"",
+      "patch": {
+        "shares": true
+      }
+    },
+    "UjfIddVd": {
+      "why": "\"The RILE courses may double count with courses that satisfy other area and school requirements\"",
+      "patch": {
+        "shares": true
+      }
+    },
+    "QxzK5NYn": {
+      "why": "\"In addition, in consultation with the advisor and program committee, students construct a major course of studies in education appropriate to their disciplinary specialty\" \"Students must pursue studies beyond the introductory level in one other field of HSS\" \"a research apprenticeship is required from each student\" No course list; the program committee approves it.",
+      "patch": {
+        "manual": "approval"
+      }
+    },
+    "CnoLMnF1": {
+      "why": "\"Students will fulfill this requirement by completing at least 1 course in 3 of the 5 available tracks listed below.\" Stored as one of the five.",
+      "replace": {
+        "t": "some",
+        "n": 3,
+        "name": "Data Science Specializations",
+        "desc": "Data Science Specializations\nStudents will also complete data science specializations in their course of study.\nStudents will fulfill this requirement by completing at least 1 course in 3 of the 5 available tracks listed below.\nThe areas of concentration that will be offered are:\n• Natural Language Processing\n• Network Science\n• Experiments & Causal Methods\n• Measurement\n• Learning Analytics\nThese courses are established courses at Stanford University and will allow for inter-professional education of GSE students and graduate students from other departments. We anticipate that these tracks may change overtime with advances in data science.",
+        "children": [
+          {
+            "id": "PgwyanKE",
+            "t": "courses",
+            "name": "Natural Language Processing",
+            "mode": "atLeast",
+            "items": [
+              [
+                "CS 124"
+              ],
+              [
+                "CS 224U"
+              ],
+              [
+                "LINGUIST 278"
+              ],
+              [
+                "LINGUIST 284"
+              ],
+              [
+                "OB 637"
+              ]
+            ],
+            "n": 1,
+            "notes": "Introductory\n• CS 124: From Languages to Information\n• LINGUIST 278: Programming for Linguists\n• OB 637: Modeling Culture\nAdvanced\n• CS 224U: Natural Language Understanding\n• LINGUIST 284: Natural Language Processing with Deep Learning"
+          },
+          {
+            "id": "28D1UB8T",
+            "t": "courses",
+            "name": "Network Science",
+            "mode": "atLeast",
+            "items": [
+              [
+                "CS 278"
+              ],
+              [
+                "CS 224W"
+              ],
+              [
+                "CS 375"
+              ],
+              [
+                "EDUC 316"
+              ],
+              [
+                "MS&E 135"
+              ],
+              [
+                "MS&E 334"
+              ]
+            ],
+            "n": 1,
+            "notes": "Introductory\n• EDUC 316: Social Network Methods (SOC 369)\n• MS&E 135: Networks\nAdvanced\n• CS 224W: Analysis of Networks\n• CS 278: Social Computing\n• CS 375: Large-Scale Neural Network Modeling for Neuroscience\n• MS&E 334: Topics in Social Data"
+          },
+          {
+            "id": "lAYZfZhm",
+            "t": "courses",
+            "name": "Experiments/Casual Methods",
+            "mode": "atLeast",
+            "items": [
+              [
+                "ECON 293"
+              ],
+              [
+                "EDUC 430B"
+              ],
+              [
+                "POLISCI 450B"
+              ],
+              [
+                "PSYCH 251"
+              ]
+            ],
+            "n": 1,
+            "notes": "Introductory\n• EDUC 430B: Causal Inference in Quantitative Educational and Social Science Research\nAdvanced\n• ECON 293: Machine Learning and Causal Inference\n• POLISCI 450B: Political Methodology II: Causal Inference\n• PSYCH 251: Experimental Methods"
+          },
+          {
+            "id": "DOYzshtn",
+            "t": "courses",
+            "name": "Measurement",
+            "mode": "atLeast",
+            "items": [
+              [
+                "EDUC 252"
+              ],
+              [
+                "EDUC 252L"
+              ],
+              [
+                "EDUC 353A"
+              ],
+              [
+                "EDUC 430C"
+              ]
+            ],
+            "n": 1,
+            "notes": "Introductory\n• EDUC 252: Introduction to Test Theory\n• EDUC 430C: Using Data to Describe the World: Descriptive Social Science Research\nAdvanced\n• EDUC 252L: Introduction to Test Theory - Lab\n• EDUC 353A: Problems in Measurement: Item Response Theory"
+          },
+          {
+            "id": "vPRsYhCi",
+            "t": "courses",
+            "name": "Learning Analytics",
+            "mode": "atLeast",
+            "items": [
+              [
+                "CS 398"
+              ]
+            ],
+            "n": 1,
+            "notes": "Advanced\n• CS 398: Computational Education"
+          }
+        ]
+      }
+    },
+    "VY3huVqq": {
+      "why": "\"students construct a major course of studies in education appropriate to their program interests in Educational Policy\" \"This program should include at least one course in each of the four main areas within the program: economics, sociology/organization studies, policy, and history.\" \"a research apprenticeship is required from each student\" Stored as information; it is one of the program options, with no course lists, so the program committee approves it.",
+      "patch": {
+        "manual": "approval",
+        "info": null
+      }
+    },
+    "WEY3231b": {
+      "why": "\"EDUC 306B is recommended but not required\"",
+      "patch": {
+        "optional": true
+      }
+    },
+    "Opv4YZGL": {
+      "why": "\"EDUC 265/165 - History of Higher Education\" \"EDUC 347 - Economics of Higher Education\" \"EDUC 355 - Higher Education and Society\" EDUC 165 is the undergraduate listing of 265.",
+      "patch": {
+        "name": "Required Courses",
+        "items": [
+          [
+            "EDUC 265",
+            "EDUC 165"
+          ],
+          [
+            "EDUC 347"
+          ],
+          [
+            "EDUC 355"
+          ]
+        ]
+      }
+    },
+    "EuR89LTu": {
+      "why": "\"In addition students must take two electives in higher education.\" No list is given; the student moves them in.",
+      "patch": {
+        "manual": "approval",
+        "n": 2
+      }
+    },
+    "vISLeC5x": {
+      "why": "\"ED 346 is not required but is strongly recommended\"",
+      "patch": {
+        "optional": true
+      }
+    },
+    "ulpvhDq7": {
+      "why": "\"students construct a program that meets the requirements of both their HSS program and their IDE program\" \"a research apprenticeship is required from each student\"",
+      "patch": {
+        "manual": "approval"
+      }
+    },
+    "tfDtSMpN": {
+      "why": "\"Usually during the Spring Quarter of the first year, in the program, each student shall submit a portfolio\"",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "vAAsjEiv": {
+      "why": "\"SHIPS Second-Year Review (Qualifying Review)\" \"students shall submit a portfolio containing ... A copy of the Qualifying Paper (QP).\"",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "KpbDtU5B": {
+      "why": "\"Doctoral students are expected to complete a dissertation proposal during the fourth year.\"",
+      "patch": {
+        "manual": "milestone"
+      }
+    }
+  },
+  "alternatives": [
+    {
+      "id": "ov-ships-program",
+      "name": "SHIPS program option",
+      "of": [
+        "QxzK5NYn",
+        "YWDBaexR",
+        "VY3huVqq",
+        "LqhaVzlS",
+        "l82Mal9F",
+        "ulpvhDq7"
+      ],
+      "why": "\"All doctoral students in SHIPS may pursue one of three program options: A program in one of the six HSS disciplines; A program in one of the four IDE areas; A dual specialization in two of the aforementioned programs\""
+    }
+  ],
+  "add": [
+    {
+      "parent": "LOxPJKzG",
+      "why": "\"Select 5 courses that fit RILE's distribution requirements, with at least 1 course from each of the following 3 areas\" One from each area leaves two more from any area. \"The RILE courses may double count with courses that satisfy other area and school requirements and come from outside the school (e.g., CCSRE)\"; outside courses are moved in by hand.",
+      "node": {
+        "id": "ov-rile-more",
+        "t": "courses",
+        "name": "Two more courses from any of the three areas",
+        "mode": "atLeast",
+        "n": 2,
+        "items": [
+          [
+            "EDUC 103B"
+          ],
+          [
+            "EDUC 131"
+          ],
+          [
+            "EDUC 179E"
+          ],
+          [
+            "EDUC 245"
+          ],
+          [
+            "EDUC 314"
+          ],
+          [
+            "EDUC 337"
+          ],
+          [
+            "EDUC 340"
+          ],
+          [
+            "EDUC 372"
+          ],
+          [
+            "EDUC 389B"
+          ],
+          [
+            "EDUC 392"
+          ],
+          [
+            "EDUC 439"
+          ],
+          [
+            "EDUC 442"
+          ],
+          [
+            "EDUC 488"
+          ],
+          [
+            "EDUC 107"
+          ],
+          [
+            "EDUC 112"
+          ],
+          [
+            "EDUC 141"
+          ],
+          [
+            "EDUC 177A"
+          ],
+          [
+            "EDUC 197"
+          ],
+          [
+            "EDUC 207"
+          ],
+          [
+            "EDUC 212"
+          ],
+          [
+            "EDUC 222"
+          ],
+          [
+            "EDUC 273"
+          ],
+          [
+            "EDUC 277"
+          ],
+          [
+            "EDUC 306A"
+          ],
+          [
+            "EDUC 341"
+          ],
+          [
+            "EDUC 257"
+          ],
+          [
+            "EDUC 381"
+          ],
+          [
+            "EDUC 389C"
+          ],
+          [
+            "EDUC 419"
+          ],
+          [
+            "LINGUIST 255K"
+          ]
+        ],
+        "shares": true
+      }
+    },
+    {
+      "parent": "LqhaVzlS",
+      "why": "\"Beyond coursework, a research apprenticeship is required from each student to obtain intensive training on an ongoing project or undertake supervised fieldwork.\"",
+      "node": {
+        "id": "ov-ships-gce-apprentice",
+        "t": "text",
+        "name": "Research apprenticeship",
+        "manual": "milestone"
+      }
+    },
+    {
+      "parent": "l82Mal9F",
+      "why": "\"Beyond coursework, a research apprenticeship is required from each student, to obtain intensive training on an on-going project or undertake supervised fieldwork.\"",
+      "node": {
+        "id": "ov-ships-he-apprentice",
+        "t": "text",
+        "name": "Research apprenticeship",
+        "manual": "milestone"
+      }
+    },
+    {
+      "block": "0GzLObTh",
+      "why": "Program Overview: \"PhD students must complete a minor in another discipline taught outside the school, hold an acceptable master's degree outside the field of education, or complete an approved individually designed distributed minor that combines relevant advanced work taken in several disciplines outside the school.\" The RILE overview and the SHIPS programs repeat it.",
+      "node": {
+        "id": "ov-edphd-outside",
+        "t": "text",
+        "name": "Master's or minor outside the GSE",
+        "manual": "other"
+      }
+    },
+    {
+      "block": "0GzLObTh",
+      "why": "Program Overview: \"Students must maintain a grade point average (GPA) of 3.0 (B) or better in courses applicable to the degree.\"",
+      "node": {
+        "id": "ov-edphd-gpa",
+        "t": "text",
+        "name": "GPA of 3.0 (B) or better in courses applicable to the degree",
+        "manual": "gpa"
+      }
+    },
+    {
+      "block": "cHrAaOYm",
+      "why": "\"LSTD students will also need to demonstrate proficiency through coursework or prior achievements (such as course equivalencies), determined in consultation with their faculty advisor, in the following domains: Two courses in research methodology / Two courses in design skills ... / Two courses on learning ... / One course on technology from a critical/social scientific/historical/philosophical perspective / One course focused on learning in a disciplinary content area\" No course lists are given and prior achievements can count, so the advisor checks it.",
+      "node": {
+        "id": "ov-lstd-proficiency",
+        "t": "text",
+        "name": "Proficiency in the LSTD domains: two research methods, two design skills and two learning courses, one technology perspectives course and one disciplinary learning course",
+        "manual": "approval"
+      }
+    }
+  ]
+}

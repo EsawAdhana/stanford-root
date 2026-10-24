@@ -1,0 +1,26 @@
+{
+  "code": "MEDST-MIN",
+  "reviewed": "2026-10-23",
+  "summary": "The audit checks one introductory core course (HISTORY 115D, ENGLISH 131 or ENGLISH 184X) taken for 5 units, five more elective courses, every course letter graded, and the minor's 25 units in all. The electives are a coherent course of study the Undergraduate Faculty Director approves, so you move them in yourself; the listed electives are only suggestions. Checked by hand: each course is 3 units or more, and at most 5 units are in a medieval language. Courses may not also count toward another major or minor, and transfer or AP credit is not accepted.",
+  "nodes": {
+    "emHIn0li": {
+      "why": "\"This introductory course must be taken for five (5) units.\"",
+      "patch": {
+        "minUnitsEach": 5
+      }
+    },
+    "r1x0gXvF": {
+      "why": "Requirements Overview: \"Students complete six courses of three units or more for a total of 25 units\", so five electives beside the introductory course. \"Electives may be selected from many offerings in various disciplines according to student interests, but they must follow a coherent course of study. The Undergraduate Faculty Director must approve this course of study and elective courses.\" Notes: \"The pre-listed courses here are recommended electives but not required. Additional courses must be approved by the Faculty Director.\" So the student moves the five approved electives in; the 3-unit minimum for each and \"Up to five units may be taken in a medieval language\" are checked by hand.",
+      "replace": {
+        "t": "text",
+        "name": "Five elective courses approved by the Faculty Director",
+        "manual": "approval",
+        "n": 5
+      }
+    }
+  },
+  "program": {
+    "letterGrade": true,
+    "why": "Grading: \"All courses must be taken for a letter grade.\""
+  }
+}

@@ -1,0 +1,132 @@
+{
+  "code": "MGTSC-MS",
+  "reviewed": "2026-10-23",
+  "summary": "The audit checks 45 units in courses numbered 100 and above: one letter-graded breadth course in each of the four areas, three letter-graded depth courses from one area (or a self-designed set of three MS&E graduate courses you move in), at least 36 letter-graded units, 27 of them in MS&E courses numbered 200 and above, and at most 3 units of MS&E 208 practical training. Checked by hand: the 3.0 GPA, the 2-unit minimum for the 27 MS&E units, at most four directed study units toward the letter-grade units, the 3-unit limit on other 1-unit courses, and multivariable calculus, linear algebra and programming, which you take in addition if you have not already. All 45 units must be taken at Stanford, apart from up to 18 non-degree units.",
+  "nodes": {
+    "llwmfa8X": {
+      "why": "\"Completion of four courses, one from each of the four breadth areas, each taken for a letter grade.\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "CALvg30I": {
+      "why": "\"Completion of four courses, one from each of the four breadth areas, each taken for a letter grade.\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "qKDuD0Pg": {
+      "why": "\"Completion of four courses, one from each of the four breadth areas, each taken for a letter grade.\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "vh0kWNtu": {
+      "why": "\"Completion of four courses, one from each of the four breadth areas, each taken for a letter grade.\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "IbbPZPdW": {
+      "why": "\"Completion of three additional MS&E graduate courses for depth, each taken for a letter grade.\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "ldHJ9KgQ": {
+      "why": "\"Completion of three additional MS&E graduate courses for depth, each taken for a letter grade.\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "ZWDrzHsl": {
+      "why": "\"Completion of three additional MS&E graduate courses for depth, each taken for a letter grade.\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "v59QnSCs": {
+      "why": "\"Completion of three additional MS&E graduate courses for depth, each taken for a letter grade.\"",
+      "patch": {
+        "letter": true
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "K8wkfWkH",
+      "parent": "h4XUX33B",
+      "node": {
+        "id": "ov-self-designed",
+        "t": "text",
+        "name": "Self-designed set of three MS&E graduate courses",
+        "manual": "other",
+        "n": 3
+      },
+      "why": "\"Students may select from one of the four listed areas, or self-design a set of three MS&E graduate courses.\" The text gives no course number for graduate level, so the student moves the three courses in and a person checks them."
+    },
+    {
+      "block": "1IlLtcEx",
+      "node": {
+        "id": "ov-gpa",
+        "t": "text",
+        "name": "GPA of 3.0 or higher",
+        "manual": "gpa"
+      },
+      "why": "GPA: \"The degree program must be completed with a grade point average (GPA) of 3.0/4.3 or higher.\""
+    },
+    {
+      "block": "1IlLtcEx",
+      "node": {
+        "id": "ov-prereqs",
+        "t": "text",
+        "name": "Multivariable calculus, linear algebra and programming (before the MS, or in addition to it)",
+        "manual": "other"
+      },
+      "why": "Policies: \"Students are expected to have previously completed multivariable calculus, linear algebra, and computer programming courses. Otherwise, those courses must be taken in addition to the degree requirements.\""
+    }
+  ],
+  "program": {
+    "totals": [
+      {
+        "label": "36 letter-graded units",
+        "minUnits": 36,
+        "grading": "letter",
+        "why": "Grading: \"Students must complete at least 36 letter-graded units, of which 27 units must be in MS&E courses numbered 200 and above and a minimum of two units each.\""
+      },
+      {
+        "label": "27 letter-graded units in MS&E courses numbered 200 and above",
+        "minUnits": 27,
+        "grading": "letter",
+        "pool": {
+          "subjects": [
+            "MS&E"
+          ],
+          "minNumber": 200
+        },
+        "why": "Grading: \"Students must complete at least 36 letter-graded units, of which 27 units must be in MS&E courses numbered 200 and above and a minimum of two units each.\""
+      },
+      {
+        "label": "MS&E 208 practical training (1-unit courses)",
+        "maxUnits": 3,
+        "codes": [
+          "MS&E 208A",
+          "MS&E 208B",
+          "MS&E 208C",
+          "MS&E 208D",
+          "MS&E 208E"
+        ],
+        "why": "Policies: \"A maximum of three units of 1-unit courses may apply toward the degree, such as seminar, colloquia, workshop, and activity, in any department, including MS&E 208A, B, C, and D Practical Training, and MS&E 208E Part-Time Practical Training.\""
+      },
+      {
+        "label": "Courses numbered below 100",
+        "maxUnits": 0,
+        "pool": {
+          "anySubject": true,
+          "maxNumber": 99
+        },
+        "why": "\"Students must complete at least 45 units at Stanford in courses numbered 100 and above.\""
+      }
+    ]
+  }
+}

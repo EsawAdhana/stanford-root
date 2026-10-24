@@ -1,0 +1,328 @@
+{
+  "code": "MGTSC-PHD",
+  "reviewed": "2026-10-23",
+  "summary": "The audit checks MS&E 302 and the courses of one research path (Computational Social Science, Decision and Risk Analysis, Operations Research, Organizations, Technology and Entrepreneurship, Policy and Strategy, or Quantitative Finance), each letter graded when a letter grade is offered, and 135 units of graduate work. Checked by hand: three years of full-time study, 3 units with each of four faculty members before candidacy, aligning with an advisor by the end of your second year, the second-year rotations or tutorials, the candidacy, progress and reading committee forms, 30 units a year with the annual review, the 3.4 GPA in MS&E courses, the qualification paper or project, the area exam or research defense, the faculty vote to advance to candidacy, the oral exam and the dissertation. Up to 45 units from another institution may transfer if you do not finish a Stanford master's.",
+  "program": {
+    "unitsMin": 135,
+    "why": "\"The PhD requires a minimum of 135 units, up to 45 units of which may be transferred from another graduate program.\" The Bulletin's program minimum says 90."
+  },
+  "nodes": {
+    "ziPxGxYm-text": {
+      "why": "The overview restates the area depth courses, the first-year seminar, the qualification procedure, the oral exam and the dissertation, which are rules here, and the 135 units, now the program minimum. What it adds is checked by hand: \"The program requires a minimum of three years of full-time graduate study.\" \"Before candidacy, at least three units of work must be taken with each of four Stanford faculty members.\" \"PhD students who do not align with an advisor by the end of the second year at Stanford are subject to dismissal from the program.\" Second-year students must \"Complete at least two one-quarter research rotations or tutorials, or one two-quarter research rotation, tutorial, or research paper or project\" and \"Submit a candidacy form\"; third-year students \"Submit a progress form listing the dissertation topic\"; fourth-year students \"submit the reading committee form\"; each year \"Complete 30 units\" (in the fourth year \"30 dissertation units\"), and \"Each doctoral student's progress is reviewed annually by the MS&E faculty.\"",
+      "replace": {
+        "t": "all",
+        "name": "Degree progress and good standing",
+        "children": [
+          {
+            "id": "ov-mgtsc-residency",
+            "t": "text",
+            "name": "At least three years of full-time graduate study",
+            "manual": "residency"
+          },
+          {
+            "id": "ov-mgtsc-four-faculty",
+            "t": "text",
+            "name": "Before candidacy, at least 3 units of work with each of four Stanford faculty members",
+            "manual": "other"
+          },
+          {
+            "id": "ov-mgtsc-advisor",
+            "t": "text",
+            "name": "Align with a dissertation advisor by the end of the second year",
+            "manual": "milestone"
+          },
+          {
+            "id": "ov-mgtsc-rotations",
+            "t": "text",
+            "name": "Second year: two one-quarter research rotations or tutorials, or one two-quarter rotation, tutorial, paper or project",
+            "manual": "milestone"
+          },
+          {
+            "id": "ov-mgtsc-forms",
+            "t": "text",
+            "name": "Candidacy form (year 2), dissertation progress form (year 3) and reading committee form (year 4)",
+            "manual": "milestone"
+          },
+          {
+            "id": "ov-mgtsc-yearly",
+            "t": "text",
+            "name": "30 units in each of years 1 to 3 and 30 dissertation units in year 4, with the annual faculty review",
+            "manual": "milestone"
+          }
+        ]
+      }
+    },
+    "XLS268SW": {
+      "why": "\"Complete four courses, with at least one from each CSS sub-area.\" Notes: \"Complete at least one additional course from any of the three CS sub areas.\"",
+      "replace": {
+        "t": "courses",
+        "name": "CSS Elective",
+        "mode": "atLeast",
+        "n": 1,
+        "letter": true,
+        "items": [
+          [
+            "MS&E 226"
+          ],
+          [
+            "MS&E 228"
+          ],
+          [
+            "MS&E 328"
+          ],
+          [
+            "STATS 202"
+          ],
+          [
+            "STATS 203"
+          ],
+          [
+            "STATS 305A"
+          ],
+          [
+            "STATS 315A"
+          ],
+          [
+            "STATS 315B"
+          ],
+          [
+            "STATS 361"
+          ],
+          [
+            "CS 224N"
+          ],
+          [
+            "CS 224S"
+          ],
+          [
+            "CS 224W"
+          ],
+          [
+            "CS 229"
+          ],
+          [
+            "CS 246"
+          ],
+          [
+            "MS&E 230"
+          ],
+          [
+            "MS&E 235A"
+          ],
+          [
+            "MS&E 235B"
+          ],
+          [
+            "MS&E 236"
+          ],
+          [
+            "MS&E 239"
+          ],
+          [
+            "MS&E 312"
+          ],
+          [
+            "MS&E 315"
+          ],
+          [
+            "STATS 290"
+          ],
+          [
+            "ECON 291"
+          ],
+          [
+            "MS&E 232",
+            "MS&E 232H"
+          ],
+          [
+            "MS&E 233"
+          ],
+          [
+            "MS&E 241"
+          ],
+          [
+            "MS&E 270"
+          ],
+          [
+            "MS&E 280"
+          ],
+          [
+            "MS&E 284"
+          ],
+          [
+            "MS&E 325"
+          ],
+          [
+            "MS&E 334"
+          ],
+          [
+            "MS&E 336"
+          ],
+          [
+            "MS&E 338"
+          ],
+          [
+            "MS&E 365"
+          ],
+          [
+            "MS&E 366"
+          ],
+          [
+            "MS&E 376"
+          ],
+          [
+            "SOC 369"
+          ]
+        ]
+      }
+    },
+    "EW4mEZVI": {
+      "why": "\"All courses used to satisfy depth requirements must be taken for a letter grade if the letter-graded option is available.\" (Qualification Procedure Requirements; the path course requirements are the area depth requirements.)",
+      "patch": {
+        "letter": true
+      }
+    },
+    "2F0mzErB": {
+      "why": "\"All courses used to satisfy depth requirements must be taken for a letter grade if the letter-graded option is available.\" (Qualification Procedure Requirements; the path course requirements are the area depth requirements.)",
+      "patch": {
+        "letter": true
+      }
+    },
+    "ZyeUkISx": {
+      "why": "\"All courses used to satisfy depth requirements must be taken for a letter grade if the letter-graded option is available.\" (Qualification Procedure Requirements; the path course requirements are the area depth requirements.)",
+      "patch": {
+        "letter": true
+      }
+    },
+    "d4KNvmTb": {
+      "why": "\"All courses used to satisfy depth requirements must be taken for a letter grade if the letter-graded option is available.\" (Qualification Procedure Requirements; the path course requirements are the area depth requirements.)",
+      "patch": {
+        "letter": true
+      }
+    },
+    "J3veNe0y": {
+      "why": "\"All courses used to satisfy depth requirements must be taken for a letter grade if the letter-graded option is available.\" (Qualification Procedure Requirements; the path course requirements are the area depth requirements.)",
+      "patch": {
+        "letter": true
+      }
+    },
+    "4mqWlJge": {
+      "why": "\"All courses used to satisfy depth requirements must be taken for a letter grade if the letter-graded option is available.\" (Qualification Procedure Requirements; the path course requirements are the area depth requirements.)",
+      "patch": {
+        "letter": true
+      }
+    },
+    "HxYs5nS4": {
+      "why": "\"All courses used to satisfy depth requirements must be taken for a letter grade if the letter-graded option is available.\" (Qualification Procedure Requirements; the path course requirements are the area depth requirements.) The page says \"OR Core Elective / Complete ANY of the following Courses\", one course; the stored count of 3 is not on the page, and one is what the path note adds up to: \"At least six core or elective courses required\" (optimization core, stochastics core, core elective and three electives).",
+      "patch": {
+        "letter": true,
+        "n": 1
+      }
+    },
+    "Kaee26JD": {
+      "why": "\"All courses used to satisfy depth requirements must be taken for a letter grade if the letter-graded option is available.\" (Qualification Procedure Requirements; the path course requirements are the area depth requirements.)",
+      "patch": {
+        "letter": true
+      }
+    },
+    "uaFmSoKP": {
+      "why": "\"All courses used to satisfy depth requirements must be taken for a letter grade if the letter-graded option is available.\" (Qualification Procedure Requirements; the path course requirements are the area depth requirements.)",
+      "patch": {
+        "letter": true
+      }
+    },
+    "Fdpgt2UX": {
+      "why": "\"All courses used to satisfy depth requirements must be taken for a letter grade if the letter-graded option is available.\" (Qualification Procedure Requirements; the path course requirements are the area depth requirements.)",
+      "patch": {
+        "letter": true
+      }
+    },
+    "BDXm9EWH": {
+      "why": "\"All courses used to satisfy depth requirements must be taken for a letter grade if the letter-graded option is available.\" (Qualification Procedure Requirements; the path course requirements are the area depth requirements.)",
+      "patch": {
+        "letter": true
+      }
+    },
+    "SF8vE941": {
+      "why": "\"All courses used to satisfy depth requirements must be taken for a letter grade if the letter-graded option is available.\" (Qualification Procedure Requirements; the path course requirements are the area depth requirements.)",
+      "patch": {
+        "letter": true
+      }
+    },
+    "QchxHogk": {
+      "why": "\"All courses used to satisfy depth requirements must be taken for a letter grade if the letter-graded option is available.\" (Qualification Procedure Requirements; the path course requirements are the area depth requirements.)",
+      "patch": {
+        "letter": true
+      }
+    },
+    "tbIAPUyK": {
+      "why": "\"All courses used to satisfy depth requirements must be taken for a letter grade if the letter-graded option is available.\" (Qualification Procedure Requirements; the path course requirements are the area depth requirements.)",
+      "patch": {
+        "letter": true
+      }
+    },
+    "2MP3PXKQ": {
+      "why": "\"All courses used to satisfy depth requirements must be taken for a letter grade if the letter-graded option is available.\" (Qualification Procedure Requirements; the path course requirements are the area depth requirements.)",
+      "patch": {
+        "letter": true
+      }
+    },
+    "JTD7t20Z": {
+      "why": "\"All courses used to satisfy depth requirements must be taken for a letter grade if the letter-graded option is available.\" (Qualification Procedure Requirements; the path course requirements are the area depth requirements.)",
+      "patch": {
+        "letter": true
+      }
+    },
+    "2665GdpI": {
+      "why": "\"All courses used to satisfy depth requirements must be taken for a letter grade if the letter-graded option is available.\" (Qualification Procedure Requirements; the path course requirements are the area depth requirements.)",
+      "patch": {
+        "letter": true
+      }
+    },
+    "j3eQjgT7": {
+      "why": "\"A student must maintain a GPA of at least 3.4 in all courses taken by the student within the department.\" \"Students must complete at least one research paper or project over a minimum of two quarters.\" \"During the second year, a student must pass an examination in one of the areas of the MS&E department or defense of the research.\" \"the department faculty vote on advancing the student to candidacy\" \"The qualification process must be completed by the end of May of the student's second year\". The area course requirements are the path rules above.",
+      "replace": {
+        "t": "all",
+        "name": "Qualification Procedure Requirements",
+        "children": [
+          {
+            "id": "j3eQjgT7-gpa",
+            "t": "text",
+            "name": "GPA of at least 3.4 in all MS&E department courses",
+            "manual": "gpa"
+          },
+          {
+            "id": "j3eQjgT7-paper",
+            "t": "text",
+            "name": "Research paper or project over at least two quarters",
+            "manual": "milestone"
+          },
+          {
+            "id": "j3eQjgT7-exam",
+            "t": "text",
+            "name": "Area qualification exam or research defense in the second year",
+            "manual": "exam"
+          },
+          {
+            "id": "j3eQjgT7-vote",
+            "t": "text",
+            "name": "Faculty vote to advance to candidacy by the end of May of the second year",
+            "manual": "milestone"
+          }
+        ]
+      }
+    },
+    "ob7yWNYT": {
+      "why": "\"As administered in this department, the university oral examination is a defense of the dissertation\"",
+      "patch": {
+        "manual": "exam"
+      }
+    },
+    "xX7rME3B": {
+      "why": "\"Students must complete a PhD dissertation and pass a university oral examination, which is a defense of the dissertation.\"",
+      "patch": {
+        "manual": "thesis"
+      }
+    }
+  }
+}

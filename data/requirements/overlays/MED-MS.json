@@ -1,0 +1,79 @@
+{
+  "code": "MED-MS",
+  "reviewed": "2026-10-23",
+  "summary": "The audit checks 45 units for the MS in Medicine (Biomedical Investigation): INDE 258, INDE 267 and MED 255, 9 units of electives from the list, and at least 23 units at the 200 level or above, with courses below the 100 level not counting. Checked by hand: the 33 research units from your School of Medicine department (usually numbered 399), which you move in, university residency with no units shared between the MS and the MD, and the research proposal, thesis defense and thesis publication.",
+  "program": {
+    "totals": [
+      {
+        "label": "23 units at the 200 level or above",
+        "minUnits": 23,
+        "pool": {
+          "anySubject": true,
+          "minNumber": 200
+        },
+        "why": "\"A minimum of 23 units must be at the 200-level or above.\""
+      },
+      {
+        "label": "Courses below the 100 level",
+        "maxUnits": 0,
+        "pool": {
+          "anySubject": true,
+          "maxNumber": 99
+        },
+        "why": "\"Only courses 100-level or above can be counted toward the degree.\""
+      }
+    ]
+  },
+  "nodes": {
+    "XYuL26y3-text": {
+      "why": "\"The Master of Science in Medicine (without the declared subplan) is reserved for MED-MD students. Please see the School of Medicine Registrar's Office for further information.\" Who may take the degree, not a requirement to complete.",
+      "patch": { "info": true }
+    },
+    "SVzUWTtX": {
+      "why": "\"Complete 33 research units from the SoM department in the student's field of study. Such courses are typically numbered 399.\" Which department depends on the student's field, so the student moves the units in.",
+      "patch": {
+        "manual": "approval",
+        "units": 33
+      }
+    },
+    "LnF5feIE": {
+      "why": "\"Research Proposal: A written research proposal for committee review. Students must orally present their proposed research to their research committee for approval.\" \"Thesis Defense: Students must defend their thesis with an oral presentation and closed-door questioning from their research committee.\" \"Thesis Publication: Students must publish their thesis to confer their MS degree.\"",
+      "replace": {
+        "t": "all",
+        "name": "Research Proposal and Thesis",
+        "children": [
+          {
+            "id": "LnF5feIE-proposal",
+            "t": "text",
+            "name": "Research proposal approved by the research committee",
+            "manual": "milestone"
+          },
+          {
+            "id": "LnF5feIE-defense",
+            "t": "text",
+            "name": "Thesis defense",
+            "manual": "exam"
+          },
+          {
+            "id": "LnF5feIE-publish",
+            "t": "text",
+            "name": "Thesis published",
+            "manual": "thesis"
+          }
+        ]
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "gBh6Fpkk",
+      "node": {
+        "id": "ov-residency",
+        "t": "text",
+        "name": "University residency, with no units counted for both the MS and the MD",
+        "manual": "residency"
+      },
+      "why": "\"Students must adhere to the university's residency requirements. Units may not be duplicated or double-counted toward the residency requirement for both degrees.\""
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "code": "PHILO-PMN",
+  "reviewed": "2026-10-23",
+  "summary": "The audit checks 30 units of Philosophy courses, each letter graded with a B- or better, including two courses numbered 200 or above beyond your six area courses. Checked by hand: a signed program of study designed with your advisor, one course numbered over 99 in each of the six areas, which you move in, that your two 200-level courses are in the same area, and at most 3 units of directed reading. All of the coursework must be taken at Stanford.",
+  "program": {
+    "letterGrade": true,
+    "minGrade": "B-",
+    "why": "Grading: \"Courses counted toward the PhD Minor must be completed with a letter grade of B- or better.\""
+  },
+  "blocks": {
+    "W3aSDS8g": {
+      "kind": "required"
+    }
+  },
+  "nodes": {
+    "wyq43W6v-text": {
+      "why": "Mostly how to apply to the minor. What a student has to do once admitted: \"Consult with the Director of Graduate Study to establish eligibility, and to select a suitable advisor.\" \"Paperwork for the minor must be submitted to the department office before beginning the program, although courses taken prior to that may be counted towards the requirements.\" \"Once approved, send a signed copy of the program of study (designed with the advisor).\"",
+      "patch": {
+        "name": "Program of study designed with your advisor, signed and sent to the department",
+        "manual": "approval"
+      }
+    },
+    "KMGPjxUq": {
+      "why": "\"30 units of courses in the Department of Philosophy with a letter grade of 'B-' or better in each course ... At least one course or seminar numbered over 99 to be taken in each of these six areas: Logic, Philosophy of science, Ethics, value theory, and moral and political philosophy, Metaphysics and epistemology, Language, mind and action, History of philosophy. Two additional courses numbered over 199 to be taken in one of those six areas.\" \"Additional\" means the two 200-level courses are beyond the six area courses, so neither rule shares its courses with the other. The 30 units are the program total (unitsMin), which counts the area courses, the two 200-level courses and any other PHIL courses. Which area a course is in, and that the two 200-level courses share an area, is checked by hand.",
+      "replace": {
+        "t": "all",
+        "name": "Philosophy PhD minor",
+        "children": [
+          {
+            "id": "ov-pmn-areas",
+            "t": "text",
+            "name": "One course numbered over 99 in each of the six areas",
+            "n": 6,
+            "manual": "approval"
+          },
+          {
+            "id": "ov-pmn-200",
+            "t": "courses",
+            "name": "Two additional PHIL courses numbered over 199, both in one of the six areas",
+            "mode": "atLeast",
+            "n": 2,
+            "pool": {
+              "subjects": [
+                "PHIL"
+              ],
+              "minNumber": 200
+            }
+          },
+          {
+            "id": "ov-pmn-30",
+            "t": "courses",
+            "name": "Other PHIL courses toward the 30 units",
+            "mode": "any",
+            "optional": true,
+            "pool": {
+              "subjects": [
+                "PHIL"
+              ]
+            }
+          }
+        ]
+      }
+    }
+  }
+}

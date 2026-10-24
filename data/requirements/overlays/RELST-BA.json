@@ -1,0 +1,167 @@
+{
+  "code": "RELST-BA",
+  "reviewed": "2026-10-23",
+  "summary": "You take three RELIGST courses numbered 1-99 (at most one Introductory Seminar), six numbered 100-289 (two at the 200 level), RELIGST 290, five units of RELIGST 297 for the senior essay or honors thesis and RELIGST 298, with more RELIGST courses making up the 60 units. At most 10 units (not counting RELIGST 298) may be S/NC or CR/NC. Approved language or other outside courses are moved in by hand, and the spread across religious traditions, transfer units, and the honors thesis and GPA are checked by hand.",
+  "nodes": {
+    "u7yHmyTq-text": {
+      "why": "\"The remainder of the coursework needed to bring the total Religious Studies unit count to 60 to be chosen according to interest, in consultation with the student's advisor, and with an eye to the senior capstone requirement.\" The same as rule ov-remaining (Remaining units in Religious Studies) and the 60-unit minimum.",
+      "patch": { "info": true }
+    },
+    "XyvHDg0t": {
+      "why": "\"Three courses (3-5 units each) from courses numbered RELIGST 1-99, only one of which may be an Introductory Seminar.\" The Introductory Seminars are the department's N and Q courses.",
+      "replace": {
+        "t": "courses",
+        "name": "Laying the Foundation",
+        "mode": "atLeast",
+        "n": 3,
+        "minUnitsEach": 3,
+        "pool": {
+          "subjects": [
+            "RELIGST"
+          ],
+          "maxNumber": 99
+        },
+        "limits": [
+          {
+            "label": "Introductory Seminars",
+            "max": 1,
+            "codes": [
+              "RELIGST 6N",
+              "RELIGST 7N",
+              "RELIGST 8N",
+              "RELIGST 9N",
+              "RELIGST 10N",
+              "RELIGST 11N",
+              "RELIGST 11Q",
+              "RELIGST 12N",
+              "RELIGST 13N",
+              "RELIGST 14N",
+              "RELIGST 15N",
+              "RELIGST 16N",
+              "RELIGST 17N",
+              "RELIGST 18N",
+              "RELIGST 19Q"
+            ]
+          }
+        ]
+      }
+    },
+    "n9PAVAH5": {
+      "why": "\"Six courses (4-5 units each) from courses numbered RELIGST 100-289, of which at least two must be at the 200-level.\"",
+      "replace": {
+        "t": "all",
+        "name": "Building Expertise",
+        "children": [
+          {
+            "id": "ov-expertise-200",
+            "t": "courses",
+            "name": "Two courses at the 200 level (RELIGST 200-289)",
+            "mode": "atLeast",
+            "n": 2,
+            "minUnitsEach": 4,
+            "pool": {
+              "subjects": [
+                "RELIGST"
+              ],
+              "minNumber": 200,
+              "maxNumber": 289
+            }
+          },
+          {
+            "id": "ov-expertise-more",
+            "t": "courses",
+            "name": "Four more courses (RELIGST 100-289)",
+            "mode": "atLeast",
+            "n": 4,
+            "minUnitsEach": 4,
+            "pool": {
+              "subjects": [
+                "RELIGST"
+              ],
+              "minNumber": 100,
+              "maxNumber": 289
+            }
+          }
+        ]
+      }
+    },
+    "ZoZmwnt2": {
+      "why": "\"Senior Essay: five units, winter quarter ... Honors Thesis: five to ten units, spread over Autumn and Winter Quarters\": at least 5 units of the repeatable RELIGST 297.",
+      "patch": {
+        "units": 5
+      }
+    },
+    "BesYRqpC": {
+      "why": "\"The Honors Thesis is a 40-80 page research paper ... The Honors Thesis is read and graded by the student’s thesis advisor and another member of the Religious Studies faculty ... Theses earning a grade of ‘B+’ or above receive honors.\"",
+      "patch": {
+        "manual": "thesis",
+        "name": "Honors Thesis (grade of B+ or above)"
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "agIpQQQW",
+      "node": {
+        "id": "ov-honors-gpa",
+        "t": "text",
+        "name": "GPA of 3.5 in Religious Studies and 3.2 overall when applying",
+        "manual": "gpa"
+      },
+      "why": "\"Applicants for honors must have a grade point average (GPA) of 3.5 in Religious Studies courses and at least 3.2 overall at the time of application in May of junior year.\""
+    },
+    {
+      "block": "5NNhGYA3",
+      "why": "Grading: \"All units must be in RELIGST courses unless the Director of Undergraduate Studies makes an exception.\" The rules above leave some of the 60 units open; further RELIGST courses take them.",
+      "node": {
+        "id": "ov-remaining",
+        "t": "courses",
+        "mode": "any",
+        "pool": {
+          "subjects": [
+            "RELIGST"
+          ]
+        },
+        "optional": true,
+        "name": "Remaining units in Religious Studies"
+      }
+    },
+    {
+      "block": "5NNhGYA3",
+      "why": "Policies: \"With the approval of the Director of Undergraduate Studies, up to two language courses relating to the student's program of study ... may be counted toward the major.\" and Grading: \"All units must be in RELIGST courses unless the Director of Undergraduate Studies makes an exception.\"",
+      "node": {
+        "id": "ov-remaining-approved",
+        "t": "text",
+        "manual": "approval",
+        "optional": true,
+        "name": "Up to two language courses, or other courses the Director of Undergraduate Studies approves"
+      }
+    },
+    {
+      "block": "5NNhGYA3",
+      "why": "Policies: \"Students must ensure that their total complement of Religious Studies courses is not focused on a single religious tradition.\"",
+      "node": {
+        "id": "ov-traditions",
+        "t": "text",
+        "manual": "approval",
+        "name": "Courses not focused on a single religious tradition"
+      }
+    }
+  ],
+  "program": {
+    "totals": [
+      {
+        "label": "S/NC and CR/NC units",
+        "maxUnits": 10,
+        "grading": "not-letter",
+        "pool": {
+          "anySubject": true,
+          "exclude": [
+            "RELIGST 298"
+          ]
+        },
+        "why": "Grading: \"No more than ten units of the total 60 (excluding RELIGST298) may be taken for the S/NC or CR/NC grade.\""
+      }
+    ]
+  }
+}

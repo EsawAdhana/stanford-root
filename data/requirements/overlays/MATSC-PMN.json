@@ -1,0 +1,78 @@
+{
+  "code": "MATSC-PMN",
+  "reviewed": "2026-10-23",
+  "summary": "The audit checks 20 units of MATSCI courses numbered 201 or higher, each letter graded with a C or better (research, colloquium, teaching and other courses offered only satisfactory/no credit do not count). Checked by hand: the advanced degree committee approves your course list, the 3.0 GPA, and that none of these units also count toward an MS degree.",
+  "program": {
+    "letterGrade": true,
+    "minGrade": "C",
+    "why": "Grading: \"All courses must be taken for a letter grade. The minimum grade in each course is a C.\""
+  },
+  "blocks": {
+    "dhmvteFG": {
+      "kind": "required"
+    }
+  },
+  "add": [
+    {
+      "block": "dhmvteFG",
+      "node": {
+        "id": "ov-units",
+        "t": "courses",
+        "name": "20 units of MATSCI courses numbered 201 or higher",
+        "mode": "units",
+        "units": 20,
+        "pool": {
+          "subjects": [
+            "MATSCI"
+          ],
+          "minNumber": 201,
+          "exclude": [
+            "MATSCI 200",
+            "MATSCI 230",
+            "MATSCI 231",
+            "MATSCI 232",
+            "MATSCI 299",
+            "MATSCI 300",
+            "MATSCI 399",
+            "MATSCI 400",
+            "MATSCI 402A",
+            "MATSCI 402T",
+            "MATSCI 801",
+            "MATSCI 802"
+          ]
+        }
+      },
+      "why": "\"A minor requires 20 units of quality and depth graduate work at the 201 level or higher in the Materials Science and Engineering course offering subject code. Courses must be taken for a letter grade.\" The letter grade is program.letterGrade. The courses the catalog offers only as satisfactory/no credit (research, colloquium, advising, ethics, practical training, independent study, teaching, the MATSCI 402 seminars and TGR) cannot be taken for a letter grade, so they are left out."
+    },
+    {
+      "block": "dhmvteFG",
+      "node": {
+        "id": "ov-approval",
+        "t": "text",
+        "name": "Course list approved by the advanced degree committee",
+        "manual": "approval"
+      },
+      "why": "\"The department's advanced degree committee must approve the proposed list of courses. Individual programs must be submitted to the Student Services Director at least one quarter before the quarter of the degree conferral.\""
+    },
+    {
+      "block": "dhmvteFG",
+      "node": {
+        "id": "ov-no-overlap",
+        "t": "text",
+        "name": "No units shared with an MS degree",
+        "manual": "other"
+      },
+      "why": "\"None of the units taken for the PhD minor may overlap with any MS degree units.\" The audit does not compare the minor with a separate MS program, so this is checked by hand."
+    },
+    {
+      "block": "dhmvteFG",
+      "node": {
+        "id": "ov-gpa",
+        "t": "text",
+        "name": "Cumulative GPA of 3.0 for PhD minor courses",
+        "manual": "gpa"
+      },
+      "why": "GPA: \"Cumulative GPA for all PhD minor courses must be at least 3.0\""
+    }
+  ]
+}

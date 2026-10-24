@@ -1,0 +1,118 @@
+{
+  "code": "ME-PHD",
+  "reviewed": "2026-10-23",
+  "summary": "The audit checks the 135 units of graduate work, all in courses numbered 100 or above. Checked by hand: aligning with an advisor by your third quarter, 21 units of approved 200-level engineering, science and math courses beyond the MS, breadth (a minor or 9 approved units outside your research topic), the program proposal, the reading committee, the Green Light meeting, the qualifying exam, candidacy, teaching, the 3.0 GPA, the oral exam and the dissertation. Up to 45 units from an MS elsewhere may transfer with approval.",
+  "program": {
+    "totals": [
+      {
+        "label": "Courses numbered below 100",
+        "maxUnits": 0,
+        "pool": {
+          "anySubject": true,
+          "maxNumber": 99
+        },
+        "why": "\"PhD candidates must complete a minimum of 135 units. These courses must be numbered 100+.\""
+      }
+    ]
+  },
+  "nodes": {
+    "w8DMES8Y": {
+      "why": "\"Aligning with an advisor is an essential milestone in the PhD program\" \"PhD students who do not align with an advisor by the 3rd quarter of study at Stanford are subject to dismissal\". \"PhD candidates must complete a minimum of 135 units. These courses must be numbered 100+.\" \"a student must complete a minimum of 21 units of approved courses in advanced study in engineering, science, and mathematics (excluding research, directed study, seminars, curricular practical training, and course) beyond the MS degree. These courses must be numbered 200+, be taken for a letter grade, and have primarily technical content.\" \"the department has a breadth requirement for the PhD degree. This may be satisfied by a formal minor in another department (generally 20 units) or by at least nine units of coursework (outside of the primary research topic) which the principal dissertation advisor approves.\" \"PhD students are required to file a preliminary PhD program proposal\" \"After attaining PhD Candidacy, the student must form a Reading Committee\" \"No less than six months before the planned PhD Oral Exam, the student and the Reading Committee are required to meet in a 'Green Light Meeting.'\" The fields name no subject codes, so the courses are moved in by the student.",
+      "replace": {
+        "t": "all",
+        "name": "Program Requirements",
+        "children": [
+          {
+            "id": "w8DMES8Y-advisor",
+            "t": "text",
+            "name": "PhD advisor identified and Advising Commitment Form signed by the 3rd quarter",
+            "manual": "milestone"
+          },
+          {
+            "id": "w8DMES8Y-advanced",
+            "t": "text",
+            "name": "21 units of approved 200-level engineering, science and math courses beyond the MS",
+            "manual": "approval",
+            "units": 21
+          },
+          {
+            "id": "w8DMES8Y-breadth",
+            "t": "text",
+            "name": "Breadth: a minor in another department, or 9 advisor-approved units outside the research topic",
+            "manual": "approval",
+            "units": 9
+          },
+          {
+            "id": "w8DMES8Y-proposal",
+            "t": "text",
+            "name": "Preliminary PhD program proposal in the first quarter",
+            "manual": "milestone"
+          },
+          {
+            "id": "w8DMES8Y-reading",
+            "t": "text",
+            "name": "Reading Committee formed",
+            "manual": "milestone"
+          },
+          {
+            "id": "w8DMES8Y-greenlight",
+            "t": "text",
+            "name": "Green Light Meeting at least six months before the oral exam",
+            "manual": "milestone"
+          }
+        ]
+      }
+    },
+    "f1PthISV": {
+      "why": "\"the student must demonstrate knowledge of engineering fundamentals by passing the Ph.D. Qualifying Exam.\" \"The student must have a minimum Stanford graduate GPA of 3.5 to be eligible for the exam\" \"The student must file the PhD candidacy form to achieve PhD candidacy status.\"",
+      "replace": {
+        "t": "all",
+        "name": "Advancement to Candidacy",
+        "children": [
+          {
+            "id": "f1PthISV-qual",
+            "t": "text",
+            "name": "PhD Qualifying Exam (3.5 graduate GPA to be eligible)",
+            "manual": "exam"
+          },
+          {
+            "id": "f1PthISV-candidacy",
+            "t": "text",
+            "name": "PhD candidacy form filed",
+            "manual": "milestone"
+          }
+        ]
+      }
+    },
+    "hneHjrip": {
+      "why": "\"PhD students must obtain teaching experience equivalent to at least one 25% course assistantship.\" \"Students must submit the Teaching Milestone Completion form\"",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "iXTMOOhV": {
+      "why": "\"Any time after completing an acceptable draft of the dissertation, with the approval of the advisor and Reading Committee, the student may schedule the University Oral Examination (Dissertation Defense).\"",
+      "patch": {
+        "manual": "exam"
+      }
+    },
+    "qEUZlt9Z": {
+      "why": "\"The PhD dissertation typically represents at least one full year of research work and must substantially contribute to the field.\"",
+      "patch": {
+        "manual": "thesis"
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "QewRauLg",
+      "node": {
+        "id": "ov-gpa",
+        "t": "text",
+        "name": "Cumulative GPA of 3.0 to graduate",
+        "manual": "gpa"
+      },
+      "why": "GPA: \"Students must have a minimum cumulative GPA of 3.0 to graduate.\""
+    }
+  ]
+}

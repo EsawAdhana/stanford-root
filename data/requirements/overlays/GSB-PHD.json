@@ -1,0 +1,870 @@
+{
+  "code": "GSB-PHD",
+  "reviewed": "2026-10-23",
+  "summary": "You pick one of the nine field subplans. The audit checks the 90 graduate units and the subplan's course lists, including repeated enrollments such as ACCT 615 in years 1 and 2 and OB 678 every quarter of years 1 to 3, with each course passed with P or B- or better. Checked by hand: that required courses were taken for a grade where a graded option exists, breadth courses, practicums, research papers, field exams, teaching or course assistantships, candidacy, the oral exam and the dissertation. External credit is not accepted.",
+  "program": {
+    "minGrade": "B-",
+    "why": "Every subplan: \"Each course must be passed with a grade of P or B- or better.\" (OIT: \"P (GSB courses) or B- (University courses)\"). The audit lets a P count. \"All required courses must be taken for a grade (not pass/fail or credit/no credit)\" is not set: GSB grades H and P read as pass grades, and GSB Pass/Fail courses such as ACCT 615 and OB 678 are not marked pass/fail-only in the course data, so a letter-grade rule would reject them."
+  },
+  "nodes": {
+    "YyXu2eJ6": {
+      "why": "\"All required courses must be taken for a grade (not pass/fail or credit/no credit) ... Each course must be passed with a grade of P or B- or better.\" Every subplan says so, so it is the program-wide grade floor (P, a GSB pass grade, still counts). The rest is policy.",
+      "patch": {
+        "info": true
+      }
+    },
+    "EC2Sd0jU": {
+      "why": "\"C. Any additional GSB doctoral-level accounting course offered during a student's first three years of the program.\" \"Doctoral-level\" is not a number range in the text, so the student moves the course in.",
+      "patch": {
+        "n": 1,
+        "manual": "approval"
+      }
+    },
+    "SlMLFJoh": {
+      "why": "\"Finance (3 courses)\": FINANCE 620, \"Plus, two additional doctoral-level courses in finance.\" Doctoral-level is not a number range in the text, so the two are moved in.",
+      "replace": {
+        "t": "all",
+        "name": "Finance (3 courses)",
+        "children": [
+          {
+            "id": "ov-gsb-acct-fin620",
+            "t": "courses",
+            "name": "FINANCE 620",
+            "mode": "all",
+            "items": [
+              [
+                "FINANCE 620"
+              ]
+            ]
+          },
+          {
+            "id": "ov-gsb-acct-fin-more",
+            "t": "text",
+            "name": "Two additional doctoral-level finance courses",
+            "manual": "approval",
+            "n": 2
+          }
+        ]
+      }
+    },
+    "er5Rz8Jp": {
+      "why": "\"Breadth requirement (1 course) One graduate level course in a field other than accounting, finance or economics ... approved by the liaison.\" \"All students are required to register for ... Teaching Practicum or ... Research Practicum for one unit in every quarter\". \"Satisfactory completion of the following research papers and presentations are required for admission to candidacy\" (1st and 2nd year summer papers). \"IV. Field Exam\". \"Students are required to enroll in a minimum of three quarters of ... Teaching Practicum or course assistantships prior to the end of the fourth year\". \"Students are required to advance to candidacy by September 1 before the start of their fourth year\". \"VII. University Oral Exams\". \"VIII. Doctoral Dissertation\".",
+      "replace": {
+        "t": "all",
+        "name": "Additional Requirements",
+        "children": [
+          {
+            "id": "ov-gsb-acct-breadth",
+            "t": "text",
+            "name": "Breadth: one graduate course outside accounting, finance and economics",
+            "manual": "approval",
+            "n": 1
+          },
+          {
+            "id": "ov-gsb-acct-practicum",
+            "t": "text",
+            "name": "Research or teaching practicum (ACCT 698/699) every quarter",
+            "manual": "milestone"
+          },
+          {
+            "id": "ov-gsb-acct-papers",
+            "t": "text",
+            "name": "First- and second-year summer research papers and presentations",
+            "manual": "milestone"
+          },
+          {
+            "id": "ov-gsb-acct-field",
+            "t": "text",
+            "name": "Accounting field exam",
+            "manual": "exam"
+          },
+          {
+            "id": "ov-gsb-acct-teaching",
+            "t": "text",
+            "name": "Three quarters of teaching practicum or course assistantships",
+            "manual": "milestone"
+          },
+          {
+            "id": "ov-gsb-acct-candidacy",
+            "t": "text",
+            "name": "Advancement to candidacy",
+            "manual": "milestone"
+          },
+          {
+            "id": "ov-gsb-acct-oral",
+            "t": "text",
+            "name": "University oral exam",
+            "manual": "exam"
+          },
+          {
+            "id": "ov-gsb-acct-dissertation",
+            "t": "text",
+            "name": "Doctoral dissertation",
+            "manual": "thesis"
+          }
+        ]
+      }
+    },
+    "zLam8NIU": {
+      "why": "\"In years 2 through 5, students sign up for MGTECON 699 ... in every quarter. Students must regularly attend and participate in one of the seminar series\". \"Students take two field exams in the summer after the first year: theory and econometrics.\" \"Each student is required to submit a research paper and present it in the Fall quarter of their third year\". \"One quarter of course assistantship or teaching practicum.\" Candidacy, \"VII. University Oral Exams\", \"VIII. Doctoral Dissertation\".",
+      "replace": {
+        "t": "all",
+        "name": "Additional Requirements",
+        "children": [
+          {
+            "id": "ov-gsb-econ-practicum",
+            "t": "text",
+            "name": "Practicum (MGTECON 699) every quarter of years 2-5 and a seminar series",
+            "manual": "milestone"
+          },
+          {
+            "id": "ov-gsb-econ-field",
+            "t": "text",
+            "name": "Field exams in theory and econometrics",
+            "manual": "exam"
+          },
+          {
+            "id": "ov-gsb-econ-paper",
+            "t": "text",
+            "name": "Third-year research paper and presentation",
+            "manual": "milestone"
+          },
+          {
+            "id": "ov-gsb-econ-teaching",
+            "t": "text",
+            "name": "One quarter of course assistantship or teaching practicum",
+            "manual": "milestone"
+          },
+          {
+            "id": "ov-gsb-econ-candidacy",
+            "t": "text",
+            "name": "Advancement to candidacy",
+            "manual": "milestone"
+          },
+          {
+            "id": "ov-gsb-econ-oral",
+            "t": "text",
+            "name": "University oral exam",
+            "manual": "exam"
+          },
+          {
+            "id": "ov-gsb-econ-dissertation",
+            "t": "text",
+            "name": "Doctoral dissertation",
+            "manual": "thesis"
+          }
+        ]
+      }
+    },
+    "JwjvwD8w": {
+      "why": "\"All required courses must be taken for a grade (not pass/fail or credit/no credit) ... Each course must be passed with a grade of P or B- or better.\" Every subplan says so, so it is the program-wide grade floor (P, a GSB pass grade, still counts). The rest is policy.",
+      "patch": {
+        "info": true
+      }
+    },
+    "Cxd8hQVK": {
+      "why": "\"Students choose a minimum of two 2-course sequences from the alternative fields listed below. Courses may not be used to fulfill two general fields.\" The two starred track fields count only \"if not taken to fulfill the Finance Specialization requirement\", so they are listed last; the rules themselves are unchanged.",
+      "replace": {
+        "t": "some",
+        "name": "General Field Requirements (4 courses)",
+        "n": 2,
+        "children": [
+          {
+            "id": "isnZTqUr",
+            "t": "courses",
+            "name": "Economic Theory",
+            "n": 2,
+            "mode": "atLeast",
+            "items": [
+              [
+                "ECON 282"
+              ],
+              [
+                "ECON 289"
+              ],
+              [
+                "ECON 290"
+              ],
+              [
+                "MGTECON 602"
+              ],
+              [
+                "MGTECON 608"
+              ],
+              [
+                "MGTECON 626"
+              ]
+            ]
+          },
+          {
+            "id": "jxrwoKBL",
+            "t": "courses",
+            "name": "Financial Market Design",
+            "n": 2,
+            "mode": "atLeast",
+            "items": [
+              [
+                "ECON 257"
+              ],
+              [
+                "ECON 258"
+              ],
+              [
+                "ECON 282"
+              ],
+              [
+                "MGTECON 602"
+              ]
+            ]
+          },
+          {
+            "id": "uPkbJxoe",
+            "t": "courses",
+            "name": "Accounting",
+            "n": 2,
+            "mode": "atLeast",
+            "items": [
+              [
+                "ACCT 610"
+              ],
+              [
+                "ACCT 611"
+              ],
+              [
+                "ACCT 612"
+              ],
+              [
+                "ACCT 617"
+              ]
+            ]
+          },
+          {
+            "id": "Nlca8IHE",
+            "t": "courses",
+            "name": "Advanced Macroeconomics",
+            "n": 2,
+            "mode": "atLeast",
+            "items": [
+              [
+                "ECON 211"
+              ],
+              [
+                "ECON 233"
+              ],
+              [
+                "ECON 234"
+              ],
+              [
+                "ECON 237"
+              ],
+              [
+                "ECON 266"
+              ]
+            ]
+          },
+          {
+            "id": "uVfCBF35",
+            "t": "courses",
+            "name": "Industrial Organization",
+            "n": 2,
+            "mode": "atLeast",
+            "items": [
+              [
+                "ECON 257"
+              ],
+              [
+                "ECON 258"
+              ],
+              [
+                "ECON 260"
+              ]
+            ]
+          },
+          {
+            "id": "x0XPkWiP",
+            "t": "courses",
+            "name": "Advanced Econometrics",
+            "mode": "all",
+            "items": [
+              [
+                "ECON 273"
+              ],
+              [
+                "ECON 274"
+              ]
+            ]
+          },
+          {
+            "id": "eWt620ru",
+            "t": "courses",
+            "name": "Labor Economics",
+            "mode": "all",
+            "items": [
+              [
+                "ECON 247"
+              ],
+              [
+                "ECON 248"
+              ]
+            ]
+          },
+          {
+            "id": "dvDrjeIS",
+            "t": "courses",
+            "name": "Capital Markets*",
+            "n": 2,
+            "mode": "atLeast",
+            "items": [
+              [
+                "FINANCE 622"
+              ],
+              [
+                "FINANCE 632"
+              ],
+              [
+                "FINANCE 637"
+              ]
+            ]
+          },
+          {
+            "id": "XPRKbI2J",
+            "t": "courses",
+            "name": "Corporate/Household/Banking*",
+            "n": 2,
+            "mode": "atLeast",
+            "items": [
+              [
+                "FINANCE 626"
+              ],
+              [
+                "FINANCE 633"
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    "VsJ65mwM": {
+      "why": "\"Students are required to sign up for either a research or teaching practicum each quarter of enrollment\" and attend the Finance seminar. \"All students in all years are expected to complete a research paper over the summer, and present this paper in the Fall quarter.\" \"Students take the field exam in the summer after the first year.\" \"One quarter of course assistantship or teaching practicum.\" \"The finance oral exam takes place at the end of the spring quarter of the second year\". Candidacy, \"VIII. University Oral Exams\", \"IX. Doctoral Dissertation\".",
+      "replace": {
+        "t": "all",
+        "name": "Additional Requirements",
+        "children": [
+          {
+            "id": "ov-gsb-fin-practicum",
+            "t": "text",
+            "name": "Research or teaching practicum every quarter and the Finance seminar",
+            "manual": "milestone"
+          },
+          {
+            "id": "ov-gsb-fin-papers",
+            "t": "text",
+            "name": "Summer research paper and Fall presentation each year",
+            "manual": "milestone"
+          },
+          {
+            "id": "ov-gsb-fin-field",
+            "t": "text",
+            "name": "First-year field exam",
+            "manual": "exam"
+          },
+          {
+            "id": "ov-gsb-fin-teaching",
+            "t": "text",
+            "name": "One quarter of course assistantship or teaching practicum",
+            "manual": "milestone"
+          },
+          {
+            "id": "ov-gsb-fin-oral-finance",
+            "t": "text",
+            "name": "Second-year finance oral exam",
+            "manual": "exam"
+          },
+          {
+            "id": "ov-gsb-fin-candidacy",
+            "t": "text",
+            "name": "Advancement to candidacy",
+            "manual": "milestone"
+          },
+          {
+            "id": "ov-gsb-fin-oral",
+            "t": "text",
+            "name": "University oral exam",
+            "manual": "exam"
+          },
+          {
+            "id": "ov-gsb-fin-dissertation",
+            "t": "text",
+            "name": "Doctoral dissertation",
+            "manual": "thesis"
+          }
+        ]
+      }
+    },
+    "sxh8wcut": {
+      "why": "Introduction: \"This document describes the requirements for the GSB Ph.D. program in Marketing (Behavioral).\"",
+      "patch": {
+        "info": true
+      }
+    },
+    "Ylaptch4": {
+      "why": "\"Students will enroll in MKTG 699. Research Practicum in autumn, winter, and spring quarters during year 1\". \"Students in all years regularly attend and participate in the Marketing seminar.\" \"The student will submit a Proposal Paper ... The student will submit an Empirical Paper\". \"Students take the field exam in the summer after their second year.\" \"Students are required to complete a minimum of two quarters of research assistantships and two quarters of teaching assistantships\". Candidacy, \"VIII. University Oral Exams\", \"IX. Doctoral Dissertation\".",
+      "replace": {
+        "t": "all",
+        "name": "Additional Requirements",
+        "children": [
+          {
+            "id": "ov-gsb-mktgb-practicum",
+            "t": "text",
+            "name": "Research practicum (MKTG 699) each quarter of year 1 and the Marketing seminar",
+            "manual": "milestone"
+          },
+          {
+            "id": "ov-gsb-mktgb-papers",
+            "t": "text",
+            "name": "Proposal paper and empirical paper",
+            "manual": "milestone"
+          },
+          {
+            "id": "ov-gsb-mktgb-field",
+            "t": "text",
+            "name": "Field exam",
+            "manual": "exam"
+          },
+          {
+            "id": "ov-gsb-mktgb-assist",
+            "t": "text",
+            "name": "Two quarters of research and two of teaching assistantships",
+            "manual": "milestone"
+          },
+          {
+            "id": "ov-gsb-mktgb-candidacy",
+            "t": "text",
+            "name": "Advancement to candidacy",
+            "manual": "milestone"
+          },
+          {
+            "id": "ov-gsb-mktgb-oral",
+            "t": "text",
+            "name": "University oral exam",
+            "manual": "exam"
+          },
+          {
+            "id": "ov-gsb-mktgb-dissertation",
+            "t": "text",
+            "name": "Doctoral dissertation",
+            "manual": "thesis"
+          }
+        ]
+      }
+    },
+    "SiNTiM5M": {
+      "why": "\"All required courses must be taken for a grade (not pass/fail or credit/no credit) ... Each course must be passed with a grade of P or B- or better.\" Every subplan says so, so it is the program-wide grade floor (P, a GSB pass grade, still counts). The rest is policy.",
+      "patch": {
+        "info": true
+      }
+    },
+    "wqN7CGp2": {
+      "why": "\"B. Recommended Courses\": recommended, not required.",
+      "patch": {
+        "optional": true
+      }
+    },
+    "EwO5oHrY": {
+      "why": "\"Students are required to sign up for either research or teaching practicum each quarter of enrollment\" with the Marketing and WIP seminars. First-year and second-year papers: \"Passing both papers is required for maintaining good academic status and advancing to candidacy.\" \"Students take the field exam in the summer after their first year.\" \"A minimum of one quarter of course assistantship or teaching practicum.\" Candidacy, \"VII. University Oral Exams\", \"VIII. Doctoral Dissertation\".",
+      "replace": {
+        "t": "all",
+        "name": "Additional Requirements",
+        "children": [
+          {
+            "id": "ov-gsb-mktgq-practicum",
+            "t": "text",
+            "name": "Research or teaching practicum every quarter and the Marketing and WIP seminars",
+            "manual": "milestone"
+          },
+          {
+            "id": "ov-gsb-mktgq-papers",
+            "t": "text",
+            "name": "First-year and second-year papers",
+            "manual": "milestone"
+          },
+          {
+            "id": "ov-gsb-mktgq-field",
+            "t": "text",
+            "name": "Field exam",
+            "manual": "exam"
+          },
+          {
+            "id": "ov-gsb-mktgq-teaching",
+            "t": "text",
+            "name": "One quarter of course assistantship or teaching practicum",
+            "manual": "milestone"
+          },
+          {
+            "id": "ov-gsb-mktgq-candidacy",
+            "t": "text",
+            "name": "Advancement to candidacy",
+            "manual": "milestone"
+          },
+          {
+            "id": "ov-gsb-mktgq-oral",
+            "t": "text",
+            "name": "University oral exam",
+            "manual": "exam"
+          },
+          {
+            "id": "ov-gsb-mktgq-dissertation",
+            "t": "text",
+            "name": "Doctoral dissertation",
+            "manual": "thesis"
+          }
+        ]
+      }
+    },
+    "aFR0ePUV": {
+      "why": "\"All required courses must be taken for a grade (not pass/fail or credit/no credit) ... Each course must be passed with a grade of P or B- or better.\" Every subplan says so, so it is the program-wide grade floor (P, a GSB pass grade, still counts). The rest is policy.",
+      "patch": {
+        "info": true
+      }
+    },
+    "gNyFZTPf": {
+      "why": "\"Students enroll in course: Doctoral Practicum in Research in autumn, winter, and spring quarters of year 1\". \"Students in all years are expected to attend all of the talks presented in the OB seminar.\" \"Students take the field exam during the summer quarter following the first year.\" \"By April 30 in year 2, each student will submit a research paper\". \"Students are required to complete a minimum of two quarters of research assistantships and two quarters of teaching assistantships\". Candidacy, \"VIII. University Oral Exams\", \"IX. Doctoral Dissertation\".",
+      "replace": {
+        "t": "all",
+        "name": "Additional Requirements",
+        "children": [
+          {
+            "id": "ov-gsb-obma-practicum",
+            "t": "text",
+            "name": "Doctoral Practicum in Research each quarter of year 1 and the OB seminar",
+            "manual": "milestone"
+          },
+          {
+            "id": "ov-gsb-obma-field",
+            "t": "text",
+            "name": "Field exam",
+            "manual": "exam"
+          },
+          {
+            "id": "ov-gsb-obma-paper",
+            "t": "text",
+            "name": "Second-year research paper and OB seminar presentation",
+            "manual": "milestone"
+          },
+          {
+            "id": "ov-gsb-obma-assist",
+            "t": "text",
+            "name": "Two quarters of research and two of teaching assistantships",
+            "manual": "milestone"
+          },
+          {
+            "id": "ov-gsb-obma-candidacy",
+            "t": "text",
+            "name": "Advancement to candidacy",
+            "manual": "milestone"
+          },
+          {
+            "id": "ov-gsb-obma-oral",
+            "t": "text",
+            "name": "University oral exam",
+            "manual": "exam"
+          },
+          {
+            "id": "ov-gsb-obma-dissertation",
+            "t": "text",
+            "name": "Doctoral dissertation",
+            "manual": "thesis"
+          }
+        ]
+      }
+    },
+    "61QAfgdC": {
+      "why": "\"All required courses must be taken for a grade (not pass/fail or credit/no credit) ... Each course must be passed with a grade of P or B- or better.\" Every subplan says so, so it is the program-wide grade floor (P, a GSB pass grade, still counts). The rest is policy.",
+      "patch": {
+        "info": true
+      }
+    },
+    "eEjzhRDp": {
+      "why": "\"Students are required to complete three PhD-level courses offered by GSB OB-micro faculty in Year 1 or Year 2, to be chosen in consultation with the faculty advisor. Examples include:\" OB 660, OB 675, OB 687. Which courses OB-micro faculty teach is not in the data, and OB 675 is also a required Methods course, so the student moves the three in.",
+      "replace": {
+        "t": "text",
+        "name": "GSB OB: three PhD-level courses by OB-micro faculty (e.g. OB 660, OB 687)",
+        "n": 3,
+        "manual": "approval"
+      }
+    },
+    "NbpHp0Xu": {
+      "why": "\"Students must take this course two times in year 1. One-unit course that can be taken repeatedly.\" Two one-unit enrollments are 2 units, as the Macro track's identical OB 654 rule is stored.",
+      "patch": {
+        "mode": "units",
+        "units": 2,
+        "n": null
+      }
+    },
+    "UYzhDEDy": {
+      "why": "\"Breadth Courses (2 courses) Students are required to complete one PhD-level course offered by a GSB OB-macro faculty ... one PhD-level course offered by a GSB or university faculty member outside of OB\". \"Students in all years are expected to attend and participate in all micro-OB talks.\" \"Students take the field exam during the summer quarter following the second year.\" \"By April 30 in year 2, each student will submit a research paper\". \"An approved dissertation proposal supported by three micro-OB faculty members is a field-specific requirement for advancement to candidacy.\" \"Students are required to complete a minimum of two quarters of research assistantships and two quarters of teaching assistantships\". Candidacy, \"VIII. University Oral Exams\", \"IX. Doctoral Dissertation\".",
+      "replace": {
+        "t": "all",
+        "name": "Additional Requirements",
+        "children": [
+          {
+            "id": "ov-gsb-obmi-breadth-macro",
+            "t": "text",
+            "name": "Breadth: one PhD-level course by GSB OB-macro faculty",
+            "manual": "approval",
+            "n": 1
+          },
+          {
+            "id": "ov-gsb-obmi-breadth-outside",
+            "t": "text",
+            "name": "Breadth: one PhD-level course by faculty outside OB",
+            "manual": "approval",
+            "n": 1
+          },
+          {
+            "id": "ov-gsb-obmi-seminars",
+            "t": "text",
+            "name": "Micro-OB talks and three non-micro-OB talks a year in years 1-3",
+            "manual": "milestone"
+          },
+          {
+            "id": "ov-gsb-obmi-field",
+            "t": "text",
+            "name": "Field exam",
+            "manual": "exam"
+          },
+          {
+            "id": "ov-gsb-obmi-paper",
+            "t": "text",
+            "name": "Second-year research paper and presentation",
+            "manual": "milestone"
+          },
+          {
+            "id": "ov-gsb-obmi-proposal",
+            "t": "text",
+            "name": "Dissertation proposal approved by three micro-OB faculty",
+            "manual": "milestone"
+          },
+          {
+            "id": "ov-gsb-obmi-assist",
+            "t": "text",
+            "name": "Two quarters of research and two of teaching assistantships",
+            "manual": "milestone"
+          },
+          {
+            "id": "ov-gsb-obmi-candidacy",
+            "t": "text",
+            "name": "Advancement to candidacy",
+            "manual": "milestone"
+          },
+          {
+            "id": "ov-gsb-obmi-oral",
+            "t": "text",
+            "name": "University oral exam",
+            "manual": "exam"
+          },
+          {
+            "id": "ov-gsb-obmi-dissertation",
+            "t": "text",
+            "name": "Doctoral dissertation",
+            "manual": "thesis"
+          }
+        ]
+      }
+    },
+    "RsxFgu55": {
+      "why": "\"Complete at least 4 courses from the following OIT Courses and Pre-Approved Non-OIT Electives. At least 2 courses must be OIT courses numbered 600 or above (examples below). Students may, with faculty liaison approval, also use non-OIT courses towards this requirement.\" The data asked for four of two one-course groups. The three OIT courses are examples, so any OIT course numbered 600 or above counts (not the ROIT seminar, directed reading, dissertation research or practicums), and the non-OIT courses are capped at two so that at least two are OIT courses. Other non-OIT courses the liaison approves are moved in.",
+      "replace": {
+        "t": "courses",
+        "name": "OIT Electives (4 courses, at least 2 OIT 600+)",
+        "mode": "atLeast",
+        "n": 4,
+        "items": [
+          [
+            "OIT 604"
+          ],
+          [
+            "OIT 648"
+          ],
+          [
+            "OIT 666"
+          ],
+          [
+            "ECON 278"
+          ],
+          [
+            "EE 364A"
+          ],
+          [
+            "MS&E 235B"
+          ],
+          [
+            "MS&E 322"
+          ],
+          [
+            "STATS 310A"
+          ]
+        ],
+        "limits": [
+          {
+            "label": "non-OIT courses",
+            "max": 2,
+            "codes": [
+              "ECON 278",
+              "EE 364A",
+              "MS&E 235B",
+              "MS&E 322",
+              "STATS 310A"
+            ]
+          }
+        ],
+        "pool": {
+          "subjects": [
+            "OIT"
+          ],
+          "minNumber": 600,
+          "exclude": [
+            "OIT 644",
+            "OIT 691",
+            "OIT 692",
+            "OIT 698",
+            "OIT 699",
+            "OIT 802"
+          ]
+        }
+      }
+    },
+    "NFMxupx8": {
+      "why": "\"The first year field exam, administered in the summer of a student's first year\" and \"To advance to candidacy, a student must pass both the first and second-year field exams\". \"Students enroll in course Doctoral Practicum in Research in the winter and spring quarters\". \"Students in all years are required to attend and participate in the OIT Seminar.\" \"Students are required to complete a minimum of two quarters of research assistantships ... a minimum of four quarters of course assistantships for OIT courses\". Candidacy, \"VII. University Oral Exams\", \"VIII. Doctoral Dissertation\".",
+      "replace": {
+        "t": "all",
+        "name": "Additional Requirements",
+        "children": [
+          {
+            "id": "ov-gsb-oit-field1",
+            "t": "text",
+            "name": "First-year field exam",
+            "manual": "exam"
+          },
+          {
+            "id": "ov-gsb-oit-practicum",
+            "t": "text",
+            "name": "Doctoral Practicum in Research (winter and spring of year 1) and the OIT Seminar",
+            "manual": "milestone"
+          },
+          {
+            "id": "ov-gsb-oit-field2",
+            "t": "text",
+            "name": "Second-year field exam (research paper and oral exam)",
+            "manual": "exam"
+          },
+          {
+            "id": "ov-gsb-oit-assist",
+            "t": "text",
+            "name": "Two quarters of research assistantships and four of OIT course assistantships",
+            "manual": "milestone"
+          },
+          {
+            "id": "ov-gsb-oit-candidacy",
+            "t": "text",
+            "name": "Advancement to candidacy",
+            "manual": "milestone"
+          },
+          {
+            "id": "ov-gsb-oit-oral",
+            "t": "text",
+            "name": "University oral exam",
+            "manual": "exam"
+          },
+          {
+            "id": "ov-gsb-oit-dissertation",
+            "t": "text",
+            "name": "Doctoral dissertation",
+            "manual": "thesis"
+          }
+        ]
+      }
+    },
+    "G6L8jp0N": {
+      "why": "\"All required courses must be taken for a grade (not pass/fail or credit/no credit) ... Each course must be passed with a grade of P or B- or better.\" Every subplan says so, so it is the program-wide grade floor (P, a GSB pass grade, still counts). The rest is policy.",
+      "patch": {
+        "info": true
+      }
+    },
+    "gOyE9IEN": {
+      "why": "\"Students are recommended, but not required, to take one course exposing them to organizational and/or psychological approaches\".",
+      "patch": {
+        "optional": true
+      }
+    },
+    "HI9P5Cg9": {
+      "why": "\"PE students in all years are required to attend the regular PE seminar ... and the weekly PE student research lunch\". \"Each student is required to write a research paper each summer following the first and second year of study\". \"Students are required to pass a field exam consisting of three parts\". \"Students are required to complete a minimum of two quarters of research assistantships and two quarters of teaching assistantships\". Candidacy, \"VII. University Oral Exam\", \"VIII. Dissertation\".",
+      "replace": {
+        "t": "all",
+        "name": "Additional Requirements",
+        "children": [
+          {
+            "id": "ov-gsb-pe-seminars",
+            "t": "text",
+            "name": "PE seminar and weekly PE student research lunch",
+            "manual": "milestone"
+          },
+          {
+            "id": "ov-gsb-pe-papers",
+            "t": "text",
+            "name": "First- and second-year summer papers and presentations",
+            "manual": "milestone"
+          },
+          {
+            "id": "ov-gsb-pe-field",
+            "t": "text",
+            "name": "Field exam (political economy, microeconomics, econometrics)",
+            "manual": "exam"
+          },
+          {
+            "id": "ov-gsb-pe-assist",
+            "t": "text",
+            "name": "Two quarters of research and two of teaching assistantships",
+            "manual": "milestone"
+          },
+          {
+            "id": "ov-gsb-pe-candidacy",
+            "t": "text",
+            "name": "Advancement to candidacy",
+            "manual": "milestone"
+          },
+          {
+            "id": "ov-gsb-pe-oral",
+            "t": "text",
+            "name": "University oral exam",
+            "manual": "exam"
+          },
+          {
+            "id": "ov-gsb-pe-dissertation",
+            "t": "text",
+            "name": "Dissertation",
+            "manual": "thesis"
+          }
+        ]
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "P4MdJhGx",
+      "why": "\"I. Course Requirements (9 courses)\" lists eight; notes: \"Additionally: One Psychology course (selected in consulations with the Faculty Liaison) is required\".",
+      "node": {
+        "id": "ov-gsb-mktgb-psych",
+        "t": "courses",
+        "name": "One Psychology course (chosen with the Faculty Liaison)",
+        "mode": "atLeast",
+        "n": 1,
+        "pool": {
+          "subjects": [
+            "PSYCH"
+          ]
+        }
+      }
+    }
+  ]
+}

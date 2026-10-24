@@ -1,0 +1,55 @@
+{
+  "code": "CEE-PHD",
+  "reviewed": "2026-10-23",
+  "summary": "The audit counts 135 graduate units, none below the 100 level, and checks 12 post-MS units of lecture or lab classes numbered 200 or above (letter graded, more than 1 unit each, not technical writing), the teaching seminar and course, and the introduction to PhD studies seminar. You move in the 45 MS units (a related MS, the CEE MS requirements, or transfer credit) and check by hand the 3.0 GPA, a 3-unit course with each of four Academic Council faculty, the TA orientation and assistantship, the GQE, the coursework proposal, the oral exam and the dissertation.",
+  "program": {
+    "totals": [
+      { "label": "Courses below the 100 level", "maxUnits": 0, "pool": { "anySubject": true, "maxNumber": 99 }, "why": "Policies: \"All units counted towards graduate degrees in CEE must be from courses at or above the 100-level.\"" }
+    ]
+  },
+  "blocks": {
+    "iwHWtFFx": { "kind": "required" }
+  },
+  "nodes": {
+    "sQXZC747": {
+      "why": "\"The PhD requires completion of a minimum of 135 units at the graduate level (100+). Students must achieve an average Grade Point Average (GPA) of at least 3.0\" ... \"45 units from a previous MS degree in a related area of study\" (or the CEE MS requirements, or a Graduate Residency Transfer Credit Application) ... \"At least 12 post-MS units of lecture- or laboratory-style classes ... All units must be 200+ level. No 1-unit courses may count. All units must be taken for a Letter Grade. EFSLANG/ESOLLANG and technical writing units may not count.\" (the technical writing courses ENGR 202C and ENGR 202W are left out) ... \"PhD students must complete 1 course of at least 3 units from each of 4 different Stanford Academic Council faculty members.\" Class type (lecture or lab) and instructors are not in the audit's data.",
+      "replace": {
+        "t": "all",
+        "name": "Program Requirements",
+        "children": [
+          { "id": "ov-ms-units", "t": "text", "name": "45 MS units (a related MS, the CEE MS requirements, or transfer credit)", "units": 45, "manual": "residency" },
+          { "id": "ov-postms", "t": "courses", "name": "12 post-MS units of lecture or lab classes (200+, letter graded, more than 1 unit)", "mode": "units", "units": 12, "letter": true, "minUnitsEach": 2, "pool": { "subjects": [], "anySubject": true, "minNumber": 200, "exclude": ["ENGR 202C", "ENGR 202W"] } },
+          { "id": "ov-gpa", "t": "text", "name": "GPA of at least 3.0 in Stanford courses counted toward the degree", "manual": "gpa" },
+          { "id": "ov-four-faculty", "t": "text", "name": "A 3+ unit course with each of four Academic Council faculty", "manual": "other" }
+        ]
+      }
+    },
+    "IApqOEm9": {
+      "why": "\"three required steps focused on these topics (one orientation and two 1-unit courses) are required for all PhD candidates ... Orientation: ... the university's TA Orientation\" and \"Course Assistantship/Teaching Assistantship to fulfill the teaching experience must be an appt between 10-50% FTE.\" The two courses are their own rules; the orientation and the assistantship are checked by hand.",
+      "patch": { "info": null, "manual": "milestone", "name": "TA Orientation and a teaching assistantship (10-50% FTE)" }
+    },
+    "nKcWqW76": {
+      "why": "\"The designation of 'PhD candidate' is reserved for students who have passed the General Qualifying Exam (GQE) and have submitted an approved program of PhD coursework using the CEE Coursework Proposal for Doctoral Degree form ... The GQE must be completed by the end of the 6th non-Summer quarter\"",
+      "replace": {
+        "t": "all",
+        "name": "General Qualifying Exam (GQE)",
+        "children": [
+          { "id": "ov-gqe", "t": "text", "name": "General Qualifying Exam by the end of the 6th non-Summer quarter", "manual": "exam" },
+          { "id": "ov-coursework-proposal", "t": "text", "name": "CEE Coursework Proposal for Doctoral Degree approved by the advisor", "manual": "approval" }
+        ]
+      }
+    },
+    "PyNkLYQT": {
+      "why": "\"It is recommended to apply for TGR status as soon as a student is eligible.\" TGR status and CEE 802 enrollment are registration, not a degree requirement.",
+      "replace": { "t": "text", "name": "Terminal Graduate Registration (TGR)", "info": true }
+    },
+    "2hWmCF3l": {
+      "why": "\"Passing the University Oral Examination is a requirement of the PhD program in the CEE Department.\"",
+      "patch": { "manual": "exam" }
+    },
+    "RKCIaVEC": {
+      "why": "\"All members of the reading committee must approve the completed dissertation to complete this milestone.\" A requirement, not an overview.",
+      "patch": { "info": null, "manual": "thesis", "name": "Dissertation approved by the reading committee" }
+    }
+  }
+}

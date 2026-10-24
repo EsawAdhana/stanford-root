@@ -1,0 +1,20 @@
+{
+  "code": "LAW-MLS",
+  "reviewed": "2026-10-23",
+  "summary": "The audit checks the 37 units and Legal Writing (LAW 219). In your first autumn you take four Law School courses, at least three of them first-year required courses and one of them Legal Writing; the Bulletin does not list the other first-year courses, so you move those three in by hand. You also move in 24 more units your faculty adviser approves, including one course, seminar or directed research project with substantial written work (one that would earn R credit). Checked by hand: a course program approved by your Law School faculty adviser, three quarters in residence (9 or more units taken and 8 or more passed each quarter), and finishing within two consecutive academic years.",
+  "nodes": {
+    "mAbEGmbJ-text": {
+      "why": "\"To obtain the MLS degree, a student must complete four Autumn Quarter Law School courses, at least three of which must be 1L required courses (at least one of which must be Legal Research and Writing) plus an additional 24 approved quarter units of coursework.\" \"Successful completion, during the Autumn Quarter, of four Law School courses, at least three of which must be those required of first-year law students in the Autumn Quarter and at least one of which must be Legal Writing.\" \"Successful completion of at least one course, seminar, or directed research project in which a paper or other form of prepared written work involving a substantial independent effort on the part of the student constitutes a principal part of the assigned work (i.e., a course that would count for “R” credit).\" Legal Writing is LAW 219. The Bulletin does not name the other first-year Autumn courses, the 24 units need approval, and R credit is not in the course data, so those are moved in by hand.",
+      "replace": {
+        "t": "all",
+        "name": "Course Requirements",
+        "children": [
+          { "id": "ov-lawmls-legal-writing", "t": "courses", "name": "Legal Writing (LAW 219), in your first autumn", "mode": "all", "items": [["LAW 219"]] },
+          { "id": "ov-lawmls-autumn", "t": "text", "name": "Three more Autumn Quarter Law School courses, at least two of them first-year required courses", "manual": "approval", "n": 3 },
+          { "id": "ov-lawmls-approved", "t": "text", "name": "24 more units of coursework approved by your faculty adviser", "manual": "approval", "units": 24 },
+          { "id": "ov-lawmls-r-credit", "t": "text", "name": "One course, seminar or directed research project with substantial written work (R credit)", "manual": "other", "n": 1, "shares": true }
+        ]
+      }
+    }
+  }
+}

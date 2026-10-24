@@ -1,0 +1,166 @@
+{
+  "code": "DIGHUM-MIN",
+  "reviewed": "2026-10-23",
+  "summary": "You take one core course of 4 or 5 units from a core cluster and five electives of at least 3 units each (15 units or more) from any of the elective clusters, for at least 20 units. Electives chosen with the Director of the DH Minor that are not on the cluster lists are moved in by hand.",
+  "blocks": {
+    "mz4FRyJ3": {
+      "units": 20
+    }
+  },
+  "nodes": {
+    "T7F8W0AA": {
+      "why": "\"One Core Course for 4 or 5 units from the of the Core Clusters\"",
+      "patch": {
+        "minUnitsEach": 4
+      }
+    },
+    "3AqftJEJ": {
+      "why": "\"Students must complete a total of 5 elective courses of 3 units or higher for a total of at least 15 units from the clusters below. ... You might wish to focus your study on one cluster, with one or two courses from related clusters, or you might want to prioritize breadth\". The clusters are a way to think about the choice, not separate requirements, so their courses form one list. \"These electives are to be determined in consultation with the Director of the DH Minor\", and the lists are \"representative\", so other courses are moved in by hand. The minor's 20 units are the Bulletin's unit minimum and the floor on block mz4FRyJ3.",
+      "replace": {
+        "t": "courses",
+        "name": "Elective Courses (5 courses, 15 units)",
+        "mode": "atLeast",
+        "n": 5,
+        "units": 15,
+        "minUnitsEach": 3,
+        "items": [
+          [
+            "COMM 106"
+          ],
+          [
+            "CS 106A"
+          ],
+          [
+            "CSRE 180B"
+          ],
+          [
+            "DATASCI 112"
+          ],
+          [
+            "DATASCI 120"
+          ],
+          [
+            "ENGLISH 184E"
+          ],
+          [
+            "LINGUIST 284"
+          ],
+          [
+            "POLISCI 150B"
+          ],
+          [
+            "SOC 258C"
+          ],
+          [
+            "STATS 195"
+          ],
+          [
+            "ARTSTUDI 147"
+          ],
+          [
+            "ARTSTUDI 171"
+          ],
+          [
+            "ARTSTUDI 177"
+          ],
+          [
+            "ME 125"
+          ],
+          [
+            "MUSIC 154A"
+          ],
+          [
+            "MUSIC 220A"
+          ],
+          [
+            "MUSIC 422"
+          ],
+          [
+            "DESIGN 101"
+          ],
+          [
+            "DESIGN 170"
+          ],
+          [
+            "AMSTUD 145"
+          ],
+          [
+            "PHIL 20N"
+          ],
+          [
+            "POLISCI 70"
+          ],
+          [
+            "PSYCH 35"
+          ],
+          [
+            "STS 1"
+          ],
+          [
+            "ARTSTUDI 148P"
+          ],
+          [
+            "CS 56N"
+          ],
+          [
+            "HISTORY 1B"
+          ],
+          [
+            "HISTORY 1C"
+          ],
+          [
+            "HISTORY 102"
+          ],
+          [
+            "SOC 31N"
+          ],
+          [
+            "AFRICAAM 200N"
+          ],
+          [
+            "CSRE 180A"
+          ],
+          [
+            "HISTORY 244F"
+          ],
+          [
+            "FEMGEN 147"
+          ],
+          [
+            "LINGUIST 180"
+          ],
+          [
+            "LINGUIST 188"
+          ],
+          [
+            "AMSTUD 1B"
+          ],
+          [
+            "ARTSTUDI 169"
+          ],
+          [
+            "ARTSTUDI 236"
+          ],
+          [
+            "COMM 177I"
+          ],
+          [
+            "COMM 281"
+          ],
+          [
+            "GLOBAL 135"
+          ],
+          [
+            "HISTORY 107"
+          ],
+          [
+            "URBANST 113"
+          ],
+          [
+            "URBANST 123B"
+          ]
+        ]
+      }
+    }
+  }
+}

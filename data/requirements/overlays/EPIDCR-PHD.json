@@ -1,0 +1,155 @@
+{
+  "code": "EPIDCR-PHD",
+  "reviewed": "2026-10-23",
+  "summary": "You need 135 graduate units, including the core epidemiology and biostatistics sequences, 8 units of research seminars and grant writing (three quarters of EPI 236 and two of EPI 246 among them), 9 units of methods coursework (any 200-level STATS course except STATS 260 also counts), and 9 units of electives in at least three content areas. Every core course except EPI 264 must be letter graded with a B or better. Your advisor checks the 3.0 GPA and that the electives span three areas, and the department records the preliminary written exam at the end of winter of your second year, the oral qualifying exam by the end of autumn of your third year, the defense and the dissertation.",
+  "blocks": {
+    "n2LX0pFX": {
+      "kind": "required"
+    }
+  },
+  "nodes": {
+    "z51kh5vU-text": {
+      "why": "\"Epidemiology PhD students must pass the Preliminary Written Exams and the Oral Qualifying Exam before being admitted to candidacy.\" and \"Doctoral students in Epidemiology and Clinical Research must complete and pass the Preliminary Written Exam given around the end of winter term of their second year\". The Oral Qualifying Exam (\"by the end of autumn quarter of Year 3\") is rule ov-epidcr-phd-qual; this rule is the written exam.",
+      "patch": {
+        "name": "Preliminary Written Exam (end of winter, year 2)",
+        "manual": "exam"
+      }
+    },
+    "Nm9XULzO": {
+      "why": "\"Except for EPI 264, all Core Courses must be taken for a letter grade and passed with a grade of B or higher.\" EPI 264 is the one core course without the grade rule.",
+      "replace": {
+        "t": "all",
+        "name": "Core Epidemiology Sequence (11 units)",
+        "children": [
+          {
+            "id": "ov-epidcr-phd-epi-core",
+            "t": "courses",
+            "name": "EPI 225, EPI 226 and EPI 227 (letter grade, B or better)",
+            "mode": "all",
+            "letter": true,
+            "minGrade": "B",
+            "items": [
+              [
+                "EPI 225"
+              ],
+              [
+                "EPI 226"
+              ],
+              [
+                "EPI 227"
+              ]
+            ]
+          },
+          {
+            "id": "ov-epidcr-phd-epi264",
+            "t": "courses",
+            "name": "EPI 264",
+            "mode": "all",
+            "items": [
+              [
+                "EPI 264"
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    "tGCszvEi": {
+      "why": "\"Except for EPI 264, all Core Courses must be taken for a letter grade and passed with a grade of B or higher.\"",
+      "patch": {
+        "letter": true,
+        "minGrade": "B"
+      }
+    },
+    "PkY9kjBS": {
+      "why": "Named \"Research Seminars and Grant Writing (8 units)\"; notes: \"3 quarters of EPI 236 are required.\" and \"Students are required to take EPI 246 in spring quarter of year 1 and spring quarter of year 2.\" Each quarter is one slot.",
+      "patch": {
+        "units": 8,
+        "items": [
+          [
+            "BIOS 242",
+            "BIOS 425"
+          ],
+          [
+            "EPI 236"
+          ],
+          [
+            "EPI 236"
+          ],
+          [
+            "EPI 236"
+          ],
+          [
+            "EPI 246"
+          ],
+          [
+            "EPI 246"
+          ],
+          [
+            "MED 255"
+          ]
+        ]
+      }
+    },
+    "FSln9W9s": {
+      "why": "Named \"Methodologic Coursework (9 units)\"; notes: \"Any 200-level STATS course (other than STATS 260) will fulfill the requirement.\"",
+      "patch": {
+        "units": 9,
+        "pool": {
+          "subjects": [
+            "STATS"
+          ],
+          "minNumber": 200,
+          "maxNumber": 299,
+          "exclude": [
+            "STATS 260"
+          ]
+        }
+      }
+    },
+    "zf5UibX3": {
+      "why": "\"Students must take electives from at least three substantive content areas for a minimum of 9 units.\" Courses are not tagged by area, so distinct areas are checked by hand; other compatible classes are moved in by hand.",
+      "patch": {
+        "n": 3,
+        "units": 9
+      }
+    },
+    "tNX2chXK": {
+      "why": "\"The defense consists of two parts: 1. Public Seminar ... 2. Closed-Door Session\"",
+      "patch": {
+        "name": "Dissertation defense",
+        "manual": "exam"
+      }
+    },
+    "Csdm6VCQ": {
+      "why": "\"Dissertations can be any combination of substantive, methodologic, or theoretical topics ... There must be some substantive methodologic innovation in at least one part of the dissertation.\"",
+      "patch": {
+        "info": null,
+        "name": "Dissertation",
+        "manual": "thesis"
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "E8hsEGR5",
+      "why": "GPA: \"Students must maintain a minimum GPA of 3.0 at all times.\"",
+      "node": {
+        "id": "ov-epidcr-phd-gpa",
+        "t": "text",
+        "name": "GPA of at least 3.0",
+        "manual": "gpa"
+      }
+    },
+    {
+      "block": "tG6hf9XY",
+      "why": "\"Students begin working on their dissertation after passing the oral qualifying exam in Year 3.\"",
+      "node": {
+        "id": "ov-epidcr-phd-qual",
+        "t": "text",
+        "name": "Oral qualifying exam",
+        "manual": "exam"
+      }
+    }
+  ]
+}

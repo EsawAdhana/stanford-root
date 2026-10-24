@@ -1,0 +1,33 @@
+{
+  "code": "CSRE-PMN",
+  "reviewed": "2026-10-23",
+  "summary": "The audit checks the 20 units of the PhD minor: CSRE 300 for 5 units and a letter grade, the three CSRE 301 workshop quarters (one unit each counts), one additional theory course and at least two graduate electives from the listed courses. You check by hand that one elective is housed outside your home department, electives the CCSRE Academic Programs team pre-approves, and that these units are not also used for another PhD minor or a master's degree.",
+  "blocks": {
+    "HbJA0rvR": { "units": 20 }
+  },
+  "nodes": {
+    "Jj9hBrx6": {
+      "why": "\"PhD Minors must complete at least 20 units of CSRE coursework.\" The floor is now on block HbJA0rvR; the rest of the overview (200 level or above, residency and double-counting policy) is information, and every listed course is numbered 200 or above.",
+      "patch": { "info": true }
+    },
+    "iukQATNA": {
+      "why": "\"Note that CSRE 300 must be taken for 5 units and letter grade if taken to fulfill the requirements of the PhD Minor.\"",
+      "patch": { "minUnitsEach": 5, "letter": true }
+    },
+    "SLwegZeg": {
+      "why": "\"Although the workshop may be listed for a range of units, only one unit per workshop quarter may be counted toward the PhD Minor.\" Three workshop quarters, so at most 3 units count.",
+      "patch": {
+        "limits": [
+          { "label": "one unit per workshop quarter", "maxUnits": 3, "codes": ["CSRE 301A", "CSRE 301B", "CSRE 301C"] }
+        ]
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "HbJA0rvR",
+      "node": { "id": "ov-csre-pmn-outside", "t": "text", "name": "One elective housed outside the student's home department", "manual": "other" },
+      "why": "\"One of these electives must be housed outside the student's home department.\" The audit does not know the home department."
+    }
+  ]
+}

@@ -1,0 +1,684 @@
+{
+  "code": "PUBPO-MPP",
+  "reviewed": "2026-10-23",
+  "summary": "You take the MPP core courses for a letter grade, two quarters of the colloquium (S/NC) and the 10-unit practicum, toward 90 units, and you complete one concentration. The audit checks the concentration's 35 letter-graded units and, for Education and Urban Policy, its course counts. The self-designed concentration, your 3.0 GPA, the Urban focus areas and third gateway course, and the Computational and Legal concentration approvals are checked by hand.",
+  "nodes": {
+    "ESXHhJMq": {
+      "why": "Policies for joint degree students only (\"The university regards a joint degree as distinct from either of its component degrees ...\"), not a requirement of the MPP itself.",
+      "patch": {
+        "info": true
+      }
+    },
+    "2O0HRpOi": {
+      "why": "\"All core courses listed above must be taken for a letter grade (except course Public Policy Colloquium, which only offers S/NC).\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "PqUYL4dO": {
+      "why": "\"All Public Policy graduate students must enroll in and attend two quarters of course Public Policy Colloquium (2 units)\": two enrollments of the 1-unit PUBLPOL 311.",
+      "patch": {
+        "items": [
+          [
+            "PUBLPOL 311"
+          ],
+          [
+            "PUBLPOL 311"
+          ]
+        ]
+      }
+    },
+    "dOBl6HJ6": {
+      "why": "\"Completion of Practicum (10 units, Autumn and Winter quarters)\": 10 units of the repeatable PUBLPOL 309.",
+      "patch": {
+        "units": 10
+      }
+    },
+    "VqNvZp2b": {
+      "why": "\"Complete 35 Units Between Gateway Courses and Elective Courses\"; \"All courses must be completed for a letter grade.\" (subplan rule notes)",
+      "patch": {
+        "units": 35
+      }
+    },
+    "OQt28HWj": {
+      "why": "\"All courses must be completed for a letter grade.\" (subplan rule notes)",
+      "patch": {
+        "letter": true
+      }
+    },
+    "Vf30errL": {
+      "why": "\"All courses must be completed for a letter grade.\" (subplan rule notes)",
+      "patch": {
+        "letter": true
+      }
+    },
+    "VcE0c5WI": {
+      "why": "\"Complete 35 units from the list below.\" \"All courses must be taken for a letter grade.\" The rule lists its courses (AMSTUD 201 through URBANST 133).",
+      "replace": {
+        "t": "courses",
+        "name": "Course Options",
+        "mode": "units",
+        "units": 35,
+        "letter": true,
+        "items": [
+          [
+            "AMSTUD 201"
+          ],
+          [
+            "CSRE 123"
+          ],
+          [
+            "CSRE 177E"
+          ],
+          [
+            "CSRE 179A"
+          ],
+          [
+            "ECON 206"
+          ],
+          [
+            "EDUC 212"
+          ],
+          [
+            "EDUC 337"
+          ],
+          [
+            "EDUC 381"
+          ],
+          [
+            "FEMGEN 297"
+          ],
+          [
+            "HISTORY 161"
+          ],
+          [
+            "HISTORY 226E"
+          ],
+          [
+            "HISTORY 255D"
+          ],
+          [
+            "INTLPOL 220"
+          ],
+          [
+            "INTLPOL 281"
+          ],
+          [
+            "INTNLREL 142"
+          ],
+          [
+            "LAW 7063"
+          ],
+          [
+            "MGTECON 526"
+          ],
+          [
+            "PUBLPOL 113"
+          ],
+          [
+            "PUBLPOL 121L"
+          ],
+          [
+            "SOC 118"
+          ],
+          [
+            "SOC 242"
+          ],
+          [
+            "SOC 249"
+          ],
+          [
+            "SOC 340L"
+          ],
+          [
+            "URBANST 132"
+          ],
+          [
+            "URBANST 133"
+          ]
+        ]
+      }
+    },
+    "mJrXP6Nh": {
+      "why": "\"All MPP students in the concentration will take two gateway courses in Education Policy; two in Foundations of Education, one in Organizational Studies and Education; and at least two additional elective courses.\" The two additional electives come from the subplan lists (\"Core courses and electives will be selected from the list below\"); others need the advisor and Program Director (\"this is not an exhaustive list\").",
+      "replace": {
+        "t": "all",
+        "name": "Complete 35 Units Between Gateway Courses and Elective Courses",
+        "units": 35,
+        "children": [
+          {
+            "id": "Za4dJiJt",
+            "t": "courses",
+            "name": "Gateway Courses",
+            "mode": "any",
+            "items": [
+              [
+                "EDUC 222"
+              ],
+              [
+                "EDUC 271"
+              ],
+              [
+                "EDUC 306A"
+              ],
+              [
+                "EDUC 347"
+              ]
+            ],
+            "n": 2,
+            "letter": true
+          },
+          {
+            "id": "NFKgBbYS",
+            "t": "courses",
+            "name": "Foundations Electives",
+            "mode": "any",
+            "items": [
+              [
+                "EDUC 201"
+              ],
+              [
+                "EDUC 208C"
+              ],
+              [
+                "EDUC 220C"
+              ],
+              [
+                "EDUC 310"
+              ],
+              [
+                "EDUC 358"
+              ],
+              [
+                "LAW 7144"
+              ]
+            ],
+            "n": 2,
+            "letter": true
+          },
+          {
+            "id": "vZD52eqz",
+            "t": "courses",
+            "name": "Organizations Electives",
+            "mode": "any",
+            "items": [
+              [
+                "EDUC 100A"
+              ],
+              [
+                "EDUC 100B"
+              ],
+              [
+                "EDUC 100C"
+              ],
+              [
+                "EDUC 103B"
+              ],
+              [
+                "EDUC 117"
+              ],
+              [
+                "EDUC 136"
+              ],
+              [
+                "EDUC 144"
+              ],
+              [
+                "EDUC 177A"
+              ],
+              [
+                "EDUC 200A"
+              ],
+              [
+                "EDUC 200B"
+              ],
+              [
+                "EDUC 201"
+              ],
+              [
+                "EDUC 202"
+              ],
+              [
+                "EDUC 204"
+              ],
+              [
+                "EDUC 207"
+              ],
+              [
+                "EDUC 252"
+              ],
+              [
+                "EDUC 265"
+              ],
+              [
+                "EDUC 306D"
+              ],
+              [
+                "EDUC 316"
+              ],
+              [
+                "EDUC 321"
+              ],
+              [
+                "EDUC 347"
+              ],
+              [
+                "EDUC 430B"
+              ],
+              [
+                "EDUC 486"
+              ],
+              [
+                "PUBLPOL 316"
+              ],
+              [
+                "SOC 130"
+              ],
+              [
+                "SOC 369"
+              ]
+            ],
+            "n": 1,
+            "letter": true
+          },
+          {
+            "id": "ov-edu-more",
+            "t": "courses",
+            "name": "Two additional elective courses",
+            "mode": "any",
+            "n": 2,
+            "letter": true,
+            "items": [
+              [
+                "EDUC 222"
+              ],
+              [
+                "EDUC 271"
+              ],
+              [
+                "EDUC 306A"
+              ],
+              [
+                "EDUC 347"
+              ],
+              [
+                "EDUC 201"
+              ],
+              [
+                "EDUC 208C"
+              ],
+              [
+                "EDUC 220C"
+              ],
+              [
+                "EDUC 310"
+              ],
+              [
+                "EDUC 358"
+              ],
+              [
+                "LAW 7144"
+              ],
+              [
+                "EDUC 100A"
+              ],
+              [
+                "EDUC 100B"
+              ],
+              [
+                "EDUC 100C"
+              ],
+              [
+                "EDUC 103B"
+              ],
+              [
+                "EDUC 117"
+              ],
+              [
+                "EDUC 136"
+              ],
+              [
+                "EDUC 144"
+              ],
+              [
+                "EDUC 177A"
+              ],
+              [
+                "EDUC 200A"
+              ],
+              [
+                "EDUC 200B"
+              ],
+              [
+                "EDUC 202"
+              ],
+              [
+                "EDUC 204"
+              ],
+              [
+                "EDUC 207"
+              ],
+              [
+                "EDUC 252"
+              ],
+              [
+                "EDUC 265"
+              ],
+              [
+                "EDUC 306D"
+              ],
+              [
+                "EDUC 316"
+              ],
+              [
+                "EDUC 321"
+              ],
+              [
+                "EDUC 430B"
+              ],
+              [
+                "EDUC 486"
+              ],
+              [
+                "PUBLPOL 316"
+              ],
+              [
+                "SOC 130"
+              ],
+              [
+                "SOC 369"
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    "CwtZ0RQ4": {
+      "why": "\"Complete 35 Units Between Gateway Courses and Elective Courses\"; \"All courses must be completed for a letter grade.\" (subplan rule notes)",
+      "patch": {
+        "units": 35
+      }
+    },
+    "VX4JzLJg": {
+      "why": "\"All courses must be completed for a letter grade.\" (subplan rule notes)",
+      "patch": {
+        "letter": true
+      }
+    },
+    "lUl4QSGx": {
+      "why": "\"All courses must be completed for a letter grade.\" (subplan rule notes)",
+      "patch": {
+        "letter": true
+      }
+    },
+    "c71ew0iu": {
+      "why": "\"Complete 35 Units Between Gateway Courses and Elective Courses\"; \"All courses must be completed for a letter grade.\" (subplan rule notes)",
+      "patch": {
+        "units": 35
+      }
+    },
+    "RYxpH2DH": {
+      "why": "\"All courses must be completed for a letter grade.\" (subplan rule notes)",
+      "patch": {
+        "letter": true
+      }
+    },
+    "83AlXF5U": {
+      "why": "\"All courses must be completed for a letter grade.\" (subplan rule notes)",
+      "patch": {
+        "letter": true
+      }
+    },
+    "2JHWRIXi": {
+      "why": "\"Complete 35 Units Between Gateway Courses and Elective Courses\"; \"All courses must be completed for a letter grade.\" (subplan rule notes)",
+      "patch": {
+        "units": 35
+      }
+    },
+    "v8jR6jIQ": {
+      "why": "\"All courses must be completed for a letter grade.\" (subplan rule notes)",
+      "patch": {
+        "letter": true
+      }
+    },
+    "rloeHENf": {
+      "why": "\"All courses must be completed for a letter grade.\" (subplan rule notes)",
+      "patch": {
+        "letter": true
+      }
+    },
+    "PUUmYUPX": {
+      "why": "\"All courses must be completed for a letter grade.\" (subplan rule notes)",
+      "patch": {
+        "letter": true
+      }
+    },
+    "i2Cc0kYQ": {
+      "why": "\"A total of 35 units is required, and all courses must be completed for a letter grade.\"",
+      "patch": {
+        "units": 35
+      }
+    },
+    "r9BsTU6o": {
+      "why": "\"All courses must be completed for a letter grade.\" (subplan rule notes)",
+      "patch": {
+        "letter": true
+      }
+    },
+    "jsofXXZs": {
+      "why": "\"All courses must be completed for a letter grade.\" (subplan rule notes)",
+      "patch": {
+        "letter": true
+      }
+    },
+    "1Z3mE95p": {
+      "why": "\"Complete 35 Units Between Gateway Courses and Elective Courses\"; \"All courses must be completed for a letter grade.\" (subplan rule notes)",
+      "patch": {
+        "units": 35
+      }
+    },
+    "qYGf2SCD": {
+      "why": "\"All courses must be completed for a letter grade.\" (subplan rule notes)",
+      "patch": {
+        "letter": true
+      }
+    },
+    "OafZJbMQ": {
+      "why": "\"All courses must be completed for a letter grade.\" (subplan rule notes)",
+      "patch": {
+        "letter": true
+      }
+    },
+    "64QW6rRe": {
+      "why": "\"Requirements for the Urban Policy Concentration for MPP students include completing at least three gateway courses, taking courses from at least two different focus areas, and fulfilling enough courses to satisfy the unit requirement.\" The Bulletin lists only two gateway courses and says \"the courses below are not an exhaustive list; students may select other courses ... with the approval of their faculty advisor\", so the third gateway is an approved course moved in by hand. The focus areas are not in the Bulletin data.",
+      "replace": {
+        "t": "all",
+        "name": "Complete 35 Units Between Gateway Courses and Elective Courses",
+        "units": 35,
+        "children": [
+          {
+            "id": "HqYY2vU8",
+            "t": "courses",
+            "name": "Gateway Courses",
+            "mode": "any",
+            "items": [
+              [
+                "PUBLPOL 174"
+              ],
+              [
+                "URBANST 110"
+              ]
+            ],
+            "n": 2,
+            "letter": true
+          },
+          {
+            "id": "ov-urban-gateway3",
+            "t": "text",
+            "name": "Third gateway course (approved by the faculty advisor)",
+            "n": 1,
+            "manual": "approval"
+          },
+          {
+            "id": "C8zbbH1W",
+            "t": "courses",
+            "name": "Elective Courses",
+            "mode": "any",
+            "items": [
+              [
+                "CEE 172"
+              ],
+              [
+                "CEE 240"
+              ],
+              [
+                "CEE 248"
+              ],
+              [
+                "CEE 277L"
+              ],
+              [
+                "COMM 264"
+              ],
+              [
+                "EARTHSYS 220"
+              ],
+              [
+                "EDUC 212"
+              ],
+              [
+                "EARTHSYS 281"
+              ],
+              [
+                "EDUC 271"
+              ],
+              [
+                "EDUC 337"
+              ],
+              [
+                "EDUC 447"
+              ],
+              [
+                "POLISCI 236"
+              ],
+              [
+                "PUBLPOL 113"
+              ],
+              [
+                "PUBLPOL 135"
+              ],
+              [
+                "PUBLPOL 143"
+              ],
+              [
+                "PUBLPOL 154"
+              ],
+              [
+                "PUBLPOL 171"
+              ],
+              [
+                "PUBLPOL 218X"
+              ],
+              [
+                "PUBLPOL 218Y"
+              ],
+              [
+                "SOC 179A"
+              ],
+              [
+                "SOC 229X"
+              ],
+              [
+                "SOC 249"
+              ],
+              [
+                "SOC 341W"
+              ],
+              [
+                "SOC 479"
+              ],
+              [
+                "STRAMGT 537"
+              ],
+              [
+                "URBANST 113"
+              ],
+              [
+                "URBANST 114"
+              ],
+              [
+                "URBANST 131"
+              ],
+              [
+                "URBANST 132"
+              ],
+              [
+                "URBANST 141"
+              ],
+              [
+                "URBANST 163"
+              ],
+              [
+                "URBANST 164"
+              ],
+              [
+                "URBANST 165"
+              ]
+            ],
+            "letter": true
+          },
+          {
+            "id": "ov-urban-focus",
+            "t": "text",
+            "name": "Courses from at least two different focus areas",
+            "manual": "approval"
+          }
+        ]
+      }
+    },
+    "YfZXCdVc": {
+      "why": "\"A self-designed concentration requires a detailed statement of study goals and the relationship of each proposed course to those goals, as well as the approval of the student’s faculty advisor and the Program Director.\" No unit figure is given for it.",
+      "patch": {
+        "info": null,
+        "manual": "approval",
+        "name": "Self-designed concentration approved by the faculty advisor and Program Director"
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "mAbEGmbJ",
+      "node": {
+        "id": "ov-gpa",
+        "t": "text",
+        "name": "GPA of 3.0 (B) in courses applicable to the degree",
+        "manual": "gpa"
+      },
+      "why": "\"Students must maintain a 3.0 (B) grade point average overall in courses applicable to the degree.\""
+    },
+    {
+      "block": "A5KGm6QW",
+      "node": {
+        "id": "ov-comp-approval",
+        "t": "text",
+        "name": "Concentration courses approved by the faculty advisor",
+        "manual": "approval"
+      },
+      "why": "\"all concentration courses must be discussed with and approved by the faculty advisor whether or not they are on the suggested list.\""
+    },
+    {
+      "block": "0Lv0FVcr",
+      "node": {
+        "id": "ov-legal-plan",
+        "t": "text",
+        "name": "Written elective plan approved by Public Policy faculty and the director",
+        "manual": "approval"
+      },
+      "why": "\"... the student’s interests and/or career plan, which must be stated in writing before approval of the elective plan and be approved in advance by a member of the Public Policy-affiliated faculty and by the director of the program.\""
+    }
+  ],
+  "program": {
+    "subplanRequired": true,
+    "why": "Overview: \"Each student in the MPP program also completes at least one concentration tailored to the student's primary degree program or the student's interests and skills.\" Joint degree note: \"joint MPP students must define their concentration area from courses offered in their non-Public Policy program.\" So a concentration is required, though the Bulletin's flag says otherwise."
+  }
+}

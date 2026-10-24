@@ -1,0 +1,9 @@
+{
+  "code": "ENERGY-MIN",
+  "reviewed": "2026-10-23",
+  "summary": "Every course must be letter graded. The minor is ENERGY 131, 132 and 133 plus three electives from the list, for at least 18 units; substitutions your advisor approves are moved in by hand.",
+  "program": {
+    "letterGrade": true,
+    "why": "Grading: \"All required courses must be taken for a letter grade.\""
+  }
+}

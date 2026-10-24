@@ -1,0 +1,64 @@
+{
+  "code": "BIOE-PHD",
+  "reviewed": "2026-10-23",
+  "summary": "The audit checks the 22 units of formal coursework, each course letter graded when that option is offered: a lab course, two quantitative courses, 12 units of biology or technical electives (any BIOE lecture or lab course numbered 200 or above also counts, with at most one ethics course), and the seminar courses. It also counts 135 graduate units. The 3.0 GPA, the research advisor by the end of the fourth quarter, two TA assignments, the qualifying exam, candidacy, the oral exam and the dissertation are checked by hand.",
+  "nodes": {
+    "2KUQY9E6": { "why": "Grading: \"Any course that satisfies the PhD degree requirements must be taken for a letter grade if offered.\"", "patch": { "letter": true } },
+    "Ebj0uabS": { "why": "Grading: \"Any course that satisfies the PhD degree requirements must be taken for a letter grade if offered.\"", "patch": { "letter": true } },
+    "wNoqCK0i": { "why": "Grading: \"Any course that satisfies the PhD degree requirements must be taken for a letter grade if offered.\"", "patch": { "letter": true } },
+    "SJqbJrSG": {
+      "why": "Grading: \"Any course that satisfies the PhD degree requirements must be taken for a letter grade if offered.\" \"Select three or more Biology & Technical electives from the pre-approved list of 200+ Technical Elective courses\" (heading: minimum 12 units). \"All lecture and lab-based BioE courses at the 200+ level and above are considered Technical Electives. Directed research units (e.g., BIOE 391, BIOE 392) and BIOE 296 do not count ... One of these courses may be an ethics course from among BIOE 131, BIOE 177, CS152, CS182, CS184, CS256, CS278, or CS281.\" Counted as 12 units: no eligible course carries more than 5 units, so 12 units always takes three or more courses. Seminars, colloquia, research, teaching practicum and thesis units stay out of the BIOE pool.",
+      "patch": { "letter": true,
+        "mode": "units",
+        "n": null,
+        "units": 12,
+        "addItems": [["BIOE 177"], ["CS 152"], ["CS 182"], ["CS 184"], ["CS 256"], ["CS 278"], ["CS 281"]],
+        "pool": { "subjects": ["BIOE"], "minNumber": 200, "exclude": ["BIOE 293", "BIOE 296", "BIOE 299B", "BIOE 370", "BIOE 391", "BIOE 392", "BIOE 393", "BIOE 399", "BIOE 459", "BIOE 500", "BIOE 802"] },
+        "limits": [
+          { "label": "ethics courses", "max": 1, "codes": ["BIOE 131", "BIOE 177", "CS 152", "CS 182", "CS 184", "CS 256", "CS 278", "CS 281"] }
+        ]
+      }
+    },
+    "52famLPT": {
+      "why": "\"Degree milestones indicate progress toward a degree. They are listed on unofficial transcripts ...\" A description of milestones in general; the milestones themselves are the rules below.",
+      "patch": { "info": true }
+    },
+    "J2pBWrkv": {
+      "why": "\"Students who do not confirm a research advisor, and thus a thesis lab, by the end of the 4th quarter of study at Stanford are subject to dismissal from the program.\"",
+      "patch": { "manual": "milestone", "name": "Research advisor and thesis lab confirmed by the end of the 4th quarter" }
+    },
+    "m9utPkFW": {
+      "why": "\"serving as a teaching assistant for two courses is a requirement for the PhD in Bioengineering ... The TA requirement may only be satisfied by TA-ing Bioengineering courses assigned by the Bioengineering department.\"",
+      "patch": { "manual": "milestone" }
+    },
+    "thC0YhKN": {
+      "why": "\"the student must demonstrate knowledge of Bioengineering fundamentals and potential for research by passing a qualifying oral examination before the end of the second year\" and \"Students must be admitted to candidacy by the end of the second year of the student's PhD Program.\"",
+      "replace": {
+        "t": "all",
+        "name": "Qualifying Exam and Advancement to Candidacy",
+        "children": [
+          { "id": "ov-qual-exam", "t": "text", "name": "Qualifying oral examination and research proposal before the end of year 2", "manual": "exam" },
+          { "id": "ov-candidacy", "t": "text", "name": "Admitted to candidacy by the end of year 2", "manual": "milestone" }
+        ]
+      }
+    },
+    "l3K1zYpx": {
+      "why": "\"The PhD candidate is required to take the university oral examination after the dissertation is substantially completed\"",
+      "patch": { "manual": "exam" }
+    },
+    "2w0ZNwbn": {
+      "why": "\"Each PhD candidate is required to establish a reading committee for a doctoral dissertation within six months after passing the department's PhD Qualifying exams ... Students must have at least three faculty members who read and certify their dissertations.\" A requirement, not an overview.",
+      "patch": { "info": null, "manual": "thesis", "name": "Dissertation read and certified by the reading committee" }
+    }
+  },
+  "blocks": {
+    "ofqDwlr6": { "kind": "required" }
+  },
+  "add": [
+    {
+      "block": "0GzLObTh",
+      "why": "GPA: \"A minimum cumulative GPA of 3.0 or above is required for all courses to fulfill the 22 units of formal coursework requirement.\" and \"An overall grade point average (GPA) of at least 3.0 must be maintained.\"",
+      "node": { "id": "ov-gpa", "t": "text", "name": "GPA of 3.0 in the 22 units of formal coursework and overall", "manual": "gpa" }
+    }
+  ]
+}

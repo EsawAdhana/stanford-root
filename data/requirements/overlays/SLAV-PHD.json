@@ -1,0 +1,122 @@
+{
+  "code": "SLAV-PHD",
+  "reviewed": "2026-10-23",
+  "summary": "You take the required courses (DLCL 301 and 369, SLAVIC 300B, 230, 379 and 311) for a letter grade, and the 135 units count only graduate-level courses. The 14 Slavic seminars and three related-field courses are moved in by hand, and the proficiency test, qualifying exams and paper, related field exam, candidacy, oral exam, dissertation, language requirement and the expected B+ in each course are checked by hand.",
+  "program": {
+    "why": "Grading: \"PhD students in the department must take required courses for a letter grade if available\". The expected B+ is reviewed by the faculty (\"The grade stands, and the student's academic performance is monitored\"), not a floor on what counts.",
+    "totals": [
+      {
+        "label": "Courses below the graduate level",
+        "maxUnits": 0,
+        "pool": {
+          "anySubject": true,
+          "excludeGraduate": true,
+          "maxNumber": 199
+        },
+        "why": "\"All courses counted toward the 135-unit requirement for the Ph.D. must be at the graduate level.\" Read as courses taken under a listing numbered below 200 that is not a graduate listing; the required SLAVIC 230 has no graduate listing but is numbered 230."
+      }
+    ]
+  },
+  "blocks": {
+    "PGtlOm3w": {
+      "kind": "info"
+    },
+    "MpK9cbqm": {
+      "kind": "required"
+    },
+    "iwHWtFFx": {
+      "kind": "required"
+    }
+  },
+  "nodes": {
+    "Qguue8Gq": {
+      "why": "\"Unless they have taken such courses elsewhere, students must take the departmental course on medieval literature, 18th-century literature, and Old Church Slavonic.\" SLAVIC 379 and SLAVIC 230 are listed already; the departmental Old Church Slavonic course is SLAVIC 311 (\"Introduction to Old Church Slavonic\"). A course taken elsewhere is moved in. Grading: \"PhD students in the department must take required courses for a letter grade if available\".",
+      "patch": {
+        "addItems": [
+          [
+            "SLAVIC 311"
+          ]
+        ],
+        "letter": true
+      }
+    },
+    "LogdpSFq": {
+      "why": "\"Administered to all entering graduate students, this test determines whether the student’s Russian language proficiency falls below the department’s standard of Advanced Low on the OPI test.\"",
+      "patch": {
+        "manual": "exam"
+      }
+    },
+    "J7ncxSUc": {
+      "why": "\"During the course of study, students must take three courses in a field contiguous to the area of specialization. A candidate will work with their advisor during their first year of study to choose a related field\". A minor is optional (\"Students electing a minor\").",
+      "patch": {
+        "manual": "approval",
+        "n": 3,
+        "name": "Related Field (three courses)"
+      }
+    },
+    "eGF1uI66": {
+      "why": "\"The Qualifying Exams are meant to be comprehensive, that is, to verify students’ knowledge in all areas of 19th- and 20th-century Russian literature and culture.\"",
+      "patch": {
+        "manual": "exam"
+      }
+    },
+    "KR5xdOLc": {
+      "why": "\"The Qualifying Paper is a complete article-length research paper (6,000-9,000 words).\"",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "zoBBKHG1": {
+      "why": "\"In the Winter quarter of the third year in the program, students will take the Related Field Oral Exam.\"",
+      "patch": {
+        "manual": "exam"
+      }
+    },
+    "zRndWB7K": {
+      "why": "\"Although teaching is not a requirement for the degree, students may teach as part of the financial support commitment\"",
+      "patch": {
+        "info": true
+      }
+    },
+    "doKQ9fMp": {
+      "why": "\"students are expected to follow department qualifying procedures and apply for candidacy by the end of the second year in residence ... Candidacy is determined by faculty vote. Failure to be admitted to candidacy results in the student’s dismissal from the Ph.D. program.\" A requirement, not only information.",
+      "patch": {
+        "info": null,
+        "manual": "milestone"
+      }
+    },
+    "MBYdTeNr": {
+      "why": "\"Students are required to take the University Oral Exam by the end of the spring of the third year.\"",
+      "patch": {
+        "manual": "exam"
+      }
+    },
+    "RLikiHU8": {
+      "why": "\"The dissertation must be a substantial piece of comprehensive and original research ... Students are expected to submit the dissertation by the end of their fifth year in the program.\"",
+      "patch": {
+        "info": null,
+        "manual": "thesis"
+      }
+    },
+    "tEmdXf9L": {
+      "why": "\"A candidate must demonstrate reading knowledge of French or German, or any other foreign language useful for the student’s area of concentration, by achieving the ranking of intermediate high on the OPI test ... Alternatively ... a grade of A- or better in a qualifying class.\"",
+      "patch": {
+        "manual": "exam"
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "0GzLObTh",
+      "node": {
+        "id": "ov-seminars",
+        "t": "text",
+        "name": "14 seminar courses in Slavic Languages and Literatures",
+        "n": 14,
+        "manual": "approval",
+        "shares": true
+      },
+      "why": "\"Students must complete 14 seminar courses in the Department of Slavic Languages and Literatures. Independent Studies and language courses do not count toward this requirement.\" The data does not mark which courses are seminars, so they are moved in; the required seminars above may be among them."
+    }
+  ]
+}

@@ -1,0 +1,104 @@
+{
+  "code": "GERST-MIN",
+  "reviewed": "2026-10-23",
+  "summary": "The minor is at least six courses of 3 units or more, 24 units in all, letter graded where a letter grade is offered. GERMAN courses at the 100 or 200 level, GERLANG language courses, and ESF or SLE courses count (ESF, SLE, IntroSems and COLLEGE courses together count for at most 5 units). These units cannot also count toward another major or minor. You add by hand courses the Director of Undergraduate Studies approves: Bing Overseas Berlin, IntroSems, COLLEGE courses, courses in other departments, and up to 5 units of AP or transfer credit.",
+  "nodes": {
+    "sowG7Z64": {
+      "why": "Advice: \"Students interested in German Studies should begin by taking a GERLANG 1 or GERLANG 2 language course ... They should consider exploring introductory literature ... Students should consult the department's Program Worksheet\".",
+      "patch": {
+        "info": true
+      }
+    },
+    "W5STfuNA": {
+      "why": "The minor is 24 units (Minimum Units in the Program), all electives: \"Coursework within the department. Additional GERMAN courses at the 100- or 200- level.\" \"Language coursework. All GERLANG courses from the Language Center may be counted.\" ESF, SLE, relevant IntroSems or COLLEGE courses count for at most five units (a program cap). Bing Overseas Berlin needs the Director of Undergraduate Studies' prior approval, and courses in other departments, IntroSems and COLLEGE courses need a judgment, so they are moved in by hand. Requirements Overview: \"Complete at least six courses at three units or more and 24 overall units of coursework in the department.\" The six courses are a count over the same courses, so that rule shares them; an approved course from another department or Bing Overseas Berlin is moved into it by hand too.",
+      "replace": {
+        "t": "all",
+        "name": "Electives",
+        "children": [
+          {
+            "id": "ov-gerst-min-six",
+            "t": "courses",
+            "name": "At least six courses of 3 units or more",
+            "mode": "any",
+            "n": 6,
+            "minUnitsEach": 3,
+            "shares": true,
+            "pool": {
+              "subjects": [
+                "GERMAN",
+                "GERLANG",
+                "ESF",
+                "SLE",
+                "COLLEGE"
+              ]
+            }
+          },
+          {
+            "id": "ov-gerst-min-german",
+            "t": "courses",
+            "name": "GERMAN courses at the 100 or 200 level",
+            "mode": "any",
+            "optional": true,
+            "pool": {
+              "subjects": [
+                "GERMAN"
+              ],
+              "minNumber": 100,
+              "maxNumber": 299
+            }
+          },
+          {
+            "id": "ov-gerst-min-gerlang",
+            "t": "courses",
+            "name": "GERLANG language courses",
+            "mode": "any",
+            "optional": true,
+            "pool": {
+              "subjects": [
+                "GERLANG"
+              ]
+            }
+          },
+          {
+            "id": "ov-gerst-min-esf-sle",
+            "t": "courses",
+            "name": "ESF and SLE courses (up to 5 units with COLLEGE courses and IntroSems)",
+            "mode": "any",
+            "optional": true,
+            "pool": {
+              "subjects": [
+                "ESF",
+                "SLE"
+              ]
+            }
+          },
+          {
+            "id": "ov-gerst-min-approved",
+            "t": "text",
+            "name": "Approved courses: Bing Overseas Berlin, relevant IntroSems or COLLEGE courses, courses in other departments",
+            "manual": "approval",
+            "optional": true
+          }
+        ]
+      }
+    }
+  },
+  "program": {
+    "letterGrade": true,
+    "why": "Grading: \"All courses must be taken for a letter grade, except where letter grades are not offered.\"",
+    "totals": [
+      {
+        "label": "ESF, SLE and COLLEGE courses",
+        "maxUnits": 5,
+        "pool": {
+          "subjects": [
+            "ESF",
+            "SLE",
+            "COLLEGE"
+          ]
+        },
+        "why": "\"Education as Self-Fashioning (ESF), Structured Liberal Education (SLE), relevant IntroSems or COLLEGE courses may contribute a maximum of five units.\""
+      }
+    ]
+  }
+}

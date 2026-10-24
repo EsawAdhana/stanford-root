@@ -1,0 +1,350 @@
+{
+  "code": "STS-BA",
+  "reviewed": "2026-10-23",
+  "summary": "You take STS 1, six disciplinary courses (four in social science and humanities, two in engineering and science, one of them a Global course that also counts toward those), a WIM course and a capstone, each with a C or better, and one concentration of at least 50 units, for 76 units. Every course must be letter graded and taken for at least 3 units, and a course counts toward either the core or the concentration, not both. The Associate Director's approval of your plan and of each concentration course, the C average in your Concentration Core, a self-designed concentration, and using only one of CS 105 and CS 106A across the degree are checked by hand.",
+  "program": {
+    "letterGrade": true,
+    "why": "Core notes: \"All courses must be taken for a letter grade.\" Concentration notes: \"All courses must be taken for a letter grade if offered\"."
+  },
+  "nodes": {
+    "VqYA1M3J": {
+      "why": "Core block notes: \"All courses must be taken for a letter grade. With a grade of C or higher in each course.\" Grading: \"All courses must be taken for a minimum of 3 units.\"",
+      "patch": {
+        "minGrade": "C",
+        "minUnitsEach": 3
+      }
+    },
+    "u8SU8MdS": {
+      "why": "Core block notes: \"All courses must be taken for a letter grade. With a grade of C or higher in each course.\" Disciplinary text: \"WIM & Global courses can double-count as Program Core Social Sciences & Humanities or Program Core Engineering and Science course.\" Grading: \"All courses must be taken for a minimum of 3 units.\"",
+      "patch": {
+        "minGrade": "C",
+        "shares": true,
+        "minUnitsEach": 3
+      }
+    },
+    "2jWe7MDP": {
+      "why": "Core block notes: \"All courses must be taken for a letter grade. With a grade of C or higher in each course.\" Grading: \"All courses must be taken for a minimum of 3 units.\"",
+      "patch": {
+        "minGrade": "C",
+        "minUnitsEach": 3
+      }
+    },
+    "flHWvdJo": {
+      "why": "Core block notes: \"All courses must be taken for a letter grade. With a grade of C or higher in each course.\" Grading: \"All courses must be taken for a minimum of 3 units.\"",
+      "patch": {
+        "minGrade": "C",
+        "minUnitsEach": 3
+      }
+    },
+    "pJYXTc9S": {
+      "why": "\"Each student’s Plan Area, certified or self-designed, requires the approval of the STS Associate Director.\" and, on every course list, \"Before a student enrolls in a course from this list, the STS Associate Director must approve the course for their curriculum plan.\" Up to \"two-course petitions outside the approved Concentration Area course list\" are moved in.",
+      "patch": {
+        "manual": "approval",
+        "name": "Plan Area approved by the STS Associate Director"
+      }
+    },
+    "Mb2jFweg": {
+      "why": "\"In addition to the Core requirements common to all STS students, a minimum of 50 units, at least twelve courses, are required from among those designated on the appropriate Pathway Area course list.\" \"A Bachelor of Arts student must take at least eight classes from the Socio-Cultural Course menu, including at least three designated as Concentration Core and at least four classes from the Technical Course menus.\"",
+      "patch": {
+        "units": 50
+      }
+    },
+    "JDlPGq55": {
+      "why": "\"You may use only one introductory computer science course (CS 105 or CS 106A) toward STS degree requirements.\" Grading: \"All courses must be taken for a minimum of 3 units.\"",
+      "patch": {
+        "limits": [
+          {
+            "label": "introductory computer science (CS 105 or CS 106A)",
+            "max": 1,
+            "codes": [
+              "CS 105",
+              "CS 106A"
+            ]
+          }
+        ],
+        "minUnitsEach": 3
+      }
+    },
+    "cpr5VqR7": {
+      "why": "\"In addition to the Core requirements common to all STS students, a minimum of 50 units, at least twelve courses, are required from among those designated on the appropriate Pathway Area course list.\" \"A Bachelor of Arts student must take at least eight classes from the Socio-Cultural Course menu, including at least three designated as Concentration Core and at least four classes from the Technical Course menus.\"",
+      "patch": {
+        "units": 50
+      }
+    },
+    "jFbh1nlg": {
+      "why": "\"You may use only one introductory computer science course (CS 105 or CS 106A) toward STS degree requirements.\" Grading: \"All courses must be taken for a minimum of 3 units.\"",
+      "patch": {
+        "limits": [
+          {
+            "label": "introductory computer science (CS 105 or CS 106A)",
+            "max": 1,
+            "codes": [
+              "CS 105",
+              "CS 106A"
+            ]
+          }
+        ],
+        "minUnitsEach": 3
+      }
+    },
+    "62sbhEBp": {
+      "why": "\"In addition to the Core requirements common to all STS students, a minimum of 50 units, at least twelve courses, are required from among those designated on the appropriate Pathway Area course list.\" \"A Bachelor of Arts student must take at least eight classes from the Socio-Cultural Course menu, including at least three designated as Concentration Core and at least four classes from the Technical Course menus.\"",
+      "patch": {
+        "units": 50
+      }
+    },
+    "SyRzSJy6": {
+      "why": "\"You may use only one introductory computer science course (CS 105 or CS 106A) toward STS degree requirements.\" Grading: \"All courses must be taken for a minimum of 3 units.\"",
+      "patch": {
+        "limits": [
+          {
+            "label": "introductory computer science (CS 105 or CS 106A)",
+            "max": 1,
+            "codes": [
+              "CS 105",
+              "CS 106A"
+            ]
+          }
+        ],
+        "minUnitsEach": 3
+      }
+    },
+    "3cxHPoEl": {
+      "why": "\"In addition to the Core requirements common to all STS students, a minimum of 50 units, at least twelve courses, are required from among those designated on the appropriate Pathway Area course list.\" \"A Bachelor of Arts student must take at least eight classes from the Socio-Cultural Course menu, including at least three designated as Concentration Core and at least four classes from the Technical Course menus.\"",
+      "patch": {
+        "units": 50
+      }
+    },
+    "jnqFWnjO": {
+      "why": "\"You may use only one introductory computer science course (CS 105 or CS 106A) toward STS degree requirements.\" Grading: \"All courses must be taken for a minimum of 3 units.\"",
+      "patch": {
+        "limits": [
+          {
+            "label": "introductory computer science (CS 105 or CS 106A)",
+            "max": 1,
+            "codes": [
+              "CS 105",
+              "CS 106A"
+            ]
+          }
+        ],
+        "minUnitsEach": 3
+      }
+    },
+    "16MXa3qd": {
+      "why": "\"In addition to the Core requirements common to all STS students, a minimum of 50 units, at least twelve courses, are required from among those designated on the appropriate Pathway Area course list.\" \"A Bachelor of Arts student must take at least eight classes from the Socio-Cultural Course menu, including at least three designated as Concentration Core and at least four classes from the Technical Course menus.\"",
+      "patch": {
+        "units": 50
+      }
+    },
+    "QNGtsvKl": {
+      "why": "\"You may use only one introductory computer science course (CS 105 or CS 106A) toward STS degree requirements.\" Grading: \"All courses must be taken for a minimum of 3 units.\"",
+      "patch": {
+        "limits": [
+          {
+            "label": "introductory computer science (CS 105 or CS 106A)",
+            "max": 1,
+            "codes": [
+              "CS 105",
+              "CS 106A"
+            ]
+          }
+        ],
+        "minUnitsEach": 3
+      }
+    },
+    "AxFzvjTn": {
+      "why": "\"In addition to the Core requirements common to all STS students, a minimum of 50 units, at least twelve courses, are required from among those designated on the appropriate Pathway Area course list.\" \"A Bachelor of Arts student must take at least eight classes from the Socio-Cultural Course menu, including at least three designated as Concentration Core and at least four classes from the Technical Course menus.\"",
+      "patch": {
+        "units": 50
+      }
+    },
+    "KQyjT9qx": {
+      "why": "\"You may use only one introductory computer science course (CS 105 or CS 106A) toward STS degree requirements.\" Grading: \"All courses must be taken for a minimum of 3 units.\"",
+      "patch": {
+        "limits": [
+          {
+            "label": "introductory computer science (CS 105 or CS 106A)",
+            "max": 1,
+            "codes": [
+              "CS 105",
+              "CS 106A"
+            ]
+          }
+        ],
+        "minUnitsEach": 3
+      }
+    },
+    "m4QtR2dY": {
+      "why": "WIM block notes: \"Course must be taken for a letter grade. With a grade of C or higher.\" Grading: \"All courses must be taken for a minimum of 3 units.\"",
+      "patch": {
+        "minGrade": "C",
+        "minUnitsEach": 3
+      }
+    },
+    "vQ8qMDUg": {
+      "why": "Capstone: \"Course must be taken for a letter grade. With a grade of C or higher.\" Grading: \"All courses must be taken for a minimum of 3 units.\"",
+      "patch": {
+        "minGrade": "C",
+        "minUnitsEach": 3
+      }
+    },
+    "RpDb5KNA": {
+      "why": "\"Must receive a grade of C or higher.\"",
+      "patch": {
+        "minGrade": "C"
+      }
+    },
+    "tTI3jpmf": {
+      "why": "Grading: \"All courses must be taken for a minimum of 3 units.\"",
+      "patch": {
+        "minUnitsEach": 3
+      }
+    },
+    "xCrONCp4": {
+      "why": "Grading: \"All courses must be taken for a minimum of 3 units.\"",
+      "patch": {
+        "minUnitsEach": 3
+      }
+    },
+    "a0QUzdH2": {
+      "why": "Grading: \"All courses must be taken for a minimum of 3 units.\"",
+      "patch": {
+        "minUnitsEach": 3
+      }
+    },
+    "wIsk9GvT": {
+      "why": "Grading: \"All courses must be taken for a minimum of 3 units.\"",
+      "patch": {
+        "minUnitsEach": 3
+      }
+    },
+    "gBlRuBMY": {
+      "why": "Grading: \"All courses must be taken for a minimum of 3 units.\"",
+      "patch": {
+        "minUnitsEach": 3
+      }
+    },
+    "H9Xp4eSp": {
+      "why": "Grading: \"All courses must be taken for a minimum of 3 units.\"",
+      "patch": {
+        "minUnitsEach": 3
+      }
+    },
+    "04nzq48v": {
+      "why": "Grading: \"All courses must be taken for a minimum of 3 units.\"",
+      "patch": {
+        "minUnitsEach": 3
+      }
+    },
+    "y7wvGVrn": {
+      "why": "Grading: \"All courses must be taken for a minimum of 3 units.\"",
+      "patch": {
+        "minUnitsEach": 3
+      }
+    },
+    "pZ1bkTC1": {
+      "why": "Grading: \"All courses must be taken for a minimum of 3 units.\"",
+      "patch": {
+        "minUnitsEach": 3
+      }
+    },
+    "x6FN961r": {
+      "why": "Grading: \"All courses must be taken for a minimum of 3 units.\"",
+      "patch": {
+        "minUnitsEach": 3
+      }
+    },
+    "DZ0IZcLj": {
+      "why": "Grading: \"All courses must be taken for a minimum of 3 units.\"",
+      "patch": {
+        "minUnitsEach": 3
+      }
+    },
+    "H2CHMurO": {
+      "why": "Grading: \"All courses must be taken for a minimum of 3 units.\"",
+      "patch": {
+        "minUnitsEach": 3
+      }
+    }
+  },
+  "alternatives": [
+    {
+      "id": "ov-concentration",
+      "name": "Concentration (choose one)",
+      "of": [
+        "Mb2jFweg",
+        "cpr5VqR7",
+        "62sbhEBp",
+        "3cxHPoEl",
+        "16MXa3qd",
+        "AxFzvjTn"
+      ],
+      "why": "\"Concentrations are organized around an STS-related area or topic: Catastrophic Risks and Solutions, Communication and Media, Innovation and Organization, Life Sciences and Health, Politics and Policy, Self-Designed Concentration, Social Dynamics of Data and Information\". \"Each student’s Plan Area, certified or self-designed, requires the approval of the STS Associate Director\": one plan area per student."
+    }
+  ],
+  "add": [
+    {
+      "parent": "Mb2jFweg",
+      "node": {
+        "id": "ov-Mb2jFweg-core-gpa",
+        "t": "text",
+        "name": "Concentration Core courses average C or higher (GPA 2.000)",
+        "manual": "gpa"
+      },
+      "why": "\"The Pathway Core (Concentration Core) courses must average a C or higher. The minimum cumulative GPA for this requirement is 2.000.\""
+    },
+    {
+      "parent": "cpr5VqR7",
+      "node": {
+        "id": "ov-cpr5VqR7-core-gpa",
+        "t": "text",
+        "name": "Concentration Core courses average C or higher (GPA 2.000)",
+        "manual": "gpa"
+      },
+      "why": "\"The Pathway Core (Concentration Core) courses must average a C or higher. The minimum cumulative GPA for this requirement is 2.000.\""
+    },
+    {
+      "parent": "62sbhEBp",
+      "node": {
+        "id": "ov-62sbhEBp-core-gpa",
+        "t": "text",
+        "name": "Concentration Core courses average C or higher (GPA 2.000)",
+        "manual": "gpa"
+      },
+      "why": "\"The Pathway Core (Concentration Core) courses must average a C or higher. The minimum cumulative GPA for this requirement is 2.000.\""
+    },
+    {
+      "parent": "3cxHPoEl",
+      "node": {
+        "id": "ov-3cxHPoEl-core-gpa",
+        "t": "text",
+        "name": "Concentration Core courses average C or higher (GPA 2.000)",
+        "manual": "gpa"
+      },
+      "why": "\"The Pathway Core (Concentration Core) courses must average a C or higher. The minimum cumulative GPA for this requirement is 2.000.\""
+    },
+    {
+      "parent": "AxFzvjTn",
+      "node": {
+        "id": "ov-AxFzvjTn-core-gpa",
+        "t": "text",
+        "name": "Concentration Core courses average C or higher (GPA 2.000)",
+        "manual": "gpa"
+      },
+      "why": "\"The Pathway Core (Concentration Core) courses must average a C or higher. The minimum cumulative GPA for this requirement is 2.000.\""
+    },
+    {
+      "parent": "ov-concentration",
+      "node": {
+        "id": "ov-self-designed",
+        "t": "text",
+        "name": "Self-Designed Concentration (approved proposal of at least 12 courses and 50 units)",
+        "n": 12,
+        "units": 50,
+        "manual": "approval"
+      },
+      "why": "\"Alternatively, subject to program approval, a student may design a self-designed pathway ... A proposal (5 to 10 pages) should ... (c) list at least 12 courses and 50 units that comprise the plan of study.\""
+    }
+  ]
+}

@@ -1,0 +1,133 @@
+{
+  "code": "CHEM-PHD",
+  "reviewed": "2026-10-23",
+  "summary": "You need six graduate lecture courses of at least 3 units each, from CHEM courses numbered above 200 or the approved list from other departments, with at most two outside Chemistry. They must be letter graded with a B or better, and so must CHEM 271 and 273, which only the physical, biophysical and chemical physics concentrations take. CHEM 291 and 299 are required in your first autumn. The audit counts 135 graduate units, research included. You check by hand the 3.0 GPA in lecture courses, the first-year research rotations and joining a lab, continuous CHEM 200 enrollment, the qualifying exam, the third-year seminar and committee meeting, the fourth-year proposal defense, candidacy, the oral exam and the dissertation. A transfer petition can reduce the six courses by up to half; that is moved in by hand.",
+  "nodes": {
+    "PGtlOm3w-text": {
+      "why": "\"Although teaching is not a requirement for the degree, students may teach as part of the financial support commitment and their professional training.\" Not a requirement.",
+      "patch": { "info": true }
+    },
+    "slyD1LeS-text": {
+      "why": "\"During Autumn and Winter quarters of the first year, students are required to arrange research rotations with faculty. For each quarter, students must submit a completed rotation form ... Upon joining a research lab, a signed letter by the primary advisor needs to be submitted to the Department ... Non ChEM-H CBI students must join a lab by the end of the Winter quarter of the first year of graduate registration. ChEM-H CBI students must join a lab by the end of the Spring quarter\"",
+      "patch": { "name": "Research rotations in autumn and winter of year 1, then join a lab (end of winter, or spring for ChEM-H CBI students)", "manual": "milestone" }
+    },
+    "YZoL0aA0": {
+      "why": "The general requirements paragraph: \"Before TGR, students are required to maintain continuous enrollment in Chem 200 (minimum 2 units per quarter)\", \"Students take the qualifying exam by the end of the Spring quarter of their second year\", \"Students are required to give a department seminar on their research by the Summer quarter of their third year\", \"Students are required to complete a thesis committee meeting by the end of the Spring quarter of their third year\" and \"Students are required to write a research proposal and defend it in front of their reading committee ... by the end of the Spring quarter of their fourth year.\" The six lecture courses are encoded in ov-six-courses and CHEM 291/299 in HFHVNKR7; seminar attendance and later committee meetings are only \"expected\".",
+      "replace": {
+        "t": "all",
+        "name": "General Requirements",
+        "children": [
+          {
+            "id": "ov-chem200",
+            "t": "text",
+            "name": "Continuous CHEM 200 research enrollment before TGR (2+ units a quarter)",
+            "manual": "milestone"
+          },
+          {
+            "id": "ov-qual-exam",
+            "t": "text",
+            "name": "Qualifying exam and progress report by the end of Spring of year 2",
+            "manual": "exam"
+          },
+          {
+            "id": "ov-research-seminar",
+            "t": "text",
+            "name": "Department research seminar by Summer of year 3",
+            "manual": "milestone"
+          },
+          {
+            "id": "ov-committee-3",
+            "t": "text",
+            "name": "Thesis committee meeting by the end of Spring of year 3",
+            "manual": "milestone"
+          },
+          {
+            "id": "ov-proposal-defense",
+            "t": "text",
+            "name": "Research proposal defense and committee meeting by the end of Spring of year 4",
+            "manual": "milestone"
+          }
+        ]
+      }
+    },
+    "82GzLKkW": {
+      "why": "\"Students concentrating in physical or biophysical chemistry or chemical physics must also complete: CHEM 271, CHEM 273\": only those concentrations, and the two courses can be among the six lecture courses. Students in the other concentrations (\"organic, inorganic chemical biology\") mark the other path.",
+      "replace": {
+        "t": "any",
+        "name": "Concentration courses",
+        "children": [
+          {
+            "id": "ov-pchem",
+            "t": "courses",
+            "name": "Physical, biophysical chemistry or chemical physics: CHEM 271 and CHEM 273",
+            "mode": "all",
+            "items": ["CHEM 271", "CHEM 273"],
+            "shares": true,
+            "letter": true,
+            "minGrade": "B"
+          },
+          {
+            "id": "ov-other-conc",
+            "t": "text",
+            "name": "Organic, inorganic or chemical biology concentration (no added courses)",
+            "manual": "other"
+          }
+        ]
+      }
+    },
+    "nyQrRfkQ": {
+      "why": "\"All graduate students are required to take six graduate-level lecture courses (course numbers greater than 200) of at least three units each in chemistry or related disciplines ... All six courses must be taken for a letter grade. Two Chemistry courses must be taken in the Autumn quarter and another two Chemistry courses in the Winter quarter of the first year.\" Six courses from CHEM above 200 (research and teaching courses left out), the pre-approved CHEM list and the acceptable outside list, with at least four in Chemistry (at most two outside). \"Courses taken outside of Chemistry require prior approval\": unlisted outside courses are moved in by hand. The first-year timing is not checked. GPA field: \"Required courses must be taken for a letter grade, with a minimum grade of a B to count toward degree requirements\" (also on ov-pchem; CHEM 291 and 299 are offered only S/NC, so HFHVNKR7 needs no grade rule).",
+      "replace": {
+        "t": "courses",
+        "name": "Six graduate lecture courses (3+ units, letter grade)",
+        "mode": "atLeast",
+        "n": 6,
+        "minUnitsEach": 3,
+        "letter": true,
+        "minGrade": "B",
+        "items": ["CHEM 221", "CHEM 223", "CHEM 225", "CHEM 232", "CHEM 251", "CHEM 253", "CHEM 255", "CHEM 261", "CHEM 263", "CHEM 271", "CHEM 273", "CHEM 274", "CHEM 275", "CHEM 281", "CHEM 283", "CHEM 285", "APPPHYS 204", "APPPHYS 273", "BIO 218", "BIO 230", "BIO 232", "BIOC 224", "BIOE 221G", "BIOE 222", "BIOE 240", "BIOE 241", "BIOE 355", "BIOPHYS 232", "BIOPHYS 241", "BIOPHYS 279", "CBIO 240", "CBIO 242", "CHEMENG 320", "CHEMENG 345", "CHEMENG 432", "CHEMENG 443", "CHEMENG 450", "CHEMENG 464", "CHEMENG 466", "CHEMENG 469", "CHEMENG 475", "CME 213", "CME 309", "CME 364A", "CS 228", "CS 229", "CS 231N", "CS 279", "CS 448B", "CSB 240B", "CSB 260", "EE 212", "EE 216", "EE 228", "EE 236C", "EE 261", "EE 268", "EE 292C", "EE 346", "EE 263", "EE 364A", "ENERGY 272R", "GENE 205", "GENE 214", "IMMUNOL 200", "MATSCI 205", "MATSCI 209", "MATSCI 210", "MATSCI 214", "MATSCI 225", "MATSCI 256", "MATSCI 303", "MATSCI 320", "MATSCI 323", "MCP 221", "ME 364", "PHYSICS 212", "PHYSICS 240", "PHYSICS 241", "STATS 200"],
+        "pool": {
+          "subjects": ["CHEM"],
+          "minNumber": 201,
+          "exclude": ["CHEM 200", "CHEM 299", "CHEM 301", "CHEM 390", "CHEM 802"]
+        },
+        "limits": [
+          {
+            "label": "courses outside Chemistry (at least four of the six must be Chemistry)",
+            "max": 2,
+            "codes": ["APPPHYS 204", "APPPHYS 273", "BIO 218", "BIO 230", "BIO 232", "BIOC 224", "BIOE 221G", "BIOE 222", "BIOE 240", "BIOE 241", "BIOE 355", "BIOPHYS 232", "BIOPHYS 241", "BIOPHYS 279", "CBIO 240", "CBIO 242", "CHEMENG 320", "CHEMENG 345", "CHEMENG 432", "CHEMENG 443", "CHEMENG 450", "CHEMENG 464", "CHEMENG 466", "CHEMENG 469", "CHEMENG 475", "CME 213", "CME 309", "CME 364A", "CS 228", "CS 229", "CS 231N", "CS 279", "CS 448B", "CSB 240B", "CSB 260", "EE 212", "EE 216", "EE 228", "EE 236C", "EE 261", "EE 268", "EE 292C", "EE 346", "EE 263", "EE 364A", "ENERGY 272R", "GENE 205", "GENE 214", "IMMUNOL 200", "MATSCI 205", "MATSCI 209", "MATSCI 210", "MATSCI 214", "MATSCI 225", "MATSCI 256", "MATSCI 303", "MATSCI 320", "MATSCI 323", "MCP 221", "ME 364", "PHYSICS 212", "PHYSICS 240", "PHYSICS 241", "STATS 200"]
+          }
+        ]
+      }
+    },
+    "y3qO9hSN": {
+      "why": "\"Acceptable courses outside of Chemistry\": not a separate requirement but courses that may count among the six (now in the six-course rule, at most two of them).",
+      "remove": true
+    },
+    "kF9GDWsZ": {
+      "why": "\"Students are expected to take the PhD qualifying exam and apply for candidacy by the end of the Spring quarter of their second year ... Qualifying procedures ... include satisfactory completion of at least five lecture course requirements, identification of an advisor by the end of the Winter quarter of the first year\"",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "MoHffOyQ": {
+      "why": "\"the oral exam is a defense of the dissertation ... Students are expected to complete this milestone by the end of the sixth year\"",
+      "patch": {
+        "manual": "exam"
+      }
+    },
+    "dakB91E5": {
+      "why": "\"Students are required to submit an approved dissertation that makes an original contribution to chemical science.\"",
+      "patch": {
+        "manual": "thesis"
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "0GzLObTh",
+      "why": "GPA: \"Candidates for advanced degrees must have a minimum grade point average (GPA) of 3.0 for all graduate level lecture courses.\"",
+      "node": { "id": "ov-gpa", "t": "text", "name": "GPA of 3.0 in graduate lecture courses", "manual": "gpa" }
+    }
+  ]
+}

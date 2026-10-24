@@ -1,0 +1,149 @@
+{
+  "code": "ENGR-MS",
+  "reviewed": "2026-10-23",
+  "summary": "With no subplan, the MS in Engineering is an individually proposed 45-unit program approved by a School of Engineering department: you move in the approved program's courses, and your advisor confirms that at least 21 of its units are letter-graded School of Engineering courses numbered 200 or above. The Biomechanical Engineering subplan instead needs two math courses in different areas, two approved life science or engineering electives, 21 units of graduate engineering courses including three biomechanical electives and a three-course specialty, and ME 389, with approved electives bringing these to 39 units and unrestricted electives to 45. Every course except the unrestricted electives must be letter graded where a letter grade is offered. Transfer units from other schools do not count.",
+  "blocks": {
+    "mAbEGmbJ": {
+      "unlessSubplan": true,
+      "name": "Individually Proposed Program",
+      "why": "\"The MS in Engineering is available to current School of Engineering graduate students who develop specialized, interdisciplinary objectives that cannot conform to any graduate program offered at Stanford.\" A student in the Biomechanical Engineering subplan follows that program instead, so the individually proposed program is the path with no subplan. The block is required, not information: \"There are three school requirements for the MS degree in Engineering\".",
+      "kind": "required"
+    },
+    "u7Ncp1bG": {
+      "units": 45
+    }
+  },
+  "nodes": {
+    "hpynlAYX": {
+      "why": "Block notes: \"All courses except unrestricted electives must be taken for a letter grade unless letter grades are not an option\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "rFgOr3le": {
+      "why": "Block notes: \"All courses except unrestricted electives must be taken for a letter grade unless letter grades are not an option\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "HAUNj1dE": {
+      "why": "Block notes: \"All courses except unrestricted electives must be taken for a letter grade unless letter grades are not an option\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "Jkoz6wWH": {
+      "why": "Block notes: \"All courses except unrestricted electives must be taken for a letter grade unless letter grades are not an option\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "UUGbfGNd": {
+      "why": "\"In either Life Sciences or Engineering, depending on the undergraduate education and approval of the advisor (minimum 6 units, 2 courses).\" No list: the student moves the approved courses in. Block notes: \"All courses except unrestricted electives must be taken for a letter grade unless letter grades are not an option\"",
+      "patch": {
+        "manual": "approval",
+        "n": 2,
+        "units": 6,
+        "letter": true
+      }
+    },
+    "OD5kGBAX": {
+      "why": "\"In either Life Sciences or Engineering, depending on the undergraduate education and approval of the advisor (minimum 6 units, 2 courses).\" No list: the student moves the approved courses in. Block notes: \"All courses except unrestricted electives must be taken for a letter grade unless letter grades are not an option\"",
+      "patch": {
+        "manual": "approval",
+        "n": 2,
+        "units": 6,
+        "letter": true
+      }
+    },
+    "1ablPf32": {
+      "why": "Graduate Engineering Electives: \"Additional courses to bring the total number of graduate-level engineering units to at least 21.\"",
+      "patch": {
+        "units": 21
+      }
+    },
+    "yfjOBoMi": {
+      "why": "Block notes: \"All courses except unrestricted electives must be taken for a letter grade unless letter grades are not an option\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "UOWVsJsl": {
+      "why": "\"A set of three or four graduate level courses in engineering mechanics, materials, controls, or design (excluding bioengineering courses) selected to provide depth in one area ... with the approval of the student's advisor.\" No list: the student moves the courses in. Block notes: \"All courses except unrestricted electives must be taken for a letter grade unless letter grades are not an option\"",
+      "patch": {
+        "manual": "approval",
+        "n": 3,
+        "letter": true
+      }
+    },
+    "uL0kf9ge": {
+      "why": "\"Additional courses to bring the total number of graduate-level engineering units to at least 21. These electives must contribute to a cohesive degree program and be approved by the student's advisor. No units may come from bioengineering courses, mathematics courses, or seminars.\" The 21-unit total is on the parent rule, so these approved electives are needed only when the other two rules fall short; the student moves them in. Block notes: \"All courses except unrestricted electives must be taken for a letter grade unless letter grades are not an option\"",
+      "patch": {
+        "manual": "approval",
+        "letter": true,
+        "optional": true
+      }
+    },
+    "TEgFduPK": {
+      "why": "Block notes: \"All courses except unrestricted electives must be taken for a letter grade unless letter grades are not an option\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "bPmURWjV": {
+      "why": "\"Additional courses to bring the total number of units to 39. These courses must be approved by the student's advisor.\" The 39 units are checked on Proposal Requirements (sTmNw65d), which holds every rule but the unrestricted electives, so these approved courses are needed only when the rest fall short; the student moves them in. Block notes: \"All courses except unrestricted electives must be taken for a letter grade unless letter grades are not an option\"",
+      "patch": {
+        "manual": "approval",
+        "letter": true,
+        "optional": true
+      }
+    },
+    "cSj611nU": {
+      "why": "\"Additional courses to bring the total number of units to 45.\" Moved out of Proposal Requirements (as ov-engr-ms-unrestricted) so these units do not count toward its 39.",
+      "remove": true
+    },
+    "sTmNw65d": {
+      "why": "General Approved Electives: \"Additional courses to bring the total number of units to 39.\" Every requirement except the unrestricted electives sits in this rule, so its units are the 39.",
+      "patch": {
+        "units": 39
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "mAbEGmbJ",
+      "why": "\"The student's program must be coherent with a well-defined objective. It must be approved by a department within the school\" and \"The program must include a total of at least 45 units.\" No list: the student moves the approved program's courses in.",
+      "node": {
+        "id": "ov-engr-ms-approved",
+        "t": "text",
+        "name": "Courses in the department-approved program (45 units)",
+        "manual": "approval",
+        "units": 45
+      }
+    },
+    {
+      "block": "mAbEGmbJ",
+      "why": "\"The student's program must include at least 21 units of courses within the School of Engineering with catalog numbers of 200 or above, in which the student receives letter grades.\" The Bulletin does not list which subjects are School of Engineering, and these courses are among the 45 above, so this is checked by hand.",
+      "node": {
+        "id": "ov-engr-ms-21",
+        "t": "text",
+        "name": "21 letter-graded School of Engineering units numbered 200 or above",
+        "manual": "other"
+      }
+    },
+    {
+      "block": "u7Ncp1bG",
+      "why": "\"Unrestricted Electives: Additional courses to bring the total number of units to 45.\" Unrestricted, so any course counts, toward the 45-unit total on the subplan only; \"All courses except unrestricted electives must be taken for a letter grade\".",
+      "node": {
+        "id": "ov-engr-ms-unrestricted",
+        "t": "courses",
+        "name": "Unrestricted Electives",
+        "mode": "any",
+        "optional": true,
+        "pool": {
+          "anySubject": true
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "code": "ME-MIN",
+  "reviewed": "2026-10-23",
+  "summary": "The audit checks one of the three minors (General, Thermosciences or Mechanical Design), each course with a C or better. Checked by hand: the 2.7 combined GPA, and that no course also counts toward another degree program; if a listed course already counts for your major, replace it with another course from the program sheet and move it in. ME majors cannot add the Mechanical Design minor.",
+  "program": {
+    "minGrade": "C",
+    "why": "Grading: \"The minimum grade in each course is a C.\""
+  },
+  "add": [
+    {
+      "block": "X59QDvKf",
+      "node": {
+        "id": "ov-gpa",
+        "t": "text",
+        "name": "Combined GPA of 2.7 for minor courses",
+        "manual": "gpa"
+      },
+      "why": "GPA: \"The minimum combined Grade Point Average for all courses in the minor is 2.7.\""
+    }
+  ]
+}

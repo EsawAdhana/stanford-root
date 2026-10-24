@@ -1,0 +1,81 @@
+{
+  "code": "PHYS-PMN",
+  "reviewed": "2026-10-23",
+  "summary": "You take six courses from the list, at most three of them quantum mechanics or quantum field theory, each for at least 3 units and a letter grade of B+ or better. If the six come to fewer than 20 units, more Physics or Applied Physics courses of 3+ units make up the rest. Your 3.3 GPA and the Graduate Study Committee's approval of your course program are checked by hand.",
+  "program": {
+    "letterGrade": true,
+    "minGrade": "B+",
+    "why": "Grading: \"All courses taken towards the PhD Minor must be taken for at least 3 units and receive a grade of B+ or higher.\""
+  },
+  "nodes": {
+    "JGIQmDLY": {
+      "why": "\"Doctoral students seeking a minor in Physics must take at least six courses from the list below for 20 units. Courses must be taken for a letter grade.\" The 20 units are the program's unit minimum, which the extra Physics or Applied Physics courses below can complete. Grading: \"at least 3 units\". Notes: \"You may only count up to 3 of the following courses towards the Ph.D. minor: PHYSICS230 ... PHYSICS231 ... PHYSICS234 ... PHYSICS330 ... PHYSICS331 ... PHYSICS332\"",
+      "patch": {
+        "units": null,
+        "minUnitsEach": 3,
+        "limits": [
+          {
+            "label": "quantum mechanics and quantum field theory courses",
+            "max": 3,
+            "codes": [
+              "PHYSICS 230",
+              "PHYSICS 231",
+              "PHYSICS 234",
+              "PHYSICS 330",
+              "PHYSICS 331",
+              "PHYSICS 332"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "MN5dQy5q",
+      "why": "\"A grade point average (GPA) of at least 3.3 (B+) must be maintained across courses counting towards the Ph.D. Minor.\"",
+      "node": {
+        "id": "ov-pmn-gpa",
+        "t": "text",
+        "name": "GPA of 3.3 (B+) across the minor's courses",
+        "manual": "gpa"
+      }
+    },
+    {
+      "block": "MN5dQy5q",
+      "why": "\"All prospective minors must obtain approval for their Physics course program from the Physics Graduate Study Committee at least one year before the conferral of the PhD.\"",
+      "node": {
+        "id": "ov-pmn-approval",
+        "t": "text",
+        "name": "Course program approved by the Physics Graduate Study Committee",
+        "manual": "approval"
+      }
+    },
+    {
+      "block": "MN5dQy5q",
+      "why": "Policies: \"If students have taken at least 6 of the required courses, and have not met the 20 unit minimum, they may choose to take additional Applied Physics/Physics course(s) for letter grade, and a minimum 3 units to meet the unit minimum.\" Notes: \"You may only count up to 3 of the following courses towards the Ph.D. minor\" (PHYSICS 230, 231, 234, 330, 331, 332), so a fourth of those does not count here either.",
+      "node": {
+        "id": "ov-remaining",
+        "t": "courses",
+        "mode": "any",
+        "pool": {
+          "subjects": [
+            "APPPHYS",
+            "PHYSICS"
+          ],
+          "exclude": [
+            "PHYSICS 230",
+            "PHYSICS 231",
+            "PHYSICS 234",
+            "PHYSICS 330",
+            "PHYSICS 331",
+            "PHYSICS 332"
+          ]
+        },
+        "minUnitsEach": 3,
+        "optional": true,
+        "name": "Remaining units in Physics or Applied Physics"
+      }
+    }
+  ]
+}

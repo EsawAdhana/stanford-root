@@ -1,0 +1,138 @@
+{
+  "code": "URBST-MIN",
+  "reviewed": "2026-10-23",
+  "summary": "You take the Urban Studies core courses, one concentration course and two electives from the concentration lists that do not repeat core courses, for 28 units. Courses from other schools (up to three, 15 units) need approval and are moved in by hand.",
+  "nodes": {
+    "TVKiPTaf": {
+      "why": "\"Complete two courses from any of the following Urban Sustainability pathways.\" Stored as a choice of one list, with two courses only from the environmental list and one from the others.",
+      "replace": {
+        "t": "courses",
+        "name": "Urban Sustainability",
+        "mode": "atLeast",
+        "n": 2,
+        "items": [
+          [
+            "BIO 81"
+          ],
+          [
+            "CEE 41Q"
+          ],
+          [
+            "CEE 64"
+          ],
+          [
+            "CEE 100"
+          ],
+          [
+            "CEE 107A"
+          ],
+          [
+            "CEE 172"
+          ],
+          [
+            "CEE 173"
+          ],
+          [
+            "CEE 176A"
+          ],
+          [
+            "CEE 178"
+          ],
+          [
+            "CEE 243"
+          ],
+          [
+            "CEE 265F"
+          ],
+          [
+            "CEE 308"
+          ],
+          [
+            "EARTHSYS 10"
+          ],
+          [
+            "EARTHSYS 101"
+          ],
+          [
+            "EARTHSYS 104"
+          ],
+          [
+            "ECON 17N"
+          ],
+          [
+            "AMSTUD 154D"
+          ],
+          [
+            "ANTHRO 167"
+          ],
+          [
+            "ENVRES 221"
+          ],
+          [
+            "ENVRES 223"
+          ],
+          [
+            "HISTORY 200B"
+          ],
+          [
+            "PEDS 150"
+          ],
+          [
+            "PUBLPOL 153"
+          ],
+          [
+            "SINY 122"
+          ],
+          [
+            "SOC 3"
+          ],
+          [
+            "URBANST 103C"
+          ],
+          [
+            "URBANST 108H"
+          ],
+          [
+            "URBANST 125"
+          ],
+          [
+            "URBANST 155"
+          ],
+          [
+            "URBANST 155A"
+          ],
+          [
+            "URBANST 156A"
+          ],
+          [
+            "URBANST 163"
+          ],
+          [
+            "URBANST 165"
+          ],
+          [
+            "URBANST 169"
+          ],
+          [
+            "CEE 124"
+          ],
+          [
+            "URBANST 164"
+          ],
+          [
+            "URBANST 171"
+          ],
+          [
+            "URBANST 172A"
+          ],
+          [
+            "URBANST 181"
+          ],
+          [
+            "URBANST 183"
+          ]
+        ]
+      }
+    }
+  }
+}

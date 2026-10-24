@@ -1,0 +1,14 @@
+{
+  "code": "CANBI-MS",
+  "reviewed": "2026-10-23",
+  "summary": "The MS is offered only to students already in the Cancer Biology PhD program, and the Graduate Studies advisor sets its requirements, so they are checked by hand. The audit counts your graduate units toward the 45 the degree needs.",
+  "blocks": {
+    "mAbEGmbJ": { "kind": "required" }
+  },
+  "nodes": {
+    "B32aMQPV": {
+      "why": "\"The Department of Cancer Biology only offers an MS to students already enrolled in the PhD program. Students should contact the Graduate Studies advisor for more details.\" No requirements are listed, so a person checks them.",
+      "patch": { "info": null, "manual": "approval", "name": "Requirements set with the Graduate Studies advisor (open only to Cancer Biology PhD students)" }
+    }
+  }
+}

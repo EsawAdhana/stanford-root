@@ -1,0 +1,32 @@
+{
+  "code": "ESS-MS",
+  "reviewed": "2026-10-23",
+  "summary": "Required courses must be letter graded where a letter grade is offered. You take the three first-year core courses (ESS 305, 306 and 307) and one course in each of the three distribution areas, for 45 graduate units with your research. Your advisor checks the 3.0 GPA and the four letter-graded graduate courses of at least 3 units from four different faculty, petitioned area courses are moved in by hand, and the research plan and the thesis are approved by the department.",
+  "nodes": {
+    "H4FiR3rJ": { "why": "Grading: \"Required courses must be taken for a letter grade if offered\"", "patch": { "letter": true } },
+    "Yx3RYiFN": { "why": "Grading: \"Required courses must be taken for a letter grade if offered\"", "patch": { "letter": true } },
+    "u2nNbUx2": { "why": "Grading: \"Required courses must be taken for a letter grade if offered\"", "patch": { "letter": true } },
+    "H7A99BFv": { "why": "Grading: \"Required courses must be taken for a letter grade if offered\"", "patch": { "letter": true } },
+    "v0t0J8id": {
+      "why": "\"In their second year, each student must complete a thesis describing their research ... The two readers jointly determine whether the thesis is acceptable for the MS degree in the department.\"",
+      "patch": { "name": "Thesis", "manual": "thesis" }
+    }
+  },
+  "add": [
+    {
+      "block": "l8TfIUX9",
+      "why": "GPA: \"Students must maintain at least a 3.0 grade point average\"",
+      "node": { "id": "ov-ess-ms-gpa", "t": "text", "name": "GPA of at least 3.0", "manual": "gpa" }
+    },
+    {
+      "block": "l8TfIUX9",
+      "why": "Policies: \"Students must complete a minimum of four graduate-level, letter-grade courses of at least three units each from four different faculty members\". Instructors are not in the course data, so this is checked by hand.",
+      "node": { "id": "ov-ess-ms-four-faculty", "t": "text", "name": "Four letter-graded graduate courses of 3+ units from four different faculty", "manual": "other" }
+    },
+    {
+      "block": "5wg2uC9g",
+      "why": "\"The student submits a proposal for a research plan, to be approved by the DGS, by the end of winter quarter of their first year.\"",
+      "node": { "id": "ov-ess-ms-plan", "t": "text", "name": "Research plan approved by the DGS", "manual": "approval" }
+    }
+  ]
+}

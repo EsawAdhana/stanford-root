@@ -1,0 +1,19 @@
+{
+  "code": "CIMGT-MS",
+  "reviewed": "2026-10-23",
+  "summary": "Every course in the set curriculum is required, letter graded: the fourteen CIM courses, with CIM 200 over three quarters (6 units), CIM 202 over four quarters (4 units) and CIM 215 over two quarters (2 units), for 48 units. You check by hand the signed program proposal.",
+  "program": { "letterGrade": true, "why": "Grading: \"MCiM students must enroll in the required courses for a letter grade, and must enroll for the number of units detailed in the instructions.\" The Bulletin's own 48-unit minimum is now in the data." },
+  "nodes": {
+    "FXzhP3Lb": {
+      "why": "\"All courses are required. No substitutions are permitted.\" \"To complete the Master's in Clinical Informatics Management, students must complete a minimum of 48 units.\" Notes: \"CIM 202 will be taken over the course of four consecutive quarters, for a total of four units. CIM 200 will be taken over the course of three consecutive quarters, for a total of six units. CIM 215 must be taken over the course of two consecutive quarters, for a total of two units.\" With no electives, the 48 units are the listed courses with those repeats, so CIM 200 is listed three times, CIM 202 four times and CIM 215 twice. The letter grade is program.letterGrade.",
+      "patch": {
+        "units": 48,
+        "items": [["CIM 200"], ["CIM 200"], ["CIM 200"], ["CIM 202"], ["CIM 202"], ["CIM 202"], ["CIM 202"], ["CIM 203"], ["CIM 205"], ["CIM 206"], ["CIM 208"], ["CIM 209"], ["CIM 210"], ["CIM 211"], ["CIM 212"], ["CIM 213"], ["CIM 214"], ["CIM 215"], ["CIM 215"], ["CIM 216"]]
+      }
+    },
+    "oiNj8jds": {
+      "why": "\"MCiM students are required to submit a program proposal at least two weeks before the final study list due date of their first quarter of enrollment ... Students must sign and submit the proposal to the MCiM administration.\"",
+      "patch": { "manual": "approval" }
+    }
+  }
+}

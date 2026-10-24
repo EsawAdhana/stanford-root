@@ -1,0 +1,407 @@
+{
+  "code": "PHILO-MA",
+  "reviewed": "2026-10-23",
+  "summary": "With no subplan you complete the General Program: 45 units of Philosophy courses numbered 100 or above, letter graded with a B- or better, the undergraduate core (logic, philosophy of science, moral and political philosophy, contemporary theoretical philosophy, two history of philosophy courses, which do not count toward the 45 units), three graduate core areas, two PHIL courses numbered 200 or above (not graduate sections of undergraduate courses), and three courses in one specialization area. The Symbolic Systems and Philosophy of Language subplans replace it with their own required courses and allow 9 of the 45 units from the field of specialization. Checked by hand: area and history courses without a Bulletin list, which you move in, and in Symbolic Systems the spread of your graduate and outside courses across areas.",
+  "blocks": {
+    "RI8pDAnO": {
+      "kind": "required",
+      "name": "General Program",
+      "unlessSubplan": true,
+      "why": "subplanRequired is false: a student in neither special program (Symbolic Systems, Philosophy of Language) completes the General Program, so it applies only with no subplan. The Philosophy of Language text treats the General Program's undergraduate core as something its students \"may be required to satisfy\", so the programs are alternatives."
+    }
+  },
+  "nodes": {
+    "SfheeWvb": {
+      "why": "\"Each program requires a minimum of 45 units in philosophy. Students in a special program may be allowed or required to replace up to nine units of philosophy with nine units in the field of specialization ... At least 45 units in courses numbered 100 or above must be completed with a B- or better grade at Stanford.\" The 45 is program.unitsMin; for the General Program the unit, level and grade rule is encoded in uVXJgSXV.",
+      "patch": {
+        "info": true
+      }
+    },
+    "uVXJgSXV": {
+      "why": "\"The General Program requires a minimum of 45 units in Philosophy courses numbered above 99. These courses must be taken for a letter grade, and the student must receive at least a B- in the course.\" The undergraduate core does not count (\"Courses taken to satisfy the undergraduate core or affiliated courses may not be counted in the 45 units\"), so those rules do not share courses with this one.",
+      "replace": {
+        "t": "courses",
+        "name": "45 units of PHIL courses numbered 100 or above, letter grade B- or better",
+        "mode": "units",
+        "units": 45,
+        "pool": {
+          "subjects": [
+            "PHIL"
+          ],
+          "minNumber": 100
+        },
+        "letter": true,
+        "minGrade": "B-"
+      }
+    },
+    "y642dIBj": {
+      "why": "\"Complete one intermediate philosophy of science course.\" No list, so the student moves it in.",
+      "patch": {
+        "manual": "approval"
+      }
+    },
+    "7Rtb4lAg": {
+      "why": "\"Complete two History of Philosophy courses, numbered 100 or above.\" No list, so the student moves them in.",
+      "patch": {
+        "n": 2,
+        "manual": "approval"
+      }
+    },
+    "fHPQbDSa": {
+      "why": "\"Students must take at least one course numbered over 105 from three of the following five areas ... Crosslisted and other courses taught outside the Department of Philosophy do not count\". The areas are not course lists, so the student moves three in. These courses are part of the 45 units (\"Each program requires a minimum of 45 units\"), so they also count toward the 45-unit rule. As part of the 45 units they carry its grading: General Program: \"The General Program requires a minimum of 45 units in Philosophy courses numbered above 99. These courses must be taken for a letter grade, and the student must receive at least a B- in the course.\"",
+      "patch": {
+        "n": 3,
+        "manual": "approval",
+        "shares": true,
+        "letter": true,
+        "minGrade": "B-"
+      }
+    },
+    "3VzfiJw7": {
+      "why": "\"Each master's candidate must take at least two courses numbered above 200; these cannot be graduate sections of undergraduate courses.\" The excluded codes are the PHIL 200-level listings the catalog cross-lists with a course numbered below 200. These courses are part of the 45 units (\"Each program requires a minimum of 45 units\"), so they also count toward the 45-unit rule. As part of the 45 units they carry its grading: General Program: \"The General Program requires a minimum of 45 units in Philosophy courses numbered above 99. These courses must be taken for a letter grade, and the student must receive at least a B- in the course.\"",
+      "replace": {
+        "t": "courses",
+        "name": "Two PHIL courses numbered 200 or above (not graduate sections of undergraduate courses)",
+        "mode": "atLeast",
+        "n": 2,
+        "shares": true,
+        "pool": {
+          "subjects": [
+            "PHIL"
+          ],
+          "minNumber": 200,
+          "exclude": [
+            "PHIL 204",
+            "PHIL 205W",
+            "PHIL 206",
+            "PHIL 207B",
+            "PHIL 207C",
+            "PHIL 208",
+            "PHIL 208A",
+            "PHIL 208B",
+            "PHIL 208C",
+            "PHIL 209A",
+            "PHIL 210",
+            "PHIL 210C",
+            "PHIL 211",
+            "PHIL 212",
+            "PHIL 213",
+            "PHIL 213A",
+            "PHIL 213E",
+            "PHIL 214",
+            "PHIL 214A",
+            "PHIL 215",
+            "PHIL 215A",
+            "PHIL 216C",
+            "PHIL 216J",
+            "PHIL 217",
+            "PHIL 217P",
+            "PHIL 218",
+            "PHIL 219",
+            "PHIL 220",
+            "PHIL 220A",
+            "PHIL 221",
+            "PHIL 225",
+            "PHIL 227",
+            "PHIL 227A",
+            "PHIL 227W",
+            "PHIL 228",
+            "PHIL 231",
+            "PHIL 232",
+            "PHIL 234",
+            "PHIL 234A",
+            "PHIL 234B",
+            "PHIL 235N",
+            "PHIL 236",
+            "PHIL 237",
+            "PHIL 238",
+            "PHIL 238W",
+            "PHIL 238Y",
+            "PHIL 241F",
+            "PHIL 242",
+            "PHIL 250",
+            "PHIL 251",
+            "PHIL 251D",
+            "PHIL 252",
+            "PHIL 253L",
+            "PHIL 254",
+            "PHIL 255",
+            "PHIL 256A",
+            "PHIL 257",
+            "PHIL 258",
+            "PHIL 259",
+            "PHIL 260",
+            "PHIL 261C",
+            "PHIL 262",
+            "PHIL 263",
+            "PHIL 264",
+            "PHIL 265",
+            "PHIL 267A",
+            "PHIL 267D",
+            "PHIL 267E",
+            "PHIL 267M",
+            "PHIL 268M",
+            "PHIL 268R",
+            "PHIL 269",
+            "PHIL 269M",
+            "PHIL 270",
+            "PHIL 270B",
+            "PHIL 272",
+            "PHIL 272B",
+            "PHIL 272V",
+            "PHIL 273",
+            "PHIL 273A",
+            "PHIL 273C",
+            "PHIL 274",
+            "PHIL 274A",
+            "PHIL 274B",
+            "PHIL 274C",
+            "PHIL 274E",
+            "PHIL 275",
+            "PHIL 275B",
+            "PHIL 275W",
+            "PHIL 276",
+            "PHIL 276A",
+            "PHIL 276J",
+            "PHIL 276L",
+            "PHIL 276M",
+            "PHIL 276T",
+            "PHIL 276W",
+            "PHIL 277K",
+            "PHIL 277R",
+            "PHIL 278M",
+            "PHIL 279B",
+            "PHIL 279R",
+            "PHIL 279W",
+            "PHIL 280",
+            "PHIL 281",
+            "PHIL 281A",
+            "PHIL 281B",
+            "PHIL 281C",
+            "PHIL 281E",
+            "PHIL 282A",
+            "PHIL 282B",
+            "PHIL 282D",
+            "PHIL 282H",
+            "PHIL 283",
+            "PHIL 283B",
+            "PHIL 284",
+            "PHIL 284B",
+            "PHIL 284C",
+            "PHIL 284F",
+            "PHIL 284M",
+            "PHIL 284P",
+            "PHIL 285",
+            "PHIL 285W",
+            "PHIL 286",
+            "PHIL 286M",
+            "PHIL 287",
+            "PHIL 287B",
+            "PHIL 287C",
+            "PHIL 288A",
+            "PHIL 288W",
+            "PHIL 289",
+            "PHIL 293C",
+            "PHIL 293E",
+            "PHIL 347",
+            "PHIL 375G"
+          ]
+        },
+        "letter": true,
+        "minGrade": "B-"
+      }
+    },
+    "uFQkRcJR": {
+      "why": "\"Students must take at least three courses numbered over 105 in one of the five areas listed in the Graduate Core section.\" The areas are not course lists, so the student moves three in. These courses are part of the 45 units (\"Each program requires a minimum of 45 units\"), so they also count toward the 45-unit rule. As part of the 45 units they carry its grading: General Program: \"The General Program requires a minimum of 45 units in Philosophy courses numbered above 99. These courses must be taken for a letter grade, and the student must receive at least a B- in the course.\"",
+      "patch": {
+        "n": 3,
+        "manual": "approval",
+        "shares": true,
+        "letter": true,
+        "minGrade": "B-"
+      }
+    },
+    "NlWE7IW3": {
+      "why": "\"Each program requires a minimum of 45 units in philosophy. Students in a special program may be allowed or required to replace up to nine units of philosophy with nine units in the field of specialization ... At least 45 units in courses numbered 100 or above must be completed with a B- or better grade at Stanford.\" Encoded as 36 PHIL units plus 9 units from any subject, all numbered 100 or above at B- or better. The SSP-related courses do not count (\"This work does not count towards the 45-unit requirement\").",
+      "replace": {
+        "t": "all",
+        "name": "45 units numbered 100 or above, B- or better",
+        "children": [
+          {
+            "id": "ov-symsys-45-phil",
+            "t": "courses",
+            "name": "At least 36 units of PHIL courses numbered 100 or above",
+            "mode": "units",
+            "units": 36,
+            "pool": {
+              "subjects": [
+                "PHIL"
+              ],
+              "minNumber": 100
+            },
+            "letter": true,
+            "minGrade": "B-"
+          },
+          {
+            "id": "ov-symsys-45-any",
+            "t": "courses",
+            "name": "9 more units numbered 100 or above (philosophy or the field of specialization)",
+            "mode": "units",
+            "units": 9,
+            "pool": {
+              "anySubject": true,
+              "minNumber": 100
+            },
+            "letter": true,
+            "minGrade": "B-"
+          }
+        ]
+      }
+    },
+    "hz04wKGx": {
+      "why": "\"Four courses in philosophy at the graduate level (numbered 200 or above), including courses from three of the following five areas ... At most two of the four courses may be graduate sections of undergraduate courses numbered 100 or higher. Three courses numbered 100 or higher from outside Philosophy chosen in consultation with an advisor. These courses should be from two of the following four areas: Psychology, Linguistics, Computer Science, Education.\" These courses are part of the 45 units, so they also count toward the 45-unit rule. PHIL 151/251 is the required SSP course, which \"does not count towards the 45-unit requirement\", so it is excluded here. Checked by hand: the area spreads, and the cap of two graduate sections of undergraduate courses (a cap cannot be combined with a rule whose courses also count toward the 45 units). The outside courses must come \"from outside Philosophy\", so the Psychology, Linguistics, Computer Science and Education listings of PHIL courses are excluded. As part of the 45 units, these courses carry its grading: \"At least 45 units in courses numbered 100 or above must be completed with a B- or better grade at Stanford.\"",
+      "replace": {
+        "t": "all",
+        "name": "Additional Course Requirements",
+        "children": [
+          {
+            "id": "ov-symsys-grad-phil",
+            "t": "courses",
+            "name": "Four PHIL courses numbered 200 or above",
+            "mode": "atLeast",
+            "n": 4,
+            "shares": true,
+            "pool": {
+              "subjects": [
+                "PHIL"
+              ],
+              "minNumber": 200,
+              "exclude": [
+                "PHIL 151",
+                "PHIL 251"
+              ]
+            },
+            "letter": true,
+            "minGrade": "B-"
+          },
+          {
+            "id": "ov-symsys-outside",
+            "t": "courses",
+            "name": "Three courses numbered 100 or above in Psychology, Linguistics, Computer Science or Education",
+            "mode": "atLeast",
+            "n": 3,
+            "shares": true,
+            "pool": {
+              "subjects": [
+                "PSYCH",
+                "LINGUIST",
+                "CS",
+                "EDUC"
+              ],
+              "minNumber": 100,
+              "exclude": [
+                "CS 181",
+                "CS 182",
+                "CS 186",
+                "CS 257",
+                "EDUC 217",
+                "EDUC 241",
+                "LINGUIST 204",
+                "PSYCH 124",
+                "PSYCH 160"
+              ]
+            },
+            "letter": true,
+            "minGrade": "B-"
+          }
+        ]
+      }
+    },
+    "mz4zXnX5": {
+      "why": "\"Each program requires a minimum of 45 units in philosophy. Students in a special program may be allowed or required to replace up to nine units of philosophy with nine units in the field of specialization ... At least 45 units in courses numbered 100 or above must be completed with a B- or better grade at Stanford.\" Encoded as 36 PHIL units plus 9 units from any subject, all numbered 100 or above at B- or better.",
+      "replace": {
+        "t": "all",
+        "name": "45 units numbered 100 or above, B- or better",
+        "children": [
+          {
+            "id": "ov-pol-45-phil",
+            "t": "courses",
+            "name": "At least 36 units of PHIL courses numbered 100 or above",
+            "mode": "units",
+            "units": 36,
+            "pool": {
+              "subjects": [
+                "PHIL"
+              ],
+              "minNumber": 100
+            },
+            "letter": true,
+            "minGrade": "B-"
+          },
+          {
+            "id": "ov-pol-45-any",
+            "t": "courses",
+            "name": "9 more units numbered 100 or above (philosophy or the field of specialization)",
+            "mode": "units",
+            "units": 9,
+            "pool": {
+              "anySubject": true,
+              "minNumber": 100
+            },
+            "letter": true,
+            "minGrade": "B-"
+          }
+        ]
+      }
+    },
+    "EiGNCBVH": {
+      "why": "\"Complete two approved courses in the philosophy of language numbered 180 or higher.\" Which courses are philosophy of language is not listed, so the student moves two in. These courses are part of the 45 units (\"Each program requires a minimum of 45 units\"), so they also count toward the 45-unit rule. As part of the 45 units they carry its grading: \"At least 45 units in courses numbered 100 or above must be completed with a B- or better grade at Stanford.\"",
+      "patch": {
+        "n": 2,
+        "manual": "approval",
+        "shares": true,
+        "letter": true,
+        "minGrade": "B-"
+      }
+    },
+    "vk8T2oHg": {
+      "why": "These courses are part of the 45 units (\"Each program requires a minimum of 45 units\"), so they also count toward the 45-unit rule. As part of the 45 units they carry its grading: \"At least 45 units in courses numbered 100 or above must be completed with a B- or better grade at Stanford.\"",
+      "patch": {
+        "shares": true,
+        "letter": true,
+        "minGrade": "B-"
+      }
+    },
+    "rdMg0qBe": {
+      "why": "\"Complete at least two approved courses numbered PHIL 151-Metalogic or higher.\" These courses are part of the 45 units (\"Each program requires a minimum of 45 units\"), so they also count toward the 45-unit rule. As part of the 45 units they carry its grading: \"At least 45 units in courses numbered 100 or above must be completed with a B- or better grade at Stanford.\"",
+      "patch": {
+        "shares": true,
+        "letter": true,
+        "minGrade": "B-"
+      }
+    },
+    "236SyKxt": {
+      "why": "\"Complete one approved graduate-level course in mathematical linguistics or automata theory.\" No list, so the student moves it in. These courses are part of the 45 units (\"Each program requires a minimum of 45 units\"), so they also count toward the 45-unit rule. As part of the 45 units they carry its grading: \"At least 45 units in courses numbered 100 or above must be completed with a B- or better grade at Stanford.\"",
+      "patch": {
+        "n": 1,
+        "manual": "approval",
+        "shares": true,
+        "letter": true,
+        "minGrade": "B-"
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "nj3pj5W7",
+      "parent": "hz04wKGx",
+      "node": {
+        "id": "ov-symsys-areas",
+        "t": "text",
+        "name": "Area spread: graduate PHIL courses from three of the five areas (at most two graduate sections of undergraduate courses), outside courses from two of the four areas",
+        "manual": "approval"
+      },
+      "why": "\"Four courses in philosophy at the graduate level (numbered 200 or above), including courses from three of the following five areas ... At most two of the four courses may be graduate sections of undergraduate courses numbered 100 or higher.\" \"Three courses numbered 100 or higher from outside Philosophy chosen in consultation with an advisor. These courses should be from two of the following four areas\". The two course rules count the courses; the areas and the cap are checked by hand."
+    }
+  ]
+}

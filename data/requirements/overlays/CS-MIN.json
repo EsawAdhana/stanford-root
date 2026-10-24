@@ -1,0 +1,140 @@
+{
+  "code": "CS-MIN",
+  "reviewed": "2026-10-23",
+  "summary": "The minor is CS 106B, the core (CS 103, CS 107, CS 109) and two electives from two different areas, at most one per area, for at least 26 units. Every course must be letter graded, except that CR or S grades from Spring 2020 through Summer 2021 count. You check by hand the 2.0 GPA in the minor's courses. If you use CS 103, 107 or 109 for your major, the replacement elective you choose is moved in by hand.",
+  "program": {
+    "letterGrade": true,
+    "why": "Grading: \"All courses taken for the CS minor must be taken for a letter grade except for courses taken Spring 2019-20, and Autumn 2020-21 through Summer 2020-21.\" The audit already accepts CR and S grades from those terms."
+  },
+  "add": [
+    {
+      "block": "IewY9yD0",
+      "why": "GPA: \"The minimum acceptable cumulative GPA for courses within the minor is 2.0.\"",
+      "node": {
+        "id": "ov-gpa",
+        "t": "text",
+        "name": "GPA of 2.0 in the minor's courses",
+        "manual": "gpa"
+      }
+    }
+  ],
+  "alternatives": [
+    {
+      "id": "ov-two-areas",
+      "name": "Two courses from different areas",
+      "of": [
+        "JMlQXpNd",
+        "Bc7R4x9e",
+        "eJXpVO1k",
+        "CppuKc1C",
+        "28LdUUjL",
+        "xbQkWWek"
+      ],
+      "n": 2,
+      "why": "\"Electives (choose two courses from different areas, but no more than one course per area)\""
+    }
+  ],
+  "nodes": {
+    "JMlQXpNd": {
+      "why": "\"Electives (choose two courses from different areas, but no more than one course per area)\". Without the cap, a second course from the same area was counted as surplus toward the 26-unit minimum.",
+      "patch": {
+        "limits": [
+          {
+            "label": "one course per area",
+            "max": 1,
+            "codes": [
+              "CS 129",
+              "CS 131",
+              "CS 221",
+              "CS 229"
+            ]
+          }
+        ]
+      }
+    },
+    "Bc7R4x9e": {
+      "why": "\"Electives (choose two courses from different areas, but no more than one course per area)\". Without the cap, a second course from the same area was counted as surplus toward the 26-unit minimum.",
+      "patch": {
+        "limits": [
+          {
+            "label": "one course per area",
+            "max": 1,
+            "codes": [
+              "CS 147",
+              "CS 177",
+              "CS 247A",
+              "CS 247B",
+              "CS 247E",
+              "CS 247G",
+              "CS 247I",
+              "CS 247S"
+            ]
+          }
+        ]
+      }
+    },
+    "eJXpVO1k": {
+      "why": "\"Electives (choose two courses from different areas, but no more than one course per area)\". Without the cap, a second course from the same area was counted as surplus toward the 26-unit minimum.",
+      "patch": {
+        "limits": [
+          {
+            "label": "one course per area",
+            "max": 1,
+            "codes": [
+              "CS 111",
+              "CS 145",
+              "CS 155"
+            ]
+          }
+        ]
+      }
+    },
+    "CppuKc1C": {
+      "why": "\"Electives (choose two courses from different areas, but no more than one course per area)\". Without the cap, a second course from the same area was counted as surplus toward the 26-unit minimum.",
+      "patch": {
+        "limits": [
+          {
+            "label": "one course per area",
+            "max": 1,
+            "codes": [
+              "CS 154",
+              "CS 157",
+              "CS 161"
+            ]
+          }
+        ]
+      }
+    },
+    "28LdUUjL": {
+      "why": "\"Electives (choose two courses from different areas, but no more than one course per area)\". Without the cap, a second course from the same area was counted as surplus toward the 26-unit minimum.",
+      "patch": {
+        "limits": [
+          {
+            "label": "one course per area",
+            "max": 1,
+            "codes": [
+              "CS 148",
+              "CS 248A",
+              "CS 248B"
+            ]
+          }
+        ]
+      }
+    },
+    "xbQkWWek": {
+      "why": "\"Electives (choose two courses from different areas, but no more than one course per area)\". Without the cap, a second course from the same area was counted as surplus toward the 26-unit minimum.",
+      "patch": {
+        "limits": [
+          {
+            "label": "one course per area",
+            "max": 1,
+            "codes": [
+              "CS 173A",
+              "CS 279"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

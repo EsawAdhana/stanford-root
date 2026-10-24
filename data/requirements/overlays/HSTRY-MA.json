@@ -1,0 +1,112 @@
+{
+  "code": "HSTRY-MA",
+  "reviewed": "2026-10-23",
+  "summary": "The audit checks nine courses and at least 45 units: one 400-level HISTORY seminar, four 300-level HISTORY colloquia (directed reading, graduate research and workshops do not count as these), two more HISTORY courses, and two more courses numbered 100 or above that are HISTORY courses or, for up to 10 units, another subject. Only courses graded A or B (B- or better) count, and at most 10 units of directed reading (HISTORY 399W). A student whose undergraduate history training is judged inadequate must take all nine courses in the department; that is checked by hand.",
+  "program": {
+    "letterGrade": true,
+    "minGrade": "B-",
+    "why": "Grading: \"The department does not recognize for credit toward the MA degree any work that has not received a grade of A or B.\" A CR or S is neither.",
+    "totals": [
+      {
+        "label": "Directed reading (HISTORY 399W)",
+        "maxUnits": 10,
+        "codes": [
+          "HISTORY 399W"
+        ],
+        "why": "\"Directed reading may be counted for a maximum of 10 units.\" HISTORY 399W is the department's Graduate Directed Reading course."
+      }
+    ]
+  },
+  "nodes": {
+    "ZPcVuQQ2": {
+      "why": "\"The department requires the completion of nine courses (totaling not less than 45 units) of graduate work\": a 45-unit floor over the rules below, which ask for nine courses. \"Directed reading may be counted for a maximum of 10 units\" is a program cap on HISTORY 399W.",
+      "patch": {
+        "units": 45
+      }
+    },
+    "xZbSRdnj": {
+      "why": "\"Students must take seven courses in the Department of History. These courses must have the HISTORY subject code.\" Five of the seven are the seminar and colloquia below (\"Of the seven courses required\"), so this rule asks for the other two.",
+      "replace": {
+        "t": "courses",
+        "name": "Two more HISTORY courses (seven in all with the seminar and colloquia)",
+        "mode": "atLeast",
+        "n": 2,
+        "pool": {
+          "subjects": [
+            "HISTORY"
+          ]
+        }
+      }
+    },
+    "uZEhwSll": {
+      "why": "\"Of the seven courses required: At least one history graduate seminar (400-level). At least four history graduate colloquia (300-level).\" Graduate Directed Reading (HISTORY 399W), Graduate Research (HISTORY 499X), the Graduate Pedagogy Workshop (HISTORY 305) and Preparing for International Field Work (HISTORY 399A) carry 300 or 400 numbers but are not colloquia or seminars, so they count only as other HISTORY courses.",
+      "replace": {
+        "t": "all",
+        "name": "Graduate Colloquia or Graduate Seminar Courses",
+        "children": [
+          {
+            "id": "ov-hstry-ma-seminar",
+            "t": "courses",
+            "name": "One history graduate seminar (400-level)",
+            "mode": "atLeast",
+            "n": 1,
+            "pool": {
+              "subjects": [
+                "HISTORY"
+              ],
+              "minNumber": 400,
+              "maxNumber": 499,
+              "exclude": [
+                "HISTORY 499X"
+              ]
+            }
+          },
+          {
+            "id": "ov-hstry-ma-colloquia",
+            "t": "courses",
+            "name": "Four history graduate colloquia (300-level)",
+            "mode": "atLeast",
+            "n": 4,
+            "pool": {
+              "subjects": [
+                "HISTORY"
+              ],
+              "minNumber": 300,
+              "maxNumber": 399,
+              "exclude": [
+                "HISTORY 305",
+                "HISTORY 399A",
+                "HISTORY 399W"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "noqtkLAx": {
+      "why": "\"Students should fulfill the remaining units with coursework that fits the following conditions: Only courses with a prefix of HISTORY and a number of at least 100. Up to 10 units may be non-HISTORY.\" Nine courses less the seven HISTORY courses leaves two.",
+      "replace": {
+        "t": "courses",
+        "name": "Other Coursework (HISTORY 100+, up to 10 units in other subjects)",
+        "mode": "atLeast",
+        "n": 2,
+        "pool": {
+          "anySubject": true,
+          "minNumber": 100
+        },
+        "limits": [
+          {
+            "label": "non-HISTORY units",
+            "maxUnits": 10,
+            "pool": {
+              "anySubject": true,
+              "excludeSubjects": [
+                "HISTORY"
+              ]
+            }
+          }
+        ]
+      }
+    }
+  }
+}

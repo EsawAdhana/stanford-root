@@ -1,0 +1,38 @@
+{
+  "code": "EPS-PMN",
+  "reviewed": "2026-10-23",
+  "summary": "The minor is at least six letter-graded courses numbered 200 or above, totaling at least 20 units, approved by the EPS Director of Graduate Studies and the Department Chair; with no list, you move the approved courses in, and a course without a letter grade does not count. Your advisor checks the 3.0 GPA, and transfer units do not count.",
+  "program": {
+    "letterGrade": true,
+    "why": "\"All Ph.D. Minor students must complete a minimum of 6 letter-graded graduate-level courses\" and Grading: \"Students must earn letter grades in all graduate-level courses that count toward program requirements (not including EPS 400 Graduate Research).\" EPS 400 is offered only S/NC, which a letter-grade rule accepts."
+  },
+  "blocks": {
+    "KaN80YIU": { "kind": "required" }
+  },
+  "nodes": {
+    "TkKuXf5d": {
+      "why": "\"All Ph.D. Minor students must complete a minimum of 6 letter-graded graduate-level courses (200-level or above), totaling at least 20 units, by the end of their PhD program. These courses must be approved by the EPS Director of Graduate Studies and the Department Chair.\" No list, so the student moves the approved courses in; letter grade and level are checked with the approval.",
+      "replace": {
+        "t": "all",
+        "name": "PhD minor coursework (20 units)",
+        "units": 20,
+        "children": [
+          {
+            "id": "ov-eps-pmn-courses",
+            "t": "text",
+            "name": "Six approved letter-graded courses numbered 200 or above",
+            "manual": "approval",
+            "n": 6
+          }
+        ]
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "KaN80YIU",
+      "why": "GPA: \"University grade point average (GPA) of 3.0 (B) or higher\"",
+      "node": { "id": "ov-eps-pmn-gpa", "t": "text", "name": "GPA of 3.0 or higher", "manual": "gpa" }
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "code": "ART-MIN",
+  "reviewed": "2026-10-23",
+  "summary": "The audit checks ARTHIST 5 and four electives, any ARTHIST course, all taken for a letter grade, toward the 25 units the minor needs. If your electives carry fewer than 5 units each, another ARTHIST course makes up the difference. At most one course (up to 5 units) from another university or Bing Overseas Studies may count; you move it in by hand.",
+  "program": {
+    "letterGrade": true,
+    "why": "Grading: \"Courses must be taken for a letter grade.\""
+  },
+  "nodes": {
+    "QZ3gSbsz": {
+      "why": "\"Students must complete a total of 4 Art History elective courses. Any ARTHIST course may be applied toward the Art History elective requirement.\"",
+      "patch": { "pool": { "subjects": ["ARTHIST"] } }
+    }
+  },
+  "add": [
+    {
+      "block": "qIx62yg3",
+      "why": "The Bulletin's \"Minimum Units in the Program\" is 25, and \"Any ARTHIST course may be applied toward the Art History elective requirement.\" Four electives of 4 units fall short of it, so further ARTHIST courses count toward the total.",
+      "node": { "id": "ov-remaining", "t": "courses", "name": "Remaining units of the 25-unit minimum, in Art History", "mode": "any", "pool": { "subjects": ["ARTHIST"] }, "optional": true }
+    }
+  ]
+}

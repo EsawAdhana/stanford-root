@@ -1,0 +1,580 @@
+{
+  "code": "FGSS-BA",
+  "reviewed": "2026-10-23",
+  "summary": "You take FEMGEN 101 and 103 for a letter grade, five courses from your subplan's list, two courses from other subplans' lists, a WIM course, and either the senior capstone (FEMGEN 104X and 199A) or the honors thesis, with more FEMGEN courses for the rest of the 63 units. At most 10 of the 63 units may be CR/NC or S/NC and at most 10 may be directed reading or independent study (FEMGEN 195 and 195X). Courses from other departments count with the Faculty Director's approval and are moved in by hand, as is an individually designed subplan's approved course of study; capstone and honors proposals are approved by the instructors and your advisor. Honors adds at least 9 units of FEMGEN 199A and the other listed honors courses.",
+  "program": {
+    "totals": [
+      {
+        "label": "At most 10 units CR/NC or S/NC",
+        "maxUnits": 10,
+        "grading": "not-letter",
+        "why": "Grading: \"A maximum of 10 of the 63 units for the major may be taken on a Credit/No Credit or Satisfactory/No Credit basis.\""
+      },
+      {
+        "label": "At most 10 units of independent study or directed reading",
+        "maxUnits": 10,
+        "codes": [
+          "FEMGEN 195",
+          "FEMGEN 195X"
+        ],
+        "why": "Policies: \"A maximum of 10 units may be taken as independent study or directed reading.\" FEMGEN 195 (Directed Reading) and 195X (Research in Feminist, Gender, & Sexuality Studies) by catalog title; independent study in other departments is checked by hand."
+      }
+    ]
+  },
+  "blocks": {
+    "hQzsLmJz": {
+      "kind": "info"
+    },
+    "jhmt9T4F": {
+      "units": 9
+    }
+  },
+  "nodes": {
+    "F5XAj4gf": {
+      "why": "Grading: \"All FEMGEN core courses must be taken for a letter grade.\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "yk8rnBie": {
+      "why": "Grading: \"All FEMGEN core courses must be taken for a letter grade.\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "Uf0Uxjaj": {
+      "why": "Encoded in each subplan as two courses from the other subplans' lists, since \"other than their own\" depends on the subplan.",
+      "patch": {
+        "info": true
+      }
+    },
+    "hdKcAIAk": {
+      "why": "\"Students pursuing honors must complete FEMGEN 199A. In addition, they will complete a minimum of 9 units, including 199A, from the following course list.\" The 9 units are on the Honors block, not on 199A alone.",
+      "patch": {
+        "units": null
+      }
+    },
+    "dDP8dsGu": {
+      "why": "\"a minimum of 9 units, including 199A, from the following course list\": FEMGEN 199A is its own rule, so this takes the other listed courses, and the block floor counts both.",
+      "patch": {
+        "mode": "any",
+        "units": null,
+        "removeItems": [
+          "FEMGEN 199A"
+        ]
+      }
+    },
+    "dVk0sFuY": {
+      "why": "\"develop a proposal describing a thematic focus and outlining a course of study. The proposal is then submitted to the Program Office ... for approval by the Director or Associate Director.\" The text gives no course count; the approved course of study is checked by hand.",
+      "patch": {
+        "manual": "approval"
+      }
+    },
+    "quoYAHRM": {
+      "why": "Capstone, Honors Thesis: \"Students pursuing honors must complete FEMGEN 199A. In addition, they will complete a minimum of 9 units, including 199A, from the following course list.\" The list is the Honors section's (FEMGEN 199A, 199B, 199C, 104X, 105). Without the 9 units this path would take FEMGEN 199A alone, which the Senior Capstone Project path does not allow (\"should enroll in FEMGEN 104X ... followed by FEMGEN 199A\").",
+      "replace": {
+        "t": "all",
+        "name": "Honors Thesis",
+        "units": 9,
+        "children": [
+          {
+            "id": "ov-fgss-ba-cap-199a",
+            "t": "courses",
+            "name": "FEMGEN 199A",
+            "mode": "all",
+            "items": [
+              [
+                "FEMGEN 199A"
+              ]
+            ]
+          },
+          {
+            "id": "ov-fgss-ba-cap-honors-units",
+            "t": "courses",
+            "name": "Other honors coursework toward the 9 units",
+            "mode": "any",
+            "optional": true,
+            "items": [
+              [
+                "FEMGEN 199B"
+              ],
+              [
+                "FEMGEN 199C"
+              ],
+              [
+                "FEMGEN 104X"
+              ],
+              [
+                "FEMGEN 105"
+              ]
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "alternatives": [
+    {
+      "id": "ov-fgss-ba-capstone",
+      "name": "Senior capstone project or honors thesis",
+      "of": [
+        "Gy6lbODA",
+        "quoYAHRM"
+      ],
+      "why": "\"Students who select to do a senior project for their capstone should enroll in FEMGEN 104X ... followed by FEMGEN 199A\"; \"Students pursuing honors must complete FEMGEN 199A.\""
+    }
+  ],
+  "add": [
+    {
+      "block": "hQzld8xT",
+      "why": "unitsMin is 63 (Grading: \"A maximum of 10 of the 63 units for the major\"), and the listed requirements fall short of it. The remaining units of the 63-unit minimum, in FEMGEN courses; the program names no other subject.",
+      "node": {
+        "id": "ov-fgss-ba-remaining",
+        "t": "courses",
+        "name": "Remaining units in FEMGEN courses",
+        "mode": "any",
+        "optional": true,
+        "pool": {
+          "subjects": [
+            "FEMGEN"
+          ]
+        }
+      }
+    },
+    {
+      "block": "hQzld8xT",
+      "why": "Policies: \"Units from courses taken from other departments/programs within Stanford may count for major/minor requirements on the approval of the Faculty Director.\"",
+      "node": {
+        "id": "ov-fgss-ba-remaining-approved",
+        "t": "text",
+        "name": "Courses from other departments approved by the Faculty Director",
+        "manual": "approval",
+        "optional": true
+      }
+    },
+    {
+      "block": "oys5rVJL",
+      "why": "Electives block: \"Students must complete an additional two courses from any two approved subplan courses other than their own. One course may not count for more than one requirement.\" Read as two courses from the other subplans' lists (courses also on this subplan's own list are left out).",
+      "node": {
+        "id": "ov-fgss-ba-outside-oys5rVJL",
+        "t": "courses",
+        "name": "Two courses from other subplans' lists",
+        "mode": "atLeast",
+        "n": 2,
+        "items": [
+          [
+            "FEMGEN 100C"
+          ],
+          [
+            "FEMGEN 119"
+          ],
+          [
+            "FEMGEN 131"
+          ],
+          [
+            "FEMGEN 155"
+          ],
+          [
+            "FEMGEN 147"
+          ],
+          [
+            "FEMGEN 150Q"
+          ],
+          [
+            "FEMGEN 252"
+          ],
+          [
+            "FEMGEN 156H"
+          ],
+          [
+            "FEMGEN 206"
+          ],
+          [
+            "FEMGEN 230A"
+          ],
+          [
+            "FEMGEN 241"
+          ],
+          [
+            "FEMGEN 256"
+          ],
+          [
+            "FEMGEN 5C"
+          ],
+          [
+            "FEMGEN 143"
+          ],
+          [
+            "FEMGEN 194"
+          ],
+          [
+            "FEMGEN 245"
+          ]
+        ]
+      }
+    },
+    {
+      "block": "q7sgtO1N",
+      "why": "Electives block: \"Students must complete an additional two courses from any two approved subplan courses other than their own. One course may not count for more than one requirement.\" Read as two courses from the other subplans' lists (courses also on this subplan's own list are left out).",
+      "node": {
+        "id": "ov-fgss-ba-outside-q7sgtO1N",
+        "t": "courses",
+        "name": "Two courses from other subplans' lists",
+        "mode": "atLeast",
+        "n": 2,
+        "items": [
+          [
+            "FEMGEN 98"
+          ],
+          [
+            "FEMGEN 137"
+          ],
+          [
+            "FEMGEN 144F"
+          ],
+          [
+            "FEMGEN 150N"
+          ],
+          [
+            "FEMGEN 151"
+          ],
+          [
+            "FEMGEN 161"
+          ],
+          [
+            "FEMGEN 183"
+          ],
+          [
+            "FEMGEN 185B"
+          ],
+          [
+            "FEMGEN 205"
+          ],
+          [
+            "FEMGEN 313"
+          ],
+          [
+            "FEMGEN 314"
+          ],
+          [
+            "FEMGEN 147"
+          ],
+          [
+            "FEMGEN 150Q"
+          ],
+          [
+            "FEMGEN 252"
+          ],
+          [
+            "FEMGEN 156H"
+          ],
+          [
+            "FEMGEN 206"
+          ],
+          [
+            "FEMGEN 230A"
+          ],
+          [
+            "FEMGEN 241"
+          ],
+          [
+            "FEMGEN 256"
+          ],
+          [
+            "FEMGEN 5C"
+          ],
+          [
+            "FEMGEN 143"
+          ],
+          [
+            "FEMGEN 194"
+          ],
+          [
+            "FEMGEN 245"
+          ]
+        ]
+      }
+    },
+    {
+      "block": "dKqA6vcv",
+      "why": "Electives block: \"Students must complete an additional two courses from any two approved subplan courses other than their own. One course may not count for more than one requirement.\" Read as two courses from the other subplans' lists (courses also on this subplan's own list are left out).",
+      "node": {
+        "id": "ov-fgss-ba-outside-dKqA6vcv",
+        "t": "courses",
+        "name": "Two courses from other subplans' lists",
+        "mode": "atLeast",
+        "n": 2,
+        "items": [
+          [
+            "FEMGEN 98"
+          ],
+          [
+            "FEMGEN 137"
+          ],
+          [
+            "FEMGEN 144F"
+          ],
+          [
+            "FEMGEN 150N"
+          ],
+          [
+            "FEMGEN 151"
+          ],
+          [
+            "FEMGEN 159"
+          ],
+          [
+            "FEMGEN 161"
+          ],
+          [
+            "FEMGEN 183"
+          ],
+          [
+            "FEMGEN 185B"
+          ],
+          [
+            "FEMGEN 205"
+          ],
+          [
+            "FEMGEN 250J"
+          ],
+          [
+            "FEMGEN 313"
+          ],
+          [
+            "FEMGEN 314"
+          ],
+          [
+            "FEMGEN 100C"
+          ],
+          [
+            "FEMGEN 119"
+          ],
+          [
+            "FEMGEN 131"
+          ],
+          [
+            "FEMGEN 155"
+          ],
+          [
+            "FEMGEN 5C"
+          ],
+          [
+            "FEMGEN 143"
+          ],
+          [
+            "FEMGEN 194"
+          ],
+          [
+            "FEMGEN 245"
+          ]
+        ]
+      }
+    },
+    {
+      "block": "uIQQwwY0",
+      "why": "Electives block: \"Students must complete an additional two courses from any two approved subplan courses other than their own. One course may not count for more than one requirement.\" Read as two courses from the other subplans' lists (courses also on this subplan's own list are left out).",
+      "node": {
+        "id": "ov-fgss-ba-outside-uIQQwwY0",
+        "t": "courses",
+        "name": "Two courses from other subplans' lists",
+        "mode": "atLeast",
+        "n": 2,
+        "items": [
+          [
+            "FEMGEN 98"
+          ],
+          [
+            "FEMGEN 137"
+          ],
+          [
+            "FEMGEN 144F"
+          ],
+          [
+            "FEMGEN 150N"
+          ],
+          [
+            "FEMGEN 151"
+          ],
+          [
+            "FEMGEN 159"
+          ],
+          [
+            "FEMGEN 161"
+          ],
+          [
+            "FEMGEN 183"
+          ],
+          [
+            "FEMGEN 185B"
+          ],
+          [
+            "FEMGEN 205"
+          ],
+          [
+            "FEMGEN 250J"
+          ],
+          [
+            "FEMGEN 313"
+          ],
+          [
+            "FEMGEN 314"
+          ],
+          [
+            "FEMGEN 100C"
+          ],
+          [
+            "FEMGEN 119"
+          ],
+          [
+            "FEMGEN 131"
+          ],
+          [
+            "FEMGEN 147"
+          ],
+          [
+            "FEMGEN 150Q"
+          ],
+          [
+            "FEMGEN 252"
+          ],
+          [
+            "FEMGEN 156H"
+          ],
+          [
+            "FEMGEN 206"
+          ],
+          [
+            "FEMGEN 230A"
+          ],
+          [
+            "FEMGEN 241"
+          ],
+          [
+            "FEMGEN 256"
+          ]
+        ]
+      }
+    },
+    {
+      "block": "HD6cyYzF",
+      "why": "Electives block: \"Students must complete an additional two courses from any two approved subplan courses other than their own. One course may not count for more than one requirement.\" Read as two courses from the other subplans' lists (courses also on this subplan's own list are left out).",
+      "node": {
+        "id": "ov-fgss-ba-outside-HD6cyYzF",
+        "t": "courses",
+        "name": "Two courses from other subplans' lists",
+        "mode": "atLeast",
+        "n": 2,
+        "items": [
+          [
+            "FEMGEN 98"
+          ],
+          [
+            "FEMGEN 137"
+          ],
+          [
+            "FEMGEN 144F"
+          ],
+          [
+            "FEMGEN 150N"
+          ],
+          [
+            "FEMGEN 151"
+          ],
+          [
+            "FEMGEN 159"
+          ],
+          [
+            "FEMGEN 161"
+          ],
+          [
+            "FEMGEN 183"
+          ],
+          [
+            "FEMGEN 185B"
+          ],
+          [
+            "FEMGEN 205"
+          ],
+          [
+            "FEMGEN 250J"
+          ],
+          [
+            "FEMGEN 313"
+          ],
+          [
+            "FEMGEN 314"
+          ],
+          [
+            "FEMGEN 100C"
+          ],
+          [
+            "FEMGEN 119"
+          ],
+          [
+            "FEMGEN 131"
+          ],
+          [
+            "FEMGEN 155"
+          ],
+          [
+            "FEMGEN 147"
+          ],
+          [
+            "FEMGEN 150Q"
+          ],
+          [
+            "FEMGEN 252"
+          ],
+          [
+            "FEMGEN 156H"
+          ],
+          [
+            "FEMGEN 206"
+          ],
+          [
+            "FEMGEN 230A"
+          ],
+          [
+            "FEMGEN 241"
+          ],
+          [
+            "FEMGEN 256"
+          ],
+          [
+            "FEMGEN 5C"
+          ],
+          [
+            "FEMGEN 143"
+          ],
+          [
+            "FEMGEN 194"
+          ],
+          [
+            "FEMGEN 245"
+          ]
+        ]
+      }
+    },
+    {
+      "block": "MwV40BeU",
+      "why": "\"All Capstone proposals are reviewed and approved by the FEMGEN 199 instructor(s) and the student's faculty advisor.\"",
+      "node": {
+        "id": "ov-fgss-ba-capstone-approval",
+        "t": "text",
+        "name": "Capstone proposal approved",
+        "manual": "approval"
+      }
+    },
+    {
+      "block": "jhmt9T4F",
+      "why": "\"Honors Thesis must be a written thesis of at least 15,000 words\"; \"All Honors proposals are reviewed and approved by the FEMGEN 199 instructor(s) and the student's faculty advisor.\"",
+      "node": {
+        "id": "ov-fgss-ba-honors-thesis",
+        "t": "text",
+        "name": "Approved honors thesis or creative project",
+        "manual": "thesis"
+      }
+    }
+  ]
+}

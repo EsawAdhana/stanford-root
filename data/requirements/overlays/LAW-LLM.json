@@ -1,0 +1,132 @@
+{
+  "code": "LAW-LLM",
+  "reviewed": "2026-10-23",
+  "summary": "You choose one of four LLM programs. The audit checks at least 35 units, at least 26 of them Law School courses, LAW 8021 and 8022, and your program's required courses, including both quarters of its seminar or colloquium (LAW 8001, 8002, 8003 or 8004) and its four additional courses (in Corporate Governance, Deals I and II count as one, as do Law and Economics Seminar I and II). Checked by hand: no more than 45 units taken at Stanford (for credit or not), three quarters in residence, at most 9 units outside the Law School (non-law courses need pre-approval or a petition), no foreign or English language courses for law credit, the ELP's outside environmental course, courses a Teaching Fellow accepts in place of listed ones, and filing your application for graduation on time.",
+  "nodes": {
+    "freeform-text": {
+      "why": "The page's requirements text restates the 35 units, the 26 Law School units, the residency rule (ov-llm-residency) and the program course requirements. Two things it states have no rule yet and are checked by hand: \"Timely filing of an application for graduation\" and \"students must complete at least 35 but no more than 45 approved quarter units of coursework\" (the ceiling; see the 26-unit total for why it is not a cap).",
+      "patch": { "name": "No more than 45 units in all, and an application for graduation filed on time", "manual": "other" }
+    },
+    "C3dX5AGa": {
+      "why": "\"Each IELBP LL.M. student must successfully complete four (4) courses adding up to at least nine (9) units from the following choices\"",
+      "patch": {
+        "units": 9
+      }
+    },
+    "D24xLM68": {
+      "why": "Notes: \"For Corporate Governance and Practice students would need to take both Seminar I and Seminar II\": two registrations of the repeatable LAW 8001, now that LAW courses are in the course data.",
+      "patch": {
+        "items": [
+          [
+            "LAW 1013"
+          ],
+          [
+            "LAW 8001"
+          ],
+          [
+            "LAW 8001"
+          ]
+        ]
+      }
+    },
+    "NCfhjz4t": {
+      "why": "\"Both Environmental Law and Policy Colloquium I (fall) and Environmental Law and Policy Colloquium II (spring) are required.\" Two registrations of the repeatable LAW 8002.",
+      "patch": {
+        "items": [
+          [
+            "LAW 8002"
+          ],
+          [
+            "LAW 8002"
+          ]
+        ]
+      }
+    },
+    "hM2MdUaT": {
+      "why": "\"IELBP LLM Colloquium course, 4 units (2 units each: Fall and Winter or Spring [tbd] quarter)\": two registrations of the repeatable 2-unit LAW 8003.",
+      "patch": {
+        "items": [
+          [
+            "LAW 8003"
+          ],
+          [
+            "LAW 8003"
+          ]
+        ]
+      }
+    },
+    "RW566QO3": {
+      "why": "\"Both LST Colloquium I and II are required.\" Two registrations of the repeatable LAW 8004.",
+      "patch": {
+        "items": [
+          [
+            "LAW 8004"
+          ],
+          [
+            "LAW 8004"
+          ]
+        ]
+      }
+    },
+    "W9svROT0": {
+      "why": "\"Courses that count as a single course: Deals I and II and Law and Economics Seminar I/II.\" Deals I and II are LAW 1016 and 1017; the Law and Economics Seminar is LAW 7506 and 7507. Courses off the list that the CGP Teaching Fellow accepts are moved in by hand.",
+      "patch": {
+        "limits": [
+          {
+            "label": "Deals I and II count as one course",
+            "max": 1,
+            "codes": [
+              "LAW 1016",
+              "LAW 1017"
+            ]
+          },
+          {
+            "label": "Law and Economics Seminar I/II count as one course",
+            "max": 1,
+            "codes": [
+              "LAW 7506",
+              "LAW 7507"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "Ohaqjs69",
+      "node": {
+        "id": "ov-elp-outside",
+        "t": "text",
+        "name": "One environmental course outside the Law School (approved by the ELP Teaching Fellow)",
+        "manual": "approval",
+        "n": 1
+      },
+      "why": "\"And at least one environmental course outside of the law school to be approved by the ELP Teaching Fellow.\""
+    },
+    {
+      "block": "mAbEGmbJ",
+      "why": "Policies: \"Three quarters of residency\"; \"To receive the LLM degree, students must complete at least 3 quarters in residence.\"",
+      "node": {
+        "id": "ov-llm-residency",
+        "t": "text",
+        "name": "Three quarters in residence (9+ units taken and 8+ passed each quarter)",
+        "manual": "residency"
+      }
+    }
+  ],
+  "program": {
+    "totals": [
+      {
+        "label": "26 units of Law School courses",
+        "minUnits": 26,
+        "pool": {
+          "subjects": [
+            "LAW"
+          ]
+        },
+        "why": "Policies: \"To obtain an LLM degree, students must complete at least 35 but no more than 45 approved quarter units of course work. At least 26 of these units must be in Law School courses\" and \"All units taken at Stanford Law School or Stanford University count toward this total, whether or not these units are taken for credit toward the degree.\" The 35-unit floor is the program's minimum. The 45-unit ceiling is checked by hand: as a cap it would drop the last courses on the record, Law courses included, and then fail the 26 Law units."
+      }
+    ]
+  }
+}

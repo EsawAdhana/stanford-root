@@ -1,0 +1,324 @@
+{
+  "code": "MATSC-PHD",
+  "reviewed": "2026-10-23",
+  "summary": "The audit checks 135 units of graduate work, every course letter graded when a letter grade is offered: the five MATSCI core courses, eight technical electives for 24 units (five MATSCI courses counting a characterization course, or four plus an outside characterization course, then STEM electives), MATSCI 230 colloquia, 75 units of MATSCI 300 research, and 18 residency units. Checked by hand: STEM electives outside the lists, the 3.0 GPA, taking a course that counts each quarter, safety training, every form and milestone, the qualifying exam, the oral defense and the dissertation. Up to 45 units from an outside MS may transfer with approval.",
+  "program": {
+    "letterGrade": true,
+    "why": "Grading: \"Any course that satisfies the PhD degree requirements must be taken for a letter grade, if offered.\""
+  },
+  "nodes": {
+    "lwBkZjiT": {
+      "why": "\"15 units required.\" Notes: \"All five courses must be taken during the first year and for a letter grade.\"",
+      "patch": {
+        "units": 15,
+        "letter": true
+      }
+    },
+    "tROdezLx": {
+      "why": "\"24 total units required.\" \"All technical elective courses must be completed for a letter grade.\" \"Of the eight technical elective courses (24 units), five must be Materials Science and Engineering courses (15 units), and include at least one characterization course (3 units).\" \"If the characterization course requirement is fulfilled with a MATSCI subject code course, only four additional MATSCI electives are required within the total eight courses.\" Elective courses \"may not include colloquium, research, seminars, or independent study such as MATSCI 200, 230, 231, 232, 299, 300, 399, or 400.\" \"Technical electives outside of the MATSCI electives must be letter-graded graduate lecture/lab courses at the 200 level or above in science fields ... may be approved by the student's advisor and Student Services.\" The two characterization cases are two paths; the outside electives name no subject codes and are moved in by hand. MATSCI 402A and 402T (1-unit topics seminars offered only satisfactory/no credit) are left out of the MATSCI electives too: \"Elective courses must be taken for a letter grade and may not include colloquium, research, seminars\".",
+      "replace": {
+        "t": "all",
+        "name": "Technical Elective Courses (eight courses, 24 units)",
+        "units": 24,
+        "children": [
+          {
+            "id": "tROdezLx-paths",
+            "t": "any",
+            "name": "MATSCI electives and characterization course",
+            "children": [
+              {
+                "id": "tROdezLx-mschar",
+                "t": "all",
+                "name": "Characterization course in MATSCI, plus four MATSCI electives",
+                "children": [
+                  {
+                    "id": "lKcirNRb",
+                    "t": "courses",
+                    "name": "Technical Elective: Characterization Course (MATSCI)",
+                    "mode": "atLeast",
+                    "n": 1,
+                    "letter": true,
+                    "items": [
+                      [
+                        "MATSCI 320"
+                      ],
+                      [
+                        "MATSCI 321"
+                      ],
+                      [
+                        "MATSCI 322"
+                      ],
+                      [
+                        "MATSCI 323"
+                      ],
+                      [
+                        "MATSCI 324"
+                      ],
+                      [
+                        "MATSCI 326"
+                      ],
+                      [
+                        "MATSCI 327"
+                      ]
+                    ]
+                  },
+                  {
+                    "id": "fNYzA9fY",
+                    "t": "courses",
+                    "name": "Technical Electives: four more MATSCI courses",
+                    "mode": "atLeast",
+                    "n": 4,
+                    "units": 12,
+                    "letter": true,
+                    "pool": {
+                      "subjects": [
+                        "MATSCI"
+                      ],
+                      "minNumber": 200,
+                      "exclude": [
+                        "MATSCI 200",
+                        "MATSCI 230",
+                        "MATSCI 231",
+                        "MATSCI 232",
+                        "MATSCI 299",
+                        "MATSCI 300",
+                        "MATSCI 399",
+                        "MATSCI 400",
+                        "MATSCI 402A",
+                        "MATSCI 402T",
+                        "MATSCI 801",
+                        "MATSCI 802"
+                      ]
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "tROdezLx-otherchar",
+                "t": "all",
+                "name": "Characterization course outside MATSCI, plus five MATSCI electives",
+                "children": [
+                  {
+                    "id": "tROdezLx-charout",
+                    "t": "courses",
+                    "name": "Technical Elective: Characterization Course (other subjects)",
+                    "mode": "atLeast",
+                    "n": 1,
+                    "letter": true,
+                    "items": [
+                      [
+                        "APPPHYS 272"
+                      ],
+                      [
+                        "BIOE 220"
+                      ],
+                      [
+                        "CHEMENG 345"
+                      ],
+                      [
+                        "CHEMENG 470"
+                      ],
+                      [
+                        "EE 219"
+                      ],
+                      [
+                        "EE 235A"
+                      ],
+                      [
+                        "EE 236A"
+                      ],
+                      [
+                        "EE 367"
+                      ],
+                      [
+                        "ENGR 241"
+                      ],
+                      [
+                        "ME 364"
+                      ],
+                      [
+                        "PHOTON 222"
+                      ]
+                    ]
+                  },
+                  {
+                    "id": "tROdezLx-ms5",
+                    "t": "courses",
+                    "name": "Technical Electives: five MATSCI courses (15 units)",
+                    "mode": "atLeast",
+                    "n": 5,
+                    "units": 15,
+                    "letter": true,
+                    "pool": {
+                      "subjects": [
+                        "MATSCI"
+                      ],
+                      "minNumber": 200,
+                      "exclude": [
+                        "MATSCI 200",
+                        "MATSCI 230",
+                        "MATSCI 231",
+                        "MATSCI 232",
+                        "MATSCI 299",
+                        "MATSCI 300",
+                        "MATSCI 399",
+                        "MATSCI 400",
+                        "MATSCI 402A",
+                        "MATSCI 402T",
+                        "MATSCI 801",
+                        "MATSCI 802"
+                      ]
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "aupsVKso",
+            "t": "text",
+            "name": "Technical Electives: STEM Coursework (6-9 units)",
+            "manual": "approval",
+            "units": 6
+          }
+        ]
+      }
+    },
+    "NhelVkSv": {
+      "why": "\"18 units required.\" (the stored floor was 12)",
+      "patch": {
+        "units": 18
+      }
+    },
+    "DHJsjWsj": {
+      "why": "\"In addition, students complete at least 16 other residency units from any subject code. These may include MATSCI 300: PhD Research units beyond the required 75 units, other engineering courses, MATSCI 400: Participation in Materials Science Teaching, or a maximum of three units MATSCI 299: Practical Training.\"",
+      "replace": {
+        "t": "courses",
+        "name": "Additional Residency Units",
+        "mode": "units",
+        "units": 16,
+        "pool": {
+          "anySubject": true
+        },
+        "limits": [
+          {
+            "label": "MATSCI 299 Practical Training",
+            "maxUnits": 3,
+            "codes": [
+              "MATSCI 299"
+            ]
+          }
+        ]
+      }
+    },
+    "zoS0iwAX": {
+      "why": "\"Aligning with an advisor is an essential milestone in the PhD program and is required for making satisfactory degree progress\" \"PhD students are expected to match with an advisor and submit the Declaration of Advisor Form to the Student Services Office by the end of their second quarter.\"",
+      "patch": {
+        "info": null,
+        "manual": "milestone"
+      }
+    },
+    "JORq2aHk": {
+      "why": "\"Students must complete a PhD Program Proposal form in their first month of study.\"",
+      "patch": {
+        "name": "Program Milestone: PhD Program Proposal Form",
+        "manual": "milestone"
+      }
+    },
+    "Xq2ta9iX": {
+      "why": "\"PhD students must apply for a MATSCI MS degree after the PhD Qualifying Examination, as a requirement for Advancement to PhD Candidacy.\" \"If the student has previously completed a MS degree in Materials Science at an external institution, they may waive this requirement.\"",
+      "patch": {
+        "name": "Program Milestone: Addition of MATSCI MS Degree Program",
+        "manual": "milestone"
+      }
+    },
+    "G33mjuV5": {
+      "why": "\"The PhD Final Completion Form must be submitted after the student completes the minimum 135 units of coursework, and no later than one academic quarter before students transition to Terminal Graduate Registration (TGR) Status.\"",
+      "patch": {
+        "name": "Program Milestone: PhD Final Completion Form and TGR Status",
+        "manual": "milestone"
+      }
+    },
+    "kS01wHct": {
+      "why": "\"Students must submit the Green Light Form signed by their advisor no later than six months prior to the planned PhD Defense Exam or the beginning of the student's fifth year in the program, whichever comes first.\"",
+      "patch": {
+        "name": "Program Milestone: Green Light Form",
+        "manual": "milestone"
+      }
+    },
+    "a98E6OCZ": {
+      "why": "\"A departmental Qualifying Examination must be taken by March 1 of the second year. The minimum standard for admission to the PhD Qualifying Exam is completion of the five MATSCI core courses with a GPA of 3.50 or better and satisfactory research progress with a declared advisor.\"",
+      "patch": {
+        "name": "Program Milestone: Qualifying Exam",
+        "manual": "exam"
+      }
+    },
+    "EVevD65d": {
+      "why": "\"This form details the degree requirements to be met by the individual student during the PhD Candidacy period\" \"All deviations must be approved by the Director of Graduate Studies and the Student Services Office.\"",
+      "patch": {
+        "name": "Program Milestone: Candidacy Form",
+        "manual": "milestone"
+      }
+    },
+    "Zw7JqTBN": {
+      "why": "\"The student is responsible for requesting an Oral Examination by submitting a University Oral Defense Exam form ... at least three weeks before the date proposed for the examination.\"",
+      "patch": {
+        "name": "Program Milestone: Oral Defense Examining Committee Form",
+        "manual": "milestone"
+      }
+    },
+    "RLjtubJY": {
+      "why": "\"Before being awarded a PhD degree, the candidate must successfully pass a University Oral Examination that is a Dissertation Defense.\"",
+      "patch": {
+        "name": "Oral Dissertation Defense Examination",
+        "manual": "exam"
+      }
+    },
+    "bsUMTBSG": {
+      "why": "\"The student proposes the reading committee by submitting a Doctoral Dissertation Reading Committee Form to the Office of Student Services.\" \"Students must submit their Doctoral Dissertation Reading Committee form to be eligible for Terminal Graduate Registration (TGR) Status.\"",
+      "patch": {
+        "name": "Program Milestone: Dissertation Reading Committee Form",
+        "manual": "milestone"
+      }
+    },
+    "uD8YfYo1": {
+      "why": "\"A dissertation based on a successful investigation of a fundamental problem in materials science and engineering is required.\"",
+      "patch": {
+        "name": "Dissertation Submission",
+        "manual": "thesis"
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "0GzLObTh",
+      "node": {
+        "id": "ov-safety",
+        "t": "text",
+        "name": "Onsite Safety Training during Graduate Orientation",
+        "manual": "milestone"
+      },
+      "why": "\"Onsite Safety Training is required of all incoming PhD students during the week of Graduate Orientation.\""
+    },
+    {
+      "block": "0GzLObTh",
+      "node": {
+        "id": "ov-gpa",
+        "t": "text",
+        "name": "Cumulative GPA of 3.0 in all courses at Stanford",
+        "manual": "gpa"
+      },
+      "why": "GPA: \"Students must maintain a cumulative GPA of 3.0 in all courses taken at Stanford.\""
+    },
+    {
+      "block": "0GzLObTh",
+      "node": {
+        "id": "ov-each-quarter",
+        "t": "text",
+        "name": "At least one course each quarter that applies to the PhD",
+        "manual": "other"
+      },
+      "why": "\"Students must take at least one course each quarter of enrollment that applies to their doctoral degree program requirements.\""
+    }
+  ]
+}

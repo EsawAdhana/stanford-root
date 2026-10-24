@@ -1,0 +1,45 @@
+{
+  "code": "PHYS-MIN",
+  "reviewed": "2026-10-23",
+  "summary": "The audit checks the introductory physics courses (the renumbered labs count under either number), MATH 51-53 or 61CM-63CM, and two more advanced physics courses from the list, 36 units in all. Every course must be letter graded with a C- or better, except the introductory courses offered only S/NC. Checked by hand: waivers of PHYSICS 41 or 43 after the placement diagnostic, and petitions to substitute math or introductory physics courses.",
+  "nodes": {
+    "lpJzguih": {
+      "why": "Notes: \"Physics 79L - This course was offered as PHYSICS 89L prior to Academic Year 2025-2026. Students requiring 89L credit may use this course to satisfy that requirement.\" \"Physics 81L - This course is new to the department as of the Academic Year 2025-2026. Students requiring credit for 71L may take this course to satisfy that requirement.\"",
+      "patch": {
+        "items": [
+          [
+            "PHYSICS 41"
+          ],
+          [
+            "PHYSICS 43"
+          ],
+          [
+            "PHYSICS 61"
+          ],
+          [
+            "PHYSICS 61L"
+          ],
+          [
+            "PHYSICS 71"
+          ],
+          [
+            "PHYSICS 79L",
+            "PHYSICS 89L"
+          ],
+          [
+            "PHYSICS 81"
+          ],
+          [
+            "PHYSICS 81L",
+            "PHYSICS 71L"
+          ]
+        ]
+      }
+    }
+  },
+  "program": {
+    "letterGrade": true,
+    "minGrade": "C-",
+    "why": "Grading: \"All courses for the Physics minor must be taken for a letter grade, and a grade of C- or better must be received for all units applied toward the minor, with the following exceptions: a grade of S is acceptable for PHYSICS 41, 61, 61L, 71L (or 81L), and 89L (or 79L).\" Those courses are offered only S/NC, which the letter-grade rule allows."
+  }
+}

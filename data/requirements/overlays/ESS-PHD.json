@@ -1,0 +1,49 @@
+{
+  "code": "ESS-PHD",
+  "reviewed": "2026-10-23",
+  "summary": "Required courses must be letter graded where a letter grade is offered. You take the three first-year core courses (ESS 305, 306 and 307) and one course in each of the three distribution areas, for 135 graduate units with your research. Your advisor checks the 3.0 GPA, the four letter-graded graduate courses of at least 3 units from four different faculty, and the three first-year graduate courses from two ESS faculty; petitioned area courses are moved in by hand. The department records annual reviews, the two TA quarters, the qualifying exam, the oral exam and the dissertation.",
+  "blocks": {
+    "PGtlOm3w": { "kind": "required" },
+    "MpK9cbqm": { "kind": "required" },
+    "ofqDwlr6": { "kind": "required" },
+    "iwHWtFFx": { "kind": "required" }
+  },
+  "nodes": {
+    "HZHswCdH": { "why": "Grading: \"Required courses must be taken for a letter grade if offered\"", "patch": { "letter": true } },
+    "EiFLA8am": { "why": "Grading: \"Required courses must be taken for a letter grade if offered\"", "patch": { "letter": true } },
+    "3Ih5rVr4": { "why": "Grading: \"Required courses must be taken for a letter grade if offered\"", "patch": { "letter": true } },
+    "MzjuSxDA": { "why": "Grading: \"Required courses must be taken for a letter grade if offered\"", "patch": { "letter": true } },
+    "Ju0Rx1eH": {
+      "why": "\"Annual reviews are required for all PhD students, including first-year PhD students.\"",
+      "patch": { "manual": "milestone" }
+    },
+    "fW2BFlAV": {
+      "why": "\"As a program requirement, students in ESS complete a minimum of two TA quarters.\"",
+      "patch": { "info": null, "manual": "milestone" }
+    },
+    "DHDVmLRs": {
+      "why": "Candidacy \"occurs when a student passes a qualifying exam and completes their required coursework\"; \"The qualifying process consists of two components: Evaluation of a written document containing a proposal ... An oral examination\".",
+      "patch": { "info": null, "name": "Qualifying exam and advancement to candidacy", "manual": "exam" }
+    },
+    "aAfndup1": {
+      "why": "\"The doctoral dissertation is defended in the university oral examination.\"",
+      "patch": { "info": null, "name": "University oral exam", "manual": "exam" }
+    },
+    "n8IwmsUW": {
+      "why": "\"the candidate must prepare a doctoral dissertation that is a contribution to knowledge and is the result of independent research.\"",
+      "patch": { "info": null, "name": "Dissertation", "manual": "thesis" }
+    }
+  },
+  "add": [
+    {
+      "block": "0GzLObTh",
+      "why": "GPA: \"Students must maintain at least a 3.0-grade point average.\" Annual Review: the student should \"maintain a 3.0 grade-point average\".",
+      "node": { "id": "ov-ess-phd-gpa", "t": "text", "name": "Maintain a 3.0 GPA", "manual": "gpa" }
+    },
+    {
+      "block": "0GzLObTh",
+      "why": "Policies: \"PhD students must complete a minimum of four graduate-level, letter-grade courses of at least three units each from four different faculty members.\" \"By the end of the spring quarter of their first year in residence, students must complete at least three graduate-level courses taught by a minimum of two ESS faculty members.\" Instructors are not in the course data, so this is checked by hand.",
+      "node": { "id": "ov-ess-phd-faculty", "t": "text", "name": "Four letter-graded graduate courses of 3+ units from four different faculty, and three first-year courses from two ESS faculty", "manual": "other" }
+    }
+  ]
+}

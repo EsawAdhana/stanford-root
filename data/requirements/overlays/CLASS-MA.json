@@ -1,0 +1,276 @@
+{
+  "code": "CLASS-MA",
+  "reviewed": "2026-10-23",
+  "summary": "Pick one subplan. Language and Literature: the Latin or Greek syntax sequence, the second-language course, and 45 units with at least 25 numbered 200 and above. Classical Archaeology: CLASSICS 331 with a B or better, 15 graduate units in classical archaeology with a B or better, and 45 units with at least 25 numbered 200 and above. Ancient History: 20 units of graduate CLASSICS courses, 10 graduate units in other programs and 15 units of Greek or Latin at the 100 level or higher, with at least 30 units numbered 200 and above. No course below the 100 level counts toward the 45 units. You check by hand the Greek or Latin translation exam, the thesis or its equivalent, the modern language reading exam, the Program Proposal, and which courses are in classical archaeology or Greek and Latin.",
+  "program": {
+    "totals": [
+      {
+        "label": "25 graduate-level units (200 and above)",
+        "minUnits": 25,
+        "pool": {
+          "anySubject": true,
+          "minNumber": 200
+        },
+        "when": "A5KGm6QW",
+        "why": "Language and Literature: \"A minimum of 25 of the 45 units must be graduate-level courses (generally 200-level or higher, but not always). The remaining units must be at the 100-level or higher.\" A graduate course numbered below 200 is moved in by hand."
+      },
+      {
+        "label": "25 graduate-level units (200 and above)",
+        "minUnits": 25,
+        "pool": {
+          "anySubject": true,
+          "minNumber": 200
+        },
+        "when": "8PmB0kGy",
+        "why": "Classical Archaeology: \"A minimum of 25 of the 45 units must be graduate-level courses (generally 200-level or higher, but not always). The remaining units must be at the 100-level or higher.\" A graduate course numbered below 200 is moved in by hand."
+      },
+      {
+        "label": "30 graduate-level units (200 and above)",
+        "minUnits": 30,
+        "pool": {
+          "anySubject": true,
+          "minNumber": 200
+        },
+        "when": "9ZIV1RIQ",
+        "why": "Ancient History: \"A minimum of 30 of the 45 units must be graduate-level courses (generally 200-level or higher, but not always) and the remaining 15 units of work must be at the 100-level or higher.\""
+      },
+      {
+        "label": "Courses below the 100 level",
+        "maxUnits": 0,
+        "pool": {
+          "anySubject": true,
+          "maxNumber": 99
+        },
+        "why": "Every subplan: \"The remaining units must be at the 100-level or higher\" (Ancient History: \"the remaining 15 units of work must be at the 100-level or higher\")."
+      }
+    ]
+  },
+  "blocks": {
+    "A5KGm6QW": {
+      "units": 45
+    },
+    "8PmB0kGy": {
+      "units": 45
+    }
+  },
+  "nodes": {
+    "cnE0ox8u": {
+      "why": "\"A minimum of 25 of the 45 units must be graduate-level courses (generally 200-level or higher, but not always). The remaining units must be at the 100-level or higher.\" Encoded as program totals (25 units numbered 200 and above in this subplan, nothing below 100).",
+      "patch": {
+        "info": true,
+        "manual": null
+      }
+    },
+    "y8zNX8BK": {
+      "why": "\"Completion of one Greek language course at the 100 level (if the undergraduate major field of study was Latin) or one Latin language course at the 100 level (if the undergraduate major field of study was Greek). This requirement is waived for students with an undergraduate major in Classics with a field of study in Greek and Latin.\" Which language depends on the undergraduate major and the text names no course, so the student moves the course in, or marks it waived.",
+      "patch": {
+        "manual": "other",
+        "n": 1
+      }
+    },
+    "IxBMzMe5": {
+      "why": "\"Passing a Greek or Latin language examination testing the candidate's ability to translate into English from a selected list of Greek or Latin authors.\"",
+      "patch": {
+        "manual": "exam"
+      }
+    },
+    "6NZ646WM": {
+      "why": "\"Completion of the syntax sequence in at least one language. For Latin, this is CLASSICS 204 Latin Syntax and CLASSICS 210 Latin Prose Composition. For Greek, this is CLASSICS 205 Greek Syntax and Classics 211G - Greek Prose Composition.\" The data accepted any two of the four. The rule's notes link CLASSICS 204 alone for Latin and CLASSICS 205 with CLASSICS 205B for Greek; the description's pairs are used, and a student who took 205B instead of 211G is moved in by hand.",
+      "replace": {
+        "t": "any",
+        "name": "4. Syntax Sequence",
+        "children": [
+          {
+            "id": "ov-syntax-latin",
+            "t": "courses",
+            "name": "Latin syntax sequence",
+            "mode": "all",
+            "items": [
+              [
+                "CLASSICS 204"
+              ],
+              [
+                "CLASSICS 210"
+              ]
+            ]
+          },
+          {
+            "id": "ov-syntax-greek",
+            "t": "courses",
+            "name": "Greek syntax sequence",
+            "mode": "all",
+            "items": [
+              [
+                "CLASSICS 205"
+              ],
+              [
+                "CLASSICS 211G"
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    "kd7xERTs": {
+      "why": "\"Writing a thesis, or passing of an examination on a particular author or topic, or having written work accepted by the graduate committee as an equivalent.\"",
+      "patch": {
+        "manual": "thesis"
+      }
+    },
+    "KPvZ0U4x": {
+      "why": "\"Students must pass a modern language reading exam in one of the following languages:\" German, French, or Italian (notes).",
+      "patch": {
+        "manual": "exam"
+      }
+    },
+    "Yir18p0b": {
+      "why": "\"Completion and approval of a Program Proposal for a Master's Degree form during the first quarter of enrollment, at least five days prior to the Final Study List deadline.\"",
+      "patch": {
+        "manual": "approval"
+      }
+    },
+    "ZbIOPzvc": {
+      "why": "\"A minimum of 25 of the 45 units must be graduate-level courses (generally 200-level or higher, but not always). The remaining units must be at the 100-level or higher.\" Encoded as program totals (25 units numbered 200 and above in this subplan, nothing below 100).",
+      "patch": {
+        "info": true,
+        "manual": null
+      }
+    },
+    "VQsO21G3": {
+      "why": "\"Completion with a grade of B or higher of at least 15 units of graduate-level courses in classical archaeology, in addition to CLASSICS331\". The Bulletin lists no classical archaeology courses, so the student moves them in and the grades are checked by hand.",
+      "patch": {
+        "manual": "approval",
+        "units": 15
+      }
+    },
+    "pzoMN2kt": {
+      "why": "\"Passing a Greek or Latin language examination testing the candidate's ability to translate into English from a selected list of Greek or Latin authors.\"",
+      "patch": {
+        "manual": "exam"
+      }
+    },
+    "vaUeT4qy": {
+      "why": "\"Completion with a grade of B or higher of CLASSICS331 ... or an equivalent course on the history of thought in classical archaeology approved by the Graduate Studies Committee.\" An approved equivalent is moved in by hand.",
+      "patch": {
+        "minGrade": "B"
+      }
+    },
+    "7Upp09SF": {
+      "why": "\"Writing a thesis, or passing an exam on a particular topic, or having written work accepted by the graduate committee as an equivalent.\"",
+      "patch": {
+        "manual": "thesis"
+      }
+    },
+    "IJWIGLOf": {
+      "why": "\"Students must pass a modern language reading exam in one of the following languages:\" German, French, or Italian (notes).",
+      "patch": {
+        "manual": "exam"
+      }
+    },
+    "tYJobeMZ": {
+      "why": "\"Completion and approval of a Program Proposal for a Master's Degree form during the first quarter of enrollment, at least five days prior to the Final Study List deadline.\"",
+      "patch": {
+        "manual": "approval"
+      }
+    },
+    "sq9yyOfe": {
+      "why": "\"A minimum of 30 of the 45 units must be graduate-level courses (generally 200-level or higher, but not always) and the remaining 15 units of work must be at the 100-level or higher.\" Encoded as program totals (30 units numbered 200 and above in this subplan, nothing below 100); rule pYt6HICn also asks for 20 graduate CLASSICS units and 10 elsewhere.",
+      "patch": {
+        "info": true
+      }
+    },
+    "pYt6HICn": {
+      "why": "\"Satisfactory completion of 20 units of graduate-level courses in Classics and of 10 units of graduate-level courses in other programs.\" Graduate-level is read as 200 and above (\"generally 200-level or higher, but not always\"); an exception is moved in by hand.",
+      "replace": {
+        "t": "all",
+        "name": "2. Graduate-level courses in Classics and in other programs",
+        "children": [
+          {
+            "id": "ov-ah-classics",
+            "t": "courses",
+            "name": "20 units of graduate-level CLASSICS courses",
+            "mode": "units",
+            "units": 20,
+            "pool": {
+              "subjects": [
+                "CLASSICS"
+              ],
+              "minNumber": 200
+            }
+          },
+          {
+            "id": "ov-ah-other",
+            "t": "courses",
+            "name": "10 units of graduate-level courses in other programs",
+            "mode": "units",
+            "units": 10,
+            "pool": {
+              "anySubject": true,
+              "excludeSubjects": [
+                "CLASSICS"
+              ],
+              "minNumber": 200
+            }
+          }
+        ]
+      }
+    },
+    "q5IZWTpc": {
+      "why": "\"Satisfactory completion of 15 additional units of courses in either ancient Greek or Latin at the 100-level or higher.\" The text names no courses, and whether a course is taught in Greek or Latin is not in the catalog data, so the student moves the courses in.",
+      "patch": {
+        "manual": "approval",
+        "units": 15
+      }
+    },
+    "0YKuYKFC": {
+      "why": "\"Writing a thesis, or passing an exam on a particular topic, or having written work accepted by the Graduate Committee as an equivalent.\"",
+      "patch": {
+        "manual": "thesis"
+      }
+    },
+    "PyjqaD39": {
+      "why": "\"Students must pass a modern language reading exam in one of the following languages:\" German, French, or Italian (notes).",
+      "patch": {
+        "manual": "exam"
+      }
+    },
+    "vj94YdxS": {
+      "why": "\"Completion and approval of a Program Proposal for a Master's Degree form during the first quarter of enrollment, at least five days prior to the Final Study List deadline.\"",
+      "patch": {
+        "manual": "approval"
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "A5KGm6QW",
+      "node": {
+        "id": "ov-units-A5KGm6QW",
+        "t": "courses",
+        "name": "Further courses at the 100 level or higher toward the 45 units",
+        "mode": "any",
+        "optional": true,
+        "pool": {
+          "anySubject": true,
+          "minNumber": 100
+        }
+      },
+      "why": "\"A minimum of 25 of the 45 units must be graduate-level courses ... The remaining units must be at the 100-level or higher.\" Every course toward the 45 (the block floor) is at the 100 level or higher; this rule counts the ones no other rule takes."
+    },
+    {
+      "block": "8PmB0kGy",
+      "node": {
+        "id": "ov-units-8PmB0kGy",
+        "t": "courses",
+        "name": "Further courses at the 100 level or higher toward the 45 units",
+        "mode": "any",
+        "optional": true,
+        "pool": {
+          "anySubject": true,
+          "minNumber": 100
+        }
+      },
+      "why": "\"A minimum of 25 of the 45 units must be graduate-level courses ... The remaining units must be at the 100-level or higher.\" Every course toward the 45 (the block floor) is at the 100 level or higher; this rule counts the ones no other rule takes."
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "code": "HMN GEN-MS",
+  "reviewed": "2026-10-23",
+  "summary": "The audit checks the 84 units, the 21 required courses, 13 units of GENE 276 fieldwork, 3 units of GENE 283 research, six quarters of GENE 284 and three of GENE 286, with every course passed with B- or better, Satisfactory or Credit. Checked by hand: the research elective you choose with your advisor, about six quarters of rotations, the Graduate Student Research Project, the service and outreach requirement, and the Grand Rounds and Journal Club presentations. Transfer credit is not accepted.",
+  "program": {
+    "minGrade": "B-",
+    "why": "GPA: \"Students must earn minimum grades of B- or better, Satisfactory, or Credit.\" Overview: \"84 units, including all of the required coursework as listed below (minimum grades of B- or better, Satisfactory, or Credit)\"."
+  },
+  "nodes": {
+    "rUTIDJu4": {
+      "why": "\"Students are required to complete 6 quarters of GENE 284.\" GENE 284 is a repeatable 1-unit course, so six quarters are 6 units; a count of six could not be met by one listed course.",
+      "patch": {
+        "mode": "units",
+        "units": 6,
+        "n": null
+      }
+    },
+    "uLcMNPPK": {
+      "why": "\"Students are required to complete 3 quarters of GENE 286.\" GENE 286 is a repeatable 2-unit course, so three quarters are 6 units.",
+      "patch": {
+        "mode": "units",
+        "units": 6,
+        "n": null
+      }
+    },
+    "pIrKPUT4": {
+      "why": "\"Complete one research elective course. A course may be chosen in conversation with a student's advisor.\"",
+      "patch": {
+        "n": 1,
+        "manual": "approval"
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "mAbEGmbJ",
+      "why": "Overview: \"84 units, including all of the required coursework as listed below (minimum grades of B- or better, Satisfactory, or Credit)\" is the program's unit minimum and grade floor; \"Approximately six quarters of rotations and independent study projects in diverse settings\".",
+      "node": {
+        "id": "ov-hmngen-ms-rotations",
+        "t": "text",
+        "name": "About six quarters of rotations and independent study projects",
+        "manual": "milestone"
+      }
+    },
+    {
+      "block": "mAbEGmbJ",
+      "why": "Overview: \"All required aspects of the Graduate Student Research Project\"",
+      "node": {
+        "id": "ov-hmngen-ms-research",
+        "t": "text",
+        "name": "Graduate Student Research Project",
+        "manual": "thesis"
+      }
+    },
+    {
+      "block": "mAbEGmbJ",
+      "why": "Overview: \"All required aspects of the Service and Outreach Requirement\"",
+      "node": {
+        "id": "ov-hmngen-ms-service",
+        "t": "text",
+        "name": "Service and Outreach Requirement",
+        "manual": "other"
+      }
+    },
+    {
+      "block": "mAbEGmbJ",
+      "why": "Overview: \"Formal presentations in Medical Genetics Grand Rounds and Human Genetics Journal Club\"",
+      "node": {
+        "id": "ov-hmngen-ms-presentations",
+        "t": "text",
+        "name": "Presentations in Medical Genetics Grand Rounds and Human Genetics Journal Club",
+        "manual": "milestone"
+      }
+    }
+  ]
+}

@@ -1,0 +1,93 @@
+{
+  "code": "HSTRY-PHD",
+  "reviewed": "2026-10-23",
+  "summary": "The audit checks the 135 graduate units and HISTORY 304 and 305, taken for a letter grade with B+ or better; American History students also take the HISTORY 351 core colloquia. You move in the two research seminars (letter graded, A- or better, one in your major concentration), the four secondary concentration courses (letter graded) and your field's core colloquium (letter graded, B+ or better). Checked by hand: your primary area, which courses fit the secondary concentration and the B+ floor on its History courses, four quarters of teaching, candidacy, the oral exam, the dissertation and the language requirement.",
+  "blocks": {
+    "iwHWtFFx": {
+      "kind": "required"
+    },
+    "fR3Rniuh": {
+      "kind": "required"
+    }
+  },
+  "nodes": {
+    "X3JPrWP1": {
+      "why": "\"For first-year and second-year PhD students in American History\"; \"Other Graduate Core Colloquia required for PhD students studying in fields other than the above are listed in the Department of History's Graduate Handbook.\" Required only in one field, and the program has no field subplans. Grading: \"The Department accepts no grade below an A- for a research seminar, and no grade below a B+ for other courses taken to fulfill degree requirements in the History Department.\" \"All courses taken to fulfill degree requirements must be taken for a letter grade.\" Set on the course rules, not program-wide: directed reading \"may be taken CR/NC if it does not apply directly to degree requirements\", and such units still count toward the 135.",
+      "patch": {
+        "optional": true,
+        "letter": true,
+        "minGrade": "B+"
+      }
+    },
+    "XQKtGFcQ": {
+      "why": "\"Upon enrolling and in consultation with the advisor, students select an area of study from the list below in which to concentrate their study and later take the university oral examination.\"",
+      "patch": {
+        "manual": "approval"
+      }
+    },
+    "vDnDfTcE": {
+      "why": "\"each student, in consultation with the advisor, defines a secondary concentration. This concentration should represent four graduate courses or their equivalents\" Grading: \"All courses taken to fulfill degree requirements must be taken for a letter grade. This includes courses outside the History Department used to fulfill a secondary field.\" The B+ floor covers only History Department courses, so it is not set here.",
+      "patch": {
+        "n": 4,
+        "manual": "approval",
+        "letter": true
+      }
+    },
+    "XSA2YFmy": {
+      "why": "\"The department seeks to provide a core colloquium in every major concentration. Students typically enroll in this colloquium during the first year\"; with the note that other fields' core colloquia \"are listed in the Department of History's Graduate Handbook\", which the Bulletin does not include. Grading: \"no grade below a B+ for other courses taken to fulfill degree requirements in the History Department\" and \"All courses taken to fulfill degree requirements must be taken for a letter grade.\"",
+      "patch": {
+        "manual": "approval",
+        "letter": true,
+        "minGrade": "B+"
+      }
+    },
+    "TXR7zAgY": {
+      "why": "\"Students must take two research seminars, at least one in the major concentration.\" Candidacy also asks that both be \"completed ... with an A- or better\"; the seminars are not listed, so a person checks both. Grading: \"The Department accepts no grade below an A- for a research seminar\". The grade floor now applies to the seminars a student moves in, so a B+ seminar (\"A grade of B+ in a research seminar ... is regarded as the equivalent of a failure\") no longer counts.",
+      "patch": {
+        "n": 2,
+        "manual": "approval",
+        "letter": true,
+        "minGrade": "A-"
+      }
+    },
+    "kzPl8j8O": {
+      "why": "\"All students are required to complete four quarters of teaching by the end of their third year\"",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "GrHln024": {
+      "why": "\"Students are expected to complete qualifying procedures and apply for candidacy by the end of their second year\"",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "VF8dNzhI": {
+      "why": "\"the oral exam is a mastery-of-field exam in the student's field/major concentration\"",
+      "patch": {
+        "manual": "exam"
+      }
+    },
+    "keltmbAv": {
+      "why": "\"The student must complete and submit a dissertation that is the result of independent work and contributes to knowledge.\" A requirement, not information.",
+      "patch": {
+        "info": null,
+        "manual": "thesis"
+      }
+    },
+    "sHyEMFiU": {
+      "why": "\"A reading knowledge of one or more foreign languages is required in concentrations where appropriate ... language competence certification must be accomplished before a student takes the university oral examination.\"",
+      "patch": {
+        "info": null,
+        "manual": "exam"
+      }
+    },
+    "g7Q0284S": {
+      "why": "Grading: \"The Department accepts no grade below an A- for a research seminar, and no grade below a B+ for other courses taken to fulfill degree requirements in the History Department.\" \"All courses taken to fulfill degree requirements must be taken for a letter grade.\" Set on the course rules, not program-wide: directed reading \"may be taken CR/NC if it does not apply directly to degree requirements\", and such units still count toward the 135.",
+      "patch": {
+        "letter": true,
+        "minGrade": "B+"
+      }
+    }
+  }
+}

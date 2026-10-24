@@ -1,0 +1,86 @@
+{
+  "code": "SLAV-MA",
+  "reviewed": "2026-10-23",
+  "summary": "You take 36 units of SLAVIC courses at the 200 level or above for a letter grade, plus 9 more units your graduate advisor approves, for 45 units; Russian courses at the third-year level or below do not count. The Russian placement exams, the qualifying paper or final examination, and the expected B+ in each course (lower grades are reviewed by the faculty) are checked by hand.",
+  "program": {
+    "why": "Grading: \"MA students in the department must take required courses for a letter grade if available\". The B+ is an expectation reviewed by the faculty (\"The grade stands, and the student's academic performance is monitored\"), not a floor on what counts.",
+    "totals": [
+      {
+        "label": "Third-year Russian and below",
+        "maxUnits": 0,
+        "pool": {
+          "subjects": [
+            "RUSSLANG"
+          ],
+          "maxNumber": 199
+        },
+        "why": "Overview: \"Coursework in third-year Russian and below carries no credit toward the MA degree.\" First- to third-year Russian are RUSSLANG 1-199. It carries no credit toward any requirement either, so the cap binds the rules (a third-year course moved into the remaining 9 units does not count there).",
+        "inRules": true
+      }
+    ]
+  },
+  "nodes": {
+    "DEmT0jlK": {
+      "why": "\"The Qualifying paper represents a complete article-length research paper (6,000-9,000 words) ... A final examination may substitute for the Qualifying paper requirement.\"",
+      "replace": {
+        "t": "any",
+        "name": "Qualifying Paper or Final Examination",
+        "children": [
+          {
+            "id": "ov-qualifying-paper",
+            "t": "text",
+            "name": "Qualifying paper (6,000-9,000 words)",
+            "manual": "thesis"
+          },
+          {
+            "id": "ov-final-exam",
+            "t": "text",
+            "name": "MA final examination",
+            "manual": "exam"
+          }
+        ]
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "mAbEGmbJ",
+      "node": {
+        "id": "ov-dept-200",
+        "t": "courses",
+        "name": "36 units of department courses at the 200 level or above",
+        "mode": "units",
+        "units": 36,
+        "pool": {
+          "subjects": [
+            "SLAVIC"
+          ],
+          "minNumber": 200
+        },
+        "letter": true
+      },
+      "why": "\"Candidates for the MA must complete a program of 45 units, of which 36 units must be 200-level or above, selected from courses given by the department.\" Grading: \"MA students in the department must take required courses for a letter grade if available\"."
+    },
+    {
+      "block": "mAbEGmbJ",
+      "node": {
+        "id": "ov-other-units",
+        "t": "text",
+        "name": "Remaining 9 units, approved by the graduate advisor",
+        "units": 9,
+        "manual": "approval"
+      },
+      "why": "The rest of the \"program of 45 units\". \"Coursework in third-year Russian and below carries no credit toward the MA degree.\" and \"Coursework should be planned in consultation with the graduate advisor, whose approval of the overall course load is required.\""
+    },
+    {
+      "block": "mAbEGmbJ",
+      "node": {
+        "id": "ov-placement",
+        "t": "text",
+        "name": "Russian placement examinations (and any remedial courses)",
+        "manual": "exam"
+      },
+      "why": "\"Before registering for the first quarter’s work in the department, entering graduate students are required to take placement examinations in Russian. Students who fail to perform satisfactorily on such examinations must register for remedial courses\""
+    }
+  ]
+}

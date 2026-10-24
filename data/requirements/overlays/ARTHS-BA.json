@@ -1,0 +1,83 @@
+{
+  "code": "ARTHS-BA",
+  "reviewed": "2026-10-23",
+  "summary": "Every course must be taken for a letter grade and for at least four units, toward the 65 units the major needs; ARTHIST courses beyond the named requirements count toward that total. The audit checks the core courses, a 4-unit ARTSTUDI course, three survey courses, two courses in each temporal category and each geographic category, and a FILMEDIA course. A course fills one temporal and one geographic category, and survey, concentration and FILMEDIA courses may also fill categories; the audit cannot stop one course from filling two geographic categories, so check that yourself. You check by hand the three-course area of concentration, the library orientation, at most two courses (10 units) taken away from Stanford, and for honors 10 units of ARTHIST 297, the thesis and the 3.5 GPAs.",
+  "program": {
+    "letterGrade": true,
+    "why": "Grading: \"Courses must be taken for at least four units and for a letter grade.\" The four-unit minimum is set on each rule."
+  },
+  "nodes": {
+    "cAvLOmma": {
+      "why": "Grading: \"Courses must be taken for at least four units and for a letter grade.\"",
+      "patch": { "minUnitsEach": 4 }
+    },
+    "IjBY7g0P": {
+      "why": "Grading: \"Courses must be taken for at least four units and for a letter grade.\"",
+      "patch": { "minUnitsEach": 4 }
+    },
+    "kpb4CvrY": {
+      "why": "Grading: \"Courses must be taken for at least four units and for a letter grade.\"",
+      "patch": { "minUnitsEach": 4 }
+    },
+    "wsemC8Hy": {
+      "why": "Grading: \"Courses must be taken for at least four units and for a letter grade.\"",
+      "patch": { "minUnitsEach": 4 }
+    },
+    "ABWturXn": {
+      "why": "\"Complete any four-unit Art Practice (ARTSTUDI) course\"",
+      "replace": { "t": "courses", "name": "Art Practice Course", "mode": "atLeast", "n": 1, "minUnitsEach": 4, "pool": { "subjects": ["ARTSTUDI"] } }
+    },
+    "Xqn1PXDT": {
+      "why": "\"Survey Courses and courses taken in the Area of Concentration may apply toward Distribution Categories.\" Grading: \"Courses must be taken for at least four units and for a letter grade.\"",
+      "patch": { "shares": true, "minUnitsEach": 4 }
+    },
+    "S3Rxycel": {
+      "why": "\"Majors must take two courses in each of 6 Distribution Categories: three temporal and three geographic. Any individual course satisfies one temporal and one geographic category.\" Encoded by the category rules below; the ITALIC or SLE year counting as an elective is a note.",
+      "patch": { "info": true }
+    },
+    "PvHwLqOg": {
+      "why": "\"Any individual course satisfies one temporal and one geographic category.\" The geographic categories share courses with the temporal ones. Grading: \"Courses must be taken for at least four units and for a letter grade.\"",
+      "patch": { "shares": true, "minUnitsEach": 4 }
+    },
+    "mHW71Iwa": {
+      "why": "\"Any individual course satisfies one temporal and one geographic category.\" The geographic categories share courses with the temporal ones. Grading: \"Courses must be taken for at least four units and for a letter grade.\"",
+      "patch": { "shares": true, "minUnitsEach": 4 }
+    },
+    "g3qbXuQz": {
+      "why": "\"Any individual course satisfies one temporal and one geographic category.\" The geographic categories share courses with the temporal ones. Grading: \"Courses must be taken for at least four units and for a letter grade.\"",
+      "patch": { "shares": true, "minUnitsEach": 4 }
+    },
+    "zygxTxIf": {
+      "why": "\"Complete any four- or five-unit Film & Media Studies (FILMEDIA) course. Survey courses, course Introduction to Film Study and course Media and Mediums, and the FILMEDIA courses within the 1850 to Present Temporal Distribution may count towards this requirement.\" It shares with those rules.",
+      "replace": { "t": "courses", "name": "Film & Media Studies Course", "mode": "atLeast", "n": 1, "minUnitsEach": 4, "pool": { "subjects": ["FILMEDIA"] }, "shares": true }
+    },
+    "AeWVegR8": {
+      "why": "\"students must complete an area of concentration form, identifying their chosen concentration and three courses to fulfill it ... one seminar (200-level) course within the area of concentration ... two ARTHIST courses of any level within the area of concentration\", approved by the faculty advisor. \"courses taken in the Area of Concentration may apply toward Distribution Categories\", so it shares.",
+      "patch": { "n": 3, "manual": "approval", "shares": true }
+    },
+    "lH85Tv9Y": {
+      "why": "\"Honors students must complete a total of 10 units of course during their senior year.\" (ARTHIST 297), \"Students must submit the final draft of their honors thesis to their faculty advisor, the second faculty reader\", and \"The minimum requirement for admission to the honors program is an overall GPA of 3.5 and at least 3.5 in Art History courses.\"",
+      "replace": {
+        "t": "all",
+        "name": "Honors",
+        "children": [
+          { "id": "ov-arthsba-honors-297", "t": "courses", "name": "10 units of ARTHIST 297 in the senior year", "mode": "units", "units": 10, "items": [["ARTHIST 297"]] },
+          { "id": "ov-arthsba-honors-thesis", "t": "text", "name": "Honors thesis submitted to the advisor and second reader", "manual": "thesis" },
+          { "id": "ov-arthsba-honors-gpa", "t": "text", "name": "GPA of 3.5 overall and in Art History courses", "manual": "gpa" }
+        ]
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "6Jp5TYIk",
+      "why": "The Bulletin's \"Minimum Units in the Program\" is 65, and \"Completing a full year of ITALIC or SLE may count as an Art History elective.\" The named requirements can share courses and fall short of 65, so further Art History courses count toward the total. Grading: \"Courses must be taken for at least four units\".",
+      "node": { "id": "ov-remaining", "t": "courses", "name": "Remaining units of the 65-unit minimum, in Art History", "mode": "any", "pool": { "subjects": ["ARTHIST"] }, "minUnitsEach": 4, "optional": true }
+    },
+    {
+      "block": "qKH2YfwY",
+      "why": "Other requirements: \"library orientation, junior seminar\". The junior seminar is ARTHIST 296, in the core.",
+      "node": { "id": "ov-library", "t": "text", "name": "Library orientation", "manual": "other" }
+    }
+  ]
+}

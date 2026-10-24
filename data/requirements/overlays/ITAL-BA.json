@@ -1,0 +1,464 @@
+{
+  "code": "ITAL-BA",
+  "reviewed": "2026-10-23",
+  "summary": "You choose the Italian Culture, Italian Literature, or Italian and Philosophy subplan. The audit checks the 60 units (66 with Italian and Philosophy), the subplan's courses, WIM and capstone, and electives from 100- and 200-level ITALIAN courses, up to three Italian language courses at or above ITALLANG 21 (12 units) and up to 10 SLE units, with at most 12 units of ITALIAN 199. Every course needs a C or better and a letter grade, except up to 10 PHIL units in the Philosophy subplan. Checked by hand: the OPI, ITALLANG 22A or the equivalent, which courses were taught in Italian, electives from other departments, Bing Overseas Florence, ESF and Digital Humanities, transfer units (up to 12 with approval) and the honors thesis.",
+  "program": {
+    "minGrade": "C",
+    "why": "GPA: \"A grade point average (GPA) of 2.0 or better must be achieved in each course.\" Grading: \"passed with at least a 'C'\".",
+    "totals": [
+      {
+        "label": "66 units with the Italian and Philosophy subplan",
+        "minUnits": 66,
+        "when": "56OogNz8",
+        "why": "\"The Italian and Philosophy subplan requires 66 units.\""
+      },
+      {
+        "label": "CR/NC Philosophy units",
+        "maxUnits": 10,
+        "grading": "not-letter",
+        "pool": {
+          "subjects": [
+            "PHIL"
+          ]
+        },
+        "when": "56OogNz8",
+        "why": "\"Up to ten units of courses taken in the Philosophy department may be taken 'CR/NC' or 'S/NC'; the remainder must be taken for a letter grade.\""
+      },
+      {
+        "label": "Independent study (ITALIAN 199)",
+        "maxUnits": 12,
+        "codes": [
+          "ITALIAN 199"
+        ],
+        "why": "Electives: \"Independent Study. No more than 12 units of coursework for the major should be taken as independent study courses.\""
+      },
+      {
+        "label": "SLE units",
+        "maxUnits": 10,
+        "pool": {
+          "subjects": [
+            "SLE"
+          ]
+        },
+        "why": "Electives: \"Structured Liberal Education. Students may count ten units of SLE coursework towards their major elective totals.\""
+      }
+    ]
+  },
+  "blocks": {
+    "C1QdCJFM": {
+      "units": null
+    },
+    "kSSQhehP": {
+      "units": null
+    }
+  },
+  "nodes": {
+    "MHes4EQp": {
+      "why": "\"Students must complete two courses in Italian for a total of 8 units.\" The 8 units were on the whole subplan, which now also holds its WIM and capstone.",
+      "patch": {
+        "units": 8
+      }
+    },
+    "AENy4QrT": {
+      "why": "\"Students must complete two courses in Italian for a total of 8 units.\" The 8 units were on the whole subplan, which now also holds its WIM and capstone. Grading: \"All courses applied to the Italian Culture and Literature subplans must be taken for a letter grade and passed with at least a 'C'.\" Italian and Philosophy Subplan: \"Up to ten units of courses taken in the Philosophy department may be taken 'CR/NC' or 'S/NC'; the remainder must be taken for a letter grade.\" So every non-PHIL rule is letter graded. Unnamed on the page; named for its courses.",
+      "patch": {
+        "units": 8,
+        "letter": true,
+        "name": "ITALIAN 128 and 129 (8 units)"
+      }
+    },
+    "kc6yAeEZ": {
+      "why": "\"Students should refer to their specific subplan for required course lists.\"",
+      "patch": {
+        "info": true
+      }
+    },
+    "pjBnFmMi": {
+      "why": "\"Students must take the Oral Proficiency Interview (OPI) through the Stanford Language Center two quarters prior to degree conferral.\"",
+      "patch": {
+        "manual": "exam"
+      }
+    },
+    "mDuxoUbB": {
+      "why": "\"Elective courses to meet the 60 unit major minimum can be taken within the following parameters.\" \"Additional ITALIAN courses taught by Italian faculty (may be taught in English or Italian) at the 100- or 200-level.\" \"Up to three language courses in Italian at or above ITALLANG 21, such as ITALLANG22 and 23 or ITALIAN 21A and 22A for a maximum of 12 units\" (there is no ITALIAN 21A or 22A; ITALLANG 21A and 22A are in the ITALLANG pool). \"Students may count ten units of SLE coursework\" (a program cap). Courses in other departments, Bing Overseas Florence, ESF (up to ten units, taught partly by department faculty) and Digital Humanities (up to five units) need approval or a judgment, so they are moved in by hand. Grading: \"All courses applied to the Italian Culture and Literature subplans must be taken for a letter grade and passed with at least a 'C'.\" Italian and Philosophy Subplan: \"Up to ten units of courses taken in the Philosophy department may be taken 'CR/NC' or 'S/NC'; the remainder must be taken for a letter grade.\" So every non-PHIL rule is letter graded. ITALLANG 205A-C (\"Intensive First-Year Italian for Stanford Grads\") are numbered above 21 but are first-year language, so they are not \"at or above ITALLANG 21\".",
+      "replace": {
+        "t": "all",
+        "name": "Electives",
+        "children": [
+          {
+            "id": "ov-ital-ba-italian",
+            "t": "courses",
+            "name": "ITALIAN courses at the 100 or 200 level",
+            "mode": "any",
+            "optional": true,
+            "letter": true,
+            "pool": {
+              "subjects": [
+                "ITALIAN"
+              ],
+              "minNumber": 100,
+              "maxNumber": 299
+            }
+          },
+          {
+            "id": "ov-ital-ba-lang",
+            "t": "courses",
+            "name": "Italian language courses at or above ITALLANG 21 (up to three, 12 units)",
+            "mode": "any",
+            "optional": true,
+            "letter": true,
+            "pool": {
+              "subjects": [
+                "ITALLANG"
+              ],
+              "minNumber": 21,
+              "exclude": [
+                "ITALLANG 205A",
+                "ITALLANG 205B",
+                "ITALLANG 205C"
+              ]
+            },
+            "limits": [
+              {
+                "label": "Italian language courses",
+                "max": 3,
+                "maxUnits": 12,
+                "pool": {
+                  "subjects": [
+                    "ITALLANG"
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "id": "ov-ital-ba-sle",
+            "t": "courses",
+            "name": "SLE courses (up to 10 units)",
+            "mode": "any",
+            "optional": true,
+            "letter": true,
+            "pool": {
+              "subjects": [
+                "SLE"
+              ]
+            }
+          },
+          {
+            "id": "ov-ital-ba-approved",
+            "t": "text",
+            "name": "Approved courses: other departments on Italian topics, Bing Overseas Florence, ESF (up to 10 units), Digital Humanities (up to 5 units)",
+            "manual": "approval",
+            "optional": true
+          }
+        ]
+      }
+    },
+    "G7v1u80Z": {
+      "why": "The WIM and capstone sections list one rule per subplan (\"Italian Culture & Italian Literature Writing in the Major\", \"Italian and Philosophy Writing in the Major\", \"Italian Culture Capstone Experience\", \"Italian Literature Capstone Experience\", \"Italian and Philosophy Capstone Experience\"); each moves into its subplan so a student is held only to their own.",
+      "remove": true
+    },
+    "A040wHho": {
+      "why": "The WIM and capstone sections list one rule per subplan (\"Italian Culture & Italian Literature Writing in the Major\", \"Italian and Philosophy Writing in the Major\", \"Italian Culture Capstone Experience\", \"Italian Literature Capstone Experience\", \"Italian and Philosophy Capstone Experience\"); each moves into its subplan so a student is held only to their own.",
+      "remove": true
+    },
+    "PZl3cEwV": {
+      "why": "The WIM and capstone sections list one rule per subplan (\"Italian Culture & Italian Literature Writing in the Major\", \"Italian and Philosophy Writing in the Major\", \"Italian Culture Capstone Experience\", \"Italian Literature Capstone Experience\", \"Italian and Philosophy Capstone Experience\"); each moves into its subplan so a student is held only to their own.",
+      "remove": true
+    },
+    "bEKzfYNF": {
+      "why": "The WIM and capstone sections list one rule per subplan (\"Italian Culture & Italian Literature Writing in the Major\", \"Italian and Philosophy Writing in the Major\", \"Italian Culture Capstone Experience\", \"Italian Literature Capstone Experience\", \"Italian and Philosophy Capstone Experience\"); each moves into its subplan so a student is held only to their own.",
+      "remove": true
+    },
+    "s3nhqSD6": {
+      "why": "The WIM and capstone sections list one rule per subplan (\"Italian Culture & Italian Literature Writing in the Major\", \"Italian and Philosophy Writing in the Major\", \"Italian Culture Capstone Experience\", \"Italian Literature Capstone Experience\", \"Italian and Philosophy Capstone Experience\"); each moves into its subplan so a student is held only to their own.",
+      "remove": true
+    },
+    "SqaINdeQ": {
+      "why": "\"Students must complete two courses in Italian for a total of 8 units. This should be either 128, 129, or one other course at 4 units each, taught in Italian.\" At least one of ITALIAN 128/129. Grading: \"All courses applied to the Italian Culture and Literature subplans must be taken for a letter grade and passed with at least a 'C'.\" Italian and Philosophy Subplan: \"Up to ten units of courses taken in the Philosophy department may be taken 'CR/NC' or 'S/NC'; the remainder must be taken for a letter grade.\" So every non-PHIL rule is letter graded.",
+      "patch": {
+        "mode": "atLeast",
+        "n": 1,
+        "minUnitsEach": 4,
+        "letter": true
+      }
+    },
+    "e2RyKjE4": {
+      "why": "\"Students have the option to take a different course in Italian paired with either ITALIAN 128 or ITALIAN 129.\" The second course is the other of 128/129, or another course taught in Italian, which is moved in by hand since language of instruction is not in the data.",
+      "replace": {
+        "t": "any",
+        "name": "Second course in Italian",
+        "children": [
+          {
+            "id": "ov-second-listed",
+            "t": "courses",
+            "name": "The other of ITALIAN 128 or 129",
+            "mode": "atLeast",
+            "n": 1,
+            "items": [
+              [
+                "ITALIAN 128"
+              ],
+              [
+                "ITALIAN 129"
+              ]
+            ],
+            "minUnitsEach": 4,
+            "letter": true
+          },
+          {
+            "id": "ov-second-other",
+            "t": "text",
+            "name": "Another course taught in Italian (4 units)",
+            "manual": "approval",
+            "n": 1
+          }
+        ]
+      }
+    },
+    "aHJVnWka": {
+      "why": "\"Students must complete one additional course in Italian.\" Language of instruction is not in the data.",
+      "patch": {
+        "manual": "approval",
+        "n": 1
+      }
+    },
+    "OkIIEXeh": {
+      "why": "\"Students should choose one additional ITALIAN course taught in Italian.\" Language of instruction is not in the data.",
+      "patch": {
+        "manual": "approval",
+        "n": 1
+      }
+    },
+    "wRpbJNzp": {
+      "why": "\"Complete AT LEAST 10 units of ITALIAN coursework in either Italian or English.\" Grading: \"All courses applied to the Italian Culture and Literature subplans must be taken for a letter grade and passed with at least a 'C'.\" Italian and Philosophy Subplan: \"Up to ten units of courses taken in the Philosophy department may be taken 'CR/NC' or 'S/NC'; the remainder must be taken for a letter grade.\" So every non-PHIL rule is letter graded.",
+      "replace": {
+        "t": "courses",
+        "name": "Studies in Italian Culture (10 ITALIAN units)",
+        "mode": "units",
+        "units": 10,
+        "pool": {
+          "subjects": [
+            "ITALIAN"
+          ]
+        }
+      },
+      "patch": {
+        "letter": true
+      }
+    },
+    "esMgeUsF": {
+      "why": "The rule names one course, ITALIAN 181 (\"This course should be taken as early as possible\"); the 10 units belong to \"Studies in Italian Culture\" (\"Complete AT LEAST 10 units of ITALIAN coursework\"), not to the gateway. Grading: \"All courses applied to the Italian Culture and Literature subplans must be taken for a letter grade and passed with at least a 'C'.\" Italian and Philosophy Subplan: \"Up to ten units of courses taken in the Philosophy department may be taken 'CR/NC' or 'S/NC'; the remainder must be taken for a letter grade.\" So every non-PHIL rule is letter graded.",
+      "patch": {
+        "units": null,
+        "letter": true
+      }
+    },
+    "A1CIBg4f": {
+      "why": "\"Complete AT LEAST 2 courses from the PHIL100-139 course set.\"",
+      "replace": {
+        "t": "courses",
+        "name": "History of Philosophy",
+        "mode": "atLeast",
+        "n": 2,
+        "pool": {
+          "subjects": [
+            "PHIL"
+          ],
+          "minNumber": 100,
+          "maxNumber": 139
+        }
+      }
+    },
+    "8UVcWue5": {
+      "why": "\"Two additional elective courses of particular relevance to studying philosophy and literature. Students must consult with the Director of Undergraduate Studies (DUS) in Italian.\"",
+      "patch": {
+        "manual": "approval",
+        "n": 2
+      }
+    },
+    "Q18BFUDw": {
+      "why": "Grading: \"All courses applied to the Italian Culture and Literature subplans must be taken for a letter grade and passed with at least a 'C'.\" Italian and Philosophy Subplan: \"Up to ten units of courses taken in the Philosophy department may be taken 'CR/NC' or 'S/NC'; the remainder must be taken for a letter grade.\" So every non-PHIL rule is letter graded.",
+      "patch": {
+        "letter": true
+      }
+    },
+    "MRruGN1T": {
+      "why": "Grading: \"All courses applied to the Italian Culture and Literature subplans must be taken for a letter grade and passed with at least a 'C'.\" Italian and Philosophy Subplan: \"Up to ten units of courses taken in the Philosophy department may be taken 'CR/NC' or 'S/NC'; the remainder must be taken for a letter grade.\" So every non-PHIL rule is letter graded. Unnamed on the page; named for its courses.",
+      "patch": {
+        "letter": true,
+        "name": "ITALIAN 128 and 129"
+      }
+    },
+    "LExhLwvP": {
+      "why": "Grading: \"All courses applied to the Italian Culture and Literature subplans must be taken for a letter grade and passed with at least a 'C'.\" Italian and Philosophy Subplan: \"Up to ten units of courses taken in the Philosophy department may be taken 'CR/NC' or 'S/NC'; the remainder must be taken for a letter grade.\" So every non-PHIL rule is letter graded. Unnamed on the page: \"To earn honors, students must complete a minimum of 9 units\".",
+      "patch": {
+        "letter": true,
+        "name": "Honors: 9 units of DLCL 189H"
+      }
+    },
+    "r9rls4zV": {
+      "why": "Policies encoded elsewhere: the 66 units and the 10-unit CR/NC Philosophy cap are program totals while this subplan is chosen. \"Substitutions and transfer credits are generally not permitted\" and the SLE replacement of one history of philosophy and one upper-division Italian course are moved by hand.",
+      "patch": {
+        "info": true
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "C1QdCJFM",
+      "node": {
+        "id": "ov-wim-culture",
+        "t": "courses",
+        "name": "Writing in the Major (WIM): ITALIAN 189",
+        "mode": "all",
+        "items": [
+          [
+            "ITALIAN 189"
+          ]
+        ],
+        "minUnitsEach": 5,
+        "shares": true,
+        "desc": "Students must take ITALIAN 189 for 5 units in order to receive WIM credit.",
+        "letter": true
+      },
+      "why": "The WIM and capstone sections list one rule per subplan (\"Italian Culture & Italian Literature Writing in the Major\", \"Italian and Philosophy Writing in the Major\", \"Italian Culture Capstone Experience\", \"Italian Literature Capstone Experience\", \"Italian and Philosophy Capstone Experience\"); each moves into its subplan so a student is held only to their own. \"Students must take ITALIAN 189 for 5 units in order to receive WIM credit.\""
+    },
+    {
+      "block": "kSSQhehP",
+      "node": {
+        "id": "ov-wim-literature",
+        "t": "courses",
+        "name": "Writing in the Major (WIM): ITALIAN 189",
+        "mode": "all",
+        "items": [
+          [
+            "ITALIAN 189"
+          ]
+        ],
+        "minUnitsEach": 5,
+        "shares": true,
+        "desc": "Students must take ITALIAN 189 for 5 units in order to receive WIM credit.",
+        "letter": true
+      },
+      "why": "The WIM and capstone sections list one rule per subplan (\"Italian Culture & Italian Literature Writing in the Major\", \"Italian and Philosophy Writing in the Major\", \"Italian Culture Capstone Experience\", \"Italian Literature Capstone Experience\", \"Italian and Philosophy Capstone Experience\"); each moves into its subplan so a student is held only to their own. \"Students must take ITALIAN 189 for 5 units in order to receive WIM credit.\""
+    },
+    {
+      "block": "56OogNz8",
+      "node": {
+        "id": "ov-wim-philosophy",
+        "t": "courses",
+        "name": "Writing in the Major (WIM): PHIL 80",
+        "mode": "all",
+        "items": [
+          [
+            "PHIL 80"
+          ]
+        ],
+        "shares": true
+      },
+      "why": "The WIM and capstone sections list one rule per subplan (\"Italian Culture & Italian Literature Writing in the Major\", \"Italian and Philosophy Writing in the Major\", \"Italian Culture Capstone Experience\", \"Italian Literature Capstone Experience\", \"Italian and Philosophy Capstone Experience\"); each moves into its subplan so a student is held only to their own. PHIL 80 is also the subplan's Philosophy Literature Requirement, so the two share it."
+    },
+    {
+      "block": "C1QdCJFM",
+      "node": {
+        "id": "ov-capstone-culture",
+        "t": "courses",
+        "name": "Italian Culture Capstone Experience",
+        "mode": "units",
+        "units": 3,
+        "items": [
+          [
+            "ITALIAN 199"
+          ]
+        ],
+        "shares": true,
+        "desc": "In their senior year, students must enroll in a three-unit Independent Study to prepare a final project that reflects their coursework in the major. In consultation with the Director of Undergraduate Studies, students choose a project from a menu of options. Options include but are not limited to a creative project or short essay. Students will present this project to the faculty of the department before graduation.",
+        "letter": true
+      },
+      "why": "The WIM and capstone sections list one rule per subplan (\"Italian Culture & Italian Literature Writing in the Major\", \"Italian and Philosophy Writing in the Major\", \"Italian Culture Capstone Experience\", \"Italian Literature Capstone Experience\", \"Italian and Philosophy Capstone Experience\"); each moves into its subplan so a student is held only to their own. \"students must enroll in a three-unit Independent Study to prepare a final project\""
+    },
+    {
+      "block": "kSSQhehP",
+      "node": {
+        "id": "ov-capstone-literature",
+        "t": "courses",
+        "name": "Italian Literature Capstone Experience",
+        "mode": "units",
+        "units": 3,
+        "items": [
+          [
+            "ITALIAN 199"
+          ]
+        ],
+        "shares": true,
+        "desc": "In their senior year, students must enroll in a three-unit Independent Study to prepare a final project that reflects their coursework in the major. In consultation with the Director of Undergraduate Studies, students choose a project from a menu of options. Options include but are not limited to a creative project or short essay. Students will present this project to the faculty of the department before graduation.",
+        "letter": true
+      },
+      "why": "The WIM and capstone sections list one rule per subplan (\"Italian Culture & Italian Literature Writing in the Major\", \"Italian and Philosophy Writing in the Major\", \"Italian Culture Capstone Experience\", \"Italian Literature Capstone Experience\", \"Italian and Philosophy Capstone Experience\"); each moves into its subplan so a student is held only to their own. \"students must enroll in a three-unit Independent Study to prepare a final project\""
+    },
+    {
+      "block": "56OogNz8",
+      "node": {
+        "id": "s3nhqSD6",
+        "t": "any",
+        "name": "Italian and Philosophy Capstone Experience",
+        "children": [
+          {
+            "id": "a2Qg76Fp",
+            "t": "text",
+            "name": "Philosophy and Literature Capstone Seminar",
+            "manual": "approval",
+            "n": 1,
+            "desc": "Students must take one course designated as a philosophy and literature capstone. Their choice of capstone seminar must be approved by the Director of Undergraduate Studies (DUS) and the Faculty Advisor for Philosophy."
+          },
+          {
+            "id": "Dl7nH3Ji",
+            "t": "courses",
+            "name": "Honors Thesis",
+            "mode": "units",
+            "units": 9,
+            "items": [
+              [
+                "DLCL 189H"
+              ]
+            ],
+            "shares": true,
+            "desc": "Students majoring in any DLCL department (i.e., Comparative Literature, French and Italian, German Studies, Iberian and Latin American Cultures, and Slavic Languages and Literatures) who have an overall grade point average (GPA) of 3.3 or above and who maintain a 3.5 (GPA) in their major courses, are eligible to participate in the DLCL’s honors program.\nSee the Honors webpage for more information.\nProgram Requirements\nTo earn honors, students must complete a minimum of 9 units, submit a thesis, and present at the Honors Colloquium at the end of their senior year.",
+            "letter": true
+          },
+          {
+            "id": "E6UVqchT",
+            "t": "text",
+            "name": "5,000-word Topic Paper",
+            "manual": "approval",
+            "n": 1,
+            "desc": "The student will write a 5,000-word paper on a topic of their choosing, serving as the culmination of their work in the field.\nTo write the paper, students must enroll in a 3-unit, letter-grade independent study with a faculty member (or affiliate) in the Philosophy and Literature Focal Group. The paper must involve philosophy and literature, and the faculty member must approve the topic by the add/drop deadline."
+          }
+        ]
+      },
+      "why": "The WIM and capstone sections list one rule per subplan (\"Italian Culture & Italian Literature Writing in the Major\", \"Italian and Philosophy Writing in the Major\", \"Italian Culture Capstone Experience\", \"Italian Literature Capstone Experience\", \"Italian and Philosophy Capstone Experience\"); each moves into its subplan so a student is held only to their own. Options: a capstone seminar \"approved by the Director of Undergraduate Studies (DUS) and the Faculty Advisor for Philosophy\"; the DLCL honors thesis (\"a minimum of 9 units, submit a thesis\"); or the topic paper written in \"a 3-unit, letter-grade independent study\"."
+    },
+    {
+      "block": "ZCRIjLPA",
+      "node": {
+        "id": "ov-honors-thesis",
+        "t": "text",
+        "name": "Honors thesis and Honors Colloquium",
+        "manual": "thesis"
+      },
+      "why": "\"To earn honors, students must complete a minimum of 9 units, submit a thesis, and present at the Honors Colloquium at the end of their senior year.\""
+    },
+    {
+      "block": "GZOmJK4W",
+      "parent": "riYadTqK",
+      "why": "Other requirements: \"Gateway course; ITALLANG22A or equiv.; Oral Proficiency Interview (OPI)\". Equivalents (placement, other second-year courses) need a judgment.",
+      "node": {
+        "id": "ov-ital-ba-itallang22a",
+        "t": "text",
+        "name": "ITALLANG 22A or the equivalent",
+        "manual": "approval"
+      }
+    }
+  ]
+}

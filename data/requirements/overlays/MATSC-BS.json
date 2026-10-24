@@ -1,0 +1,1182 @@
+{
+  "code": "MATSC-BS",
+  "reviewed": "2026-10-23",
+  "summary": "The audit checks the School of Engineering requirements (39 combined units of Math and Science, at least 16 of them Science, Technology in Society, and 7 units of Engineering Fundamentals), the 25 units of Materials Science Fundamentals, four depth lab courses for 15 units, one focus area of three courses for 9 units including a MATSCI course, WIM and a capstone track. Every course must be letter graded when the instructor offers a letter grade, with a C or better. Checked by hand: the 2.7 combined GPA, a self-defined focus area, a petitioned non-MatSci lab course, up to six units of MATSCI 150 an honors student counts toward the focus area (they still count for honors, but not as the focus area's MATSCI course), and AP credit toward the science units. Honors is optional.",
+  "nodes": {
+    "sysaahi8": {
+      "why": "\"39 units minimum combined (Math & Science)\" (on Mathematics) and \"16 units minimum\" (on Science). Science moves under one Math and Science rule that carries the combined 39-unit floor; see ReGttkxg.",
+      "remove": true
+    },
+    "ReGttkxg": {
+      "why": "Mathematics says \"39 units minimum combined (Math & Science)\" and Science says \"16 units minimum\". The two groups are now children of one rule with the 39-unit floor, Science keeping its own 16-unit floor. The physics labs the notes say \"can be taken to help you meet the 39 unit minimum\" are on no list and are moved in by hand.",
+      "replace": {
+        "t": "all",
+        "name": "Mathematics and Science (39 units combined)",
+        "units": 39,
+        "children": [
+          {
+            "id": "UNQy0HTs",
+            "name": "Mathematics Requirements",
+            "notes": "AP credit is also acceptable and must be approved by the Dean’s office.",
+            "t": "all",
+            "children": [
+              {
+                "id": "0CMbouFD",
+                "name": "Calculus Fundamentals",
+                "notes": "All exceptions including AP/IB credit are approved by the School of Engineering.",
+                "t": "courses",
+                "items": [
+                  [
+                    "MATH 19"
+                  ],
+                  [
+                    "MATH 20"
+                  ],
+                  [
+                    "MATH 21"
+                  ]
+                ],
+                "mode": "all"
+              },
+              {
+                "id": "CTOixi6x",
+                "name": "Advanced Calculus",
+                "t": "courses",
+                "items": [
+                  [
+                    "CME 100",
+                    "ENGR 154"
+                  ],
+                  [
+                    "MATH 51"
+                  ]
+                ],
+                "mode": "atLeast",
+                "n": 1
+              },
+              {
+                "id": "hjsuEjUi",
+                "name": "Differential Equations",
+                "t": "courses",
+                "items": [
+                  [
+                    "CME 102",
+                    "ENGR 155A"
+                  ],
+                  [
+                    "MATH 53"
+                  ]
+                ],
+                "mode": "atLeast",
+                "n": 1
+              },
+              {
+                "id": "EfNJNYCQ",
+                "name": "Math/Statistics",
+                "notes": "Or more advanced Statistics courses numbered over 100 via approval of a petition to deviate.\n\nCME 106 or STATS 110 are recommended.",
+                "t": "courses",
+                "items": [
+                  [
+                    "CEE 203"
+                  ],
+                  [
+                    "CME 106"
+                  ],
+                  [
+                    "CS 109"
+                  ],
+                  [
+                    "EE 178"
+                  ],
+                  [
+                    "MATH 151"
+                  ],
+                  [
+                    "MS&E 120"
+                  ],
+                  [
+                    "MS&E 125"
+                  ],
+                  [
+                    "STATS 60"
+                  ],
+                  [
+                    "STATS 110"
+                  ]
+                ],
+                "mode": "atLeast",
+                "n": 1
+              }
+            ]
+          },
+          {
+            "id": "sysaahi8",
+            "name": "Science",
+            "desc": "16 units minimum",
+            "notes": "AP credit is also acceptable and must be approved by the Dean's office.",
+            "t": "all",
+            "children": [
+              {
+                "id": "go8ADNFn",
+                "name": "Chemistry and Physics Fundamentals",
+                "t": "courses",
+                "items": [
+                  [
+                    "CHEM 31A",
+                    "CHEM 31E"
+                  ],
+                  [
+                    "PHYSICS 41",
+                    "PHYSICS 61"
+                  ],
+                  [
+                    "PHYSICS 43",
+                    "PHYSICS 81"
+                  ]
+                ],
+                "mode": "atLeast",
+                "n": 3
+              },
+              {
+                "id": "VJUBS91A",
+                "name": "Additional Science Course",
+                "notes": "AP credit is also acceptable and must be approved by the Dean’s office.\nIn some cases, AP/IB credit may also be used to meet the 16 units minimum; see the AP/IB credit chart in the Bulletin or check with the School of Engineering at the Huang Engineering Center, Room 135.\nPhysics laboratory courses are not required and do not count toward this one additional course requirement (i.e., PHYSICS 42, PHYSICS 44, PHYSICS 46, PHYSICS 61L, PHYSICS 71L, PHYSICS 89L), but these courses can be taken to help you meet the 39 unit minimum Math/Science requirement of the Major.",
+                "t": "courses",
+                "items": [
+                  [
+                    "BIO 45"
+                  ],
+                  [
+                    "BIO 47"
+                  ],
+                  [
+                    "BIO 81"
+                  ],
+                  [
+                    "BIO 82"
+                  ],
+                  [
+                    "BIO 83"
+                  ],
+                  [
+                    "BIO 84"
+                  ],
+                  [
+                    "BIO 85"
+                  ],
+                  [
+                    "BIO 86"
+                  ],
+                  [
+                    "BIO 150"
+                  ],
+                  [
+                    "CEE 63"
+                  ],
+                  [
+                    "CEE 64"
+                  ],
+                  [
+                    "CEE 70",
+                    "ENGR 90"
+                  ],
+                  [
+                    "CHEM 31A"
+                  ],
+                  [
+                    "CHEM 31B"
+                  ],
+                  [
+                    "CHEM 31E"
+                  ],
+                  [
+                    "CHEM 33"
+                  ],
+                  [
+                    "CHEM 121"
+                  ],
+                  [
+                    "CHEM 123"
+                  ],
+                  [
+                    "EARTHSYS 10"
+                  ],
+                  [
+                    "EPS 1"
+                  ],
+                  [
+                    "PHYSICS 41",
+                    "PHYSICS 41E"
+                  ],
+                  [
+                    "PHYSICS 43"
+                  ],
+                  [
+                    "PHYSICS 45"
+                  ],
+                  [
+                    "PHYSICS 61"
+                  ],
+                  [
+                    "PHYSICS 71"
+                  ],
+                  [
+                    "PHYSICS 81"
+                  ]
+                ],
+                "mode": "atLeast",
+                "n": 1
+              }
+            ],
+            "units": 16
+          }
+        ]
+      }
+    },
+    "UGmhozFX": {
+      "why": "\"Seven (7) units minimum.\"",
+      "patch": {
+        "units": 7
+      }
+    },
+    "RDzHlGqn": {
+      "why": "\"25 units minimum.\"",
+      "patch": {
+        "units": 25
+      }
+    },
+    "UVe4cUUB": {
+      "why": "\"Four laboratory courses for 15 units.\" The petition for one non-MatSci lab course is moved in by hand.",
+      "patch": {
+        "units": 15
+      }
+    },
+    "45ZiTZsa": {
+      "why": "\"Select three (3) courses within one of the focus areas for a minimum of 9 units.\" \"At least one course for the focus area must be a MATSCI course.\" \"Each focus area course must be at least three units and may not include seminars.\" Encoded as one MATSCI course from the track list plus two more from the whole list, at least 3 units each.",
+      "replace": {
+        "t": "all",
+        "name": "Biological Properties of Materials",
+        "units": 9,
+        "children": [
+          {
+            "id": "45ZiTZsa-matsci",
+            "t": "courses",
+            "name": "Biological Properties of Materials: one MATSCI course",
+            "mode": "atLeast",
+            "n": 1,
+            "minUnitsEach": 3,
+            "items": [
+              [
+                "MATSCI 190"
+              ],
+              [
+                "MATSCI 225"
+              ],
+              [
+                "MATSCI 333"
+              ],
+              [
+                "MATSCI 381"
+              ],
+              [
+                "MATSCI 384"
+              ],
+              [
+                "MATSCI 385"
+              ]
+            ]
+          },
+          {
+            "id": "45ZiTZsa-more",
+            "t": "courses",
+            "name": "Biological Properties of Materials: two more courses",
+            "mode": "atLeast",
+            "n": 2,
+            "minUnitsEach": 3,
+            "items": [
+              [
+                "APPPHYS 205"
+              ],
+              [
+                "BIOE 80"
+              ],
+              [
+                "BIOE 220"
+              ],
+              [
+                "BIOE 231"
+              ],
+              [
+                "BIOE 260"
+              ],
+              [
+                "BIOE 279"
+              ],
+              [
+                "BIOE 281"
+              ],
+              [
+                "BIOE 282"
+              ],
+              [
+                "ENGR 55"
+              ],
+              [
+                "MATSCI 190"
+              ],
+              [
+                "MATSCI 225"
+              ],
+              [
+                "MATSCI 333"
+              ],
+              [
+                "MATSCI 381"
+              ],
+              [
+                "MATSCI 384"
+              ],
+              [
+                "MATSCI 385"
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    "HhOCOS4L": {
+      "why": "\"Select three (3) courses within one of the focus areas for a minimum of 9 units.\" \"At least one course for the focus area must be a MATSCI course.\" \"Each focus area course must be at least three units and may not include seminars.\" Encoded as one MATSCI course from the track list plus two more from the whole list, at least 3 units each.",
+      "replace": {
+        "t": "all",
+        "name": "Chemical Properties of Materials",
+        "units": 9,
+        "children": [
+          {
+            "id": "HhOCOS4L-matsci",
+            "t": "courses",
+            "name": "Chemical Properties of Materials: one MATSCI course",
+            "mode": "atLeast",
+            "n": 1,
+            "minUnitsEach": 3,
+            "items": [
+              [
+                "MATSCI 181"
+              ],
+              [
+                "MATSCI 182"
+              ]
+            ]
+          },
+          {
+            "id": "HhOCOS4L-more",
+            "t": "courses",
+            "name": "Chemical Properties of Materials: two more courses",
+            "mode": "atLeast",
+            "n": 2,
+            "minUnitsEach": 3,
+            "items": [
+              [
+                "CHEM 126"
+              ],
+              [
+                "CHEM 171"
+              ],
+              [
+                "CHEM 175"
+              ],
+              [
+                "CHEMENG 110B"
+              ],
+              [
+                "CHEMENG 120B"
+              ],
+              [
+                "CHEMENG 130A"
+              ],
+              [
+                "CHEMENG 150"
+              ],
+              [
+                "CHEMENG 174"
+              ],
+              [
+                "CHEMENG 175X"
+              ],
+              [
+                "MATSCI 181"
+              ],
+              [
+                "MATSCI 182"
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    "JtqkolcQ": {
+      "why": "\"Select three (3) courses within one of the focus areas for a minimum of 9 units.\" \"At least one course for the focus area must be a MATSCI course.\" \"Each focus area course must be at least three units and may not include seminars.\" Encoded as one MATSCI course from the track list plus two more from the whole list, at least 3 units each.",
+      "replace": {
+        "t": "all",
+        "name": "Computational Materials Science",
+        "units": 9,
+        "children": [
+          {
+            "id": "JtqkolcQ-matsci",
+            "t": "courses",
+            "name": "Computational Materials Science: one MATSCI course",
+            "mode": "atLeast",
+            "n": 1,
+            "minUnitsEach": 3,
+            "items": [
+              [
+                "MATSCI 165"
+              ],
+              [
+                "MATSCI 166"
+              ],
+              [
+                "MATSCI 331"
+              ]
+            ]
+          },
+          {
+            "id": "JtqkolcQ-more",
+            "t": "courses",
+            "name": "Computational Materials Science: two more courses",
+            "mode": "atLeast",
+            "n": 2,
+            "minUnitsEach": 3,
+            "items": [
+              [
+                "CHEM 161"
+              ],
+              [
+                "CHEM 263"
+              ],
+              [
+                "CME 107"
+              ],
+              [
+                "CME 108"
+              ],
+              [
+                "CME 216"
+              ],
+              [
+                "CME 322"
+              ],
+              [
+                "CS 129"
+              ],
+              [
+                "MATSCI 165"
+              ],
+              [
+                "MATSCI 166"
+              ],
+              [
+                "MATSCI 331"
+              ],
+              [
+                "ME 123"
+              ],
+              [
+                "ME 335A"
+              ],
+              [
+                "PHYSICS 113"
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    "HL7dn4S9": {
+      "why": "\"Select three (3) courses within one of the focus areas for a minimum of 9 units.\" \"At least one course for the focus area must be a MATSCI course.\" \"Each focus area course must be at least three units and may not include seminars.\" Encoded as one MATSCI course from the track list plus two more from the whole list, at least 3 units each.",
+      "replace": {
+        "t": "all",
+        "name": "Electronics & Photonics Properties of Materials",
+        "units": 9,
+        "children": [
+          {
+            "id": "HL7dn4S9-matsci",
+            "t": "courses",
+            "name": "Electronics & Photonics Properties of Materials: one MATSCI course",
+            "mode": "atLeast",
+            "n": 1,
+            "minUnitsEach": 3,
+            "items": [
+              [
+                "MATSCI 152"
+              ],
+              [
+                "MATSCI 199"
+              ],
+              [
+                "MATSCI 317"
+              ],
+              [
+                "MATSCI 341"
+              ],
+              [
+                "MATSCI 346"
+              ]
+            ]
+          },
+          {
+            "id": "HL7dn4S9-more",
+            "t": "courses",
+            "name": "Electronics & Photonics Properties of Materials: two more courses",
+            "mode": "atLeast",
+            "n": 2,
+            "minUnitsEach": 3,
+            "items": [
+              [
+                "APPPHYS 201"
+              ],
+              [
+                "APPPHYS 204"
+              ],
+              [
+                "EE 101A"
+              ],
+              [
+                "EE 102A"
+              ],
+              [
+                "EE 116"
+              ],
+              [
+                "EE 117"
+              ],
+              [
+                "EE 134"
+              ],
+              [
+                "EE 153"
+              ],
+              [
+                "EE 157"
+              ],
+              [
+                "EE 212"
+              ],
+              [
+                "EE 216"
+              ],
+              [
+                "EE 218"
+              ],
+              [
+                "EE 222"
+              ],
+              [
+                "EE 223"
+              ],
+              [
+                "ENGR 240"
+              ],
+              [
+                "ENGR 241"
+              ],
+              [
+                "MATSCI 152"
+              ],
+              [
+                "MATSCI 199"
+              ],
+              [
+                "MATSCI 317"
+              ],
+              [
+                "MATSCI 341"
+              ],
+              [
+                "MATSCI 346"
+              ],
+              [
+                "ME 210"
+              ],
+              [
+                "ME 220"
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    "AFWlOkC7": {
+      "why": "\"Select three (3) courses within one of the focus areas for a minimum of 9 units.\" \"At least one course for the focus area must be a MATSCI course.\" \"Each focus area course must be at least three units and may not include seminars.\" Encoded as one MATSCI course from the track list plus two more from the whole list, at least 3 units each.",
+      "replace": {
+        "t": "all",
+        "name": "Materials for Energy Technology",
+        "units": 9,
+        "children": [
+          {
+            "id": "AFWlOkC7-matsci",
+            "t": "courses",
+            "name": "Materials for Energy Technology: one MATSCI course",
+            "mode": "atLeast",
+            "n": 1,
+            "minUnitsEach": 3,
+            "items": [
+              [
+                "MATSCI 156"
+              ],
+              [
+                "MATSCI 303"
+              ]
+            ]
+          },
+          {
+            "id": "AFWlOkC7-more",
+            "t": "courses",
+            "name": "Materials for Energy Technology: two more courses",
+            "mode": "atLeast",
+            "n": 2,
+            "minUnitsEach": 3,
+            "items": [
+              [
+                "BIOS 255"
+              ],
+              [
+                "CEE 107A"
+              ],
+              [
+                "CHEM 174"
+              ],
+              [
+                "EE 116"
+              ],
+              [
+                "EE 153"
+              ],
+              [
+                "EE 237"
+              ],
+              [
+                "EE 293B"
+              ],
+              [
+                "ENERGY 132"
+              ],
+              [
+                "ENERGY 153"
+              ],
+              [
+                "ENERGY 201C"
+              ],
+              [
+                "ENERGY 295"
+              ],
+              [
+                "MATSCI 156"
+              ],
+              [
+                "MATSCI 303"
+              ],
+              [
+                "PHYSICS 240"
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    "ypDMdx4S": {
+      "why": "\"Select three (3) courses within one of the focus areas for a minimum of 9 units.\" \"At least one course for the focus area must be a MATSCI course.\" \"Each focus area course must be at least three units and may not include seminars.\" Encoded as one MATSCI course from the track list plus two more from the whole list, at least 3 units each.",
+      "replace": {
+        "t": "all",
+        "name": "Materials Characterization",
+        "units": 9,
+        "children": [
+          {
+            "id": "ypDMdx4S-matsci",
+            "t": "courses",
+            "name": "Materials Characterization: one MATSCI course",
+            "mode": "atLeast",
+            "n": 1,
+            "minUnitsEach": 3,
+            "items": [
+              [
+                "MATSCI 236"
+              ],
+              [
+                "MATSCI 320"
+              ],
+              [
+                "MATSCI 321"
+              ],
+              [
+                "MATSCI 322"
+              ],
+              [
+                "MATSCI 323"
+              ],
+              [
+                "MATSCI 324"
+              ],
+              [
+                "MATSCI 326"
+              ],
+              [
+                "MATSCI 327"
+              ]
+            ]
+          },
+          {
+            "id": "ypDMdx4S-more",
+            "t": "courses",
+            "name": "Materials Characterization: two more courses",
+            "mode": "atLeast",
+            "n": 2,
+            "minUnitsEach": 3,
+            "items": [
+              [
+                "AA 252"
+              ],
+              [
+                "APPPHYS 201"
+              ],
+              [
+                "APPPHYS 222"
+              ],
+              [
+                "BIOE 220"
+              ],
+              [
+                "BIO 232"
+              ],
+              [
+                "CEE 192"
+              ],
+              [
+                "CHEM 131"
+              ],
+              [
+                "CHEM 174"
+              ],
+              [
+                "CHEM 176"
+              ],
+              [
+                "CHEMENG 345"
+              ],
+              [
+                "MATSCI 236"
+              ],
+              [
+                "MATSCI 320"
+              ],
+              [
+                "MATSCI 321"
+              ],
+              [
+                "MATSCI 322"
+              ],
+              [
+                "MATSCI 323"
+              ],
+              [
+                "MATSCI 324"
+              ],
+              [
+                "MATSCI 326"
+              ],
+              [
+                "MATSCI 327"
+              ],
+              [
+                "ME 149"
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    "lC65HkFW": {
+      "why": "\"Select three (3) courses within one of the focus areas for a minimum of 9 units.\" \"At least one course for the focus area must be a MATSCI course.\" \"Each focus area course must be at least three units and may not include seminars.\" Encoded as one MATSCI course from the track list plus two more from the whole list, at least 3 units each.",
+      "replace": {
+        "t": "all",
+        "name": "Mechanical Behavior & Materials Processing",
+        "units": 9,
+        "children": [
+          {
+            "id": "lC65HkFW-matsci",
+            "t": "courses",
+            "name": "Mechanical Behavior & Materials Processing: one MATSCI course",
+            "mode": "atLeast",
+            "n": 1,
+            "minUnitsEach": 3,
+            "items": [
+              [
+                "MATSCI 151"
+              ],
+              [
+                "MATSCI 163"
+              ],
+              [
+                "MATSCI 183"
+              ],
+              [
+                "MATSCI 198"
+              ],
+              [
+                "MATSCI 312"
+              ],
+              [
+                "MATSCI 358"
+              ]
+            ]
+          },
+          {
+            "id": "lC65HkFW-more",
+            "t": "courses",
+            "name": "Mechanical Behavior & Materials Processing: two more courses",
+            "mode": "atLeast",
+            "n": 2,
+            "minUnitsEach": 3,
+            "items": [
+              [
+                "AA 240"
+              ],
+              [
+                "AA 256"
+              ],
+              [
+                "AA 280"
+              ],
+              [
+                "CEE 305"
+              ],
+              [
+                "CHEMENG 170X"
+              ],
+              [
+                "ENGR 240"
+              ],
+              [
+                "ENGR 241"
+              ],
+              [
+                "MATSCI 151"
+              ],
+              [
+                "MATSCI 163"
+              ],
+              [
+                "MATSCI 183"
+              ],
+              [
+                "MATSCI 198"
+              ],
+              [
+                "MATSCI 312"
+              ],
+              [
+                "MATSCI 358"
+              ],
+              [
+                "ME 127"
+              ],
+              [
+                "ME 129"
+              ],
+              [
+                "ME 152"
+              ],
+              [
+                "ME 303"
+              ],
+              [
+                "ME 335A"
+              ],
+              [
+                "ME 340"
+              ],
+              [
+                "ME 345"
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    "7wPHOKea": {
+      "why": "\"Select three (3) courses within one of the focus areas for a minimum of 9 units.\" \"At least one course for the focus area must be a MATSCI course.\" \"Each focus area course must be at least three units and may not include seminars.\" Encoded as one MATSCI course from the track list plus two more from the whole list, at least 3 units each.",
+      "replace": {
+        "t": "all",
+        "name": "Materials Physics",
+        "units": 9,
+        "children": [
+          {
+            "id": "7wPHOKea-matsci",
+            "t": "courses",
+            "name": "Materials Physics: one MATSCI course",
+            "mode": "atLeast",
+            "n": 1,
+            "minUnitsEach": 3,
+            "items": [
+              [
+                "MATSCI 184"
+              ],
+              [
+                "MATSCI 185"
+              ],
+              [
+                "MATSCI 195"
+              ]
+            ]
+          },
+          {
+            "id": "7wPHOKea-more",
+            "t": "courses",
+            "name": "Materials Physics: two more courses",
+            "mode": "atLeast",
+            "n": 2,
+            "minUnitsEach": 3,
+            "items": [
+              [
+                "APPPHYS 201"
+              ],
+              [
+                "APPPHYS 203"
+              ],
+              [
+                "APPPHYS 204"
+              ],
+              [
+                "EE 222"
+              ],
+              [
+                "EE 223"
+              ],
+              [
+                "MATSCI 184"
+              ],
+              [
+                "MATSCI 185"
+              ],
+              [
+                "MATSCI 195"
+              ],
+              [
+                "PHYSICS 110"
+              ],
+              [
+                "PHYSICS 120"
+              ],
+              [
+                "PHYSICS 121"
+              ],
+              [
+                "PHYSICS 130"
+              ],
+              [
+                "PHYSICS 131"
+              ],
+              [
+                "PHYSICS 134"
+              ],
+              [
+                "PHYSICS 170"
+              ],
+              [
+                "PHYSICS 171"
+              ],
+              [
+                "PHYSICS 172"
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    "2TPhfs0z": {
+      "why": "\"Select three (3) courses within one of the focus areas for a minimum of 9 units.\" \"At least one course for the focus area must be a MATSCI course.\" \"Each focus area course must be at least three units and may not include seminars.\" Encoded as one MATSCI course from the track list plus two more from the whole list, at least 3 units each.",
+      "replace": {
+        "t": "all",
+        "name": "Nanomaterials & Nanotechnology",
+        "units": 9,
+        "children": [
+          {
+            "id": "2TPhfs0z-matsci",
+            "t": "courses",
+            "name": "Nanomaterials & Nanotechnology: one MATSCI course",
+            "mode": "atLeast",
+            "n": 1,
+            "minUnitsEach": 3,
+            "items": [
+              [
+                "MATSCI 160"
+              ],
+              [
+                "MATSCI 320"
+              ],
+              [
+                "MATSCI 327"
+              ],
+              [
+                "MATSCI 346"
+              ],
+              [
+                "MATSCI 380"
+              ]
+            ]
+          },
+          {
+            "id": "2TPhfs0z-more",
+            "t": "courses",
+            "name": "Nanomaterials & Nanotechnology: two more courses",
+            "mode": "atLeast",
+            "n": 2,
+            "minUnitsEach": 3,
+            "items": [
+              [
+                "APPPHYS 189"
+              ],
+              [
+                "CHEMENG 140X"
+              ],
+              [
+                "EE 212"
+              ],
+              [
+                "ENGR 240"
+              ],
+              [
+                "ENGR 241"
+              ],
+              [
+                "MATSCI 160"
+              ],
+              [
+                "MATSCI 320"
+              ],
+              [
+                "MATSCI 327"
+              ],
+              [
+                "MATSCI 346"
+              ],
+              [
+                "MATSCI 380"
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    "uO5V6QPh": {
+      "why": "\"Students may also define their own focus area containing a minimum of 9 units (3 courses) that comprise a cohesive program of study.\" \"The self-defined focus area option requires additional approval; program deviation forms for this option can be found on the MATSCI website.\"",
+      "patch": {
+        "manual": "approval",
+        "n": 3,
+        "units": 9
+      }
+    },
+    "TTf5oCGf": {
+      "why": "\"Have an overall GPA of 3.700 or higher ... at the time of application.\" \"Have taken ENGR 50 and at least six MATSCI courses.\" \"Seek out a Faculty Research Advisor and agree on a proposed research topic.\" \"Complete and submit an Honors Program application package\". ENGR 50 and the six MATSCI courses are courses already in the major, so they share.",
+      "replace": {
+        "t": "all",
+        "name": "To apply to the MATSCI Honors program",
+        "children": [
+          {
+            "id": "TTf5oCGf-engr50",
+            "t": "courses",
+            "name": "ENGR 50 taken",
+            "mode": "all",
+            "items": [
+              [
+                "ENGR 50"
+              ]
+            ],
+            "shares": true
+          },
+          {
+            "id": "TTf5oCGf-six",
+            "t": "courses",
+            "name": "At least six MATSCI courses taken",
+            "mode": "atLeast",
+            "n": 6,
+            "pool": {
+              "subjects": [
+                "MATSCI"
+              ]
+            },
+            "shares": true
+          },
+          {
+            "id": "TTf5oCGf-gpa",
+            "t": "text",
+            "name": "Overall GPA of 3.7 or higher at application",
+            "manual": "gpa"
+          },
+          {
+            "id": "TTf5oCGf-app",
+            "t": "text",
+            "name": "Faculty research advisor and honors application package",
+            "manual": "approval"
+          }
+        ]
+      }
+    },
+    "NtHJ1ZGC": {
+      "why": "\"Overall GPA of 3.7 or higher at the end of the quarter prior to degree conferral\" \"Complete at least three-quarters of research with a minimum of 9 units of MATSCI 150\" \"Present a poster presentation of thesis work at the MSE Research Symposium, or at a comparable public event.\" \"Submit final drafts of an Honors thesis to two faculty readers ... Both must approve the thesis\". The overview adds \"All requirements for the Honors Program are in addition to the standard undergraduate program requirements.\" The MATSCI 150 units also count where the major uses them: \"For students pursuing the Honor's Program, you may count up to six units of MATSCI 150 toward the focus area but cannot use these units to replace the MATSCI course minimum.\"",
+      "replace": {
+        "t": "all",
+        "name": "To complete the MATSCI Honors program",
+        "children": [
+          {
+            "id": "NtHJ1ZGC-150",
+            "t": "courses",
+            "name": "At least 9 units of MATSCI 150 over three quarters",
+            "mode": "units",
+            "units": 9,
+            "items": [
+              [
+                "MATSCI 150"
+              ]
+            ],
+            "shares": true
+          },
+          {
+            "id": "NtHJ1ZGC-gpa",
+            "t": "text",
+            "name": "Overall GPA of 3.7 or higher before degree conferral",
+            "manual": "gpa"
+          },
+          {
+            "id": "NtHJ1ZGC-poster",
+            "t": "text",
+            "name": "Poster presentation of thesis work",
+            "manual": "milestone"
+          },
+          {
+            "id": "NtHJ1ZGC-thesis",
+            "t": "text",
+            "name": "Honors thesis approved by two faculty readers",
+            "manual": "thesis"
+          }
+        ]
+      }
+    }
+  },
+  "program": {
+    "letterGrade": true,
+    "minGrade": "C",
+    "why": "GPA: \"All courses taken for the major must be taken for a letter grade if this option is offered by the instructor.\" Grading: \"The minimum grade in each course from all categories (Math, Science, TiS, Fundamentals, Depth, and Technical Electives) is a C.\""
+  },
+  "add": [
+    {
+      "block": "OzOiprAC",
+      "node": {
+        "id": "ov-gpa",
+        "t": "text",
+        "name": "Combined GPA of 2.7 for all major courses",
+        "manual": "gpa"
+      },
+      "why": "GPA: \"The minimum combined Grade Point Average for all courses (Math, Science, TiS, Fundamentals, Depth, and Technical Electives) is 2.7.\""
+    }
+  ]
+}

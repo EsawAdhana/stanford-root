@@ -1,0 +1,60 @@
+{
+  "code": "CPLIT-PMN",
+  "reviewed": "2026-10-23",
+  "summary": "The audit checks three graduate COMPLIT courses and 20 units in all, every course letter graded where a letter grade is offered. You move in by hand the three graduate courses in your second literature's department, and mark the literary theory seminar, the two non-native languages, and that two of the COMPLIT courses originate in a department other than your own.",
+  "nodes": {
+    "qJQV2IOX": {
+      "why": "\"A knowledge of at least two non-native languages\" \"A minimum of six graduate courses: Three graduate courses must be in the department of the second literature ... Three graduate courses must be in the Department of Comparative Literature, including: A seminar in literary theory or criticism\". Graduate courses are read as 200 and above; cross-listed courses count as COMPLIT. \"At least two of the three courses in Comparative Literature should originate in a department other than the one where the student is completing their degree\": the audit does not know the student's department, so this is a check by hand (ov-origin).",
+      "replace": {
+        "t": "all",
+        "name": "Completion requirements",
+        "children": [
+          {
+            "id": "ov-languages",
+            "t": "text",
+            "name": "Two non-native languages (one for graduate courses, one to read an author in the original)",
+            "manual": "other"
+          },
+          {
+            "id": "ov-second-lit",
+            "t": "text",
+            "name": "Three graduate courses in the department of the second literature",
+            "manual": "approval",
+            "n": 3
+          },
+          {
+            "id": "ov-complit",
+            "t": "courses",
+            "name": "Three graduate COMPLIT courses",
+            "mode": "atLeast",
+            "n": 3,
+            "pool": {
+              "subjects": [
+                "COMPLIT"
+              ],
+              "minNumber": 200
+            }
+          },
+          {
+            "id": "ov-theory",
+            "t": "text",
+            "name": "One of the COMPLIT courses a seminar in literary theory or criticism",
+            "manual": "approval",
+            "n": 1,
+            "shares": true
+          },
+          {
+            "id": "ov-origin",
+            "t": "text",
+            "name": "Two of the three COMPLIT courses originate in a department other than your own",
+            "manual": "other"
+          }
+        ]
+      }
+    }
+  },
+  "program": {
+    "letterGrade": true,
+    "why": "Grading: \"PhD students in the department must take required courses for a letter grade if available\". Every course in the minor is a required course. The \"expected to earn a grade of B+ or better\" is reviewed by the faculty, not a floor."
+  }
+}

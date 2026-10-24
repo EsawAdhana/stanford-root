@@ -1,0 +1,42 @@
+{
+  "code": "EE-MIN",
+  "reviewed": "2026-10-23",
+  "summary": "Every course must be letter graded. The minor is one EE fundamental (5 units minimum), one of the four two-course sequences (EE 101A-B, EE 102A-B, EE 102A with ENGR 108, or EE 108 with EE 180, 8 units minimum), and four more EE courses at the 100 level or above, one of which may be CS 107 or CS 107E (12 units minimum), for at least 23 units. Your advisor checks that no seminar is used; transfer credit does not count.",
+  "program": {
+    "letterGrade": true,
+    "why": "Grading: \"All courses taken for the minor must be taken for a letter grade.\""
+  },
+  "nodes": {
+    "Iycg9VCn": {
+      "why": "\"Course must be taken for a letter grade if that option is offered.\"",
+      "patch": { "letter": true }
+    },
+    "4svL01CG": {
+      "why": "\"Select one two-course sequence (eight units minimum).\" The Bulletin lists the courses in pairs: EE 101A and EE 101B, EE 102A and EE 102B, EE 102A and ENGR 108, EE 108 and EE 180. \"All courses must be taken for a letter grade if that option is offered.\"",
+      "replace": {
+        "t": "any",
+        "name": "Select one two-course sequence (eight units minimum).",
+        "units": 8,
+        "children": [
+          { "id": "ov-eemin-seq-101", "t": "courses", "name": "EE 101A and EE 101B", "mode": "all", "items": [["EE 101A"], ["EE 101B"]], "letter": true },
+          { "id": "ov-eemin-seq-102", "t": "courses", "name": "EE 102A and EE 102B", "mode": "all", "items": [["EE 102A"], ["EE 102B"]], "letter": true },
+          { "id": "ov-eemin-seq-102-108", "t": "courses", "name": "EE 102A and ENGR 108", "mode": "all", "items": [["EE 102A"], ["ENGR 108"]], "letter": true },
+          { "id": "ov-eemin-seq-108-180", "t": "courses", "name": "EE 108 and EE 180", "mode": "all", "items": [["EE 108"], ["EE 180"]], "letter": true }
+        ]
+      }
+    },
+    "fa9IQaI5": {
+      "why": "\"In addition, four letter-graded EE courses at the 100-level or higher must be taken (12 units minimum).\" \"Note: CS107E or CS 107 is required as a prerequisite for EE 180 but can count as one of the four classes.\" \"Seminars may not be used to fulfill requirements for the minor.\" One slot takes CS 107 or CS 107E; seminars are excluded by hand.",
+      "replace": {
+        "t": "courses",
+        "name": "Additional letter-graded courses (12 units minimum)",
+        "mode": "atLeast",
+        "n": 4,
+        "units": 12,
+        "items": [["CS 107E", "CS 107"]],
+        "pool": { "subjects": ["EE"], "minNumber": 100 },
+        "letter": true
+      }
+    }
+  }
+}

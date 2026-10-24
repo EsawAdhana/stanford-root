@@ -1,0 +1,163 @@
+{
+  "code": "ENVRES-MS",
+  "reviewed": "2026-10-23",
+  "summary": "You follow the joint MS (with an MBA or JD) or the dual MS (with another Stanford degree), and either way you need 45 units for this MS: ENVRES 280 and 290, one human environmental decision-making course, four courses from one of the six pathways, and electives numbered 100 or above, with at most 12 professional school units, 5 guest-lecture units and 5 individual study units (8 for the dual MS). The core, decision-making and pathway courses must be letter graded, and the decision-making and pathway courses carry at least 3 units each; the pathway courses count toward the 45 units. Your advisor checks the 23 units at the 200 level and the 3.0 GPA, because your other degree's courses are on the same record, and a science methods course used for decision-making is moved in by hand.",
+  "blocks": {
+    "vGUKbrs9": {
+      "kind": "info",
+      "why": "The pathway lists: \"To view the full list of pathways and pathway courses see the 'Depth in Discipline' section.\" The requirement itself (\"A minimum of four letter-graded courses ... from one course pathway\") is checked inside each track's 45 units, under Pathway Courses."
+    }
+  },
+  "nodes": {
+    "4bu16pFU": {
+      "why": "\"all joint MS students must complete 45 units in EIPER-approved courses.\"",
+      "patch": { "units": 45 }
+    },
+    "zATVRPC0": {
+      "why": "\"The student must take all core courses, the human environmental decision-making course, and pathway courses for a letter grade.\"",
+      "patch": { "letter": true }
+    },
+    "atcNygur": {
+      "why": "\"At least one three to five-unit letter-graded course\". A methods course in the sciences, which \"can also\" fulfill it, is moved in by hand.",
+      "patch": { "letter": true, "minUnitsEach": 3 }
+    },
+    "SBimCaPe": {
+      "why": "\"A minimum of four letter-graded courses at the 100-level or higher from one course pathway. Pathway courses must be taken for a minimum of 3 units.\" They are part of \"the 45 units\" the joint MS completes \"within the following parameters\", so the choice of pathway sits here, inside the 45-unit rule, with the lists from the Depth in Discipline section (\"To view the full list of pathways and pathway courses see the 'Depth in Discipline' section\"). In that section on its own, pathway courses never counted toward the 45.",
+      "replace": {
+        "t": "any",
+        "name": "Pathway Courses: four courses from one pathway",
+        "children": [
+          { "id": "ov-envres-ms-joint-climate", "t": "courses", "name": "Climate Change", "mode": "atLeast", "n": 4, "minUnitsEach": 3, "letter": true, "items": [["CEE 172"], ["CEE 207A", "CEE 107A", "EARTHSYS 103", "ENERGY 107A", "ENERGY 207A"], ["CEE 261I", "CEE 161I", "EARTHSYS 146A", "ESS 246A"], ["CEE 263C"], ["CEE 263D"], ["CEE 265E"], ["CEE 265F", "POLISCI 227B", "PUBLPOL 265F"], ["CEE 265I", "ESS 264"], ["CEE 276B", "CEE 176B"], ["CEE 278A"], ["CHEMENG 274", "BIO 273A", "CEE 274", "CHEMENG 174"], ["EARTHSYS 114", "EARTHSYS 214", "HUMBIO 114"], ["EARTHSYS 183", "EBS 183"], ["EARTHSYS 212", "EARTHSYS 112", "ESS 112", "HISTORY 103D"], ["EARTHSYS 217", "EARTHSYS 111", "BIO 117", "ESS 111"], ["EARTHSYS 223", "EARTHSYS 123A", "ESS 223", "ESS 123"], ["EARTHSYS 251", "EARTHSYS 151", "ESS 251", "ESS 151"], ["ENERGY 131", "EARTHSYS 101"], ["ENERGY 203"], ["ENERGY 253", "ENERGY 153"], ["EPS 226"], ["ESS 202", "ESS 102"], ["ESS 246A", "CEE 161I", "CEE 261I", "EARTHSYS 146A"], ["ESS 246B", "CEE 162I", "CEE 262I", "EARTHSYS 146B"], ["ESS 271", "ESS 171"], ["ESS 348"], ["HUMBIO 116", "PUBLPOL 116"], ["MS&E 394"], ["PHYSICS 240"], ["SUSTAIN 101C"], ["SUSTAIN 231", "CSRE 161", "CSRE 261", "ENGLISH 131D", "SUSTAIN 131"], ["SUSTAIN 352", "ANTHRO 302D", "HISTORY 302D"], ["SUSTAIN 370A"], ["SUSTAIN 370B"], ["SUSTAIN 370C"]] },
+          { "id": "ov-envres-ms-joint-foodwater", "t": "courses", "name": "Food and Water Systems", "mode": "atLeast", "n": 4, "minUnitsEach": 3, "letter": true, "items": [["BIO 117", "EARTHSYS 111", "EARTHSYS 217", "ESS 111"], ["BIO 279", "BIO 179", "EARTHSYS 279", "EARTHSYS 179"], ["CEE 241A"], ["CEE 260A", "ESS 220"], ["CEE 260C", "ESS 221"], ["CEE 260D", "ESS 224"], ["CEE 262A"], ["CEE 262B"], ["CEE 262E", "CEE 162E"], ["CEE 263C"], ["CEE 265D"], ["CEE 266A", "CEE 166A"], ["CEE 266B", "CEE 166B"], ["CEE 266C"], ["CEE 266G"], ["CEE 270"], ["CEE 271A"], ["CEE 271B"], ["CEE 273M"], ["CEE 273T"], ["CEE 279D", "CEE 179D"], ["CEE 279E", "CEE 179E"], ["CEE 374W"], ["EARTHSYS 185"], ["EARTHSYS 204", "EARTHSYS 104", "GEOPHYS 204", "GEOPHYS 104"], ["EARTHSYS 206", "EARTHSYS 106", "ECON 206", "ECON 106", "ESS 206", "ESS 106"], ["EARTHSYS 281", "EARTHSYS 181", "ESS 281", "ESS 181", "URBANST 181"], ["ESS 155", "EARTHSYS 155"], ["ESS 164", "EARTHSYS 144"], ["EARTHSYS 256", "ESS 256"], ["ESS 262", "ESS 162", "EARTHSYS 242", "EARTHSYS 142"], ["HUMBIO 113"], ["HUMBIO 166", "CHPR 166"], ["PHYSICS 240"]] },
+          { "id": "ov-envres-ms-joint-global", "t": "courses", "name": "Global Environmental Systems", "mode": "atLeast", "n": 4, "minUnitsEach": 3, "letter": true, "items": [["BIO 105A", "EARTHSYS 105A"], ["BIO 105B", "EARTHSYS 105B"], ["BIO 123", "BIOHOPK 123H", "BIOHOPK 223H", "OCEANS 123H", "OCEANS 223H"], ["BIO 228", "BIO 148", "EARTHSYS 128", "EPS 128", "EPS 228"], ["BIO 234", "BIO 144", "HUMBIO 112"], ["BIO 279", "BIO 179", "EARTHSYS 179", "EARTHSYS 279"], ["CEE 260A", "ESS 220"], ["CEE 260C", "ESS 221"], ["CEE 260D", "ESS 224"], ["CEE 261I", "CEE 161I", "EARTHSYS 146A", "ESS 246A"], ["CEE 262A"], ["CEE 262D", "CEE 162D", "EARTHSYS 164", "ESS 148"], ["CEE 263C"], ["CEE 263D"], ["CEE 265D"], ["CEE 265F", "POLISCI 227B", "PUBLPOL 265F"], ["CEE 266A", "CEE 166A"], ["CEE 266B", "CEE 166B"], ["CEE 266C"], ["CEE 266G"], ["CEE 270"], ["CEE 271A"], ["CEE 272"], ["EARTHSYS 114", "EARTHSYS 214", "HUMBIO 114"], ["EARTHSYS 123A", "EARTHSYS 223", "ESS 123", "ESS 223"], ["EARTHSYS 212", "EARTHSYS 112", "ESS 112", "HISTORY 103D"], ["EARTHSYS 217", "EARTHSYS 111", "BIO 117", "ESS 111"], ["EARTHSYS 251", "EARTHSYS 151", "ESS 251", "ESS 151"], ["EARTHSYS 256", "ESS 256"], ["EARTHSYS 281", "EARTHSYS 181", "ESS 281", "ESS 181", "URBANST 181"], ["EBS 183", "EARTHSYS 183"], ["ESS 155", "EARTHSYS 155"], ["ESS 164", "EARTHSYS 144"], ["ESS 202", "ESS 102"], ["ESS 241", "ESS 141", "EARTHSYS 241", "EARTHSYS 141", "GEOPHYS 141"], ["ESS 244"], ["ESS 246A", "CEE 161I", "CEE 261I", "EARTHSYS 146A"], ["ESS 246B", "CEE 162I", "CEE 262I", "EARTHSYS 146B"], ["ESS 251", "EARTHSYS 251", "EARTHSYS 151", "ESS 151"], ["ESS 252", "ESS 152", "EARTHSYS 252", "EARTHSYS 152"], ["ESS 252", "EARTHSYS 256"], ["ESS 258", "ESS 158", "EARTHSYS 258", "EARTHSYS 158"], ["ESS 262", "ESS 162", "EARTHSYS 242", "EARTHSYS 142"], ["ESS 348"], ["ENERGY 131", "EARTHSYS 101"], ["EPS 217"], ["EPS 226"], ["GEOPHYS 115", "GEOPHYS 231"], ["GEOPHYS 124", "ESS 125", "EPS 124"], ["GEOPHYS 228", "GEOPHYS 128"], ["GEOPHYS 304"], ["PHYSICS 240"]] },
+          { "id": "ov-envres-ms-joint-health", "t": "courses", "name": "Human and Planetary Health", "mode": "atLeast", "n": 4, "minUnitsEach": 3, "letter": true, "items": [["ANTHRO 282", "HUMBIO 176A"], ["BIO 123", "BIOHOPK 123H", "BIOHOPK 223H", "OCEANS 123H", "OCEANS 223H"], ["BIO 203", "BIO 103", "SOC 103"], ["BIOE 271"], ["CEE 172"], ["CEE 260C", "ESS 221"], ["CEE 263D"], ["CEE 265D"], ["CEE 265F", "POLISCI 227B", "PUBLPOL 265F"], ["CEE 270"], ["CEE 272"], ["CEE 274D"], ["CEE 278A"], ["EARTHSYS 217", "EARTHSYS 111", "BIO 117", "ESS 111"], ["EARTHSYS 256", "ESS 256"], ["EBS 213", "EARTHSYS 214", "EARTHSYS 114", "HUMBIO 114"], ["EBS 238", "PEDS 237"], ["ENERGY 131", "EARTHSYS 101"], ["ENVRES 223", "EARTHSYS 194"], ["EPI 259"], ["EPI 261"], ["EPI 262"], ["ESS 114", "ESS 314"], ["HUMBIO 113"], ["HUMBIO 116", "PUBLPOL 116"], ["HUMBIO 122H", "PEDS 150", "PEDS 250"], ["HUMBIO 166", "CHPR 166"], ["INTLPOL 291", "PUBLPOL 291", "SOMGEN 207"], ["OCEANS 270"], ["PUBLPOL 224"], ["SUSTAIN 352"]] },
+          { "id": "ov-envres-ms-joint-built", "t": "courses", "name": "Sustainable Built Environment", "mode": "atLeast", "n": 4, "minUnitsEach": 3, "letter": true, "items": [["CEE 130B"], ["CEE 176A"], ["CEE 176C"], ["CEE 207A", "CEE 107A", "EARTHSYS 103", "ENERGY 107A", "ENERGY 207A"], ["CEE 207R", "CEE 107R"], ["CEE 218X", "CEE 118X", "ESS 218X", "ESS 118X", "GEOLSCI 218X", "GEOLSCI 118X", "GEOPHYS 218X", "GEOPHYS 118X", "PUBLPOL 218X", "POLISCI 218X", "AMSTUD 118X"], ["CEE 223"], ["CEE 224B"], ["CEE 226"], ["CEE 226E"], ["CEE 241A", "CEE 141A"], ["CEE 243"], ["CEE 255", "CEE 155"], ["CEE 256", "CEE 156"], ["CEE 261C"], ["CEE 265E"], ["CEE 265I", "ESS 264"], ["CEE 276B", "CEE 176B"], ["CEE 277L", "CEE 177L"], ["CEE 330", "CEE 130R"], ["EARTHSYS 160", "URBANST 164"], ["ENERGY 132", "EARTHSYS 102"], ["PHYSICS 240"], ["SUSTAIN 210"], ["URBANST 163", "AMSTUD 163", "PUBLPOL 163"]] },
+          { "id": "ov-envres-ms-joint-energy", "t": "courses", "name": "Sustainable Energy Systems", "mode": "atLeast", "n": 4, "minUnitsEach": 3, "letter": true, "items": [["CEE 176A"], ["CEE 176C"], ["CEE 207A", "CEE 107A", "EARTHSYS 103"], ["CEE 207R", "CEE 107R"], ["CEE 226E"], ["CEE 241A"], ["CEE 255", "CEE 155"], ["CEE 256", "CEE 156"], ["CEE 261C"], ["CEE 272R"], ["CEE 273S", "CEE 173S"], ["CEE 276B", "CEE 176B"], ["CEE 284W"], ["CEE 330", "CEE 130R"], ["CS 153"], ["ECON 256"], ["EE 237"], ["ENERGY 131", "EARTHSYS 101"], ["ENERGY 132", "EARTHSYS 102"], ["ENERGY 201B", "EE 293B"], ["ENERGY 134"], ["ENERGY 253", "ENERGY 153"], ["ENERGY 263", "CEE 263H"], ["ENERGY 267", "ENERGY 167"], ["ENERGY 269"], ["ENERGY 277A", "ENERGY 177A"], ["ENERGY 277B", "ENERGY 177B"], ["ENERGY 291", "ENERGY 191"], ["FINANCE 338"], ["GEP 130", "GEP 230"], ["HUMBIO 116", "PUBLPOL 116"], ["LAW 2503"], ["MATSCI 256"], ["MATSCI 303"], ["ME 370A"], ["ME 370B"], ["MS&E 243"], ["MS&E 394"], ["PHYSICS 240"], ["POLISCI 111"]] }
+        ]
+      }
+    },
+    "Hf07RTMI": {
+      "why": "Not alternatives but limits on one elective pool: \"Elective courses may be taken from the student's selected course pathway, another course pathway, the human environmental decision-making course list, or elsewhere in the university, provided they are relevant\"; \"Courses numbered 1 to 99 are not allowable\"; \"A maximum of five units from courses identified as primarily consisting of guest lectures, such as the Energy Seminar\"; \"A maximum of five units of individual study courses, such as course Directed Research in Environment and Resources\"; \"A maximum of 12 units of approved professional school courses\". The Energy Seminar and individual study codes are the catalog's listings with those titles; other guest-lecture courses and relevance are checked by hand.",
+      "replace": {
+        "t": "courses",
+        "name": "Elective Courses (to reach 45 units)",
+        "mode": "any",
+        "pool": { "anySubject": true, "minNumber": 100 },
+        "limits": [
+          { "label": "professional school courses", "maxUnits": 12, "codes": ["ALP 303", "ALP 306", "EMED 234", "EMED 134", "FINANCE 338", "GSBGEN 312", "GSBGEN 332", "GSBGEN 341", "GSBGEN 367", "GSBGEN 386", "GSBGEN 505", "GSBGEN 532", "GSBGEN 537", "GSBGEN 552", "GSBGEN 559", "GSBGEN 565", "GSBGID 305", "GSBGID 330", "GSBGID 501", "LAW 808D", "LAW 808Y", "LAW 809B", "LAW 809T", "LAW 809U", "LAW 908", "LAW 908A", "LAW 908B", "LAW 908C", "LAW 2503", "LAW 2504", "LAW 2505", "LAW 2506", "LAW 2508", "LAW 2513", "LAW 2515", "LAW 2519", "LAW 2520", "LAW 2526", "LAW 7024", "LAW 7051", "LAW 7508", "LAW 7824", "LAW 7846", "MED 232", "MGTECON 583", "POLECON 515", "POLECON 531", "SOMGEN 207", "INTLPOL 291", "PUBLPOL 291", "STRAMGT 325", "STRAMGT 345", "STRAMGT 356", "STRAMGT 366", "STRAMGT 368", "STRAMGT 574"] },
+          { "label": "guest-lecture courses", "maxUnits": 5, "codes": ["ENERGY 301", "CEE 301", "MS&E 494"] },
+          { "label": "individual study courses", "maxUnits": 5, "codes": ["ENVRES 299", "ENVRES 398", "ENVRES 399"] }
+        ]
+      }
+    },
+    "wWDOAWzN": {
+      "why": "\"all dual MS students are required to complete the 45 units within the following parameters\"",
+      "patch": { "units": 45 }
+    },
+    "mD8eqoM0": {
+      "why": "\"The student must take all core courses, the human environmental decision-making course, and pathway courses for a letter grade.\"",
+      "patch": { "letter": true }
+    },
+    "9yK8XWIX": {
+      "why": "\"At least one three to five-unit letter-graded course\". A methods course in the sciences, which \"can also\" fulfill it, is moved in by hand.",
+      "patch": { "letter": true, "minUnitsEach": 3 }
+    },
+    "CCrWOPB2": {
+      "why": "\"A minimum of four letter-graded courses at the 100-level or higher from one MS course pathway. Pathway courses must be taken for a minimum of three units.\" They are part of \"the 45 units\" the dual MS completes \"within the following parameters\", so the choice of pathway sits here, inside the 45-unit rule, with the lists from the Depth in Discipline section (\"To view the complete list of pathways and pathway cour,ses see the Depth in Discipline section below\"). In that section on its own, pathway courses never counted toward the 45.",
+      "replace": {
+        "t": "any",
+        "name": "Pathway Courses: four courses from one pathway",
+        "children": [
+          { "id": "ov-envres-ms-dual-climate", "t": "courses", "name": "Climate Change", "mode": "atLeast", "n": 4, "minUnitsEach": 3, "letter": true, "items": [["CEE 172"], ["CEE 207A", "CEE 107A", "EARTHSYS 103", "ENERGY 107A", "ENERGY 207A"], ["CEE 261I", "CEE 161I", "EARTHSYS 146A", "ESS 246A"], ["CEE 263C"], ["CEE 263D"], ["CEE 265E"], ["CEE 265F", "POLISCI 227B", "PUBLPOL 265F"], ["CEE 265I", "ESS 264"], ["CEE 276B", "CEE 176B"], ["CEE 278A"], ["CHEMENG 274", "BIO 273A", "CEE 274", "CHEMENG 174"], ["EARTHSYS 114", "EARTHSYS 214", "HUMBIO 114"], ["EARTHSYS 183", "EBS 183"], ["EARTHSYS 212", "EARTHSYS 112", "ESS 112", "HISTORY 103D"], ["EARTHSYS 217", "EARTHSYS 111", "BIO 117", "ESS 111"], ["EARTHSYS 223", "EARTHSYS 123A", "ESS 223", "ESS 123"], ["EARTHSYS 251", "EARTHSYS 151", "ESS 251", "ESS 151"], ["ENERGY 131", "EARTHSYS 101"], ["ENERGY 203"], ["ENERGY 253", "ENERGY 153"], ["EPS 226"], ["ESS 202", "ESS 102"], ["ESS 246A", "CEE 161I", "CEE 261I", "EARTHSYS 146A"], ["ESS 246B", "CEE 162I", "CEE 262I", "EARTHSYS 146B"], ["ESS 271", "ESS 171"], ["ESS 348"], ["HUMBIO 116", "PUBLPOL 116"], ["MS&E 394"], ["PHYSICS 240"], ["SUSTAIN 101C"], ["SUSTAIN 231", "CSRE 161", "CSRE 261", "ENGLISH 131D", "SUSTAIN 131"], ["SUSTAIN 352", "ANTHRO 302D", "HISTORY 302D"], ["SUSTAIN 370A"], ["SUSTAIN 370B"], ["SUSTAIN 370C"]] },
+          { "id": "ov-envres-ms-dual-foodwater", "t": "courses", "name": "Food and Water Systems", "mode": "atLeast", "n": 4, "minUnitsEach": 3, "letter": true, "items": [["BIO 117", "EARTHSYS 111", "EARTHSYS 217", "ESS 111"], ["BIO 279", "BIO 179", "EARTHSYS 279", "EARTHSYS 179"], ["CEE 241A"], ["CEE 260A", "ESS 220"], ["CEE 260C", "ESS 221"], ["CEE 260D", "ESS 224"], ["CEE 262A"], ["CEE 262B"], ["CEE 262E", "CEE 162E"], ["CEE 263C"], ["CEE 265D"], ["CEE 266A", "CEE 166A"], ["CEE 266B", "CEE 166B"], ["CEE 266C"], ["CEE 266G"], ["CEE 270"], ["CEE 271A"], ["CEE 271B"], ["CEE 273M"], ["CEE 273T"], ["CEE 279D", "CEE 179D"], ["CEE 279E", "CEE 179E"], ["CEE 374W"], ["EARTHSYS 185"], ["EARTHSYS 204", "EARTHSYS 104", "GEOPHYS 204", "GEOPHYS 104"], ["EARTHSYS 206", "EARTHSYS 106", "ECON 206", "ECON 106", "ESS 206", "ESS 106"], ["EARTHSYS 281", "EARTHSYS 181", "ESS 281", "ESS 181", "URBANST 181"], ["ESS 155", "EARTHSYS 155"], ["ESS 164", "EARTHSYS 144"], ["EARTHSYS 256", "ESS 256"], ["ESS 262", "ESS 162", "EARTHSYS 242", "EARTHSYS 142"], ["HUMBIO 113"], ["HUMBIO 166", "CHPR 166"], ["PHYSICS 240"]] },
+          { "id": "ov-envres-ms-dual-global", "t": "courses", "name": "Global Environmental Systems", "mode": "atLeast", "n": 4, "minUnitsEach": 3, "letter": true, "items": [["BIO 105A", "EARTHSYS 105A"], ["BIO 105B", "EARTHSYS 105B"], ["BIO 123", "BIOHOPK 123H", "BIOHOPK 223H", "OCEANS 123H", "OCEANS 223H"], ["BIO 228", "BIO 148", "EARTHSYS 128", "EPS 128", "EPS 228"], ["BIO 234", "BIO 144", "HUMBIO 112"], ["BIO 279", "BIO 179", "EARTHSYS 179", "EARTHSYS 279"], ["CEE 260A", "ESS 220"], ["CEE 260C", "ESS 221"], ["CEE 260D", "ESS 224"], ["CEE 261I", "CEE 161I", "EARTHSYS 146A", "ESS 246A"], ["CEE 262A"], ["CEE 262D", "CEE 162D", "EARTHSYS 164", "ESS 148"], ["CEE 263C"], ["CEE 263D"], ["CEE 265D"], ["CEE 265F", "POLISCI 227B", "PUBLPOL 265F"], ["CEE 266A", "CEE 166A"], ["CEE 266B", "CEE 166B"], ["CEE 266C"], ["CEE 266G"], ["CEE 270"], ["CEE 271A"], ["CEE 272"], ["EARTHSYS 114", "EARTHSYS 214", "HUMBIO 114"], ["EARTHSYS 123A", "EARTHSYS 223", "ESS 123", "ESS 223"], ["EARTHSYS 212", "EARTHSYS 112", "ESS 112", "HISTORY 103D"], ["EARTHSYS 217", "EARTHSYS 111", "BIO 117", "ESS 111"], ["EARTHSYS 251", "EARTHSYS 151", "ESS 251", "ESS 151"], ["EARTHSYS 256", "ESS 256"], ["EARTHSYS 281", "EARTHSYS 181", "ESS 281", "ESS 181", "URBANST 181"], ["EBS 183", "EARTHSYS 183"], ["ESS 155", "EARTHSYS 155"], ["ESS 164", "EARTHSYS 144"], ["ESS 202", "ESS 102"], ["ESS 241", "ESS 141", "EARTHSYS 241", "EARTHSYS 141", "GEOPHYS 141"], ["ESS 244"], ["ESS 246A", "CEE 161I", "CEE 261I", "EARTHSYS 146A"], ["ESS 246B", "CEE 162I", "CEE 262I", "EARTHSYS 146B"], ["ESS 251", "EARTHSYS 251", "EARTHSYS 151", "ESS 151"], ["ESS 252", "ESS 152", "EARTHSYS 252", "EARTHSYS 152"], ["ESS 252", "EARTHSYS 256"], ["ESS 258", "ESS 158", "EARTHSYS 258", "EARTHSYS 158"], ["ESS 262", "ESS 162", "EARTHSYS 242", "EARTHSYS 142"], ["ESS 348"], ["ENERGY 131", "EARTHSYS 101"], ["EPS 217"], ["EPS 226"], ["GEOPHYS 115", "GEOPHYS 231"], ["GEOPHYS 124", "ESS 125", "EPS 124"], ["GEOPHYS 228", "GEOPHYS 128"], ["GEOPHYS 304"], ["PHYSICS 240"]] },
+          { "id": "ov-envres-ms-dual-health", "t": "courses", "name": "Human and Planetary Health", "mode": "atLeast", "n": 4, "minUnitsEach": 3, "letter": true, "items": [["ANTHRO 282", "HUMBIO 176A"], ["BIO 123", "BIOHOPK 123H", "BIOHOPK 223H", "OCEANS 123H", "OCEANS 223H"], ["BIO 203", "BIO 103", "SOC 103"], ["BIOE 271"], ["CEE 172"], ["CEE 260C", "ESS 221"], ["CEE 263D"], ["CEE 265D"], ["CEE 265F", "POLISCI 227B", "PUBLPOL 265F"], ["CEE 270"], ["CEE 272"], ["CEE 274D"], ["CEE 278A"], ["EARTHSYS 217", "EARTHSYS 111", "BIO 117", "ESS 111"], ["EARTHSYS 256", "ESS 256"], ["EBS 213", "EARTHSYS 214", "EARTHSYS 114", "HUMBIO 114"], ["EBS 238", "PEDS 237"], ["ENERGY 131", "EARTHSYS 101"], ["ENVRES 223", "EARTHSYS 194"], ["EPI 259"], ["EPI 261"], ["EPI 262"], ["ESS 114", "ESS 314"], ["HUMBIO 113"], ["HUMBIO 116", "PUBLPOL 116"], ["HUMBIO 122H", "PEDS 150", "PEDS 250"], ["HUMBIO 166", "CHPR 166"], ["INTLPOL 291", "PUBLPOL 291", "SOMGEN 207"], ["OCEANS 270"], ["PUBLPOL 224"], ["SUSTAIN 352"]] },
+          { "id": "ov-envres-ms-dual-built", "t": "courses", "name": "Sustainable Built Environment", "mode": "atLeast", "n": 4, "minUnitsEach": 3, "letter": true, "items": [["CEE 130B"], ["CEE 176A"], ["CEE 176C"], ["CEE 207A", "CEE 107A", "EARTHSYS 103", "ENERGY 107A", "ENERGY 207A"], ["CEE 207R", "CEE 107R"], ["CEE 218X", "CEE 118X", "ESS 218X", "ESS 118X", "GEOLSCI 218X", "GEOLSCI 118X", "GEOPHYS 218X", "GEOPHYS 118X", "PUBLPOL 218X", "POLISCI 218X", "AMSTUD 118X"], ["CEE 223"], ["CEE 224B"], ["CEE 226"], ["CEE 226E"], ["CEE 241A", "CEE 141A"], ["CEE 243"], ["CEE 255", "CEE 155"], ["CEE 256", "CEE 156"], ["CEE 261C"], ["CEE 265E"], ["CEE 265I", "ESS 264"], ["CEE 276B", "CEE 176B"], ["CEE 277L", "CEE 177L"], ["CEE 330", "CEE 130R"], ["EARTHSYS 160", "URBANST 164"], ["ENERGY 132", "EARTHSYS 102"], ["PHYSICS 240"], ["SUSTAIN 210"], ["URBANST 163", "AMSTUD 163", "PUBLPOL 163"]] },
+          { "id": "ov-envres-ms-dual-energy", "t": "courses", "name": "Sustainable Energy Systems", "mode": "atLeast", "n": 4, "minUnitsEach": 3, "letter": true, "items": [["CEE 176A"], ["CEE 176C"], ["CEE 207A", "CEE 107A", "EARTHSYS 103"], ["CEE 207R", "CEE 107R"], ["CEE 226E"], ["CEE 241A"], ["CEE 255", "CEE 155"], ["CEE 256", "CEE 156"], ["CEE 261C"], ["CEE 272R"], ["CEE 273S", "CEE 173S"], ["CEE 276B", "CEE 176B"], ["CEE 284W"], ["CEE 330", "CEE 130R"], ["CS 153"], ["ECON 256"], ["EE 237"], ["ENERGY 131", "EARTHSYS 101"], ["ENERGY 132", "EARTHSYS 102"], ["ENERGY 201B", "EE 293B"], ["ENERGY 134"], ["ENERGY 253", "ENERGY 153"], ["ENERGY 263", "CEE 263H"], ["ENERGY 267", "ENERGY 167"], ["ENERGY 269"], ["ENERGY 277A", "ENERGY 177A"], ["ENERGY 277B", "ENERGY 177B"], ["ENERGY 291", "ENERGY 191"], ["FINANCE 338"], ["GEP 130", "GEP 230"], ["HUMBIO 116", "PUBLPOL 116"], ["LAW 2503"], ["MATSCI 256"], ["MATSCI 303"], ["ME 370A"], ["ME 370B"], ["MS&E 243"], ["MS&E 394"], ["PHYSICS 240"], ["POLISCI 111"]] }
+        ]
+      }
+    },
+    "zMumP2K4": {
+      "why": "Not alternatives but limits on one elective pool: \"Elective courses may be taken from the student's selected course pathway, another course pathway, the human environmental decision-making course list, or elsewhere in the university\"; \"Courses numbered 1 to 99 are not allowable\"; \"A maximum of five units from courses that are identified as primarily consisting of guest lectures, such as the Energy Seminar\"; \"A maximum of five units of individual study courses ... Students may do an additional 3 units of independent study to support their capstone research\" (so 8 in all, the last 3 only for capstone research, which is checked by hand); \"A maximum of 12 units of approved professional school courses\".",
+      "replace": {
+        "t": "courses",
+        "name": "Elective Courses (to reach 45 units)",
+        "mode": "any",
+        "pool": { "anySubject": true, "minNumber": 100 },
+        "limits": [
+          { "label": "professional school courses", "maxUnits": 12, "codes": ["ALP 303", "ALP 306", "EMED 234", "EMED 134", "GSBGEN 312", "GSBGEN 332", "GSBGEN 341", "GSBGEN 367", "GSBGEN 386", "GSBGEN 505", "GSBGEN 532", "GSBGEN 537", "GSBGEN 552", "GSBGEN 559", "GSBGEN 565", "GSBGID 305", "GSBGID 330", "GSBGID 501", "LAW 808D", "LAW 808Y", "LAW 809B", "LAW 809T", "LAW 809U", "LAW 908", "LAW 908A", "LAW 908B", "LAW 908C", "LAW 2503", "LAW 2504", "LAW 2505", "LAW 2506", "LAW 2508", "LAW 2513", "LAW 2515", "LAW 2519", "LAW 2520", "LAW 2526", "LAW 7024", "LAW 7051", "LAW 7508", "LAW 7824", "LAW 7846", "MED 232", "MGTECON 583", "POLECON 515", "POLECON 531", "SOMGEN 207", "STRAMGT 325", "STRAMGT 345", "STRAMGT 356", "STRAMGT 366", "STRAMGT 368", "STRAMGT 574"] },
+          { "label": "guest-lecture courses", "maxUnits": 5, "codes": ["ENERGY 301", "CEE 301", "MS&E 494"] },
+          { "label": "individual study courses", "maxUnits": 8, "codes": ["ENVRES 299", "ENVRES 398", "ENVRES 399"] }
+        ]
+      }
+    },
+    "Fn0sJWEw": {
+      "why": "\"In exceptional circumstances, students in E-IPER's PhD program may opt to complete their training with an MS degree. Please visit the program page to review the program requirements\": a pointer, not a requirement of this MS.",
+      "patch": { "info": true }
+    },
+    "UzXmniGx": {
+      "why": "\"At least four letter-graded courses from one MS Course Pathway at the 100-level or higher. Pathway courses must be taken for a minimum of three units.\"",
+      "patch": { "letter": true, "minUnitsEach": 3 }
+    },
+    "1ITIZ0KW": {
+      "why": "\"At least four letter-graded courses from one MS Course Pathway at the 100-level or higher. Pathway courses must be taken for a minimum of three units.\"",
+      "patch": { "letter": true, "minUnitsEach": 3 }
+    },
+    "JcplxW6K": {
+      "why": "\"At least four letter-graded courses from one MS Course Pathway at the 100-level or higher. Pathway courses must be taken for a minimum of three units.\"",
+      "patch": { "letter": true, "minUnitsEach": 3 }
+    },
+    "ntmLMBkK": {
+      "why": "\"At least four letter-graded courses from one MS Course Pathway at the 100-level or higher. Pathway courses must be taken for a minimum of three units.\"",
+      "patch": { "letter": true, "minUnitsEach": 3 }
+    },
+    "P3H6llGS": {
+      "why": "\"At least four letter-graded courses from one MS Course Pathway at the 100-level or higher. Pathway courses must be taken for a minimum of three units.\"",
+      "patch": { "letter": true, "minUnitsEach": 3 }
+    },
+    "nHN6x0KU": {
+      "why": "\"At least four letter-graded courses from one MS Course Pathway at the 100-level or higher. Pathway courses must be taken for a minimum of three units.\"",
+      "patch": { "letter": true, "minUnitsEach": 3 }
+    }
+  },
+  "alternatives": [
+    {
+      "id": "ov-envres-ms-track",
+      "name": "Joint MS (with an MBA or JD) or dual MS",
+      "of": ["4bu16pFU", "wWDOAWzN"],
+      "why": "Two different programs by the student's other degree: \"Students enrolled in the MBA program ... or the JD program ... can apply for admission to the joint MS\" and \"Students enrolled in an MA or MS program ..., the MD program ..., or a PhD program in another Stanford department can apply for admission to the dual MS\"."
+    },
+    {
+      "id": "ov-envres-ms-pathway",
+      "name": "One course pathway",
+      "of": ["UzXmniGx", "1ITIZ0KW", "JcplxW6K", "ntmLMBkK", "P3H6llGS", "nHN6x0KU"],
+      "why": "\"Joint MS students pursue one of E-IPER's six thematic pathways\"; \"A minimum of four letter-graded courses at the 100-level or higher from one course pathway.\""
+    }
+  ],
+  "add": [
+    {
+      "block": "mAbEGmbJ",
+      "parent": "4bu16pFU",
+      "why": "\"The student must complete at least 23 units at the 200 level or above.\" These units are among the 45 counted by the other rules, and the student's other degree's courses are on the same record, so a count over the record would include them; checked by hand.",
+      "node": { "id": "ov-envres-ms-joint-200", "t": "text", "name": "At least 23 units at the 200 level or above", "manual": "other" }
+    },
+    {
+      "block": "mAbEGmbJ",
+      "parent": "4bu16pFU",
+      "why": "\"The student must achieve a cumulative 3.0 grade point average (GPA) for all letter-graded courses taken toward the MS degree.\"",
+      "node": { "id": "ov-envres-ms-joint-gpa", "t": "text", "name": "Cumulative 3.0 GPA in MS courses", "manual": "gpa" }
+    },
+    {
+      "block": "mAbEGmbJ",
+      "parent": "wWDOAWzN",
+      "why": "\"The student must complete at least 23 units at the 200-level or above.\" These units are among the 45 counted by the other rules, and the student's other degree's courses are on the same record, so a count over the record would include them; checked by hand.",
+      "node": { "id": "ov-envres-ms-dual-200", "t": "text", "name": "At least 23 units at the 200 level or above", "manual": "other" }
+    },
+    {
+      "block": "mAbEGmbJ",
+      "parent": "wWDOAWzN",
+      "why": "\"The student must achieve at least a cumulative 3.0 grade point average for all letter-graded courses taken toward the MS degree.\"",
+      "node": { "id": "ov-envres-ms-dual-gpa", "t": "text", "name": "Cumulative 3.0 GPA in MS courses", "manual": "gpa" }
+    }
+  ]
+}

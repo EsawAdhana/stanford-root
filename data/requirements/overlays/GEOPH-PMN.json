@@ -1,0 +1,109 @@
+{
+  "code": "GEOPH-PMN",
+  "reviewed": "2026-10-23",
+  "summary": "The audit checks 20 units of GEOPHYS lecture courses numbered 200 or above, at least 15 of them letter graded, all taken at Stanford. Seminars, field trips, research, teaching, practical training and TGR units do not count.",
+  "blocks": {
+    "gjhQnM6j": {
+      "kind": "required"
+    }
+  },
+  "nodes": {
+    "1VmMArv2": {
+      "why": "\"students must take a minimum of 20 units of graduate lecture courses at the 200+ level or higher in Geophysics (of which 15 units must be letter-graded).\" The 20 units are a floor over both parts: 15 letter-graded units, and the rest in any grading. Whether a course is a lecture is not in the data. Courses that are plainly not lectures are left out of both pools: the Frontiers and department seminars (GEOPHYS 201, 300), the GEOPHYS 385 research seminars, the field trip (214), practical training (255), teaching (299), research (400) and TGR (801, 802).",
+      "replace": {
+        "t": "all",
+        "name": "20 units of Geophysics graduate lecture courses",
+        "units": 20,
+        "children": [
+          {
+            "id": "ov-geoph-pmn-letter",
+            "t": "courses",
+            "name": "15 units of letter-graded GEOPHYS courses at the 200+ level",
+            "mode": "units",
+            "units": 15,
+            "letter": true,
+            "pool": {
+              "subjects": [
+                "GEOPHYS"
+              ],
+              "minNumber": 200,
+              "exclude": [
+                "GEOPHYS 201",
+                "GEOPHYS 214",
+                "GEOPHYS 255",
+                "GEOPHYS 299",
+                "GEOPHYS 300",
+                "GEOPHYS 385A",
+                "GEOPHYS 385B",
+                "GEOPHYS 385D",
+                "GEOPHYS 385E",
+                "GEOPHYS 385F",
+                "GEOPHYS 385G",
+                "GEOPHYS 385H",
+                "GEOPHYS 385I",
+                "GEOPHYS 385K",
+                "GEOPHYS 385L",
+                "GEOPHYS 385M",
+                "GEOPHYS 385N",
+                "GEOPHYS 385Q",
+                "GEOPHYS 385R",
+                "GEOPHYS 385S",
+                "GEOPHYS 385T",
+                "GEOPHYS 385V",
+                "GEOPHYS 385W",
+                "GEOPHYS 385Y",
+                "GEOPHYS 385Z",
+                "GEOPHYS 400",
+                "GEOPHYS 801",
+                "GEOPHYS 802"
+              ]
+            }
+          },
+          {
+            "id": "ov-geoph-pmn-other",
+            "t": "courses",
+            "name": "Remaining GEOPHYS units at the 200+ level (any grading)",
+            "mode": "any",
+            "optional": true,
+            "pool": {
+              "subjects": [
+                "GEOPHYS"
+              ],
+              "minNumber": 200,
+              "exclude": [
+                "GEOPHYS 201",
+                "GEOPHYS 214",
+                "GEOPHYS 255",
+                "GEOPHYS 299",
+                "GEOPHYS 300",
+                "GEOPHYS 385A",
+                "GEOPHYS 385B",
+                "GEOPHYS 385D",
+                "GEOPHYS 385E",
+                "GEOPHYS 385F",
+                "GEOPHYS 385G",
+                "GEOPHYS 385H",
+                "GEOPHYS 385I",
+                "GEOPHYS 385K",
+                "GEOPHYS 385L",
+                "GEOPHYS 385M",
+                "GEOPHYS 385N",
+                "GEOPHYS 385Q",
+                "GEOPHYS 385R",
+                "GEOPHYS 385S",
+                "GEOPHYS 385T",
+                "GEOPHYS 385V",
+                "GEOPHYS 385W",
+                "GEOPHYS 385Y",
+                "GEOPHYS 385Z",
+                "GEOPHYS 400",
+                "GEOPHYS 801",
+                "GEOPHYS 802"
+              ]
+            }
+          }
+        ]
+      }
+    }
+  }
+}

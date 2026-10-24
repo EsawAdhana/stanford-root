@@ -1,0 +1,490 @@
+{
+  "code": "DESIGN-BS",
+  "reviewed": "2026-10-23",
+  "summary": "You take the School of Engineering math (MATH 19, 20, 21 and a statistics course; MATH 53, 106, 115 or CME 102 with a C or better can replace MATH 21), PSYCH 1, 15 more units of approved math and science (30 in all), a Technology in Society course and two Engineering Fundamentals, then the Design core, one Methods track, one Domain pathway (one List A class and two more from List A or B) and one capstone sequence, which is also your WIM. The Physical and AI tracks also require MATH 51 or CME 100 (CS 103 for AI), and PHYSICS 41 and ENGR 14 or CS 106A; those courses count in their School of Engineering category too. Every course must be taken for a letter grade when one is offered, and a course counts in only one category. Only one of PHYSICS 41 and 41E counts, MATH 51 and CME 100 together count for at most 8 units, ENERGY 177A and 177B count for TiS together at 3 units each, and NBIO 101 at 3 units. You check by hand the 2.0 GPA, math waivers and AP credit, the NBIO 101 application, and that your Domain courses were on the approved list the year you took them.",
+  "nodes": {
+    "ZUlg3pLb-text": {
+      "why": "\"Degree Requirements Overview: Fulling DESIGN-BS degree requirements consists of completing classes in the following categories\" and the nine categories, each a block below. \"Review each section carefully to see all posted requirements\". An overview with nothing of its own to check.",
+      "patch": {
+        "info": true
+      }
+    },
+    "xTQ7A3FE": {
+      "why": "\"(MATH 51) or (CME 100) is only required for the (Physical Methods Track) or (AI Methods Track). (CS 103) is also a suitable option for (AI Methods Track).\" and \"15 units minimum required for the (Human Behavior Methods Track)\". The MATH 51 slot moves to those two tracks; MATH 19, 20, 21 and the statistics course are the 15 units every track takes. Waivers and AP credit are applied by hand. Note D: \"Students can replace the (MATH 21) requirement if they take a class that makes substantial use of the concepts in (MATH 21) while also receiving a grade of C or better: (MATH 53), (MATH 106), (MATH 115), or (CME 102).\"",
+      "replace": {
+        "t": "all",
+        "name": "Mathematics",
+        "children": [
+          {
+            "id": "xTQ7A3FE-calc",
+            "t": "courses",
+            "name": "MATH 19, MATH 20 and a statistics course",
+            "mode": "all",
+            "items": [
+              [
+                "MATH 19"
+              ],
+              [
+                "MATH 20"
+              ],
+              [
+                "STATS 60",
+                "STATS 110",
+                "STATS 160"
+              ]
+            ]
+          },
+          {
+            "id": "xTQ7A3FE-21",
+            "t": "any",
+            "name": "MATH 21, or a course that replaces it",
+            "children": [
+              {
+                "id": "xTQ7A3FE-21a",
+                "t": "courses",
+                "name": "MATH 21",
+                "mode": "all",
+                "items": [
+                  [
+                    "MATH 21"
+                  ]
+                ]
+              },
+              {
+                "id": "xTQ7A3FE-21b",
+                "t": "courses",
+                "name": "MATH 53, MATH 106, MATH 115 or CME 102 with a C or better",
+                "mode": "atLeast",
+                "n": 1,
+                "minGrade": "C",
+                "items": [
+                  [
+                    "MATH 53"
+                  ],
+                  [
+                    "MATH 106"
+                  ],
+                  [
+                    "MATH 115"
+                  ],
+                  [
+                    "CME 102"
+                  ]
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "av3hhICQ": {
+      "why": "\"The number of courses for use here may vary based on the remaining units you need to reach the 30 unit required minimum.\" Mathematics is 15 units in every track once the MATH 51 slot moves to the track (20 with it), so 15 units remain here, MATH 51 or CME 100 among them for the Physical and AI tracks. Notes: \"Students may choose (PHYSICS 41) or (PHYSICS 41E), but both cannot be taken towards the major.\" and \"If (MATH 51) and (CME 100) are both taken, only 8 units of credit will be allowed towards the Design major due to overlapping material.\"",
+      "patch": {
+        "mode": "units",
+        "units": 15,
+        "limits": [
+          {
+            "label": "PHYSICS 41 or 41E, not both",
+            "max": 1,
+            "codes": [
+              "PHYSICS 41",
+              "PHYSICS 41E"
+            ]
+          },
+          {
+            "label": "MATH 51 and CME 100 together",
+            "maxUnits": 8,
+            "codes": [
+              "MATH 51",
+              "CME 100"
+            ]
+          }
+        ]
+      }
+    },
+    "dENOcAzo": {
+      "why": "\"(CS 106M) is a companion course to (CS 106B), for 1 unit, but may not count as a standalone course fulfilling Engineering Fundamentals.\"",
+      "patch": {
+        "removeItems": [
+          "CS 106M"
+        ]
+      }
+    },
+    "MTexxVlt": {
+      "why": "The methods courses plus the courses the notes require for this track, which also count in their School of Engineering category: \"(MATH 51) or (CME 100) is only required for the (Physical Methods Track) or (AI Methods Track).\", \"(PHYSICS 41) is required for (Physical Methods Track). Students may choose (PHYSICS 41) or (PHYSICS 41E)\", \"(ENGR 14) is required for (Physical Methods Track).\"",
+      "replace": {
+        "t": "all",
+        "name": "Physical Design + Manufacturing",
+        "children": [
+          {
+            "id": "MTexxVlt-methods",
+            "t": "courses",
+            "name": "Physical Design + Manufacturing methods courses",
+            "mode": "all",
+            "items": [
+              [
+                "ME 80",
+                "CEE 101A"
+              ],
+              [
+                "ME 102"
+              ],
+              [
+                "ME 103"
+              ],
+              [
+                "ME 104",
+                "ME 129",
+                "ME 152",
+                "ME 210",
+                "ME 220"
+              ]
+            ]
+          },
+          {
+            "id": "MTexxVlt-math",
+            "t": "courses",
+            "name": "MATH 51 or CME 100 (required for this track)",
+            "mode": "all",
+            "items": [
+              [
+                "MATH 51",
+                "CME 100"
+              ]
+            ],
+            "shares": true
+          },
+          {
+            "id": "MTexxVlt-physics",
+            "t": "courses",
+            "name": "PHYSICS 41 or 41E (required for this track)",
+            "mode": "all",
+            "items": [
+              [
+                "PHYSICS 41",
+                "PHYSICS 41E"
+              ]
+            ],
+            "shares": true
+          },
+          {
+            "id": "MTexxVlt-engr14",
+            "t": "courses",
+            "name": "ENGR 14 (required for this track)",
+            "mode": "all",
+            "items": [
+              [
+                "ENGR 14"
+              ]
+            ],
+            "shares": true
+          }
+        ]
+      }
+    },
+    "3kOULAGH": {
+      "why": "The methods courses plus the courses the notes require for this track, which also count in their School of Engineering category: \"(MATH 51) or (CME 100) is only required for the (Physical Methods Track) or (AI Methods Track). (CS 103) is also a suitable option for (AI Methods Track).\", \"(CS 106A) is required for (AI Methods Track).\"",
+      "replace": {
+        "t": "all",
+        "name": "AI + Digital User Experience",
+        "children": [
+          {
+            "id": "3kOULAGH-methods",
+            "t": "courses",
+            "name": "AI + Digital User Experience methods courses",
+            "mode": "all",
+            "items": [
+              [
+                "CS 106B"
+              ],
+              [
+                "CS 124",
+                "CS 223A"
+              ],
+              [
+                "CS 247A",
+                "CS 247B",
+                "CS 247G",
+                "CS 247I",
+                "CS 247S",
+                "CS 448B",
+                "CS 278",
+                "CS 347",
+                "CS 377Q"
+              ],
+              [
+                "PSYCH 30",
+                "BIOMEDIN 220",
+                "CS 272"
+              ]
+            ]
+          },
+          {
+            "id": "3kOULAGH-math",
+            "t": "courses",
+            "name": "MATH 51, CME 100 or CS 103 (required for this track)",
+            "mode": "all",
+            "items": [
+              [
+                "MATH 51",
+                "CME 100",
+                "CS 103"
+              ]
+            ],
+            "shares": true
+          },
+          {
+            "id": "3kOULAGH-cs106a",
+            "t": "courses",
+            "name": "CS 106A (required for this track)",
+            "mode": "all",
+            "items": [
+              [
+                "CS 106A"
+              ]
+            ],
+            "shares": true
+          }
+        ]
+      }
+    },
+    "hrImmtnc": {
+      "why": "An overview: \"You will choose one of four Domain Focus Areas listed below\" with the pathway rule in its notes. The choice is now the alternatives ov-design-domain over the five pathway rules; following the approved list and a Domain Co-Lead's guidance is advice.",
+      "patch": {
+        "info": true
+      }
+    },
+    "73WvqPjI": {
+      "why": "\"To fulfill a Domain, you will pursue a three-course “pathway”. Students take 3 classes total: one or more class from [List A], and the remaining classes from [List B].\" After one List A class, the other two may come from either list, so List A's courses join this rule; the Bulletin stored it as two from List B only.",
+      "patch": {
+        "name": "Two more from List A or List B",
+        "addItems": [
+          [
+            "CEE 63"
+          ],
+          [
+            "CEE 64"
+          ],
+          [
+            "CEE 166A"
+          ],
+          [
+            "CEE 176B"
+          ],
+          [
+            "EARTHSYS 4"
+          ],
+          [
+            "EARTHSYS 10"
+          ],
+          [
+            "EARTHSYS 100A"
+          ],
+          [
+            "EARTHSYS 102"
+          ],
+          [
+            "EARTHSYS 111"
+          ],
+          [
+            "EARTHSYS 112"
+          ],
+          [
+            "EARTHSYS 114"
+          ],
+          [
+            "EARTHSYS 123A"
+          ],
+          [
+            "EARTHSYS 146B"
+          ],
+          [
+            "EARTHSYS 155"
+          ],
+          [
+            "EARTHSYS 179"
+          ],
+          [
+            "EARTHSYS 183"
+          ],
+          [
+            "EARTHSYS 185"
+          ],
+          [
+            "ENERGY 131"
+          ],
+          [
+            "ENERGY 134"
+          ],
+          [
+            "EPS 20"
+          ],
+          [
+            "SUSTAIN 2"
+          ],
+          [
+            "SUSTAIN 101A"
+          ],
+          [
+            "SUSTAIN 103"
+          ],
+          [
+            "SUSTAIN 128"
+          ]
+        ]
+      }
+    },
+    "Di1AnohD": {
+      "why": "\"To fulfill a Domain, you will pursue a three-course “pathway”. Students take 3 classes total: one or more class from [List A], and the remaining classes from [List B].\" After one List A class, the other two may come from either list, so List A's courses join this rule; the Bulletin stored it as two from List B only.",
+      "patch": {
+        "name": "Two more from List A or List B",
+        "addItems": [
+          [
+            "BIO 71"
+          ],
+          [
+            "BIO 173H"
+          ],
+          [
+            "BIO 182H"
+          ],
+          [
+            "EARTHSYS 141"
+          ],
+          [
+            "OCEANS 125H"
+          ],
+          [
+            "OCEANS 143H"
+          ]
+        ]
+      }
+    },
+    "1jBG70B3": {
+      "why": "\"To fulfill a Domain, you will pursue a three-course “pathway”. Students take 3 classes total: one or more class from [List A], and the remaining classes from [List B].\" After one List A class, the other two may come from either list, so List A's courses join this rule; the Bulletin stored it as two from List B only.",
+      "patch": {
+        "name": "Two more from List A or List B",
+        "addItems": [
+          [
+            "BIOE 80"
+          ],
+          [
+            "BIO 81"
+          ],
+          [
+            "BIOE 44"
+          ],
+          [
+            "BIOE 177"
+          ]
+        ]
+      }
+    },
+    "BB14yRTG": {
+      "why": "\"To fulfill a Domain, you will pursue a three-course “pathway”. Students take 3 classes total: one or more class from [List A], and the remaining classes from [List B].\" After one List A class, the other two may come from either list, so List A's courses join this rule; the Bulletin stored it as two from List B only.",
+      "patch": {
+        "name": "Two more from List A or List B",
+        "addItems": [
+          [
+            "BIO 84"
+          ],
+          [
+            "BIO 150"
+          ],
+          [
+            "BIOE 51"
+          ],
+          [
+            "BIOE 220"
+          ],
+          [
+            "BMDS 215"
+          ],
+          [
+            "DESIGN 264"
+          ],
+          [
+            "HUMBIO 4A"
+          ],
+          [
+            "MED 275B"
+          ],
+          [
+            "SURG 101"
+          ]
+        ]
+      }
+    },
+    "Qcatb1Wl": {
+      "why": "\"To fulfill a Domain, you will pursue a three-course “pathway”. Students take 3 classes total: one or more class from [List A], and the remaining classes from [List B].\" After one List A class, the other two may come from either list, so List A's courses join this rule; the Bulletin stored it as two from List B only.",
+      "patch": {
+        "name": "Two more from List A or List B",
+        "addItems": [
+          [
+            "CEE 265D"
+          ],
+          [
+            "EARTHSYS 185"
+          ],
+          [
+            "ECON 127"
+          ],
+          [
+            "POLISCI 101"
+          ],
+          [
+            "POLISCI 247G"
+          ]
+        ]
+      }
+    },
+    "TiHvXr5O-23": {
+      "why": "TiS note B: \"(ENERGY 177A) and (ENERGY 177B) must both be taken, and for 3 units each, to fulfill TiS.\"",
+      "patch": {
+        "minUnitsEach": 3
+      }
+    },
+    "TiHvXr5O-28": {
+      "why": "TiS note C: \"(NBIO 101) is by application, and must be taken for 3 units and a letter grade to fulfill TiS.\" The application is checked by hand.",
+      "patch": {
+        "minUnitsEach": 3
+      }
+    }
+  },
+  "alternatives": [
+    {
+      "id": "ov-design-domain",
+      "name": "Domain Focus Area (choose one pathway)",
+      "of": [
+        "nG75Yqdt",
+        "Ovs7EQok",
+        "RIC59VGu",
+        "bHxCaHtF",
+        "oZ9q9vtw"
+      ],
+      "why": "\"You will choose one of four Domain Focus Areas listed below\" and \"To fulfill a Domain, you will pursue a three-course “pathway”.\" Designing for the Planet has two pathways (Climate + Environment, Oceans), so there are five to choose from."
+    }
+  ],
+  "program": {
+    "letterGrade": true,
+    "why": "Grading: \"All courses taken to satisfy major requirements (including the requirements for mathematics, science, engineering fundamentals, technology in society, and engineering depth) for all engineering students (including both department and School of Engineering majors) must be taken for a letter grade if the instructor offers that option.\""
+  },
+  "blocks": {
+    "6jlkwfm1": {
+      "shares": false,
+      "why": "Policies: \"You may not double-count classes across any major category.\" The capstone sequence is its own category. The WIM block keeps sharing: its only courses are the capstone sequences, so the WIM is a designation on the capstone course, not a second category."
+    }
+  },
+  "add": [
+    {
+      "block": "UPUtm8RG",
+      "node": {
+        "id": "ov-gpa",
+        "t": "text",
+        "name": "Combined GPA of 2.0 in Engineering Fundamentals and depth courses",
+        "manual": "gpa"
+      },
+      "why": "GPA: \"For departmental majors, the minimum combined GPA (grade point average) for all courses taken in fulfillment of the Engineering Fundamentals requirement and the Engineering Depth requirement is 2.0. For School of Engineering majors, the minimum GPA on all engineering courses taken in fulfillment of the major requirement is 2.0.\""
+    }
+  ]
+}

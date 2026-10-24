@@ -1,0 +1,77 @@
+{
+  "code": "PAS-MS",
+  "reviewed": "2026-10-23",
+  "summary": "The audit checks the didactic courses (Foundations of Clinical Medicine and of Clinical Pharmacology, Clinical Anatomy, and the Pathophysiology, Practice of Medicine, Clinical Pharmacology and Therapeutics, and LEAD-PA series), the twelve 6-unit clerkships, and 182 units in all. Both the old and new numbers count for the two series being renumbered. Checked by hand: the leadership track and thesis, the milestone examinations and the annual survey.",
+  "blocks": {
+    "yO6CI8R4": {
+      "units": null
+    }
+  },
+  "nodes": {
+    "apRHQlpY": {
+      "why": "\"Beginning in AY 26-27, this course series is being renamed/renumbered from Principles of Clinical Medicine (PAS 212-215) to Pathophysiology and Clinical Medicine (PAS 232-235). This change has taken effect for the first two courses in the series; the latter two courses will be changed prior to AY 27-28.\" Either number fills each slot.",
+      "patch": {
+        "items": [
+          [
+            "PAS 232",
+            "PAS 212"
+          ],
+          [
+            "PAS 233",
+            "PAS 213"
+          ],
+          [
+            "PAS 214",
+            "PAS 234"
+          ],
+          [
+            "PAS 215",
+            "PAS 235"
+          ]
+        ]
+      }
+    },
+    "YLlrqf4n": {
+      "why": "\"Beginning in AY 26-27, this course series is being renamed/renumbered from Clinical Therapeutics (PAS 222-225) to Clinical Pharmacology and Therapeutics (PAS 242-245). This change has taken effect for the first two courses in the series\". Either number fills each slot.",
+      "patch": {
+        "items": [
+          [
+            "PAS 242",
+            "PAS 222"
+          ],
+          [
+            "PAS 243",
+            "PAS 223"
+          ],
+          [
+            "PAS 224",
+            "PAS 244"
+          ],
+          [
+            "PAS 225",
+            "PAS 245"
+          ]
+        ]
+      }
+    },
+    "CTuOxUZ4": {
+      "why": "\"Beyond the core curriculum and clerkships, students are required to select a leadership track and complete a thesis ... Each student must declare a Leadership Track by submitting their course plan ... A final complete Thesis paper is due at the end of Q8 (December).\" The track coursework is not listed.",
+      "patch": {
+        "manual": "thesis",
+        "name": "Leadership track and thesis project"
+      }
+    },
+    "CXM2k5m6": {
+      "why": "\"All MSPA students are required to complete and pass the following milestone examinations: End of Didactic Exam (EOD) ... CPX-P ... APSA/PRISM ... End of Curriculum Exam (EOC)\"",
+      "patch": {
+        "manual": "exam"
+      }
+    },
+    "Coy9R9Ye": {
+      "why": "\"It is a milestone requirement for MSPA students to complete the MSPA Program Annual Survey\"",
+      "patch": {
+        "manual": "milestone"
+      }
+    }
+  }
+}

@@ -1,0 +1,1074 @@
+{
+  "code": "POLSC-MA",
+  "reviewed": "2026-10-23",
+  "summary": "You take two 5-unit graduate seminars (300 or 400 level) in each of two fields and one in a third, 25 units, plus 20 more units numbered above 100, at most 10 of them outside Political Science, for 45 units, all letter graded. The audit also caps a single field's seminars at 25 units and directed reading at 10 units. Outside courses need the Director of Graduate Studies' approval on your MA Course Plan, and your 2.7 GPA and who taught each seminar are checked by hand.",
+  "program": {"letterGrade": true, "why": "Grading: \"All courses must be taken for a letter grade.\"", "totals": [{"label": "American Politics seminars", "maxUnits": 25, "codes": ["POLISCI 320R", "POLISCI 324L", "POLISCI 326", "POLISCI 351B", "POLISCI 420A", "POLISCI 420B", "POLISCI 421K", "POLISCI 422F", "POLISCI 423A", "POLISCI 423B", "POLISCI 424C", "POLISCI 426", "POLISCI 427C", "POLISCI 460A", "POLISCI 462"], "why": "Policies: \"Not more than 25 units of the 45-unit requirement may be taken in a single field.\" Counted over the field's listed seminars; other courses carry no field in the Bulletin."}, {"label": "Comparative Politics seminars", "maxUnits": 25, "codes": ["POLISCI 314D", "POLISCI 341", "POLISCI 344U", "POLISCI 347G", "POLISCI 348", "POLISCI 348D", "POLISCI 348S", "POLISCI 440A", "POLISCI 440B", "POLISCI 440C", "POLISCI 443S", "POLISCI 444A", "POLISCI 445C", "POLISCI 446", "POLISCI 446A", "POLISCI 447T", "POLISCI 460A"], "why": "Policies: \"Not more than 25 units of the 45-unit requirement may be taken in a single field.\" Counted over the field's listed seminars; other courses carry no field in the Bulletin."}, {"label": "International Relations seminars", "maxUnits": 25, "codes": ["POLISCI 311N", "POLISCI 314D", "POLISCI 410A", "POLISCI 410B", "POLISCI 410C", "POLISCI 410D", "POLISCI 460A"], "why": "Policies: \"Not more than 25 units of the 45-unit requirement may be taken in a single field.\" Counted over the field's listed seminars; other courses carry no field in the Bulletin."}, {"label": "Political Methodology seminars", "maxUnits": 25, "codes": ["POLISCI 351B", "POLISCI 354", "POLISCI 355A", "POLISCI 355B", "POLISCI 355C", "POLISCI 356A", "POLISCI 356B", "POLISCI 450A", "POLISCI 450B", "POLISCI 450C", "POLISCI 450D", "POLISCI 451", "POLISCI 460A"], "why": "Policies: \"Not more than 25 units of the 45-unit requirement may be taken in a single field.\" Counted over the field's listed seminars; other courses carry no field in the Bulletin."}, {"label": "Political Theory seminars", "maxUnits": 25, "codes": ["POLISCI 330A", "POLISCI 331", "POLISCI 331M", "POLISCI 332T", "POLISCI 333M", "POLISCI 334P", "POLISCI 335", "POLISCI 336S", "POLISCI 337", "POLISCI 337A", "POLISCI 338B", "POLISCI 338E", "POLISCI 431", "POLISCI 432R", "POLISCI 437C", "POLISCI 438R"], "why": "Policies: \"Not more than 25 units of the 45-unit requirement may be taken in a single field.\" Counted over the field's listed seminars; other courses carry no field in the Bulletin."}, {"label": "Directed reading", "maxUnits": 10, "codes": ["POLISCI 219", "POLISCI 229", "POLISCI 239", "POLISCI 249", "POLISCI 259", "POLISCI 319", "POLISCI 329"], "why": "Policies: \"A maximum of ten units of directed reading coursework may count towards the Additional Units requirement with the approval of the Director of Graduate Studies.\""}]},
+  "nodes": {
+    "EPTjwaTT": {
+      "why": "\"All MA candidates must complete at least two graduate seminars for five units each in two fields and at least one graduate seminar for five units in a third field. These 25 units must be taken in graduate seminars (300 or 400 level) taught by regular Political Science faculty.\" The Bulletin data accepted one seminar from any field. Now one choice among the thirty ways to pick two fields with two seminars and a third field with one, each seminar 5 units. Who taught the seminar is not checked.",
+      "replace": {
+        "t": "any",
+        "name": "Seminar Options",
+        "children": [
+          {
+            "id": "ov-sem-am-cp-ir",
+            "t": "all",
+            "name": "Two in American Politics, two in Comparative Politics, one in International Relations",
+            "children": [
+              {
+                "id": "ov-sem-am-cp-ir-a",
+                "t": "courses",
+                "name": "American Politics: 2 seminars",
+                "mode": "atLeast",
+                "n": 2,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 320R"], ["POLISCI 324L"], ["POLISCI 326"], ["POLISCI 351B"], ["POLISCI 420A"], ["POLISCI 420B"], ["POLISCI 421K"], ["POLISCI 422F"], ["POLISCI 423A"], ["POLISCI 423B"], ["POLISCI 424C"], ["POLISCI 426"], ["POLISCI 427C"], ["POLISCI 460A"], ["POLISCI 462"]]
+              },
+              {
+                "id": "ov-sem-am-cp-ir-b",
+                "t": "courses",
+                "name": "Comparative Politics: 2 seminars",
+                "mode": "atLeast",
+                "n": 2,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 314D"], ["POLISCI 341"], ["POLISCI 344U"], ["POLISCI 347G"], ["POLISCI 348"], ["POLISCI 348D"], ["POLISCI 348S"], ["POLISCI 440A"], ["POLISCI 440B"], ["POLISCI 440C"], ["POLISCI 443S"], ["POLISCI 444A"], ["POLISCI 445C"], ["POLISCI 446"], ["POLISCI 446A"], ["POLISCI 447T"], ["POLISCI 460A"]]
+              },
+              {
+                "id": "ov-sem-am-cp-ir-c",
+                "t": "courses",
+                "name": "International Relations: 1 seminar",
+                "mode": "atLeast",
+                "n": 1,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 311N"], ["POLISCI 314D"], ["POLISCI 410A"], ["POLISCI 410B"], ["POLISCI 410C"], ["POLISCI 410D"], ["POLISCI 460A"]]
+              }
+            ]
+          },
+          {
+            "id": "ov-sem-am-cp-pm",
+            "t": "all",
+            "name": "Two in American Politics, two in Comparative Politics, one in Political Methodology",
+            "children": [
+              {
+                "id": "ov-sem-am-cp-pm-a",
+                "t": "courses",
+                "name": "American Politics: 2 seminars",
+                "mode": "atLeast",
+                "n": 2,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 320R"], ["POLISCI 324L"], ["POLISCI 326"], ["POLISCI 351B"], ["POLISCI 420A"], ["POLISCI 420B"], ["POLISCI 421K"], ["POLISCI 422F"], ["POLISCI 423A"], ["POLISCI 423B"], ["POLISCI 424C"], ["POLISCI 426"], ["POLISCI 427C"], ["POLISCI 460A"], ["POLISCI 462"]]
+              },
+              {
+                "id": "ov-sem-am-cp-pm-b",
+                "t": "courses",
+                "name": "Comparative Politics: 2 seminars",
+                "mode": "atLeast",
+                "n": 2,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 314D"], ["POLISCI 341"], ["POLISCI 344U"], ["POLISCI 347G"], ["POLISCI 348"], ["POLISCI 348D"], ["POLISCI 348S"], ["POLISCI 440A"], ["POLISCI 440B"], ["POLISCI 440C"], ["POLISCI 443S"], ["POLISCI 444A"], ["POLISCI 445C"], ["POLISCI 446"], ["POLISCI 446A"], ["POLISCI 447T"], ["POLISCI 460A"]]
+              },
+              {
+                "id": "ov-sem-am-cp-pm-c",
+                "t": "courses",
+                "name": "Political Methodology: 1 seminar",
+                "mode": "atLeast",
+                "n": 1,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 351B"], ["POLISCI 354"], ["POLISCI 355A"], ["POLISCI 355B"], ["POLISCI 355C"], ["POLISCI 356A"], ["POLISCI 356B"], ["POLISCI 450A"], ["POLISCI 450B"], ["POLISCI 450C"], ["POLISCI 450D"], ["POLISCI 451"], ["POLISCI 460A"]]
+              }
+            ]
+          },
+          {
+            "id": "ov-sem-am-cp-pt",
+            "t": "all",
+            "name": "Two in American Politics, two in Comparative Politics, one in Political Theory",
+            "children": [
+              {
+                "id": "ov-sem-am-cp-pt-a",
+                "t": "courses",
+                "name": "American Politics: 2 seminars",
+                "mode": "atLeast",
+                "n": 2,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 320R"], ["POLISCI 324L"], ["POLISCI 326"], ["POLISCI 351B"], ["POLISCI 420A"], ["POLISCI 420B"], ["POLISCI 421K"], ["POLISCI 422F"], ["POLISCI 423A"], ["POLISCI 423B"], ["POLISCI 424C"], ["POLISCI 426"], ["POLISCI 427C"], ["POLISCI 460A"], ["POLISCI 462"]]
+              },
+              {
+                "id": "ov-sem-am-cp-pt-b",
+                "t": "courses",
+                "name": "Comparative Politics: 2 seminars",
+                "mode": "atLeast",
+                "n": 2,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 314D"], ["POLISCI 341"], ["POLISCI 344U"], ["POLISCI 347G"], ["POLISCI 348"], ["POLISCI 348D"], ["POLISCI 348S"], ["POLISCI 440A"], ["POLISCI 440B"], ["POLISCI 440C"], ["POLISCI 443S"], ["POLISCI 444A"], ["POLISCI 445C"], ["POLISCI 446"], ["POLISCI 446A"], ["POLISCI 447T"], ["POLISCI 460A"]]
+              },
+              {
+                "id": "ov-sem-am-cp-pt-c",
+                "t": "courses",
+                "name": "Political Theory: 1 seminar",
+                "mode": "atLeast",
+                "n": 1,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 330A"], ["POLISCI 331"], ["POLISCI 331M"], ["POLISCI 332T"], ["POLISCI 333M"], ["POLISCI 334P"], ["POLISCI 335"], ["POLISCI 336S"], ["POLISCI 337"], ["POLISCI 337A"], ["POLISCI 338B"], ["POLISCI 338E"], ["POLISCI 431"], ["POLISCI 432R"], ["POLISCI 437C"], ["POLISCI 438R"]]
+              }
+            ]
+          },
+          {
+            "id": "ov-sem-am-ir-cp",
+            "t": "all",
+            "name": "Two in American Politics, two in International Relations, one in Comparative Politics",
+            "children": [
+              {
+                "id": "ov-sem-am-ir-cp-a",
+                "t": "courses",
+                "name": "American Politics: 2 seminars",
+                "mode": "atLeast",
+                "n": 2,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 320R"], ["POLISCI 324L"], ["POLISCI 326"], ["POLISCI 351B"], ["POLISCI 420A"], ["POLISCI 420B"], ["POLISCI 421K"], ["POLISCI 422F"], ["POLISCI 423A"], ["POLISCI 423B"], ["POLISCI 424C"], ["POLISCI 426"], ["POLISCI 427C"], ["POLISCI 460A"], ["POLISCI 462"]]
+              },
+              {
+                "id": "ov-sem-am-ir-cp-b",
+                "t": "courses",
+                "name": "International Relations: 2 seminars",
+                "mode": "atLeast",
+                "n": 2,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 311N"], ["POLISCI 314D"], ["POLISCI 410A"], ["POLISCI 410B"], ["POLISCI 410C"], ["POLISCI 410D"], ["POLISCI 460A"]]
+              },
+              {
+                "id": "ov-sem-am-ir-cp-c",
+                "t": "courses",
+                "name": "Comparative Politics: 1 seminar",
+                "mode": "atLeast",
+                "n": 1,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 314D"], ["POLISCI 341"], ["POLISCI 344U"], ["POLISCI 347G"], ["POLISCI 348"], ["POLISCI 348D"], ["POLISCI 348S"], ["POLISCI 440A"], ["POLISCI 440B"], ["POLISCI 440C"], ["POLISCI 443S"], ["POLISCI 444A"], ["POLISCI 445C"], ["POLISCI 446"], ["POLISCI 446A"], ["POLISCI 447T"], ["POLISCI 460A"]]
+              }
+            ]
+          },
+          {
+            "id": "ov-sem-am-ir-pm",
+            "t": "all",
+            "name": "Two in American Politics, two in International Relations, one in Political Methodology",
+            "children": [
+              {
+                "id": "ov-sem-am-ir-pm-a",
+                "t": "courses",
+                "name": "American Politics: 2 seminars",
+                "mode": "atLeast",
+                "n": 2,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 320R"], ["POLISCI 324L"], ["POLISCI 326"], ["POLISCI 351B"], ["POLISCI 420A"], ["POLISCI 420B"], ["POLISCI 421K"], ["POLISCI 422F"], ["POLISCI 423A"], ["POLISCI 423B"], ["POLISCI 424C"], ["POLISCI 426"], ["POLISCI 427C"], ["POLISCI 460A"], ["POLISCI 462"]]
+              },
+              {
+                "id": "ov-sem-am-ir-pm-b",
+                "t": "courses",
+                "name": "International Relations: 2 seminars",
+                "mode": "atLeast",
+                "n": 2,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 311N"], ["POLISCI 314D"], ["POLISCI 410A"], ["POLISCI 410B"], ["POLISCI 410C"], ["POLISCI 410D"], ["POLISCI 460A"]]
+              },
+              {
+                "id": "ov-sem-am-ir-pm-c",
+                "t": "courses",
+                "name": "Political Methodology: 1 seminar",
+                "mode": "atLeast",
+                "n": 1,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 351B"], ["POLISCI 354"], ["POLISCI 355A"], ["POLISCI 355B"], ["POLISCI 355C"], ["POLISCI 356A"], ["POLISCI 356B"], ["POLISCI 450A"], ["POLISCI 450B"], ["POLISCI 450C"], ["POLISCI 450D"], ["POLISCI 451"], ["POLISCI 460A"]]
+              }
+            ]
+          },
+          {
+            "id": "ov-sem-am-ir-pt",
+            "t": "all",
+            "name": "Two in American Politics, two in International Relations, one in Political Theory",
+            "children": [
+              {
+                "id": "ov-sem-am-ir-pt-a",
+                "t": "courses",
+                "name": "American Politics: 2 seminars",
+                "mode": "atLeast",
+                "n": 2,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 320R"], ["POLISCI 324L"], ["POLISCI 326"], ["POLISCI 351B"], ["POLISCI 420A"], ["POLISCI 420B"], ["POLISCI 421K"], ["POLISCI 422F"], ["POLISCI 423A"], ["POLISCI 423B"], ["POLISCI 424C"], ["POLISCI 426"], ["POLISCI 427C"], ["POLISCI 460A"], ["POLISCI 462"]]
+              },
+              {
+                "id": "ov-sem-am-ir-pt-b",
+                "t": "courses",
+                "name": "International Relations: 2 seminars",
+                "mode": "atLeast",
+                "n": 2,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 311N"], ["POLISCI 314D"], ["POLISCI 410A"], ["POLISCI 410B"], ["POLISCI 410C"], ["POLISCI 410D"], ["POLISCI 460A"]]
+              },
+              {
+                "id": "ov-sem-am-ir-pt-c",
+                "t": "courses",
+                "name": "Political Theory: 1 seminar",
+                "mode": "atLeast",
+                "n": 1,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 330A"], ["POLISCI 331"], ["POLISCI 331M"], ["POLISCI 332T"], ["POLISCI 333M"], ["POLISCI 334P"], ["POLISCI 335"], ["POLISCI 336S"], ["POLISCI 337"], ["POLISCI 337A"], ["POLISCI 338B"], ["POLISCI 338E"], ["POLISCI 431"], ["POLISCI 432R"], ["POLISCI 437C"], ["POLISCI 438R"]]
+              }
+            ]
+          },
+          {
+            "id": "ov-sem-am-pm-cp",
+            "t": "all",
+            "name": "Two in American Politics, two in Political Methodology, one in Comparative Politics",
+            "children": [
+              {
+                "id": "ov-sem-am-pm-cp-a",
+                "t": "courses",
+                "name": "American Politics: 2 seminars",
+                "mode": "atLeast",
+                "n": 2,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 320R"], ["POLISCI 324L"], ["POLISCI 326"], ["POLISCI 351B"], ["POLISCI 420A"], ["POLISCI 420B"], ["POLISCI 421K"], ["POLISCI 422F"], ["POLISCI 423A"], ["POLISCI 423B"], ["POLISCI 424C"], ["POLISCI 426"], ["POLISCI 427C"], ["POLISCI 460A"], ["POLISCI 462"]]
+              },
+              {
+                "id": "ov-sem-am-pm-cp-b",
+                "t": "courses",
+                "name": "Political Methodology: 2 seminars",
+                "mode": "atLeast",
+                "n": 2,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 351B"], ["POLISCI 354"], ["POLISCI 355A"], ["POLISCI 355B"], ["POLISCI 355C"], ["POLISCI 356A"], ["POLISCI 356B"], ["POLISCI 450A"], ["POLISCI 450B"], ["POLISCI 450C"], ["POLISCI 450D"], ["POLISCI 451"], ["POLISCI 460A"]]
+              },
+              {
+                "id": "ov-sem-am-pm-cp-c",
+                "t": "courses",
+                "name": "Comparative Politics: 1 seminar",
+                "mode": "atLeast",
+                "n": 1,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 314D"], ["POLISCI 341"], ["POLISCI 344U"], ["POLISCI 347G"], ["POLISCI 348"], ["POLISCI 348D"], ["POLISCI 348S"], ["POLISCI 440A"], ["POLISCI 440B"], ["POLISCI 440C"], ["POLISCI 443S"], ["POLISCI 444A"], ["POLISCI 445C"], ["POLISCI 446"], ["POLISCI 446A"], ["POLISCI 447T"], ["POLISCI 460A"]]
+              }
+            ]
+          },
+          {
+            "id": "ov-sem-am-pm-ir",
+            "t": "all",
+            "name": "Two in American Politics, two in Political Methodology, one in International Relations",
+            "children": [
+              {
+                "id": "ov-sem-am-pm-ir-a",
+                "t": "courses",
+                "name": "American Politics: 2 seminars",
+                "mode": "atLeast",
+                "n": 2,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 320R"], ["POLISCI 324L"], ["POLISCI 326"], ["POLISCI 351B"], ["POLISCI 420A"], ["POLISCI 420B"], ["POLISCI 421K"], ["POLISCI 422F"], ["POLISCI 423A"], ["POLISCI 423B"], ["POLISCI 424C"], ["POLISCI 426"], ["POLISCI 427C"], ["POLISCI 460A"], ["POLISCI 462"]]
+              },
+              {
+                "id": "ov-sem-am-pm-ir-b",
+                "t": "courses",
+                "name": "Political Methodology: 2 seminars",
+                "mode": "atLeast",
+                "n": 2,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 351B"], ["POLISCI 354"], ["POLISCI 355A"], ["POLISCI 355B"], ["POLISCI 355C"], ["POLISCI 356A"], ["POLISCI 356B"], ["POLISCI 450A"], ["POLISCI 450B"], ["POLISCI 450C"], ["POLISCI 450D"], ["POLISCI 451"], ["POLISCI 460A"]]
+              },
+              {
+                "id": "ov-sem-am-pm-ir-c",
+                "t": "courses",
+                "name": "International Relations: 1 seminar",
+                "mode": "atLeast",
+                "n": 1,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 311N"], ["POLISCI 314D"], ["POLISCI 410A"], ["POLISCI 410B"], ["POLISCI 410C"], ["POLISCI 410D"], ["POLISCI 460A"]]
+              }
+            ]
+          },
+          {
+            "id": "ov-sem-am-pm-pt",
+            "t": "all",
+            "name": "Two in American Politics, two in Political Methodology, one in Political Theory",
+            "children": [
+              {
+                "id": "ov-sem-am-pm-pt-a",
+                "t": "courses",
+                "name": "American Politics: 2 seminars",
+                "mode": "atLeast",
+                "n": 2,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 320R"], ["POLISCI 324L"], ["POLISCI 326"], ["POLISCI 351B"], ["POLISCI 420A"], ["POLISCI 420B"], ["POLISCI 421K"], ["POLISCI 422F"], ["POLISCI 423A"], ["POLISCI 423B"], ["POLISCI 424C"], ["POLISCI 426"], ["POLISCI 427C"], ["POLISCI 460A"], ["POLISCI 462"]]
+              },
+              {
+                "id": "ov-sem-am-pm-pt-b",
+                "t": "courses",
+                "name": "Political Methodology: 2 seminars",
+                "mode": "atLeast",
+                "n": 2,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 351B"], ["POLISCI 354"], ["POLISCI 355A"], ["POLISCI 355B"], ["POLISCI 355C"], ["POLISCI 356A"], ["POLISCI 356B"], ["POLISCI 450A"], ["POLISCI 450B"], ["POLISCI 450C"], ["POLISCI 450D"], ["POLISCI 451"], ["POLISCI 460A"]]
+              },
+              {
+                "id": "ov-sem-am-pm-pt-c",
+                "t": "courses",
+                "name": "Political Theory: 1 seminar",
+                "mode": "atLeast",
+                "n": 1,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 330A"], ["POLISCI 331"], ["POLISCI 331M"], ["POLISCI 332T"], ["POLISCI 333M"], ["POLISCI 334P"], ["POLISCI 335"], ["POLISCI 336S"], ["POLISCI 337"], ["POLISCI 337A"], ["POLISCI 338B"], ["POLISCI 338E"], ["POLISCI 431"], ["POLISCI 432R"], ["POLISCI 437C"], ["POLISCI 438R"]]
+              }
+            ]
+          },
+          {
+            "id": "ov-sem-am-pt-cp",
+            "t": "all",
+            "name": "Two in American Politics, two in Political Theory, one in Comparative Politics",
+            "children": [
+              {
+                "id": "ov-sem-am-pt-cp-a",
+                "t": "courses",
+                "name": "American Politics: 2 seminars",
+                "mode": "atLeast",
+                "n": 2,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 320R"], ["POLISCI 324L"], ["POLISCI 326"], ["POLISCI 351B"], ["POLISCI 420A"], ["POLISCI 420B"], ["POLISCI 421K"], ["POLISCI 422F"], ["POLISCI 423A"], ["POLISCI 423B"], ["POLISCI 424C"], ["POLISCI 426"], ["POLISCI 427C"], ["POLISCI 460A"], ["POLISCI 462"]]
+              },
+              {
+                "id": "ov-sem-am-pt-cp-b",
+                "t": "courses",
+                "name": "Political Theory: 2 seminars",
+                "mode": "atLeast",
+                "n": 2,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 330A"], ["POLISCI 331"], ["POLISCI 331M"], ["POLISCI 332T"], ["POLISCI 333M"], ["POLISCI 334P"], ["POLISCI 335"], ["POLISCI 336S"], ["POLISCI 337"], ["POLISCI 337A"], ["POLISCI 338B"], ["POLISCI 338E"], ["POLISCI 431"], ["POLISCI 432R"], ["POLISCI 437C"], ["POLISCI 438R"]]
+              },
+              {
+                "id": "ov-sem-am-pt-cp-c",
+                "t": "courses",
+                "name": "Comparative Politics: 1 seminar",
+                "mode": "atLeast",
+                "n": 1,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 314D"], ["POLISCI 341"], ["POLISCI 344U"], ["POLISCI 347G"], ["POLISCI 348"], ["POLISCI 348D"], ["POLISCI 348S"], ["POLISCI 440A"], ["POLISCI 440B"], ["POLISCI 440C"], ["POLISCI 443S"], ["POLISCI 444A"], ["POLISCI 445C"], ["POLISCI 446"], ["POLISCI 446A"], ["POLISCI 447T"], ["POLISCI 460A"]]
+              }
+            ]
+          },
+          {
+            "id": "ov-sem-am-pt-ir",
+            "t": "all",
+            "name": "Two in American Politics, two in Political Theory, one in International Relations",
+            "children": [
+              {
+                "id": "ov-sem-am-pt-ir-a",
+                "t": "courses",
+                "name": "American Politics: 2 seminars",
+                "mode": "atLeast",
+                "n": 2,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 320R"], ["POLISCI 324L"], ["POLISCI 326"], ["POLISCI 351B"], ["POLISCI 420A"], ["POLISCI 420B"], ["POLISCI 421K"], ["POLISCI 422F"], ["POLISCI 423A"], ["POLISCI 423B"], ["POLISCI 424C"], ["POLISCI 426"], ["POLISCI 427C"], ["POLISCI 460A"], ["POLISCI 462"]]
+              },
+              {
+                "id": "ov-sem-am-pt-ir-b",
+                "t": "courses",
+                "name": "Political Theory: 2 seminars",
+                "mode": "atLeast",
+                "n": 2,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 330A"], ["POLISCI 331"], ["POLISCI 331M"], ["POLISCI 332T"], ["POLISCI 333M"], ["POLISCI 334P"], ["POLISCI 335"], ["POLISCI 336S"], ["POLISCI 337"], ["POLISCI 337A"], ["POLISCI 338B"], ["POLISCI 338E"], ["POLISCI 431"], ["POLISCI 432R"], ["POLISCI 437C"], ["POLISCI 438R"]]
+              },
+              {
+                "id": "ov-sem-am-pt-ir-c",
+                "t": "courses",
+                "name": "International Relations: 1 seminar",
+                "mode": "atLeast",
+                "n": 1,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 311N"], ["POLISCI 314D"], ["POLISCI 410A"], ["POLISCI 410B"], ["POLISCI 410C"], ["POLISCI 410D"], ["POLISCI 460A"]]
+              }
+            ]
+          },
+          {
+            "id": "ov-sem-am-pt-pm",
+            "t": "all",
+            "name": "Two in American Politics, two in Political Theory, one in Political Methodology",
+            "children": [
+              {
+                "id": "ov-sem-am-pt-pm-a",
+                "t": "courses",
+                "name": "American Politics: 2 seminars",
+                "mode": "atLeast",
+                "n": 2,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 320R"], ["POLISCI 324L"], ["POLISCI 326"], ["POLISCI 351B"], ["POLISCI 420A"], ["POLISCI 420B"], ["POLISCI 421K"], ["POLISCI 422F"], ["POLISCI 423A"], ["POLISCI 423B"], ["POLISCI 424C"], ["POLISCI 426"], ["POLISCI 427C"], ["POLISCI 460A"], ["POLISCI 462"]]
+              },
+              {
+                "id": "ov-sem-am-pt-pm-b",
+                "t": "courses",
+                "name": "Political Theory: 2 seminars",
+                "mode": "atLeast",
+                "n": 2,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 330A"], ["POLISCI 331"], ["POLISCI 331M"], ["POLISCI 332T"], ["POLISCI 333M"], ["POLISCI 334P"], ["POLISCI 335"], ["POLISCI 336S"], ["POLISCI 337"], ["POLISCI 337A"], ["POLISCI 338B"], ["POLISCI 338E"], ["POLISCI 431"], ["POLISCI 432R"], ["POLISCI 437C"], ["POLISCI 438R"]]
+              },
+              {
+                "id": "ov-sem-am-pt-pm-c",
+                "t": "courses",
+                "name": "Political Methodology: 1 seminar",
+                "mode": "atLeast",
+                "n": 1,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 351B"], ["POLISCI 354"], ["POLISCI 355A"], ["POLISCI 355B"], ["POLISCI 355C"], ["POLISCI 356A"], ["POLISCI 356B"], ["POLISCI 450A"], ["POLISCI 450B"], ["POLISCI 450C"], ["POLISCI 450D"], ["POLISCI 451"], ["POLISCI 460A"]]
+              }
+            ]
+          },
+          {
+            "id": "ov-sem-cp-ir-am",
+            "t": "all",
+            "name": "Two in Comparative Politics, two in International Relations, one in American Politics",
+            "children": [
+              {
+                "id": "ov-sem-cp-ir-am-a",
+                "t": "courses",
+                "name": "Comparative Politics: 2 seminars",
+                "mode": "atLeast",
+                "n": 2,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 314D"], ["POLISCI 341"], ["POLISCI 344U"], ["POLISCI 347G"], ["POLISCI 348"], ["POLISCI 348D"], ["POLISCI 348S"], ["POLISCI 440A"], ["POLISCI 440B"], ["POLISCI 440C"], ["POLISCI 443S"], ["POLISCI 444A"], ["POLISCI 445C"], ["POLISCI 446"], ["POLISCI 446A"], ["POLISCI 447T"], ["POLISCI 460A"]]
+              },
+              {
+                "id": "ov-sem-cp-ir-am-b",
+                "t": "courses",
+                "name": "International Relations: 2 seminars",
+                "mode": "atLeast",
+                "n": 2,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 311N"], ["POLISCI 314D"], ["POLISCI 410A"], ["POLISCI 410B"], ["POLISCI 410C"], ["POLISCI 410D"], ["POLISCI 460A"]]
+              },
+              {
+                "id": "ov-sem-cp-ir-am-c",
+                "t": "courses",
+                "name": "American Politics: 1 seminar",
+                "mode": "atLeast",
+                "n": 1,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 320R"], ["POLISCI 324L"], ["POLISCI 326"], ["POLISCI 351B"], ["POLISCI 420A"], ["POLISCI 420B"], ["POLISCI 421K"], ["POLISCI 422F"], ["POLISCI 423A"], ["POLISCI 423B"], ["POLISCI 424C"], ["POLISCI 426"], ["POLISCI 427C"], ["POLISCI 460A"], ["POLISCI 462"]]
+              }
+            ]
+          },
+          {
+            "id": "ov-sem-cp-ir-pm",
+            "t": "all",
+            "name": "Two in Comparative Politics, two in International Relations, one in Political Methodology",
+            "children": [
+              {
+                "id": "ov-sem-cp-ir-pm-a",
+                "t": "courses",
+                "name": "Comparative Politics: 2 seminars",
+                "mode": "atLeast",
+                "n": 2,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 314D"], ["POLISCI 341"], ["POLISCI 344U"], ["POLISCI 347G"], ["POLISCI 348"], ["POLISCI 348D"], ["POLISCI 348S"], ["POLISCI 440A"], ["POLISCI 440B"], ["POLISCI 440C"], ["POLISCI 443S"], ["POLISCI 444A"], ["POLISCI 445C"], ["POLISCI 446"], ["POLISCI 446A"], ["POLISCI 447T"], ["POLISCI 460A"]]
+              },
+              {
+                "id": "ov-sem-cp-ir-pm-b",
+                "t": "courses",
+                "name": "International Relations: 2 seminars",
+                "mode": "atLeast",
+                "n": 2,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 311N"], ["POLISCI 314D"], ["POLISCI 410A"], ["POLISCI 410B"], ["POLISCI 410C"], ["POLISCI 410D"], ["POLISCI 460A"]]
+              },
+              {
+                "id": "ov-sem-cp-ir-pm-c",
+                "t": "courses",
+                "name": "Political Methodology: 1 seminar",
+                "mode": "atLeast",
+                "n": 1,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 351B"], ["POLISCI 354"], ["POLISCI 355A"], ["POLISCI 355B"], ["POLISCI 355C"], ["POLISCI 356A"], ["POLISCI 356B"], ["POLISCI 450A"], ["POLISCI 450B"], ["POLISCI 450C"], ["POLISCI 450D"], ["POLISCI 451"], ["POLISCI 460A"]]
+              }
+            ]
+          },
+          {
+            "id": "ov-sem-cp-ir-pt",
+            "t": "all",
+            "name": "Two in Comparative Politics, two in International Relations, one in Political Theory",
+            "children": [
+              {
+                "id": "ov-sem-cp-ir-pt-a",
+                "t": "courses",
+                "name": "Comparative Politics: 2 seminars",
+                "mode": "atLeast",
+                "n": 2,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 314D"], ["POLISCI 341"], ["POLISCI 344U"], ["POLISCI 347G"], ["POLISCI 348"], ["POLISCI 348D"], ["POLISCI 348S"], ["POLISCI 440A"], ["POLISCI 440B"], ["POLISCI 440C"], ["POLISCI 443S"], ["POLISCI 444A"], ["POLISCI 445C"], ["POLISCI 446"], ["POLISCI 446A"], ["POLISCI 447T"], ["POLISCI 460A"]]
+              },
+              {
+                "id": "ov-sem-cp-ir-pt-b",
+                "t": "courses",
+                "name": "International Relations: 2 seminars",
+                "mode": "atLeast",
+                "n": 2,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 311N"], ["POLISCI 314D"], ["POLISCI 410A"], ["POLISCI 410B"], ["POLISCI 410C"], ["POLISCI 410D"], ["POLISCI 460A"]]
+              },
+              {
+                "id": "ov-sem-cp-ir-pt-c",
+                "t": "courses",
+                "name": "Political Theory: 1 seminar",
+                "mode": "atLeast",
+                "n": 1,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 330A"], ["POLISCI 331"], ["POLISCI 331M"], ["POLISCI 332T"], ["POLISCI 333M"], ["POLISCI 334P"], ["POLISCI 335"], ["POLISCI 336S"], ["POLISCI 337"], ["POLISCI 337A"], ["POLISCI 338B"], ["POLISCI 338E"], ["POLISCI 431"], ["POLISCI 432R"], ["POLISCI 437C"], ["POLISCI 438R"]]
+              }
+            ]
+          },
+          {
+            "id": "ov-sem-cp-pm-am",
+            "t": "all",
+            "name": "Two in Comparative Politics, two in Political Methodology, one in American Politics",
+            "children": [
+              {
+                "id": "ov-sem-cp-pm-am-a",
+                "t": "courses",
+                "name": "Comparative Politics: 2 seminars",
+                "mode": "atLeast",
+                "n": 2,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 314D"], ["POLISCI 341"], ["POLISCI 344U"], ["POLISCI 347G"], ["POLISCI 348"], ["POLISCI 348D"], ["POLISCI 348S"], ["POLISCI 440A"], ["POLISCI 440B"], ["POLISCI 440C"], ["POLISCI 443S"], ["POLISCI 444A"], ["POLISCI 445C"], ["POLISCI 446"], ["POLISCI 446A"], ["POLISCI 447T"], ["POLISCI 460A"]]
+              },
+              {
+                "id": "ov-sem-cp-pm-am-b",
+                "t": "courses",
+                "name": "Political Methodology: 2 seminars",
+                "mode": "atLeast",
+                "n": 2,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 351B"], ["POLISCI 354"], ["POLISCI 355A"], ["POLISCI 355B"], ["POLISCI 355C"], ["POLISCI 356A"], ["POLISCI 356B"], ["POLISCI 450A"], ["POLISCI 450B"], ["POLISCI 450C"], ["POLISCI 450D"], ["POLISCI 451"], ["POLISCI 460A"]]
+              },
+              {
+                "id": "ov-sem-cp-pm-am-c",
+                "t": "courses",
+                "name": "American Politics: 1 seminar",
+                "mode": "atLeast",
+                "n": 1,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 320R"], ["POLISCI 324L"], ["POLISCI 326"], ["POLISCI 351B"], ["POLISCI 420A"], ["POLISCI 420B"], ["POLISCI 421K"], ["POLISCI 422F"], ["POLISCI 423A"], ["POLISCI 423B"], ["POLISCI 424C"], ["POLISCI 426"], ["POLISCI 427C"], ["POLISCI 460A"], ["POLISCI 462"]]
+              }
+            ]
+          },
+          {
+            "id": "ov-sem-cp-pm-ir",
+            "t": "all",
+            "name": "Two in Comparative Politics, two in Political Methodology, one in International Relations",
+            "children": [
+              {
+                "id": "ov-sem-cp-pm-ir-a",
+                "t": "courses",
+                "name": "Comparative Politics: 2 seminars",
+                "mode": "atLeast",
+                "n": 2,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 314D"], ["POLISCI 341"], ["POLISCI 344U"], ["POLISCI 347G"], ["POLISCI 348"], ["POLISCI 348D"], ["POLISCI 348S"], ["POLISCI 440A"], ["POLISCI 440B"], ["POLISCI 440C"], ["POLISCI 443S"], ["POLISCI 444A"], ["POLISCI 445C"], ["POLISCI 446"], ["POLISCI 446A"], ["POLISCI 447T"], ["POLISCI 460A"]]
+              },
+              {
+                "id": "ov-sem-cp-pm-ir-b",
+                "t": "courses",
+                "name": "Political Methodology: 2 seminars",
+                "mode": "atLeast",
+                "n": 2,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 351B"], ["POLISCI 354"], ["POLISCI 355A"], ["POLISCI 355B"], ["POLISCI 355C"], ["POLISCI 356A"], ["POLISCI 356B"], ["POLISCI 450A"], ["POLISCI 450B"], ["POLISCI 450C"], ["POLISCI 450D"], ["POLISCI 451"], ["POLISCI 460A"]]
+              },
+              {
+                "id": "ov-sem-cp-pm-ir-c",
+                "t": "courses",
+                "name": "International Relations: 1 seminar",
+                "mode": "atLeast",
+                "n": 1,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 311N"], ["POLISCI 314D"], ["POLISCI 410A"], ["POLISCI 410B"], ["POLISCI 410C"], ["POLISCI 410D"], ["POLISCI 460A"]]
+              }
+            ]
+          },
+          {
+            "id": "ov-sem-cp-pm-pt",
+            "t": "all",
+            "name": "Two in Comparative Politics, two in Political Methodology, one in Political Theory",
+            "children": [
+              {
+                "id": "ov-sem-cp-pm-pt-a",
+                "t": "courses",
+                "name": "Comparative Politics: 2 seminars",
+                "mode": "atLeast",
+                "n": 2,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 314D"], ["POLISCI 341"], ["POLISCI 344U"], ["POLISCI 347G"], ["POLISCI 348"], ["POLISCI 348D"], ["POLISCI 348S"], ["POLISCI 440A"], ["POLISCI 440B"], ["POLISCI 440C"], ["POLISCI 443S"], ["POLISCI 444A"], ["POLISCI 445C"], ["POLISCI 446"], ["POLISCI 446A"], ["POLISCI 447T"], ["POLISCI 460A"]]
+              },
+              {
+                "id": "ov-sem-cp-pm-pt-b",
+                "t": "courses",
+                "name": "Political Methodology: 2 seminars",
+                "mode": "atLeast",
+                "n": 2,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 351B"], ["POLISCI 354"], ["POLISCI 355A"], ["POLISCI 355B"], ["POLISCI 355C"], ["POLISCI 356A"], ["POLISCI 356B"], ["POLISCI 450A"], ["POLISCI 450B"], ["POLISCI 450C"], ["POLISCI 450D"], ["POLISCI 451"], ["POLISCI 460A"]]
+              },
+              {
+                "id": "ov-sem-cp-pm-pt-c",
+                "t": "courses",
+                "name": "Political Theory: 1 seminar",
+                "mode": "atLeast",
+                "n": 1,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 330A"], ["POLISCI 331"], ["POLISCI 331M"], ["POLISCI 332T"], ["POLISCI 333M"], ["POLISCI 334P"], ["POLISCI 335"], ["POLISCI 336S"], ["POLISCI 337"], ["POLISCI 337A"], ["POLISCI 338B"], ["POLISCI 338E"], ["POLISCI 431"], ["POLISCI 432R"], ["POLISCI 437C"], ["POLISCI 438R"]]
+              }
+            ]
+          },
+          {
+            "id": "ov-sem-cp-pt-am",
+            "t": "all",
+            "name": "Two in Comparative Politics, two in Political Theory, one in American Politics",
+            "children": [
+              {
+                "id": "ov-sem-cp-pt-am-a",
+                "t": "courses",
+                "name": "Comparative Politics: 2 seminars",
+                "mode": "atLeast",
+                "n": 2,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 314D"], ["POLISCI 341"], ["POLISCI 344U"], ["POLISCI 347G"], ["POLISCI 348"], ["POLISCI 348D"], ["POLISCI 348S"], ["POLISCI 440A"], ["POLISCI 440B"], ["POLISCI 440C"], ["POLISCI 443S"], ["POLISCI 444A"], ["POLISCI 445C"], ["POLISCI 446"], ["POLISCI 446A"], ["POLISCI 447T"], ["POLISCI 460A"]]
+              },
+              {
+                "id": "ov-sem-cp-pt-am-b",
+                "t": "courses",
+                "name": "Political Theory: 2 seminars",
+                "mode": "atLeast",
+                "n": 2,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 330A"], ["POLISCI 331"], ["POLISCI 331M"], ["POLISCI 332T"], ["POLISCI 333M"], ["POLISCI 334P"], ["POLISCI 335"], ["POLISCI 336S"], ["POLISCI 337"], ["POLISCI 337A"], ["POLISCI 338B"], ["POLISCI 338E"], ["POLISCI 431"], ["POLISCI 432R"], ["POLISCI 437C"], ["POLISCI 438R"]]
+              },
+              {
+                "id": "ov-sem-cp-pt-am-c",
+                "t": "courses",
+                "name": "American Politics: 1 seminar",
+                "mode": "atLeast",
+                "n": 1,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 320R"], ["POLISCI 324L"], ["POLISCI 326"], ["POLISCI 351B"], ["POLISCI 420A"], ["POLISCI 420B"], ["POLISCI 421K"], ["POLISCI 422F"], ["POLISCI 423A"], ["POLISCI 423B"], ["POLISCI 424C"], ["POLISCI 426"], ["POLISCI 427C"], ["POLISCI 460A"], ["POLISCI 462"]]
+              }
+            ]
+          },
+          {
+            "id": "ov-sem-cp-pt-ir",
+            "t": "all",
+            "name": "Two in Comparative Politics, two in Political Theory, one in International Relations",
+            "children": [
+              {
+                "id": "ov-sem-cp-pt-ir-a",
+                "t": "courses",
+                "name": "Comparative Politics: 2 seminars",
+                "mode": "atLeast",
+                "n": 2,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 314D"], ["POLISCI 341"], ["POLISCI 344U"], ["POLISCI 347G"], ["POLISCI 348"], ["POLISCI 348D"], ["POLISCI 348S"], ["POLISCI 440A"], ["POLISCI 440B"], ["POLISCI 440C"], ["POLISCI 443S"], ["POLISCI 444A"], ["POLISCI 445C"], ["POLISCI 446"], ["POLISCI 446A"], ["POLISCI 447T"], ["POLISCI 460A"]]
+              },
+              {
+                "id": "ov-sem-cp-pt-ir-b",
+                "t": "courses",
+                "name": "Political Theory: 2 seminars",
+                "mode": "atLeast",
+                "n": 2,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 330A"], ["POLISCI 331"], ["POLISCI 331M"], ["POLISCI 332T"], ["POLISCI 333M"], ["POLISCI 334P"], ["POLISCI 335"], ["POLISCI 336S"], ["POLISCI 337"], ["POLISCI 337A"], ["POLISCI 338B"], ["POLISCI 338E"], ["POLISCI 431"], ["POLISCI 432R"], ["POLISCI 437C"], ["POLISCI 438R"]]
+              },
+              {
+                "id": "ov-sem-cp-pt-ir-c",
+                "t": "courses",
+                "name": "International Relations: 1 seminar",
+                "mode": "atLeast",
+                "n": 1,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 311N"], ["POLISCI 314D"], ["POLISCI 410A"], ["POLISCI 410B"], ["POLISCI 410C"], ["POLISCI 410D"], ["POLISCI 460A"]]
+              }
+            ]
+          },
+          {
+            "id": "ov-sem-cp-pt-pm",
+            "t": "all",
+            "name": "Two in Comparative Politics, two in Political Theory, one in Political Methodology",
+            "children": [
+              {
+                "id": "ov-sem-cp-pt-pm-a",
+                "t": "courses",
+                "name": "Comparative Politics: 2 seminars",
+                "mode": "atLeast",
+                "n": 2,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 314D"], ["POLISCI 341"], ["POLISCI 344U"], ["POLISCI 347G"], ["POLISCI 348"], ["POLISCI 348D"], ["POLISCI 348S"], ["POLISCI 440A"], ["POLISCI 440B"], ["POLISCI 440C"], ["POLISCI 443S"], ["POLISCI 444A"], ["POLISCI 445C"], ["POLISCI 446"], ["POLISCI 446A"], ["POLISCI 447T"], ["POLISCI 460A"]]
+              },
+              {
+                "id": "ov-sem-cp-pt-pm-b",
+                "t": "courses",
+                "name": "Political Theory: 2 seminars",
+                "mode": "atLeast",
+                "n": 2,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 330A"], ["POLISCI 331"], ["POLISCI 331M"], ["POLISCI 332T"], ["POLISCI 333M"], ["POLISCI 334P"], ["POLISCI 335"], ["POLISCI 336S"], ["POLISCI 337"], ["POLISCI 337A"], ["POLISCI 338B"], ["POLISCI 338E"], ["POLISCI 431"], ["POLISCI 432R"], ["POLISCI 437C"], ["POLISCI 438R"]]
+              },
+              {
+                "id": "ov-sem-cp-pt-pm-c",
+                "t": "courses",
+                "name": "Political Methodology: 1 seminar",
+                "mode": "atLeast",
+                "n": 1,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 351B"], ["POLISCI 354"], ["POLISCI 355A"], ["POLISCI 355B"], ["POLISCI 355C"], ["POLISCI 356A"], ["POLISCI 356B"], ["POLISCI 450A"], ["POLISCI 450B"], ["POLISCI 450C"], ["POLISCI 450D"], ["POLISCI 451"], ["POLISCI 460A"]]
+              }
+            ]
+          },
+          {
+            "id": "ov-sem-ir-pm-am",
+            "t": "all",
+            "name": "Two in International Relations, two in Political Methodology, one in American Politics",
+            "children": [
+              {
+                "id": "ov-sem-ir-pm-am-a",
+                "t": "courses",
+                "name": "International Relations: 2 seminars",
+                "mode": "atLeast",
+                "n": 2,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 311N"], ["POLISCI 314D"], ["POLISCI 410A"], ["POLISCI 410B"], ["POLISCI 410C"], ["POLISCI 410D"], ["POLISCI 460A"]]
+              },
+              {
+                "id": "ov-sem-ir-pm-am-b",
+                "t": "courses",
+                "name": "Political Methodology: 2 seminars",
+                "mode": "atLeast",
+                "n": 2,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 351B"], ["POLISCI 354"], ["POLISCI 355A"], ["POLISCI 355B"], ["POLISCI 355C"], ["POLISCI 356A"], ["POLISCI 356B"], ["POLISCI 450A"], ["POLISCI 450B"], ["POLISCI 450C"], ["POLISCI 450D"], ["POLISCI 451"], ["POLISCI 460A"]]
+              },
+              {
+                "id": "ov-sem-ir-pm-am-c",
+                "t": "courses",
+                "name": "American Politics: 1 seminar",
+                "mode": "atLeast",
+                "n": 1,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 320R"], ["POLISCI 324L"], ["POLISCI 326"], ["POLISCI 351B"], ["POLISCI 420A"], ["POLISCI 420B"], ["POLISCI 421K"], ["POLISCI 422F"], ["POLISCI 423A"], ["POLISCI 423B"], ["POLISCI 424C"], ["POLISCI 426"], ["POLISCI 427C"], ["POLISCI 460A"], ["POLISCI 462"]]
+              }
+            ]
+          },
+          {
+            "id": "ov-sem-ir-pm-cp",
+            "t": "all",
+            "name": "Two in International Relations, two in Political Methodology, one in Comparative Politics",
+            "children": [
+              {
+                "id": "ov-sem-ir-pm-cp-a",
+                "t": "courses",
+                "name": "International Relations: 2 seminars",
+                "mode": "atLeast",
+                "n": 2,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 311N"], ["POLISCI 314D"], ["POLISCI 410A"], ["POLISCI 410B"], ["POLISCI 410C"], ["POLISCI 410D"], ["POLISCI 460A"]]
+              },
+              {
+                "id": "ov-sem-ir-pm-cp-b",
+                "t": "courses",
+                "name": "Political Methodology: 2 seminars",
+                "mode": "atLeast",
+                "n": 2,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 351B"], ["POLISCI 354"], ["POLISCI 355A"], ["POLISCI 355B"], ["POLISCI 355C"], ["POLISCI 356A"], ["POLISCI 356B"], ["POLISCI 450A"], ["POLISCI 450B"], ["POLISCI 450C"], ["POLISCI 450D"], ["POLISCI 451"], ["POLISCI 460A"]]
+              },
+              {
+                "id": "ov-sem-ir-pm-cp-c",
+                "t": "courses",
+                "name": "Comparative Politics: 1 seminar",
+                "mode": "atLeast",
+                "n": 1,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 314D"], ["POLISCI 341"], ["POLISCI 344U"], ["POLISCI 347G"], ["POLISCI 348"], ["POLISCI 348D"], ["POLISCI 348S"], ["POLISCI 440A"], ["POLISCI 440B"], ["POLISCI 440C"], ["POLISCI 443S"], ["POLISCI 444A"], ["POLISCI 445C"], ["POLISCI 446"], ["POLISCI 446A"], ["POLISCI 447T"], ["POLISCI 460A"]]
+              }
+            ]
+          },
+          {
+            "id": "ov-sem-ir-pm-pt",
+            "t": "all",
+            "name": "Two in International Relations, two in Political Methodology, one in Political Theory",
+            "children": [
+              {
+                "id": "ov-sem-ir-pm-pt-a",
+                "t": "courses",
+                "name": "International Relations: 2 seminars",
+                "mode": "atLeast",
+                "n": 2,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 311N"], ["POLISCI 314D"], ["POLISCI 410A"], ["POLISCI 410B"], ["POLISCI 410C"], ["POLISCI 410D"], ["POLISCI 460A"]]
+              },
+              {
+                "id": "ov-sem-ir-pm-pt-b",
+                "t": "courses",
+                "name": "Political Methodology: 2 seminars",
+                "mode": "atLeast",
+                "n": 2,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 351B"], ["POLISCI 354"], ["POLISCI 355A"], ["POLISCI 355B"], ["POLISCI 355C"], ["POLISCI 356A"], ["POLISCI 356B"], ["POLISCI 450A"], ["POLISCI 450B"], ["POLISCI 450C"], ["POLISCI 450D"], ["POLISCI 451"], ["POLISCI 460A"]]
+              },
+              {
+                "id": "ov-sem-ir-pm-pt-c",
+                "t": "courses",
+                "name": "Political Theory: 1 seminar",
+                "mode": "atLeast",
+                "n": 1,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 330A"], ["POLISCI 331"], ["POLISCI 331M"], ["POLISCI 332T"], ["POLISCI 333M"], ["POLISCI 334P"], ["POLISCI 335"], ["POLISCI 336S"], ["POLISCI 337"], ["POLISCI 337A"], ["POLISCI 338B"], ["POLISCI 338E"], ["POLISCI 431"], ["POLISCI 432R"], ["POLISCI 437C"], ["POLISCI 438R"]]
+              }
+            ]
+          },
+          {
+            "id": "ov-sem-ir-pt-am",
+            "t": "all",
+            "name": "Two in International Relations, two in Political Theory, one in American Politics",
+            "children": [
+              {
+                "id": "ov-sem-ir-pt-am-a",
+                "t": "courses",
+                "name": "International Relations: 2 seminars",
+                "mode": "atLeast",
+                "n": 2,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 311N"], ["POLISCI 314D"], ["POLISCI 410A"], ["POLISCI 410B"], ["POLISCI 410C"], ["POLISCI 410D"], ["POLISCI 460A"]]
+              },
+              {
+                "id": "ov-sem-ir-pt-am-b",
+                "t": "courses",
+                "name": "Political Theory: 2 seminars",
+                "mode": "atLeast",
+                "n": 2,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 330A"], ["POLISCI 331"], ["POLISCI 331M"], ["POLISCI 332T"], ["POLISCI 333M"], ["POLISCI 334P"], ["POLISCI 335"], ["POLISCI 336S"], ["POLISCI 337"], ["POLISCI 337A"], ["POLISCI 338B"], ["POLISCI 338E"], ["POLISCI 431"], ["POLISCI 432R"], ["POLISCI 437C"], ["POLISCI 438R"]]
+              },
+              {
+                "id": "ov-sem-ir-pt-am-c",
+                "t": "courses",
+                "name": "American Politics: 1 seminar",
+                "mode": "atLeast",
+                "n": 1,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 320R"], ["POLISCI 324L"], ["POLISCI 326"], ["POLISCI 351B"], ["POLISCI 420A"], ["POLISCI 420B"], ["POLISCI 421K"], ["POLISCI 422F"], ["POLISCI 423A"], ["POLISCI 423B"], ["POLISCI 424C"], ["POLISCI 426"], ["POLISCI 427C"], ["POLISCI 460A"], ["POLISCI 462"]]
+              }
+            ]
+          },
+          {
+            "id": "ov-sem-ir-pt-cp",
+            "t": "all",
+            "name": "Two in International Relations, two in Political Theory, one in Comparative Politics",
+            "children": [
+              {
+                "id": "ov-sem-ir-pt-cp-a",
+                "t": "courses",
+                "name": "International Relations: 2 seminars",
+                "mode": "atLeast",
+                "n": 2,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 311N"], ["POLISCI 314D"], ["POLISCI 410A"], ["POLISCI 410B"], ["POLISCI 410C"], ["POLISCI 410D"], ["POLISCI 460A"]]
+              },
+              {
+                "id": "ov-sem-ir-pt-cp-b",
+                "t": "courses",
+                "name": "Political Theory: 2 seminars",
+                "mode": "atLeast",
+                "n": 2,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 330A"], ["POLISCI 331"], ["POLISCI 331M"], ["POLISCI 332T"], ["POLISCI 333M"], ["POLISCI 334P"], ["POLISCI 335"], ["POLISCI 336S"], ["POLISCI 337"], ["POLISCI 337A"], ["POLISCI 338B"], ["POLISCI 338E"], ["POLISCI 431"], ["POLISCI 432R"], ["POLISCI 437C"], ["POLISCI 438R"]]
+              },
+              {
+                "id": "ov-sem-ir-pt-cp-c",
+                "t": "courses",
+                "name": "Comparative Politics: 1 seminar",
+                "mode": "atLeast",
+                "n": 1,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 314D"], ["POLISCI 341"], ["POLISCI 344U"], ["POLISCI 347G"], ["POLISCI 348"], ["POLISCI 348D"], ["POLISCI 348S"], ["POLISCI 440A"], ["POLISCI 440B"], ["POLISCI 440C"], ["POLISCI 443S"], ["POLISCI 444A"], ["POLISCI 445C"], ["POLISCI 446"], ["POLISCI 446A"], ["POLISCI 447T"], ["POLISCI 460A"]]
+              }
+            ]
+          },
+          {
+            "id": "ov-sem-ir-pt-pm",
+            "t": "all",
+            "name": "Two in International Relations, two in Political Theory, one in Political Methodology",
+            "children": [
+              {
+                "id": "ov-sem-ir-pt-pm-a",
+                "t": "courses",
+                "name": "International Relations: 2 seminars",
+                "mode": "atLeast",
+                "n": 2,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 311N"], ["POLISCI 314D"], ["POLISCI 410A"], ["POLISCI 410B"], ["POLISCI 410C"], ["POLISCI 410D"], ["POLISCI 460A"]]
+              },
+              {
+                "id": "ov-sem-ir-pt-pm-b",
+                "t": "courses",
+                "name": "Political Theory: 2 seminars",
+                "mode": "atLeast",
+                "n": 2,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 330A"], ["POLISCI 331"], ["POLISCI 331M"], ["POLISCI 332T"], ["POLISCI 333M"], ["POLISCI 334P"], ["POLISCI 335"], ["POLISCI 336S"], ["POLISCI 337"], ["POLISCI 337A"], ["POLISCI 338B"], ["POLISCI 338E"], ["POLISCI 431"], ["POLISCI 432R"], ["POLISCI 437C"], ["POLISCI 438R"]]
+              },
+              {
+                "id": "ov-sem-ir-pt-pm-c",
+                "t": "courses",
+                "name": "Political Methodology: 1 seminar",
+                "mode": "atLeast",
+                "n": 1,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 351B"], ["POLISCI 354"], ["POLISCI 355A"], ["POLISCI 355B"], ["POLISCI 355C"], ["POLISCI 356A"], ["POLISCI 356B"], ["POLISCI 450A"], ["POLISCI 450B"], ["POLISCI 450C"], ["POLISCI 450D"], ["POLISCI 451"], ["POLISCI 460A"]]
+              }
+            ]
+          },
+          {
+            "id": "ov-sem-pm-pt-am",
+            "t": "all",
+            "name": "Two in Political Methodology, two in Political Theory, one in American Politics",
+            "children": [
+              {
+                "id": "ov-sem-pm-pt-am-a",
+                "t": "courses",
+                "name": "Political Methodology: 2 seminars",
+                "mode": "atLeast",
+                "n": 2,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 351B"], ["POLISCI 354"], ["POLISCI 355A"], ["POLISCI 355B"], ["POLISCI 355C"], ["POLISCI 356A"], ["POLISCI 356B"], ["POLISCI 450A"], ["POLISCI 450B"], ["POLISCI 450C"], ["POLISCI 450D"], ["POLISCI 451"], ["POLISCI 460A"]]
+              },
+              {
+                "id": "ov-sem-pm-pt-am-b",
+                "t": "courses",
+                "name": "Political Theory: 2 seminars",
+                "mode": "atLeast",
+                "n": 2,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 330A"], ["POLISCI 331"], ["POLISCI 331M"], ["POLISCI 332T"], ["POLISCI 333M"], ["POLISCI 334P"], ["POLISCI 335"], ["POLISCI 336S"], ["POLISCI 337"], ["POLISCI 337A"], ["POLISCI 338B"], ["POLISCI 338E"], ["POLISCI 431"], ["POLISCI 432R"], ["POLISCI 437C"], ["POLISCI 438R"]]
+              },
+              {
+                "id": "ov-sem-pm-pt-am-c",
+                "t": "courses",
+                "name": "American Politics: 1 seminar",
+                "mode": "atLeast",
+                "n": 1,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 320R"], ["POLISCI 324L"], ["POLISCI 326"], ["POLISCI 351B"], ["POLISCI 420A"], ["POLISCI 420B"], ["POLISCI 421K"], ["POLISCI 422F"], ["POLISCI 423A"], ["POLISCI 423B"], ["POLISCI 424C"], ["POLISCI 426"], ["POLISCI 427C"], ["POLISCI 460A"], ["POLISCI 462"]]
+              }
+            ]
+          },
+          {
+            "id": "ov-sem-pm-pt-cp",
+            "t": "all",
+            "name": "Two in Political Methodology, two in Political Theory, one in Comparative Politics",
+            "children": [
+              {
+                "id": "ov-sem-pm-pt-cp-a",
+                "t": "courses",
+                "name": "Political Methodology: 2 seminars",
+                "mode": "atLeast",
+                "n": 2,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 351B"], ["POLISCI 354"], ["POLISCI 355A"], ["POLISCI 355B"], ["POLISCI 355C"], ["POLISCI 356A"], ["POLISCI 356B"], ["POLISCI 450A"], ["POLISCI 450B"], ["POLISCI 450C"], ["POLISCI 450D"], ["POLISCI 451"], ["POLISCI 460A"]]
+              },
+              {
+                "id": "ov-sem-pm-pt-cp-b",
+                "t": "courses",
+                "name": "Political Theory: 2 seminars",
+                "mode": "atLeast",
+                "n": 2,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 330A"], ["POLISCI 331"], ["POLISCI 331M"], ["POLISCI 332T"], ["POLISCI 333M"], ["POLISCI 334P"], ["POLISCI 335"], ["POLISCI 336S"], ["POLISCI 337"], ["POLISCI 337A"], ["POLISCI 338B"], ["POLISCI 338E"], ["POLISCI 431"], ["POLISCI 432R"], ["POLISCI 437C"], ["POLISCI 438R"]]
+              },
+              {
+                "id": "ov-sem-pm-pt-cp-c",
+                "t": "courses",
+                "name": "Comparative Politics: 1 seminar",
+                "mode": "atLeast",
+                "n": 1,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 314D"], ["POLISCI 341"], ["POLISCI 344U"], ["POLISCI 347G"], ["POLISCI 348"], ["POLISCI 348D"], ["POLISCI 348S"], ["POLISCI 440A"], ["POLISCI 440B"], ["POLISCI 440C"], ["POLISCI 443S"], ["POLISCI 444A"], ["POLISCI 445C"], ["POLISCI 446"], ["POLISCI 446A"], ["POLISCI 447T"], ["POLISCI 460A"]]
+              }
+            ]
+          },
+          {
+            "id": "ov-sem-pm-pt-ir",
+            "t": "all",
+            "name": "Two in Political Methodology, two in Political Theory, one in International Relations",
+            "children": [
+              {
+                "id": "ov-sem-pm-pt-ir-a",
+                "t": "courses",
+                "name": "Political Methodology: 2 seminars",
+                "mode": "atLeast",
+                "n": 2,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 351B"], ["POLISCI 354"], ["POLISCI 355A"], ["POLISCI 355B"], ["POLISCI 355C"], ["POLISCI 356A"], ["POLISCI 356B"], ["POLISCI 450A"], ["POLISCI 450B"], ["POLISCI 450C"], ["POLISCI 450D"], ["POLISCI 451"], ["POLISCI 460A"]]
+              },
+              {
+                "id": "ov-sem-pm-pt-ir-b",
+                "t": "courses",
+                "name": "Political Theory: 2 seminars",
+                "mode": "atLeast",
+                "n": 2,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 330A"], ["POLISCI 331"], ["POLISCI 331M"], ["POLISCI 332T"], ["POLISCI 333M"], ["POLISCI 334P"], ["POLISCI 335"], ["POLISCI 336S"], ["POLISCI 337"], ["POLISCI 337A"], ["POLISCI 338B"], ["POLISCI 338E"], ["POLISCI 431"], ["POLISCI 432R"], ["POLISCI 437C"], ["POLISCI 438R"]]
+              },
+              {
+                "id": "ov-sem-pm-pt-ir-c",
+                "t": "courses",
+                "name": "International Relations: 1 seminar",
+                "mode": "atLeast",
+                "n": 1,
+                "minUnitsEach": 5,
+                "items": [["POLISCI 311N"], ["POLISCI 314D"], ["POLISCI 410A"], ["POLISCI 410B"], ["POLISCI 410C"], ["POLISCI 410D"], ["POLISCI 460A"]]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "dZWkyhs4": {
+      "why": "Note: \"The remaining 20 units must come from courses numbered above 100. Of those 20 units, a maximum of 10 units may be taken from classes outside the Political Science department ... approved by the Director of Graduate Studies on the MA Course Plan.\" Encoded as 10 units of POLISCI plus 10 units of any subject, all numbered above 100. With the 25 seminar units this is the 45-unit total (program.unitsMin).",
+      "replace": {
+        "t": "all",
+        "name": "Additional Units Requirement (20 units)",
+        "children": [
+          {
+            "id": "ov-add-polisci",
+            "t": "courses",
+            "name": "10 units of POLISCI courses numbered above 100",
+            "mode": "units",
+            "units": 10,
+            "pool": {"subjects": ["POLISCI"], "minNumber": 101}
+          },
+          {
+            "id": "ov-add-any",
+            "t": "courses",
+            "name": "10 more units numbered above 100 (outside courses need the DGS's approval)",
+            "mode": "units",
+            "units": 10,
+            "pool": {"anySubject": true, "minNumber": 101}
+          }
+        ]
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "mAbEGmbJ",
+      "why": "GPA: \"A grade point average (GPA) of 2.7 (B-) must be maintained for all classes used to fulfill master's degree requirements.\"",
+      "node": {
+        "id": "ov-gpa",
+        "t": "text",
+        "name": "GPA of 2.7 in the courses used for the degree",
+        "manual": "gpa"
+      }
+    }
+  ]
+}

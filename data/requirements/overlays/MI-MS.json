@@ -1,0 +1,22 @@
+{
+  "code": "MI-MS",
+  "reviewed": "2026-10-23",
+  "summary": "This MS is open only to students already in the Microbiology and Immunology PhD, and the Bulletin says its requirements vary by student. The audit counts the 45 units; your department checks your individual requirements by hand.",
+  "blocks": {
+    "mAbEGmbJ": {
+      "kind": "required"
+    }
+  },
+  "add": [
+    {
+      "block": "mAbEGmbJ",
+      "node": {
+        "id": "ov-individual",
+        "t": "text",
+        "name": "Individually set MS requirements met",
+        "manual": "approval"
+      },
+      "why": "\"The MI-MS program is only open to existing students in the MI-PHD program. Requirements vary by student.\""
+    }
+  ]
+}

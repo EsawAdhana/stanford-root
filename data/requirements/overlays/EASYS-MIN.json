@@ -1,0 +1,97 @@
+{
+  "code": "EASYS-MIN",
+  "reviewed": "2026-10-23",
+  "summary": "In the Sustainability subplan you take the five foundational courses and at least 3 units in each of the four elective categories, at least 28 units in all, with no course used twice and at most 16 units of EARTHSYS 323 counted. In the Environmental Justice subplan you take EARTHSYS 194, one course each in movements, ethical frameworks and practice, EARTHSYS 134, and 12 units of Cardinal Courses, which may also count for the other requirements, for at least 24 units. Every course must be letter graded when that option exists and passed with a D- or better. You check by hand a petitioned non-Cardinal community-engaged course and the 2.0 GPA.",
+  "program": {
+    "letterGrade": true,
+    "minGrade": "D-",
+    "why": "Grading: \"All courses counted toward the minor must be taken for a letter grade, except when a letter grade option is not available, and must be passed with a grade of at least D-.\"",
+    "totals": [
+      {
+        "label": "EARTHSYS 323 (Stanford at Sea)",
+        "maxUnits": 16,
+        "codes": [
+          "EARTHSYS 323"
+        ],
+        "when": "7umqQR9x",
+        "why": "\"Students may apply up to 16 units of Earthsys 323: Stanford at Sea across Categories 1, 3, and 4.\""
+      }
+    ]
+  },
+  "blocks": {
+    "7umqQR9x": {
+      "units": 28,
+      "why": "Program Overview: \"There are two subplans available for students interested in pursuing a minor in Earth Systems: 1) Sustainability: 28 units 2) Environmental Justice: 24 units\". The foundational courses and four 3-unit categories can come to as few as 24 units (EARTHSYS 108 is 1 unit), so the 28 is its own floor."
+    },
+    "vXBJ4sAr": {
+      "units": 24,
+      "why": "\"Students must complete a minimum of 24 units of Environmental Justice-related coursework.\" and Program Overview: \"2) Environmental Justice: 24 units\""
+    }
+  },
+  "add": [
+    {
+      "block": "7umqQR9x",
+      "node": {
+        "id": "ov-gpa",
+        "t": "text",
+        "name": "Cumulative GPA of 2.0",
+        "manual": "gpa"
+      },
+      "why": "GPA: \"In accordance with University policy, students must maintain a minimum cumulative GPA of 2.0.\""
+    },
+    {
+      "block": "vXBJ4sAr",
+      "node": {
+        "id": "ov-gpa-ej",
+        "t": "text",
+        "name": "Cumulative GPA of 2.0",
+        "manual": "gpa"
+      },
+      "why": "GPA: \"In accordance with University policy, students must maintain a minimum cumulative GPA of 2.0.\" Both subplans carry it; the minor has no block outside them."
+    }
+  ],
+  "nodes": {
+    "udFxlhYc": {
+      "why": "\"A minimum of 3 units must be taken in each of the following categories: 1) Earth Systems Science/Engineering; 2) Environmental Justice; 3) Applied Problem Solving; and 4) Skills. Courses appearing in multiple categories may not be re-used.\" The four category rules below now carry the 3 units, so this heading is information.",
+      "patch": {
+        "info": true
+      }
+    },
+    "2ifkd9f2": {
+      "why": "\"A minimum of 3 units must be taken in each of the following categories\". \"Students may apply up to 16 units of Earthsys 323: Stanford at Sea across Categories 1, 3, and 4\" spans three rules; it is a program total.",
+      "patch": {
+        "units": 3
+      }
+    },
+    "dbch6NUM": {
+      "why": "\"A minimum of 3 units must be taken in each of the following categories\"",
+      "patch": {
+        "units": 3
+      }
+    },
+    "T41Sayvn": {
+      "why": "\"A minimum of 3 units must be taken in each of the following categories\"",
+      "patch": {
+        "units": 3
+      }
+    },
+    "oii1O4yF": {
+      "why": "\"A minimum of 3 units must be taken in each of the following categories\"",
+      "patch": {
+        "units": 3
+      }
+    },
+    "UFFFPEqJ": {
+      "why": "\"Students must complete a minimum of 24 units of Environmental Justice-related coursework.\" The floor is now on the subplan block vXBJ4sAr; this rule keeps EARTHSYS 194.",
+      "patch": {
+        "name": "Gateway"
+      }
+    },
+    "Q8F7RSBb": {
+      "why": "\"Cardinal Courses may be doubled counted across requirements.\" A petitioned non-Cardinal course with a community-engaged component is moved in by hand.",
+      "patch": {
+        "shares": true
+      }
+    }
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "code": "CHEME-MS",
+  "reviewed": "2026-10-23",
+  "summary": "You need four of the six CHEMENG 300-series core courses, four more CHEMENG lecture courses numbered 200 to 499, 3 units of CHEMENG 699 colloquium, and 18 units of science, math or engineering courses numbered 100 and above (at most 6 units below 200 and at most 6 units of CHEMENG 600), for 45 graduate units. Every course must be letter graded when a letter grade is offered. CHEMENG 500-series special topics courses and courses numbered below 100 do not count toward the 45 units. You check by hand the 3.0 GPA, your approved Program Proposal, and the 3-unit seminar and 6-unit lab caps on the science, math or engineering electives. All 45 units must be taken at Stanford.",
+  "program": {
+    "letterGrade": true,
+    "why": "Grading: \"Any course that satisfies the 45-unit minimum for the Master of Science degree must be taken for a letter grade, if offered.\" The Bulletin's own 45-unit minimum is now in the data.",
+    "totals": [
+      { "label": "CHEMENG 500-series special topics", "maxUnits": 0, "pool": { "subjects": ["CHEMENG"], "minNumber": 500, "maxNumber": 599 }, "why": "Policies: \"Credit toward the required minimum of 45 completed units for the MS degree is not given for Chemical Engineering special topics courses numbered in the 500 series.\"" },
+      { "label": "Courses numbered below 100", "maxUnits": 0, "pool": { "anySubject": true, "maxNumber": 99 }, "why": "\"No courses under 100-level are accepted for any MS degree requirements.\"" }
+    ]
+  },
+  "nodes": {
+    "oysZ0Jcr": {
+      "why": "\"Chemical Engineering Electives (12 Units)\": \"An additional four (4) courses selected from 200, 300 and 400-level Chemical Engineering lecture courses.\" Practical training, the research rotation and 1-unit seminars are not lecture courses; every remaining CHEMENG course at these levels carries at least 3 units, so four courses make the 12 units.",
+      "replace": {
+        "t": "courses",
+        "name": "Chemical Engineering Electives (four courses, 12 units)",
+        "mode": "atLeast",
+        "n": 4,
+        "pool": { "subjects": ["CHEMENG"], "minNumber": 200, "maxNumber": 499, "exclude": ["CHEMENG 299", "CHEMENG 399", "CHEMENG 410", "CHEMENG 459"] }
+      }
+    },
+    "lXBFuAax": {
+      "why": "\"These units must be selected from graduate-level science, math or engineering lecture courses (3 units or more each) in any appropriate department. Students may substitute up to 12 units ... No more than three units of seminar or colloquium courses ... No more than six units of graduate-level ... lab courses ... No more than six units of 100-level or higher lecture, case study, workshop or practicum courses ... up to six units of Chemeng 600\" and \"No courses under 100-level are accepted\". The 100-level and CHEMENG 600 caps are encoded; course type (lecture, lab, seminar) is not in the audit's data and is checked with the program proposal. Policies: \"Credit toward the required minimum of 45 completed units for the MS degree is not given for Chemical Engineering special topics courses numbered in the 500 series\", so they cannot fill these units either.",
+      "replace": {
+        "t": "courses",
+        "name": "Science, Math or Engineering Electives (18 units)",
+        "mode": "units",
+        "units": 18,
+        "pool": { "subjects": [], "anySubject": true, "minNumber": 100 },
+        "limits": [
+          { "label": "100-level courses", "maxUnits": 6, "pool": { "subjects": [], "anySubject": true, "maxNumber": 199 } },
+          { "label": "CHEMENG 600 research", "maxUnits": 6, "codes": ["CHEMENG 600"] },
+          { "label": "CHEMENG 500-series special topics (no credit toward the 45 units)", "maxUnits": 0, "pool": { "subjects": ["CHEMENG"], "minNumber": 500, "maxNumber": 599 } }
+        ]
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "mAbEGmbJ",
+      "why": "GPA: \"An overall grade point average (GPA) of 3.0 must be maintained for courses that satisfy the 45 unit minimum for the Master of Science degree.\"",
+      "node": { "id": "ov-gpa", "t": "text", "name": "GPA of 3.0 in the courses counted toward the 45 units", "manual": "gpa" }
+    },
+    {
+      "block": "mAbEGmbJ",
+      "why": "\"Complete a Program Proposal for a master's degree form\" and \"All MS candidates must obtain approvals for the final MS program no later than the seventh week of the quarter preceding the quarter of degree conferral\". The seminar (3 units) and lab (6 units) caps of the science, math or engineering electives are checked with it.",
+      "node": { "id": "ov-proposal", "t": "text", "name": "Program Proposal and final MS program approved (seminar and lab caps checked here)", "manual": "approval" }
+    }
+  ]
+}

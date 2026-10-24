@@ -1,0 +1,56 @@
+{
+  "code": "CHEME-BS",
+  "reviewed": "2026-10-23",
+  "summary": "Math is MATH 19, 20 and 21 plus CME 100 or both MATH 51 and 52; science and engineering fundamentals are the listed courses; the depth is the eleven CHEMENG courses (CHEMENG 100 and 105 still count for students who took them before 2026-27). CHEMENG 185A is also your WIM course and CHEMENG 185B your capstone; no other course counts twice. Every course must be letter graded if the instructor offers a letter grade, and the audit counts 95 units. You check by hand your Technology in Society course from the School of Engineering list and the 2.0 combined GPA in engineering fundamentals and depth. Honors needs three letter-graded quarters of CHEMENG 190H (9 units) and 3 units of CHEMENG 191H, and you check by hand the 3.5 GPA, the poster presentation and the thesis.",
+  "program": {
+    "letterGrade": true,
+    "why": "Grading: \"All courses taken for the major must be taken for a letter grade if the instructor offers that option.\" Policies: \"A course may only be counted towards one requirement, not double-counted.\" The WIM and capstone blocks still share, because the depth text says \"CHEMENG 185A will also satisfy the Writing in the Major (WiM) requirement, and CHEMENG 185B will also satisfy the Capstone requirement.\""
+  },
+  "nodes": {
+    "WWsQWpB7": {
+      "why": "\"Students must complete either CME 100, or Math 51 and 52.\"",
+      "replace": {
+        "t": "any",
+        "name": "Additional Calculus",
+        "children": [
+          { "id": "ov-cme100", "t": "courses", "name": "CME 100", "mode": "all", "items": ["CME 100"] },
+          { "id": "ov-math51-52", "t": "courses", "name": "MATH 51 and MATH 52", "mode": "all", "items": ["MATH 51", "MATH 52"] }
+        ]
+      }
+    },
+    "sVbdY6kx": {
+      "why": "\"Students must complete at least one course of at least 3 units or more from the School of Engineering's approved Technology in Society list for 2026-27.\" The list is not in this program's data; the student moves the course in.",
+      "patch": { "manual": "approval", "n": 1 }
+    },
+    "jHYy5Vmj": {
+      "why": "\"Students who completed CHEMENG 100 before academic year 2026/2027 may substitute CHEMENG 105A with CHEMENG 100. Students who completed CHEMENG 105 before academic year 2026/2027 may substitute CHEMENG 105B with CHEMENG 105.\" (\"a minimum of 46 units of Depth Coursework\" is the eleven courses' own 46 units.)",
+      "patch": { "items": [["CHEMENG 105A", "CHEMENG 100"], ["CHEMENG 105B", "CHEMENG 105"], ["CHEMENG 110A"], ["CHEMENG 110B"], ["CHEMENG 120A"], ["CHEMENG 120B"], ["CHEMENG 130A"], ["CHEMENG 130B"], ["CHEMENG 180"], ["CHEMENG 185A"], ["CHEMENG 185B"]] }
+    },
+    "I9nwsqdA": {
+      "why": "\"Complete at least three quarters of research with an aggregate enrollment of a minimum of nine units in course Undergraduate Honors Research in Chemical Engineering for a letter grade\": three enrollments, nine units, letter graded. Research as an Undergraduate Research Assistant instead is moved in or marked by hand.",
+      "patch": { "mode": "all", "items": [["CHEMENG 190H"], ["CHEMENG 190H"], ["CHEMENG 190H"]], "units": 9, "letter": true }
+    }
+  },
+  "add": [
+    {
+      "block": "RYpGTrIs",
+      "why": "GPA: \"Minimum Combined GPA for all courses in Engineering Fundamentals and Depth is 2.0.\"",
+      "node": { "id": "ov-gpa", "t": "text", "name": "Combined GPA of 2.0 in engineering fundamentals and depth", "manual": "gpa" }
+    },
+    {
+      "block": "PmCC5pNl",
+      "why": "\"Maintain an overall GPA of 3.5 or higher as calculated on the unofficial transcript.\"",
+      "node": { "id": "ov-honors-gpa", "t": "text", "name": "Overall GPA of 3.5 or higher", "manual": "gpa" }
+    },
+    {
+      "block": "PmCC5pNl",
+      "why": "\"Participate with a poster and oral presentation of thesis work at the Chemical Engineering Honors Poster Session held during the Mason Lectures week, Spring Quarter, or ... at a comparable public event.\"",
+      "node": { "id": "ov-honors-poster", "t": "text", "name": "Poster and oral presentation at the Honors Poster Session", "manual": "milestone" }
+    },
+    {
+      "block": "PmCC5pNl",
+      "why": "\"submission of a research proposal for faculty review, (2) appropriate faculty approvals ... (5) completion of a faculty-approved thesis\" and \"Submit to departmental student services the final copy of the honors thesis in electronic format, as approved by the appropriate faculty.\"",
+      "node": { "id": "ov-honors-thesis", "t": "text", "name": "Approved research proposal and faculty-approved honors thesis", "manual": "thesis" }
+    }
+  ]
+}

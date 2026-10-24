@@ -1,0 +1,27 @@
+{
+  "code": "ED-IHN",
+  "reviewed": "2026-10-23",
+  "summary": "Before honors you need at least 9 units in three education (EDUC) courses, letter graded, with a 3.0 GPA in them and the honors director's approval; the audit checks the courses and you check the GPA and approval by hand. You take the three senior honors seminar courses (EDUC 199A, 199B and 199C) and enroll in EDUC 140 with your advisor in both winter and spring, for at least 7 units in all. The honors thesis and its spring presentation are checked by the department.",
+  "nodes": {
+    "hdTtg9Ix-text": {
+      "why": "\"Required Preparatory Coursework / Education Course Requirement: A minimum of nine units among three education courses (taken for a letter grade with a GPA of 3.0 or higher in those courses). Coursework completed for the Honors program in Education should address varied topics in the field of education, and must be approved by the honors director.\" Three EDUC courses for at least 9 units, letter graded; the 3.0 GPA in them and the director's approval are checked by hand.",
+      "replace": {
+        "t": "all",
+        "name": "Required Preparatory Coursework",
+        "children": [
+          { "id": "ov-edihn-prep", "t": "courses", "name": "Three education courses, at least 9 units, letter graded", "mode": "atLeast", "n": 3, "units": 9, "letter": true, "pool": { "subjects": ["EDUC"] } },
+          { "id": "ov-edihn-prep-gpa", "t": "text", "name": "GPA of 3.0 or higher in the three education courses", "manual": "gpa" },
+          { "id": "ov-edihn-prep-approval", "t": "text", "name": "The honors director approves the three education courses", "manual": "approval" }
+        ]
+      }
+    },
+    "8jHt4gsi": {
+      "why": "\"Students must enroll in Honors Research (EDUC 140) with their advisor during winter and spring quarters of their senior year.\" \"Students must enroll in EDUC 140 for a minimum of 1 unit in Winter and Spring Quarters.\" Two enrollments of EDUC 140, plus \"EDUC 199A (Autumn, three units), EDUC 199B (Winter, one unit), and EDUC 199C (spring, one unit)\".",
+      "patch": { "items": [["EDUC 140"], ["EDUC 140"], ["EDUC 199A"], ["EDUC 199B"], ["EDUC 199C"]] }
+    },
+    "Wr2SXKAv": {
+      "why": "\"In addition to completing an honors thesis over their senior year, successful candidates for honors present brief reports on their research at a mini-conference held in spring quarter\"",
+      "patch": { "manual": "thesis" }
+    }
+  }
+}

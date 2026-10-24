@@ -1,0 +1,970 @@
+{
+  "code": "CIVC-MIN",
+  "reviewed": "2026-10-23",
+  "summary": "You need COLLEGE 102 and POLISCI 238T (or HISTORY 258T), then four track courses: either Breadth (one course in three of the five tracks plus one more from any track) or Depth (three courses in one track plus one more from any track), for six courses and at least 20 units. Every course must carry at least 3 units and be letter graded where a letter grade is offered, with a C or better.",
+  "program": {
+    "letterGrade": true,
+    "minGrade": "C",
+    "why": "Grading: \"Courses applied to the minor must be taken for a letter grade where offered. Students must earn at least a C grade or higher in each course counting towards the minor.\" The Bulletin's own 20-unit minimum is now in the data."
+  },
+  "nodes": {
+    "CeiTqgJE": {
+      "why": "Overview of the core courses and tracks encoded below; \"For a total of six courses (minimum of 20 units)\" is the Bulletin's unitsMin.",
+      "patch": {
+        "info": true
+      }
+    },
+    "naaIZYAT": {
+      "why": "\"Take at least one course in three of the following five tracks and one additional course in any of the five tracks.\" The Bulletin stored the five tracks as one-of.",
+      "replace": {
+        "t": "all",
+        "name": "Breadth",
+        "children": [
+          {
+            "id": "ov-breadth-three",
+            "t": "some",
+            "n": 3,
+            "name": "One course in three of the five tracks",
+            "children": [
+              {
+                "id": "uvgcQ34C",
+                "t": "courses",
+                "name": "Civic History",
+                "mode": "any",
+                "items": [
+                  [
+                    "AMSTUD 57A"
+                  ],
+                  [
+                    "CIVIC 49A"
+                  ],
+                  [
+                    "CIVIC 49B"
+                  ],
+                  [
+                    "CIVIC 233G"
+                  ],
+                  [
+                    "CIVIC 241K"
+                  ],
+                  [
+                    "CLASSICS 83"
+                  ],
+                  [
+                    "CLASSICS 84"
+                  ],
+                  [
+                    "GERMAN 209"
+                  ],
+                  [
+                    "HISTORY 153"
+                  ],
+                  [
+                    "HISTORY 250"
+                  ],
+                  [
+                    "HISTORY 252"
+                  ],
+                  [
+                    "HISTORY 253F"
+                  ],
+                  [
+                    "HISTORY 254E"
+                  ],
+                  [
+                    "HISTORY 33B"
+                  ],
+                  [
+                    "HISTORY 50A"
+                  ],
+                  [
+                    "HISTORY 61N"
+                  ],
+                  [
+                    "INTNLREL 127"
+                  ],
+                  [
+                    "POLISCI 115"
+                  ],
+                  [
+                    "POLISCI 116M"
+                  ],
+                  [
+                    "POLISCI 140P"
+                  ],
+                  [
+                    "POLISCI 231A"
+                  ],
+                  [
+                    "POLISCI 247C"
+                  ]
+                ]
+              },
+              {
+                "id": "ZoGVgzkq",
+                "t": "courses",
+                "name": "Civic Thought",
+                "mode": "any",
+                "items": [
+                  [
+                    "CIVIC 212R"
+                  ],
+                  [
+                    "CIVIC 230A"
+                  ],
+                  [
+                    "CIVIC 231H"
+                  ],
+                  [
+                    "CIVIC 231R"
+                  ],
+                  [
+                    "CLASSICS 37"
+                  ],
+                  [
+                    "COLLEGE 110"
+                  ],
+                  [
+                    "COMM 235"
+                  ],
+                  [
+                    "ENGLISH 235"
+                  ],
+                  [
+                    "HISTORY 233F"
+                  ],
+                  [
+                    "PHIL 172B"
+                  ],
+                  [
+                    "PHIL 174L"
+                  ],
+                  [
+                    "PHIL 176P"
+                  ],
+                  [
+                    "POLISCI 103"
+                  ],
+                  [
+                    "POLISCI 114D"
+                  ],
+                  [
+                    "POLISCI 125"
+                  ],
+                  [
+                    "POLISCI 130"
+                  ],
+                  [
+                    "POLISCI 131L"
+                  ],
+                  [
+                    "POLISCI 228R"
+                  ],
+                  [
+                    "POLISCI 230A"
+                  ],
+                  [
+                    "POLISCI 231A"
+                  ],
+                  [
+                    "POLISCI 231R"
+                  ],
+                  [
+                    "POLISCI 237"
+                  ],
+                  [
+                    "POLISCI 237L"
+                  ],
+                  [
+                    "POLISCI 334A"
+                  ],
+                  [
+                    "POLISCI 337M"
+                  ],
+                  [
+                    "POLISCI 432R"
+                  ],
+                  [
+                    "POLISCI 437C"
+                  ]
+                ]
+              },
+              {
+                "id": "UbsllxR5",
+                "t": "courses",
+                "name": "Constitution and Law",
+                "mode": "any",
+                "items": [
+                  [
+                    "COMM 151"
+                  ],
+                  [
+                    "HISTORY 153"
+                  ],
+                  [
+                    "HISTORY 153C"
+                  ],
+                  [
+                    "HISTORY 252"
+                  ],
+                  [
+                    "HISTORY 33B"
+                  ],
+                  [
+                    "LAW 7007"
+                  ],
+                  [
+                    "POLISCI 132A"
+                  ],
+                  [
+                    "POLISCI 220R"
+                  ],
+                  [
+                    "POLISCI 29N"
+                  ],
+                  [
+                    "POLISCI 326"
+                  ],
+                  [
+                    "POLISCI 335T"
+                  ],
+                  [
+                    "POLISCI 421A"
+                  ],
+                  [
+                    "PUBLPOL 314"
+                  ]
+                ]
+              },
+              {
+                "id": "XR3FMOJi",
+                "t": "courses",
+                "name": "Political Economy",
+                "mode": "any",
+                "items": [
+                  [
+                    "POLISCI 243"
+                  ],
+                  [
+                    "POLISCI 244C"
+                  ],
+                  [
+                    "POLISCI 244D"
+                  ],
+                  [
+                    "POLISCI 440B"
+                  ],
+                  [
+                    "POLISCI 235U"
+                  ]
+                ]
+              },
+              {
+                "id": "xQOYwbkr",
+                "t": "courses",
+                "name": "Classical Traditions",
+                "mode": "any",
+                "items": [
+                  [
+                    "CIVIC 49A"
+                  ],
+                  [
+                    "CIVIC 49B"
+                  ],
+                  [
+                    "CLASSICS 49C"
+                  ]
+                ]
+              }
+            ]
+          },
+          {
+            "id": "ov-breadth-extra",
+            "t": "courses",
+            "name": "One additional course in any track",
+            "mode": "atLeast",
+            "n": 1,
+            "items": [
+              [
+                "AMSTUD 57A"
+              ],
+              [
+                "CIVIC 49A"
+              ],
+              [
+                "CIVIC 49B"
+              ],
+              [
+                "CIVIC 233G"
+              ],
+              [
+                "CIVIC 241K"
+              ],
+              [
+                "CLASSICS 83"
+              ],
+              [
+                "CLASSICS 84"
+              ],
+              [
+                "GERMAN 209"
+              ],
+              [
+                "HISTORY 153"
+              ],
+              [
+                "HISTORY 250"
+              ],
+              [
+                "HISTORY 252"
+              ],
+              [
+                "HISTORY 253F"
+              ],
+              [
+                "HISTORY 254E"
+              ],
+              [
+                "HISTORY 33B"
+              ],
+              [
+                "HISTORY 50A"
+              ],
+              [
+                "HISTORY 61N"
+              ],
+              [
+                "INTNLREL 127"
+              ],
+              [
+                "POLISCI 115"
+              ],
+              [
+                "POLISCI 116M"
+              ],
+              [
+                "POLISCI 140P"
+              ],
+              [
+                "POLISCI 231A"
+              ],
+              [
+                "POLISCI 247C"
+              ],
+              [
+                "CIVIC 212R"
+              ],
+              [
+                "CIVIC 230A"
+              ],
+              [
+                "CIVIC 231H"
+              ],
+              [
+                "CIVIC 231R"
+              ],
+              [
+                "CLASSICS 37"
+              ],
+              [
+                "COLLEGE 110"
+              ],
+              [
+                "COMM 235"
+              ],
+              [
+                "ENGLISH 235"
+              ],
+              [
+                "HISTORY 233F"
+              ],
+              [
+                "PHIL 172B"
+              ],
+              [
+                "PHIL 174L"
+              ],
+              [
+                "PHIL 176P"
+              ],
+              [
+                "POLISCI 103"
+              ],
+              [
+                "POLISCI 114D"
+              ],
+              [
+                "POLISCI 125"
+              ],
+              [
+                "POLISCI 130"
+              ],
+              [
+                "POLISCI 131L"
+              ],
+              [
+                "POLISCI 228R"
+              ],
+              [
+                "POLISCI 230A"
+              ],
+              [
+                "POLISCI 231R"
+              ],
+              [
+                "POLISCI 237"
+              ],
+              [
+                "POLISCI 237L"
+              ],
+              [
+                "POLISCI 334A"
+              ],
+              [
+                "POLISCI 337M"
+              ],
+              [
+                "POLISCI 432R"
+              ],
+              [
+                "POLISCI 437C"
+              ],
+              [
+                "COMM 151"
+              ],
+              [
+                "HISTORY 153C"
+              ],
+              [
+                "LAW 7007"
+              ],
+              [
+                "POLISCI 132A"
+              ],
+              [
+                "POLISCI 220R"
+              ],
+              [
+                "POLISCI 29N"
+              ],
+              [
+                "POLISCI 326"
+              ],
+              [
+                "POLISCI 335T"
+              ],
+              [
+                "POLISCI 421A"
+              ],
+              [
+                "PUBLPOL 314"
+              ],
+              [
+                "POLISCI 243"
+              ],
+              [
+                "POLISCI 244C"
+              ],
+              [
+                "POLISCI 244D"
+              ],
+              [
+                "POLISCI 440B"
+              ],
+              [
+                "POLISCI 235U"
+              ],
+              [
+                "CLASSICS 49C"
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    "nlKZEa3E": {
+      "why": "\"Take three courses in one of the tracks, and one additional course in any of the tracks.\" The Bulletin stored only the three-course track.",
+      "replace": {
+        "t": "all",
+        "name": "Depth",
+        "children": [
+          {
+            "id": "ov-depth-track",
+            "t": "any",
+            "name": "Three courses in one track",
+            "children": [
+              {
+                "id": "cjCr4M4e",
+                "t": "courses",
+                "name": "Civic History",
+                "mode": "atLeast",
+                "items": [
+                  [
+                    "AMSTUD 57A"
+                  ],
+                  [
+                    "CIVIC 49A"
+                  ],
+                  [
+                    "CIVIC 49B"
+                  ],
+                  [
+                    "CIVIC 233G"
+                  ],
+                  [
+                    "CIVIC 241K"
+                  ],
+                  [
+                    "CLASSICS 83"
+                  ],
+                  [
+                    "CLASSICS 84"
+                  ],
+                  [
+                    "GERMAN 209"
+                  ],
+                  [
+                    "HISTORY 153"
+                  ],
+                  [
+                    "HISTORY 250"
+                  ],
+                  [
+                    "HISTORY 252"
+                  ],
+                  [
+                    "HISTORY 253F"
+                  ],
+                  [
+                    "HISTORY 254E"
+                  ],
+                  [
+                    "HISTORY 33B"
+                  ],
+                  [
+                    "HISTORY 50A"
+                  ],
+                  [
+                    "HISTORY 61N"
+                  ],
+                  [
+                    "INTNLREL 127"
+                  ],
+                  [
+                    "POLISCI 115"
+                  ],
+                  [
+                    "POLISCI 116M"
+                  ],
+                  [
+                    "POLISCI 140P"
+                  ],
+                  [
+                    "POLISCI 231A"
+                  ],
+                  [
+                    "POLISCI 247C"
+                  ]
+                ],
+                "n": 3
+              },
+              {
+                "id": "uacp1iPd",
+                "t": "courses",
+                "name": "Civic Thought",
+                "mode": "atLeast",
+                "items": [
+                  [
+                    "CIVIC 212R"
+                  ],
+                  [
+                    "CIVIC 230A"
+                  ],
+                  [
+                    "CIVIC 231H"
+                  ],
+                  [
+                    "CIVIC 231R"
+                  ],
+                  [
+                    "CLASSICS 37"
+                  ],
+                  [
+                    "COLLEGE 110"
+                  ],
+                  [
+                    "COMM 235"
+                  ],
+                  [
+                    "ENGLISH 235"
+                  ],
+                  [
+                    "HISTORY 233F"
+                  ],
+                  [
+                    "PHIL 172B"
+                  ],
+                  [
+                    "PHIL 174L"
+                  ],
+                  [
+                    "PHIL 176P"
+                  ],
+                  [
+                    "POLISCI 103"
+                  ],
+                  [
+                    "POLISCI 114D"
+                  ],
+                  [
+                    "POLISCI 125"
+                  ],
+                  [
+                    "POLISCI 130"
+                  ],
+                  [
+                    "POLISCI 131L"
+                  ],
+                  [
+                    "POLISCI 228R"
+                  ],
+                  [
+                    "POLISCI 230A"
+                  ],
+                  [
+                    "POLISCI 231A"
+                  ],
+                  [
+                    "POLISCI 231R"
+                  ],
+                  [
+                    "POLISCI 237"
+                  ],
+                  [
+                    "POLISCI 237L"
+                  ],
+                  [
+                    "POLISCI 334A"
+                  ],
+                  [
+                    "POLISCI 337M"
+                  ],
+                  [
+                    "POLISCI 432R"
+                  ],
+                  [
+                    "POLISCI 437C"
+                  ]
+                ],
+                "n": 3
+              },
+              {
+                "id": "OW086K22",
+                "t": "courses",
+                "name": "Constitution and Law",
+                "mode": "atLeast",
+                "items": [
+                  [
+                    "COMM 151"
+                  ],
+                  [
+                    "HISTORY 153"
+                  ],
+                  [
+                    "HISTORY 153C"
+                  ],
+                  [
+                    "HISTORY 252"
+                  ],
+                  [
+                    "HISTORY 33B"
+                  ],
+                  [
+                    "LAW 7007"
+                  ],
+                  [
+                    "POLISCI 132A"
+                  ],
+                  [
+                    "POLISCI 220R"
+                  ],
+                  [
+                    "POLISCI 29N"
+                  ],
+                  [
+                    "POLISCI 326"
+                  ],
+                  [
+                    "POLISCI 335T"
+                  ],
+                  [
+                    "POLISCI 421A"
+                  ],
+                  [
+                    "PUBLPOL 314"
+                  ]
+                ],
+                "n": 3
+              },
+              {
+                "id": "O0cYUXIH",
+                "t": "courses",
+                "name": "Political Economy",
+                "mode": "atLeast",
+                "items": [
+                  [
+                    "POLISCI 243"
+                  ],
+                  [
+                    "POLISCI 244C"
+                  ],
+                  [
+                    "POLISCI 244D"
+                  ],
+                  [
+                    "POLISCI 440B"
+                  ],
+                  [
+                    "POLISCI 235U"
+                  ]
+                ],
+                "n": 3
+              },
+              {
+                "id": "b5RcO6G5",
+                "t": "courses",
+                "name": "Classical Traditions",
+                "mode": "atLeast",
+                "items": [
+                  [
+                    "CIVIC 49A"
+                  ],
+                  [
+                    "CIVIC 49B"
+                  ],
+                  [
+                    "CLASSICS 49C"
+                  ]
+                ],
+                "n": 3
+              }
+            ]
+          },
+          {
+            "id": "ov-depth-extra",
+            "t": "courses",
+            "name": "One additional course in any track",
+            "mode": "atLeast",
+            "n": 1,
+            "items": [
+              [
+                "AMSTUD 57A"
+              ],
+              [
+                "CIVIC 49A"
+              ],
+              [
+                "CIVIC 49B"
+              ],
+              [
+                "CIVIC 233G"
+              ],
+              [
+                "CIVIC 241K"
+              ],
+              [
+                "CLASSICS 83"
+              ],
+              [
+                "CLASSICS 84"
+              ],
+              [
+                "GERMAN 209"
+              ],
+              [
+                "HISTORY 153"
+              ],
+              [
+                "HISTORY 250"
+              ],
+              [
+                "HISTORY 252"
+              ],
+              [
+                "HISTORY 253F"
+              ],
+              [
+                "HISTORY 254E"
+              ],
+              [
+                "HISTORY 33B"
+              ],
+              [
+                "HISTORY 50A"
+              ],
+              [
+                "HISTORY 61N"
+              ],
+              [
+                "INTNLREL 127"
+              ],
+              [
+                "POLISCI 115"
+              ],
+              [
+                "POLISCI 116M"
+              ],
+              [
+                "POLISCI 140P"
+              ],
+              [
+                "POLISCI 231A"
+              ],
+              [
+                "POLISCI 247C"
+              ],
+              [
+                "CIVIC 212R"
+              ],
+              [
+                "CIVIC 230A"
+              ],
+              [
+                "CIVIC 231H"
+              ],
+              [
+                "CIVIC 231R"
+              ],
+              [
+                "CLASSICS 37"
+              ],
+              [
+                "COLLEGE 110"
+              ],
+              [
+                "COMM 235"
+              ],
+              [
+                "ENGLISH 235"
+              ],
+              [
+                "HISTORY 233F"
+              ],
+              [
+                "PHIL 172B"
+              ],
+              [
+                "PHIL 174L"
+              ],
+              [
+                "PHIL 176P"
+              ],
+              [
+                "POLISCI 103"
+              ],
+              [
+                "POLISCI 114D"
+              ],
+              [
+                "POLISCI 125"
+              ],
+              [
+                "POLISCI 130"
+              ],
+              [
+                "POLISCI 131L"
+              ],
+              [
+                "POLISCI 228R"
+              ],
+              [
+                "POLISCI 230A"
+              ],
+              [
+                "POLISCI 231R"
+              ],
+              [
+                "POLISCI 237"
+              ],
+              [
+                "POLISCI 237L"
+              ],
+              [
+                "POLISCI 334A"
+              ],
+              [
+                "POLISCI 337M"
+              ],
+              [
+                "POLISCI 432R"
+              ],
+              [
+                "POLISCI 437C"
+              ],
+              [
+                "COMM 151"
+              ],
+              [
+                "HISTORY 153C"
+              ],
+              [
+                "LAW 7007"
+              ],
+              [
+                "POLISCI 132A"
+              ],
+              [
+                "POLISCI 220R"
+              ],
+              [
+                "POLISCI 29N"
+              ],
+              [
+                "POLISCI 326"
+              ],
+              [
+                "POLISCI 335T"
+              ],
+              [
+                "POLISCI 421A"
+              ],
+              [
+                "PUBLPOL 314"
+              ],
+              [
+                "POLISCI 243"
+              ],
+              [
+                "POLISCI 244C"
+              ],
+              [
+                "POLISCI 244D"
+              ],
+              [
+                "POLISCI 440B"
+              ],
+              [
+                "POLISCI 235U"
+              ],
+              [
+                "CLASSICS 49C"
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    "RNyYv5MV": {
+      "why": "\"Courses applied to the minor must be taken for a letter grade where offered and must count for a minimum of 3 units\" (Program Overview).",
+      "patch": {
+        "minUnitsEach": 3
+      }
+    },
+    "nWSok1Rs": {
+      "why": "\"Courses applied to the minor must be taken for a letter grade where offered and must count for a minimum of 3 units\" (Program Overview).",
+      "patch": {
+        "minUnitsEach": 3
+      }
+    }
+  }
+}

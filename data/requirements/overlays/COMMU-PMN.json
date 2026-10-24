@@ -1,0 +1,19 @@
+{
+  "code": "COMMU-PMN",
+  "reviewed": "2026-10-23",
+  "summary": "The audit checks at least 20 units of graduate courses in Communication (COMM). Three of them must be theory or research methods courses that a department advisor picks with you, and a representative of the department examines you; you check both by hand. All of the coursework must be taken at Stanford.",
+  "nodes": {
+    "PgoY5IuH-text": {
+      "why": "\"Candidates for the PhD degree in other departments who elect a minor in Communication must complete a minimum of 20 units of graduate courses in the Department of Communication, including three theory or research methods courses. A representative of the department examines them. In consultation with the individual student, a department advisor determines the particular communication theory and methods courses.\" The 20 units are graduate-career COMM listings; the three theory or methods courses are among them and chosen with the advisor, so the student moves them in; the examination is by hand.",
+      "replace": {
+        "t": "all",
+        "name": "Program Requirements",
+        "children": [
+          { "id": "ov-commupmn-units", "t": "courses", "name": "20 units of graduate courses in Communication", "mode": "units", "units": 20, "pool": { "subjects": ["COMM"], "onlyGraduate": true } },
+          { "id": "ov-commupmn-theory", "t": "text", "name": "Three theory or research methods courses, determined with a department advisor", "manual": "approval", "n": 3, "shares": true },
+          { "id": "ov-commupmn-exam", "t": "text", "name": "Examination by a representative of the department", "manual": "exam" }
+        ]
+      }
+    }
+  }
+}

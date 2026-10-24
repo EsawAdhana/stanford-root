@@ -1,0 +1,9 @@
+{
+  "code": "DATSCI-MIN",
+  "reviewed": "2026-10-23",
+  "summary": "The audit checks one course from each of the six lists (linear algebra, programming, probability, statistics, data mining and machine learning, and data science methodology), each taken for a letter grade, and the 22 units of the minor. You check by hand courses the program approves outside the lists, that you take STATS 118 or MATH 151 for probability if your major or another minor already uses STATS 117, CS 109, EE 178 or MS&E 120, and that no course other than CS 106A or 106B, MATH 51 and STATS 110 is also counted toward your major or another minor.",
+  "program": {
+    "letterGrade": true,
+    "why": "Grading: \"All courses for the minor must be taken for a letter grade.\""
+  }
+}

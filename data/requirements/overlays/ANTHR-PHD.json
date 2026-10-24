@@ -1,0 +1,129 @@
+{
+  "code": "ANTHR-PHD",
+  "reviewed": "2026-10-23",
+  "summary": "You pick the Archaeology or Culture and Society track. Its required courses need a B+ or better, and its electives (four for Archaeology, three for Culture and Society) are 5 units each and letter graded. The audit also checks ANTHRO 310G and 444 for three quarters each, the third-year qualifying exam courses, ANTHRO 802 once you are TGR, and 135 graduate units. The 3.0 GPA and every yearly checklist, teaching, research, language, candidacy, exam and dissertation milestone are checked by hand.",
+  "nodes": {
+    "Y7Qb8378": {
+      "why": "\"Enroll in Anthro 310G and Anthro 444 for 1 unit each, Autumn, Winter and, Spring Quarters\": three 1-unit enrollments of each, not six different courses.",
+      "replace": {
+        "t": "all",
+        "name": "Introductory Coursework",
+        "children": [
+          { "id": "ov-anthrphd-310g", "t": "courses", "name": "ANTHRO 310G in Autumn, Winter and Spring", "mode": "units", "units": 3, "items": [["ANTHRO 310G"]] },
+          { "id": "ov-anthrphd-444", "t": "courses", "name": "ANTHRO 444 in Autumn, Winter and Spring", "mode": "units", "units": 3, "items": [["ANTHRO 444"]] }
+        ]
+      }
+    },
+    "QoZepRCf": {
+      "why": "\"Total electives completed in the first and second year must be at least 3\" (Culture and Society) and \"at least 4\" (Archaeology): one elective count per track over both years, now inside each track.",
+      "remove": true
+    },
+    "pEYimXnD": {
+      "why": "The second-year Elective rule repeats the first-year one (\"Total electives completed in the first and second year must be at least 3 / at least 4\"), and the second-year Track Options repeat the track choice (\"ANTHRO307 may be taken in either the first or second year\"). Both are now inside the first-year track options.",
+      "remove": true
+    },
+    "blS8y3Y9": {
+      "why": "Archaeology track: first-year ANTHRO 303, 303A, 307 and second-year ANTHRO 307, 308A (\"ANTHRO307 may be taken in either the first or second year of the PhD program\", so once), and \"Archaeology Track Students ... Total electives completed in the first and second year must be at least 4\", \"Elective courses must be taken for 5 units each for a letter grade.\" Grading: \"All required courses in Anthropology appropriate for the student’s chosen track must be passed with a minimum grade of B+.\"",
+      "replace": {
+        "t": "all",
+        "name": "Archaeology Track",
+        "children": [
+          { "id": "ov-anthrphd-arch-courses", "t": "courses", "name": "Required Courses for the Archaeology Track", "mode": "all", "items": [["ANTHRO 303"], ["ANTHRO 303A"], ["ANTHRO 307"], ["ANTHRO 308A"]], "minGrade": "B+" },
+          {
+            "id": "ov-anthrphd-arch-electives",
+            "t": "courses",
+            "name": "Four electives (5 units each, letter grade)",
+            "mode": "atLeast",
+            "n": 4,
+            "minUnitsEach": 5,
+            "letter": true,
+            "items": [["ANTHRO 312"], ["ANTHRO 319"], ["ANTHRO 322"], ["ANTHRO 324"], ["ANTHRO 325"], ["ANTHRO 325W"], ["ANTHRO 330A"], ["ANTHRO 334A"], ["ANTHRO 342"], ["ANTHRO 343"], ["ANTHRO 345A"], ["ANTHRO 350A"], ["ANTHRO 356A"], ["ANTHRO 366"], ["ANTHRO 367"], ["ANTHRO 372"], ["ANTHRO 374"]]
+          }
+        ]
+      }
+    },
+    "173Jc8un": {
+      "why": "Culture and Society track: first-year ANTHRO 300, 301, 301A and second-year ANTHRO 306, 308, and \"Culture and Society Track Students ... Total electives completed in the first and second year must be at least 3\", \"Elective courses must be taken for 5 units each for a letter grade.\" Grading: \"All required courses in Anthropology appropriate for the student’s chosen track must be passed with a minimum grade of B+.\"",
+      "replace": {
+        "t": "all",
+        "name": "Culture and Society Track",
+        "children": [
+          { "id": "ov-anthrphd-cs-courses", "t": "courses", "name": "Required Courses for the Culture and Society Track", "mode": "all", "items": [["ANTHRO 300"], ["ANTHRO 301"], ["ANTHRO 301A"], ["ANTHRO 306"], ["ANTHRO 308"]], "minGrade": "B+" },
+          {
+            "id": "ov-anthrphd-cs-electives",
+            "t": "courses",
+            "name": "Three electives (5 units each, letter grade)",
+            "mode": "atLeast",
+            "n": 3,
+            "minUnitsEach": 5,
+            "letter": true,
+            "items": [["ANTHRO 312"], ["ANTHRO 319"], ["ANTHRO 322"], ["ANTHRO 324"], ["ANTHRO 325"], ["ANTHRO 325W"], ["ANTHRO 330A"], ["ANTHRO 334A"], ["ANTHRO 342"], ["ANTHRO 343"], ["ANTHRO 345A"], ["ANTHRO 350A"], ["ANTHRO 356A"], ["ANTHRO 366"], ["ANTHRO 367"], ["ANTHRO 372"], ["ANTHRO 374"]]
+          }
+        ]
+      }
+    },
+    "UBH9ob4m": {
+      "why": "First-year checklist: \"submit the 1st Year PhD Plan of Study form\", \"The 1st Year PhD Checklist and a faculty approved Summer Research proposal\", \"Complete at least 50 units\" by the end of spring quarter.",
+      "patch": { "manual": "milestone" }
+    },
+    "z8dDqSe8": {
+      "why": "Second-year checklist: approved Plan of Study, qualifying exam committee chairs, Foreign Language Plan, Application for Candidacy, \"Complete at least 95 units by the end of the second year\".",
+      "patch": { "manual": "milestone" }
+    },
+    "ArU3PMw5": {
+      "why": "\"Students are expected to enroll in all required courses for a letter grade unless that option is not available.\"",
+      "patch": { "letter": true }
+    },
+    "qKL9qgxE": {
+      "why": "Third-year checklist: qualifying exam committee readers and form, \"Finish Qualifying Exams and Dissertation Proposal Review\", \"Submit Doctoral Dissertation Reading Committee Form\".",
+      "patch": { "manual": "milestone" }
+    },
+    "UndPntMf": {
+      "why": "\"Students are required to pass qualifying exams in their Area and Topic. Inclusive of written components, oral component and the dissertation proposal review.\"",
+      "patch": { "manual": "exam" }
+    },
+    "ZXh1eZLx": {
+      "why": "Fourth year: \"Submit the End of Fieldwork Checklist\", \"Confirm a Teaching Plan for the Fifth year\", \"Complete Field Research\".",
+      "patch": { "manual": "milestone" }
+    },
+    "EcGoKOfP": {
+      "why": "\"Once students reach TGR status, they must enroll in Anthro 802 for 0 units until completion of the degree\": the same rule as the fourth year's, so it shares that enrollment.",
+      "patch": { "shares": true }
+    },
+    "tGU9QH8X": {
+      "why": "\"Submit chapter drafts of the dissertation to all members of the DRC for review quarterly.\" The oral exam and dissertation milestones listed here are their own rules.",
+      "patch": { "manual": "milestone" }
+    },
+    "Vaxk7GRW": {
+      "why": "\"All students are required to complete 1 quarter of teaching experience by the end of their 2nd year in the program\"",
+      "patch": { "manual": "milestone" }
+    },
+    "i8lfxG07": {
+      "why": "Ethics workshop, CITI tutorials, IRB protocol, approved research and dissertation proposals, funding proposals, and \"Conduct at least nine months of approved dissertation field research\".",
+      "patch": { "manual": "milestone" }
+    },
+    "QiTmBIHc": {
+      "why": "\"Students are expected to complete qualifying procedures by the last week of classes in the spring quarter, and apply for candidacy by the end of Winter.\"",
+      "patch": { "manual": "milestone" }
+    },
+    "O1lU9pWL": {
+      "why": "\"Pass the University Oral Examination\"",
+      "patch": { "manual": "exam" }
+    },
+    "GmkTuwfP": {
+      "why": "\"submit the final DRC-approved dissertation to the university Registrar via Axess\"",
+      "patch": { "manual": "thesis" }
+    },
+    "KE7QZQZi": {
+      "why": "\"The Anthropology PhD language requirement ensures oral and reading proficiency in a language necessary for successful scholarship\", approved through the Foreign Language Plan.",
+      "patch": { "manual": "milestone" }
+    }
+  },
+  "add": [
+    {
+      "block": "1k4VGRCS",
+      "why": "GPA: \"Ph.D. Students in Anthropology must complete a minimum of 135 quarter units with a minimum grade point average (GPA) of 3.0 (B).\"",
+      "node": { "id": "ov-gpa", "t": "text", "name": "GPA of 3.0 (B) or higher", "manual": "gpa" }
+    }
+  ]
+}

@@ -1,0 +1,1578 @@
+{
+  "code": "EASYS-BS",
+  "reviewed": "2026-10-23",
+  "summary": "Everyone takes EARTHSYS 10, a natural-science and a human-dimensions sustainability course, the EARTHSYS 260 internship, a WIM course, and the capstone (EARTHSYS 210A or 210B with the 210P project, honors research, or the Notation in Science Communication), then a subplan's foundational and subcategory courses. Each subcategory group asks for its stated number of courses and units, with the skills or qualitative methods minimums where a subplan has them. Every course needs a D- or better, and all but the internship and the foundational courses must be letter graded when that option exists. A course counts toward one requirement only, so the WIM and capstone courses do not also fill other rules; honors research is the exception, since the honors thesis is the capstone. You check by hand the 2.0 GPA, the Notation's non-PWR elective and AP or transfer credit for foundational courses. Left: the Energy subplan's \"7 courses must be taken across 3 subcategories, for a total of 21-35 units\" can be read as 7 courses in its first group or 7 with the 4 additional courses; the 4 additional courses are checked.",
+  "program": {
+    "minGrade": "D-",
+    "totals": [
+      {"label": "21 units of Energy, Science & Technology subcategory courses", "minUnits": 21, "when": "BtMnkvIP", "codes": ["ME 30", "CEE 176B", "CEE 272R", "ENERGY 140", "MATSCI 156", "EARTHSYS 101", "EARTHSYS 102", "EARTHSYS 103", "CEE 156", "CEE 176A", "EE 116", "ENERGY 201A", "ENERGY 201B", "ENERGY 269", "CEE 130B", "CEE 173S", "ECON 133", "ECON 156", "ENERGY 110", "ENERGY 134", "ENERGY 191", "ENERGY 203", "GEP 130", "LAW 2503", "CEE 107R", "CEE 176C", "CEE 226", "EARTHSYS 118G", "EARTHSYS 146A", "EARTHSYS 176M", "ENERGY 153", "ENERGY 176", "SUSTAIN 170A", "CS 106A", "CS 106B", "CS 229", "DATASCI 112", "DATASCI 154", "EARTHSYS 144", "EARTHSYS 145", "EPS 140", "MATSCI 166", "POLISCI 150B"], "why": "\"7 courses must be taken across 3 subcategories, for a total of 21-35 units\". The other subplans carry their floor on one subcategory group; here the seven courses sit in two groups, so the floor is a total over their lists."}
+    ],
+    "why": "Grading: \"All courses must be taken for a letter grade, unless letter grading is not an available option, and passed with a minimum grade of a D-.\" The letter grade is on each rule except the internship and the subplans' foundational courses, which \"do not need to be taken for a letter grade\"."
+  },
+  "blocks": {
+    "SPsGEXyK": {
+      "shares": false
+    },
+    "kFJrw3f8": {
+      "shares": false
+    },
+    "U6GNelon": {
+      "shares": true
+    }
+  },
+  "nodes": {
+    "BckmVyTc": {
+      "why": "\"Advanced Mathematics - Foundational: Complete ANY of the following Courses: CME 100, MATH 51 AND MATH 52\". MATH 51 and 52 together are one option; the data split them, so either alone passed.",
+      "replace": {
+        "t": "any",
+        "name": "Advanced Mathematics - Foundational",
+        "children": [
+          {
+            "id": "ov-oac-cme100",
+            "t": "courses",
+            "name": "CME 100",
+            "mode": "all",
+            "items": [
+              [
+                "CME 100"
+              ]
+            ]
+          },
+          {
+            "id": "ov-oac-51-52",
+            "t": "courses",
+            "name": "MATH 51 and MATH 52",
+            "mode": "all",
+            "items": [
+              [
+                "MATH 51"
+              ],
+              [
+                "MATH 52"
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    "MLOmx2WK": {
+      "why": "\"Courses used to satisfy the WIM requirement may not also be counted toward other program requirements.\" The WIM block (SPsGEXyK) no longer shares either. Grading: \"All courses must be taken for a letter grade, unless letter grading is not an available option ... Earth Systems Internship courses and foundational courses in Subplans do not need to be taken for a letter grade.\"",
+      "patch": {
+        "shares": null,
+        "letter": true
+      }
+    },
+    "ahl3y7Iz": {
+      "why": "\"Students pursuing Honors in Earth Systems will not be required to complete Earthsys 210P. Instead, they will need to enroll in a minimum of two units of Earthsys 199.\" With the 1-unit EARTHSYS 199A this option lists, that is a 3-unit floor (repeated EARTHSYS 199 enrollments count toward it). Grading: \"All courses must be taken for a letter grade, unless letter grading is not an available option ... Earth Systems Internship courses and foundational courses in Subplans do not need to be taken for a letter grade.\"",
+      "patch": {
+        "units": 3,
+        "letter": true
+      }
+    },
+    "XUXkFAUM": {
+      "why": "\"An additional (3-5 unit) non-PWR elective course is required to complete the Notation in Science Communication. ... Students must email notationsc@stanford.edu with their choice of elective course ... in order for that course to count\". The website list is not in the Bulletin; the student moves the approved course in.",
+      "patch": {
+        "manual": "approval",
+        "n": 1
+      }
+    },
+    "UNk2dVk5": {
+      "why": "\"6 courses must be taken across 5 subcategories, for a total of 18-30 units; courses appearing in multiple subcategories may not be reused.\" The subcategory minimums add up to five courses; the sixth comes from any subcategory (ov-easys-bio-sixth).",
+      "patch": {
+        "units": 18
+      }
+    },
+    "IRU6eESy": {
+      "why": "\"6 courses must be taken across 3 subcategories, for a total of 18-30 units\"",
+      "patch": {
+        "units": 18
+      }
+    },
+    "l2hlgUpK": {
+      "why": "\"5 courses must be taken across 3 subcategories, for a total of 15-25 units; 2 of the overall 5 must be a skills/methods course (see notes under each subcategory course list).\" The subcategory minimums add up to three courses; two more come from any subcategory (ov-easys-hes-more), and two of the five must be on the eligible skills/methods lists (ov-easys-hes-methods, which shares the courses).",
+      "patch": {
+        "units": 15
+      }
+    },
+    "LESFPe4q": {
+      "why": "\"6 courses must be taken across 4 subcategories, for a total of 18-30 units; courses appearing in multiple subcategories may not be reused.\" The subcategory minimums add up to four courses; two more come from any subcategory (ov-easys-land-more).",
+      "patch": {
+        "units": 18
+      }
+    },
+    "w88gFDqe": {
+      "why": "\"Choose 1 subcategory below and complete all courses within that subcategory. An additional two courses are required from either the \\\"Electives\\\" subcategory or another chosen subcategory. Subcategory courses must be a minimum of 3 units and taken for a letter grade, unless a letter grade option is not available.\" The Bulletin stored Electives as a fourth alternative to the subcategories; it is the source of the two additional courses, which may also come from the other subcategories' lists.",
+      "replace": {
+        "t": "all",
+        "name": "Oceans, Atmosphere, and Climate - Subcategory Courses",
+        "children": [
+          {
+            "id": "w88gFDqe-choice",
+            "t": "any",
+            "name": "One subcategory, all of its courses",
+            "children": [
+              {
+                "id": "RGEoRvw2",
+                "t": "courses",
+                "name": "Oceanography - Subcategory",
+                "mode": "all",
+                "items": [
+                  [
+                    "EARTHSYS 146A"
+                  ],
+                  [
+                    "EARTHSYS 146B",
+                    "EARTHSYS 164"
+                  ],
+                  [
+                    "EARTHSYS 152"
+                  ]
+                ],
+                "minUnitsEach": 3,
+                "letter": true
+              },
+              {
+                "id": "paO9yWWf",
+                "t": "courses",
+                "name": "Climate - Subcategory",
+                "mode": "all",
+                "items": [
+                  [
+                    "EARTHSYS 146A"
+                  ],
+                  [
+                    "EARTHSYS 146B"
+                  ],
+                  [
+                    "ESS 102"
+                  ],
+                  [
+                    "ESS 248",
+                    "ESS 288"
+                  ]
+                ],
+                "minUnitsEach": 3,
+                "letter": true
+              },
+              {
+                "id": "yhRT2grx",
+                "t": "courses",
+                "name": "Marine Biology and Conservation - Subcategory",
+                "mode": "all",
+                "items": [
+                  [
+                    "BIO 136"
+                  ],
+                  [
+                    "BIO 143H"
+                  ],
+                  [
+                    "EARTHSYS 151"
+                  ],
+                  [
+                    "OCEANS 125H"
+                  ]
+                ],
+                "minUnitsEach": 3,
+                "letter": true
+              }
+            ]
+          },
+          {
+            "id": "nFV5qfTS",
+            "t": "courses",
+            "name": "Two more from Electives or another subcategory",
+            "mode": "atLeast",
+            "n": 2,
+            "items": [
+              [
+                "BIO 140"
+              ],
+              [
+                "EARTHSYS 141"
+              ],
+              [
+                "EARTHSYS 152"
+              ],
+              [
+                "EPS 125"
+              ],
+              [
+                "ESS 71"
+              ],
+              [
+                "ESS 171"
+              ],
+              [
+                "ESS 259"
+              ],
+              [
+                "OCEANS 161H"
+              ],
+              [
+                "OCEANS 185H"
+              ],
+              [
+                "EARTHSYS 146A"
+              ],
+              [
+                "EARTHSYS 146B",
+                "EARTHSYS 164"
+              ],
+              [
+                "EARTHSYS 146B"
+              ],
+              [
+                "ESS 102"
+              ],
+              [
+                "ESS 248",
+                "ESS 288"
+              ],
+              [
+                "BIO 136"
+              ],
+              [
+                "BIO 143H"
+              ],
+              [
+                "EARTHSYS 151"
+              ],
+              [
+                "OCEANS 125H"
+              ]
+            ],
+            "minUnitsEach": 3,
+            "letter": true
+          }
+        ]
+      }
+    },
+    "Fl5JhkHl": {
+      "why": "\"6 total subcategory courses are required. Subcategory courses must be a minimum of 3 units and taken for a letter grade, unless a letter grade option is not available.\"",
+      "patch": {
+        "minUnitsEach": 3,
+        "letter": true
+      }
+    },
+    "qaVEefPV": {
+      "why": "\"6 total subcategory courses are required. Subcategory courses must be a minimum of 3 units and taken for a letter grade, unless a letter grade option is not available.\"",
+      "patch": {
+        "minUnitsEach": 3,
+        "letter": true
+      }
+    },
+    "dDjdu3Ho": {
+      "why": "\"6 total subcategory courses are required. Subcategory courses must be a minimum of 3 units and taken for a letter grade, unless a letter grade option is not available.\"",
+      "patch": {
+        "minUnitsEach": 3,
+        "letter": true
+      }
+    },
+    "czLXCDg9": {
+      "why": "\"6 total subcategory courses are required. Subcategory courses must be a minimum of 3 units and taken for a letter grade, unless a letter grade option is not available.\"",
+      "patch": {
+        "minUnitsEach": 3,
+        "letter": true
+      }
+    },
+    "TDe6EQ2s": {
+      "why": "\"6 total subcategory courses are required. Subcategory courses must be a minimum of 3 units and taken for a letter grade, unless a letter grade option is not available.\"",
+      "patch": {
+        "minUnitsEach": 3,
+        "letter": true
+      }
+    },
+    "x0EPKqoJ": {
+      "why": "\"Choose a second Planetary Science course or Environmental Science course from above OR choose one from this list of Additional Science courses. Complete ANY of the following Courses: EARTHSYS 105A AND EARTHSYS 105B, EARTHSYS 123A, ...\" EARTHSYS 105A and 105B together are one option; the data split them, so either half alone passed.",
+      "replace": {
+        "t": "any",
+        "name": "Additional Science - Foundational",
+        "children": [
+          {
+            "id": "ov-sse-sci-one",
+            "t": "courses",
+            "name": "One course from the lists",
+            "mode": "atLeast",
+            "n": 1,
+            "items": [
+              [
+                "EARTHSYS 123A"
+              ],
+              [
+                "EARTHSYS 127A"
+              ],
+              [
+                "EARTHSYS 128"
+              ],
+              [
+                "EARTHSYS 150"
+              ],
+              [
+                "EARTHSYS 155"
+              ],
+              [
+                "OCEANS 125H"
+              ],
+              [
+                "OSPAUSTL 28"
+              ],
+              [
+                "OSPSANTG 58"
+              ],
+              [
+                "SUSTAIN 101C"
+              ],
+              [
+                "BIO 81"
+              ],
+              [
+                "EPS 1"
+              ],
+              [
+                "EPS 2"
+              ],
+              [
+                "EPS 4"
+              ],
+              [
+                "CEE 70"
+              ],
+              [
+                "CEE 107A"
+              ],
+              [
+                "EARTHSYS 101"
+              ],
+              [
+                "SUSTAIN 103"
+              ]
+            ]
+          },
+          {
+            "t": "courses",
+            "name": "EARTHSYS 105A and EARTHSYS 105B",
+            "mode": "all",
+            "items": [
+              [
+                "EARTHSYS 105A"
+              ],
+              [
+                "EARTHSYS 105B"
+              ]
+            ],
+            "id": "ov-sse-sci-105ab"
+          }
+        ]
+      }
+    },
+    "Ga8IiZUr": {
+      "why": "\"Choose 3 courses, for 9-12 units. 1 course must focus on qualitative methods (see description notes).\" The qualitative-methods course is ov-easys-sse-qual, which shares this rule's course.",
+      "patch": {
+        "units": 9
+      }
+    },
+    "AuTTxyXn": {
+      "why": "\"Take 5 courses, at least 3 units in each subcategory, and a minimum of 15 units total across all subcategories. You may not double count courses that appear in more than one category/section.\" The subcategory minimums add up to three courses; two more come from any subcategory (ov-easys-sse-more).",
+      "patch": {
+        "units": 15
+      }
+    },
+    "wMJg5M9f": {
+      "why": "\"Take 5 courses, at least 3 units in each subcategory ... Subcategory courses must be taken for a letter grade, unless a letter grade option is not available.\"",
+      "patch": {
+        "units": 3,
+        "letter": true
+      }
+    },
+    "G8NpfU4Y": {
+      "why": "\"Take 5 courses, at least 3 units in each subcategory ... Subcategory courses must be taken for a letter grade, unless a letter grade option is not available.\"",
+      "patch": {
+        "units": 3,
+        "letter": true
+      }
+    },
+    "TLSg48GX": {
+      "why": "\"Take 5 courses, at least 3 units in each subcategory ... Subcategory courses must be taken for a letter grade, unless a letter grade option is not available.\"",
+      "patch": {
+        "units": 3,
+        "letter": true
+      }
+    },
+    "WYf5IhwA": {
+      "why": "Grading: \"All courses must be taken for a letter grade, unless letter grading is not an available option ... Earth Systems Internship courses and foundational courses in Subplans do not need to be taken for a letter grade.\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "EuhOuZsq": {
+      "why": "Grading: \"All courses must be taken for a letter grade, unless letter grading is not an available option ... Earth Systems Internship courses and foundational courses in Subplans do not need to be taken for a letter grade.\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "MSXPvsGc": {
+      "why": "Grading: \"All courses must be taken for a letter grade, unless letter grading is not an available option ... Earth Systems Internship courses and foundational courses in Subplans do not need to be taken for a letter grade.\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "VCCpAKEQ": {
+      "why": "Grading: \"All courses must be taken for a letter grade, unless letter grading is not an available option ... Earth Systems Internship courses and foundational courses in Subplans do not need to be taken for a letter grade.\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "IdQ0LPGz": {
+      "why": "Grading: \"All courses must be taken for a letter grade, unless letter grading is not an available option ... Earth Systems Internship courses and foundational courses in Subplans do not need to be taken for a letter grade.\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "QPmLkfm8": {
+      "why": "Grading: \"All courses must be taken for a letter grade, unless letter grading is not an available option ... Earth Systems Internship courses and foundational courses in Subplans do not need to be taken for a letter grade.\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "Klz3WSQQ": {
+      "why": "Grading: \"All courses must be taken for a letter grade, unless letter grading is not an available option ... Earth Systems Internship courses and foundational courses in Subplans do not need to be taken for a letter grade.\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "rNuOcsWs": {
+      "why": "Grading: \"All courses must be taken for a letter grade, unless letter grading is not an available option ... Earth Systems Internship courses and foundational courses in Subplans do not need to be taken for a letter grade.\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "JCkftiOJ": {
+      "why": "Grading: \"All courses must be taken for a letter grade, unless letter grading is not an available option ... Earth Systems Internship courses and foundational courses in Subplans do not need to be taken for a letter grade.\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "jzPRAwIN": {
+      "why": "Grading: \"All courses must be taken for a letter grade, unless letter grading is not an available option ... Earth Systems Internship courses and foundational courses in Subplans do not need to be taken for a letter grade.\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "DtDgQz7B": {
+      "why": "Grading: \"All courses must be taken for a letter grade, unless letter grading is not an available option ... Earth Systems Internship courses and foundational courses in Subplans do not need to be taken for a letter grade.\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "V4cZCb3I": {
+      "why": "Grading: \"All courses must be taken for a letter grade, unless letter grading is not an available option ... Earth Systems Internship courses and foundational courses in Subplans do not need to be taken for a letter grade.\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "RhUQsF4R": {
+      "why": "Grading: \"All courses must be taken for a letter grade, unless letter grading is not an available option ... Earth Systems Internship courses and foundational courses in Subplans do not need to be taken for a letter grade.\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "dNfsvlYG": {
+      "why": "Grading: \"All courses must be taken for a letter grade, unless letter grading is not an available option ... Earth Systems Internship courses and foundational courses in Subplans do not need to be taken for a letter grade.\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "xPTOO9ox": {
+      "why": "Grading: \"All courses must be taken for a letter grade, unless letter grading is not an available option ... Earth Systems Internship courses and foundational courses in Subplans do not need to be taken for a letter grade.\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "U29KFIWu": {
+      "why": "\"Ecology and Conservation - Subcategory: Complete at least 2 of the following Courses: BIO 103, BIO 115, BIO 121, BIO 136, BIO 144, BIO 179, EARTHSYS 105A AND EARTHSYS 105B, EARTHSYS 127, ...\" EARTHSYS 105A and 105B together are one of the options; the data split them into two, so either half counted on its own. The pair is two of the subplan's six courses, so taken together it fills the two this subcategory asks for. Grading: \"All courses must be taken for a letter grade, unless letter grading is not an available option ... Earth Systems Internship courses and foundational courses in Subplans do not need to be taken for a letter grade.\"",
+      "replace": {
+        "t": "any",
+        "name": "Ecology and Conservation - Subcategory",
+        "children": [
+          {
+            "id": "ov-eco-two",
+            "t": "courses",
+            "name": "Two courses from the list",
+            "mode": "atLeast",
+            "n": 2,
+            "items": [
+              [
+                "BIO 103"
+              ],
+              [
+                "BIO 115"
+              ],
+              [
+                "BIO 121"
+              ],
+              [
+                "BIO 136"
+              ],
+              [
+                "BIO 144"
+              ],
+              [
+                "BIO 179"
+              ],
+              [
+                "EARTHSYS 127"
+              ],
+              [
+                "EARTHSYS 128"
+              ],
+              [
+                "EARTHSYS 180"
+              ],
+              [
+                "OCEANS 159H"
+              ],
+              [
+                "OCEANS 173"
+              ],
+              [
+                "OSPAUSTL 10"
+              ],
+              [
+                "OSPAUSTL 28"
+              ]
+            ],
+            "letter": true
+          },
+          {
+            "id": "ov-eco-105ab",
+            "t": "courses",
+            "name": "EARTHSYS 105A and EARTHSYS 105B",
+            "mode": "all",
+            "items": [
+              [
+                "EARTHSYS 105A"
+              ],
+              [
+                "EARTHSYS 105B"
+              ]
+            ],
+            "letter": true
+          }
+        ]
+      }
+    },
+    "HDIj951U": {
+      "why": "Grading: \"All courses must be taken for a letter grade, unless letter grading is not an available option ... Earth Systems Internship courses and foundational courses in Subplans do not need to be taken for a letter grade.\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "jMw2nIRa": {
+      "why": "Grading: \"All courses must be taken for a letter grade, unless letter grading is not an available option ... Earth Systems Internship courses and foundational courses in Subplans do not need to be taken for a letter grade.\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "lR9U940P": {
+      "why": "Grading: \"All courses must be taken for a letter grade, unless letter grading is not an available option ... Earth Systems Internship courses and foundational courses in Subplans do not need to be taken for a letter grade.\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "rxE94McS": {
+      "why": "Grading: \"All courses must be taken for a letter grade, unless letter grading is not an available option ... Earth Systems Internship courses and foundational courses in Subplans do not need to be taken for a letter grade.\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "odcY7eRI": {
+      "why": "Grading: \"All courses must be taken for a letter grade, unless letter grading is not an available option ... Earth Systems Internship courses and foundational courses in Subplans do not need to be taken for a letter grade.\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "RY0mCAFS": {
+      "why": "Grading: \"All courses must be taken for a letter grade, unless letter grading is not an available option ... Earth Systems Internship courses and foundational courses in Subplans do not need to be taken for a letter grade.\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "k39w16Wb": {
+      "why": "Grading: \"All courses must be taken for a letter grade, unless letter grading is not an available option ... Earth Systems Internship courses and foundational courses in Subplans do not need to be taken for a letter grade.\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "GogLTtSw": {
+      "why": "Grading: \"All courses must be taken for a letter grade, unless letter grading is not an available option ... Earth Systems Internship courses and foundational courses in Subplans do not need to be taken for a letter grade.\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "aLOD8tlG": {
+      "why": "Grading: \"All courses must be taken for a letter grade, unless letter grading is not an available option ... Earth Systems Internship courses and foundational courses in Subplans do not need to be taken for a letter grade.\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "zEhk9GxB": {
+      "why": "Grading: \"All courses must be taken for a letter grade, unless letter grading is not an available option ... Earth Systems Internship courses and foundational courses in Subplans do not need to be taken for a letter grade.\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "vAGbV1FD": {
+      "why": "\"Land Ecosystems - Subcategory: Complete at least 1 of the following Courses: BIO 144, EARTHSYS 105A AND EARTHSYS 105B, EARTHSYS 123A, ...\" EARTHSYS 105A and 105B together are one option; the data split them, so either half alone passed. Grading: \"All courses must be taken for a letter grade, unless letter grading is not an available option ... Earth Systems Internship courses and foundational courses in Subplans do not need to be taken for a letter grade.\"",
+      "replace": {
+        "t": "any",
+        "name": "Land Ecosystems - Subcategory",
+        "children": [
+          {
+            "id": "ov-land-one",
+            "t": "courses",
+            "name": "One course from the list",
+            "mode": "atLeast",
+            "n": 1,
+            "items": [
+              [
+                "BIO 144"
+              ],
+              [
+                "EARTHSYS 123A"
+              ],
+              [
+                "EARTHSYS 127"
+              ],
+              [
+                "EARTHSYS 128"
+              ],
+              [
+                "EARTHSYS 150"
+              ],
+              [
+                "EARTHSYS 155"
+              ],
+              [
+                "EARTHSYS 180"
+              ],
+              [
+                "EARTHSYS 181"
+              ],
+              [
+                "ESS 256"
+              ],
+              [
+                "OSPSANTG 58"
+              ]
+            ],
+            "letter": true
+          },
+          {
+            "t": "courses",
+            "name": "EARTHSYS 105A and EARTHSYS 105B",
+            "mode": "all",
+            "items": [
+              [
+                "EARTHSYS 105A"
+              ],
+              [
+                "EARTHSYS 105B"
+              ]
+            ],
+            "id": "ov-land-105ab",
+            "letter": true
+          }
+        ]
+      }
+    },
+    "n9qE3oHj": {
+      "why": "Grading: \"All courses must be taken for a letter grade, unless letter grading is not an available option ... Earth Systems Internship courses and foundational courses in Subplans do not need to be taken for a letter grade.\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "VdZnxrwT": {
+      "why": "Grading: \"All courses must be taken for a letter grade, unless letter grading is not an available option ... Earth Systems Internship courses and foundational courses in Subplans do not need to be taken for a letter grade.\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "ZXIYkKZv": {
+      "why": "Grading: \"All courses must be taken for a letter grade, unless letter grading is not an available option ... Earth Systems Internship courses and foundational courses in Subplans do not need to be taken for a letter grade.\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "oLfmRzsa": {
+      "why": "Grading: \"All courses must be taken for a letter grade, unless letter grading is not an available option ... Earth Systems Internship courses and foundational courses in Subplans do not need to be taken for a letter grade.\"",
+      "patch": {
+        "letter": true
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "U6GNelon",
+      "node": {
+        "id": "ov-easys-honors-thesis",
+        "t": "text",
+        "name": "Honors thesis",
+        "manual": "thesis"
+      },
+      "why": "\"Completion of the honors thesis satisfies the program's senior capstone requirement.\" The honors block now shares its courses with the capstone's honors option."
+    },
+    {
+      "parent": "EWh41wxK",
+      "node": {
+        "id": "ov-easys-energy-fourth",
+        "t": "courses",
+        "name": "Fourth additional course (any of these subcategories, Methods included)",
+        "mode": "atLeast",
+        "n": 1,
+        "items": [
+          [
+            "CEE 156"
+          ],
+          [
+            "CEE 176A"
+          ],
+          [
+            "EARTHSYS 101"
+          ],
+          [
+            "EARTHSYS 103"
+          ],
+          [
+            "EE 116"
+          ],
+          [
+            "ENERGY 140"
+          ],
+          [
+            "ENERGY 201A"
+          ],
+          [
+            "ENERGY 201B"
+          ],
+          [
+            "ENERGY 269"
+          ],
+          [
+            "MATSCI 156"
+          ],
+          [
+            "CEE 130B"
+          ],
+          [
+            "CEE 173S"
+          ],
+          [
+            "ECON 133"
+          ],
+          [
+            "ECON 156"
+          ],
+          [
+            "ENERGY 110"
+          ],
+          [
+            "ENERGY 134"
+          ],
+          [
+            "ENERGY 191"
+          ],
+          [
+            "ENERGY 203"
+          ],
+          [
+            "GEP 130"
+          ],
+          [
+            "LAW 2503"
+          ],
+          [
+            "CEE 107R"
+          ],
+          [
+            "CEE 176B"
+          ],
+          [
+            "CEE 176C"
+          ],
+          [
+            "CEE 226"
+          ],
+          [
+            "EARTHSYS 102"
+          ],
+          [
+            "EARTHSYS 118G"
+          ],
+          [
+            "EARTHSYS 146A"
+          ],
+          [
+            "EARTHSYS 176M"
+          ],
+          [
+            "ENERGY 153"
+          ],
+          [
+            "ENERGY 176"
+          ],
+          [
+            "SUSTAIN 170A"
+          ],
+          [
+            "CS 106A"
+          ],
+          [
+            "CS 106B"
+          ],
+          [
+            "CS 229"
+          ],
+          [
+            "DATASCI 112"
+          ],
+          [
+            "DATASCI 154"
+          ],
+          [
+            "EARTHSYS 144"
+          ],
+          [
+            "EARTHSYS 145"
+          ],
+          [
+            "EPS 140"
+          ],
+          [
+            "MATSCI 166"
+          ],
+          [
+            "POLISCI 150B"
+          ]
+        ],
+        "letter": true
+      },
+      "why": "\"Students must complete 4 courses from additional subcategories; one course is required from each of the three subcategories below, totaling four additional courses. The Methods subcategory is optional.\" One from each of three is three; the fourth comes from any of them or Methods. Grading: \"All courses must be taken for a letter grade, unless letter grading is not an available option ... Earth Systems Internship courses and foundational courses in Subplans do not need to be taken for a letter grade.\""
+    },
+    {
+      "parent": "UNk2dVk5",
+      "node": {
+        "id": "ov-easys-bio-sixth",
+        "t": "courses",
+        "name": "Sixth subcategory course (any subcategory)",
+        "mode": "atLeast",
+        "n": 1,
+        "items": [
+          [
+            "BIO 103"
+          ],
+          [
+            "BIO 115"
+          ],
+          [
+            "BIO 121"
+          ],
+          [
+            "BIO 136"
+          ],
+          [
+            "BIO 144"
+          ],
+          [
+            "BIO 179"
+          ],
+          [
+            "EARTHSYS 105A"
+          ],
+          [
+            "EARTHSYS 105B"
+          ],
+          [
+            "EARTHSYS 127"
+          ],
+          [
+            "EARTHSYS 128"
+          ],
+          [
+            "EARTHSYS 180"
+          ],
+          [
+            "OCEANS 159H"
+          ],
+          [
+            "OCEANS 173"
+          ],
+          [
+            "OSPAUSTL 10"
+          ],
+          [
+            "OSPAUSTL 28"
+          ],
+          [
+            "CEE 177"
+          ],
+          [
+            "CEE 274"
+          ],
+          [
+            "EARTHSYS 152"
+          ],
+          [
+            "EARTHSYS 155"
+          ],
+          [
+            "EARTHSYS 205A"
+          ],
+          [
+            "EARTHSYS 256"
+          ],
+          [
+            "ANTHRO 127W"
+          ],
+          [
+            "EARTHSYS 123"
+          ],
+          [
+            "EARTHSYS 150"
+          ],
+          [
+            "EARTHSYS 175"
+          ],
+          [
+            "EARTHSYS 160"
+          ],
+          [
+            "EARTHSYS 179"
+          ],
+          [
+            "EARTHSYS 185"
+          ],
+          [
+            "EARTHSYS 227"
+          ],
+          [
+            "LAW 2515"
+          ],
+          [
+            "EARTHSYS 144"
+          ],
+          [
+            "EARTHSYS 145"
+          ],
+          [
+            "EARTHSYS 213"
+          ],
+          [
+            "EARTHSYS 243H"
+          ],
+          [
+            "EPS 240"
+          ],
+          [
+            "ESS 220"
+          ],
+          [
+            "ESS 224"
+          ]
+        ],
+        "letter": true
+      },
+      "why": "\"6 courses must be taken across 5 subcategories\"; the subcategory minimums add up to five. Grading: \"All courses must be taken for a letter grade, unless letter grading is not an available option ... Earth Systems Internship courses and foundational courses in Subplans do not need to be taken for a letter grade.\""
+    },
+    {
+      "parent": "l2hlgUpK",
+      "node": {
+        "id": "ov-easys-hes-more",
+        "t": "courses",
+        "name": "Two more subcategory courses (any subcategory)",
+        "mode": "atLeast",
+        "n": 2,
+        "items": [
+          [
+            "BUSGEN 143"
+          ],
+          [
+            "CEE 124"
+          ],
+          [
+            "CEE 130B"
+          ],
+          [
+            "CEE 173S"
+          ],
+          [
+            "EBS 130"
+          ],
+          [
+            "ECON 51"
+          ],
+          [
+            "ECON 106"
+          ],
+          [
+            "ECON 118"
+          ],
+          [
+            "ECON 150"
+          ],
+          [
+            "ECON 155"
+          ],
+          [
+            "ECON 156"
+          ],
+          [
+            "ECON 178"
+          ],
+          [
+            "GEP 130"
+          ],
+          [
+            "GEP 160"
+          ],
+          [
+            "GEP 248"
+          ],
+          [
+            "GEP 268"
+          ],
+          [
+            "GEP 269"
+          ],
+          [
+            "GEP 382"
+          ],
+          [
+            "LAW 2504"
+          ],
+          [
+            "MS&E 243"
+          ],
+          [
+            "PUBLPOL 308"
+          ],
+          [
+            "SUSTAIN 170A"
+          ],
+          [
+            "URBANST 183"
+          ],
+          [
+            "BIO 144"
+          ],
+          [
+            "CEE 151"
+          ],
+          [
+            "CEE 226"
+          ],
+          [
+            "EARTHSYS 123"
+          ],
+          [
+            "EARTHSYS 123A"
+          ],
+          [
+            "EARTHSYS 150"
+          ],
+          [
+            "EARTHSYS 160"
+          ],
+          [
+            "EARTHSYS 169"
+          ],
+          [
+            "EARTHSYS 171"
+          ],
+          [
+            "EARTHSYS 174"
+          ],
+          [
+            "EARTHSYS 175"
+          ],
+          [
+            "EARTHSYS 179"
+          ],
+          [
+            "EARTHSYS 181"
+          ],
+          [
+            "EARTHSYS 183"
+          ],
+          [
+            "EARTHSYS 185"
+          ],
+          [
+            "EARTHSYS 195"
+          ],
+          [
+            "EARTHSYS 227"
+          ],
+          [
+            "EBS 306"
+          ],
+          [
+            "OSPSANTG 58"
+          ],
+          [
+            "POLISCI 124A"
+          ],
+          [
+            "CS 106B"
+          ],
+          [
+            "DATASCI 112"
+          ],
+          [
+            "EARTHSYS 141"
+          ],
+          [
+            "EARTHSYS 142"
+          ],
+          [
+            "EARTHSYS 144"
+          ],
+          [
+            "EARTHSYS 145"
+          ],
+          [
+            "EARTHSYS 153"
+          ],
+          [
+            "EARTHSYS 162"
+          ],
+          [
+            "EARTHSYS 213"
+          ],
+          [
+            "ENERGY 240"
+          ],
+          [
+            "STATS 202",
+            "STATS 202F",
+            "STATS 202V"
+          ]
+        ],
+        "letter": true
+      },
+      "why": "\"5 courses must be taken across 3 subcategories\"; the subcategory minimums add up to three. Grading: \"All courses must be taken for a letter grade, unless letter grading is not an available option ... Earth Systems Internship courses and foundational courses in Subplans do not need to be taken for a letter grade.\""
+    },
+    {
+      "parent": "l2hlgUpK",
+      "node": {
+        "id": "ov-easys-hes-methods",
+        "t": "courses",
+        "name": "Two of the five are skills/methods courses",
+        "mode": "atLeast",
+        "n": 2,
+        "shares": true,
+        "items": [
+          [
+            "GEP 268"
+          ],
+          [
+            "GEP 269"
+          ],
+          [
+            "CS 106B"
+          ],
+          [
+            "EARTHSYS 141"
+          ],
+          [
+            "EARTHSYS 142"
+          ],
+          [
+            "EARTHSYS 144"
+          ],
+          [
+            "EARTHSYS 145"
+          ],
+          [
+            "EARTHSYS 153"
+          ]
+        ],
+        "letter": true
+      },
+      "why": "\"2 of the overall 5 must be a skills/methods course (see notes under each subcategory course list).\" The notes: \"Eligible Skills/Methods course: GEP268 and GEP 269.\" and \"Eligible Skills/Methods courses: CS 106B; EARTHSYS 141; EARTHSYS 142; EARTHSYS144; EARTHSYS145; EARTHSYS153.\" It shares the courses counted in the subcategories. Grading: \"All courses must be taken for a letter grade, unless letter grading is not an available option ... Earth Systems Internship courses and foundational courses in Subplans do not need to be taken for a letter grade.\""
+    },
+    {
+      "parent": "LESFPe4q",
+      "node": {
+        "id": "ov-easys-land-more",
+        "t": "courses",
+        "name": "Two more subcategory courses (any subcategory)",
+        "mode": "atLeast",
+        "n": 2,
+        "items": [
+          [
+            "BIO 144"
+          ],
+          [
+            "EARTHSYS 105A"
+          ],
+          [
+            "EARTHSYS 105B"
+          ],
+          [
+            "EARTHSYS 123A"
+          ],
+          [
+            "EARTHSYS 127"
+          ],
+          [
+            "EARTHSYS 128"
+          ],
+          [
+            "EARTHSYS 150"
+          ],
+          [
+            "EARTHSYS 155"
+          ],
+          [
+            "EARTHSYS 180"
+          ],
+          [
+            "EARTHSYS 181"
+          ],
+          [
+            "ESS 256"
+          ],
+          [
+            "OSPSANTG 58"
+          ],
+          [
+            "CEE 101B"
+          ],
+          [
+            "CEE 162E"
+          ],
+          [
+            "CEE 166A"
+          ],
+          [
+            "CEE 166B"
+          ],
+          [
+            "CEE 177"
+          ],
+          [
+            "EARTHSYS 112G"
+          ],
+          [
+            "ESS 220"
+          ],
+          [
+            "ARCHLGY 106"
+          ],
+          [
+            "CEE 124"
+          ],
+          [
+            "CEE 176A"
+          ],
+          [
+            "EARTHSYS 171"
+          ],
+          [
+            "EARTHSYS 174"
+          ],
+          [
+            "EARTHSYS 175"
+          ],
+          [
+            "EARTHSYS 176M"
+          ],
+          [
+            "EARTHSYS 185"
+          ],
+          [
+            "EARTHSYS 195"
+          ],
+          [
+            "EARTHSYS 273W"
+          ],
+          [
+            "ECON 106"
+          ],
+          [
+            "ENERGY 131"
+          ],
+          [
+            "ENERGY 132"
+          ],
+          [
+            "ENERGY 134"
+          ],
+          [
+            "ENVRES 250"
+          ],
+          [
+            "NATIVEAM 100"
+          ],
+          [
+            "NATIVEAM 115"
+          ],
+          [
+            "NATIVEAM 123"
+          ],
+          [
+            "URBANST 110"
+          ],
+          [
+            "URBANST 113"
+          ],
+          [
+            "URBANST 123A"
+          ],
+          [
+            "URBANST 164"
+          ],
+          [
+            "EARTHSYS 144"
+          ],
+          [
+            "EARTHSYS 142"
+          ],
+          [
+            "EARTHSYS 145"
+          ],
+          [
+            "ESS 224"
+          ]
+        ],
+        "letter": true
+      },
+      "why": "\"6 courses must be taken across 4 subcategories\"; the subcategory minimums add up to four. Grading: \"All courses must be taken for a letter grade, unless letter grading is not an available option ... Earth Systems Internship courses and foundational courses in Subplans do not need to be taken for a letter grade.\""
+    },
+    {
+      "block": "bEWNngBY",
+      "node": {
+        "id": "ov-easys-sse-qual",
+        "t": "courses",
+        "name": "One qualitative methods course (among the three methods courses)",
+        "mode": "atLeast",
+        "n": 1,
+        "shares": true,
+        "items": [
+          [
+            "ANTHRO 91"
+          ],
+          [
+            "CHPR 247"
+          ],
+          [
+            "CSRE 146A"
+          ],
+          [
+            "HUMBIO 82A"
+          ],
+          [
+            "PEDS 202C"
+          ],
+          [
+            "SOC 180A"
+          ],
+          [
+            "URBANST 123B"
+          ]
+        ]
+      },
+      "why": "\"1 course must focus on qualitative methods (see description notes).\" The notes: \"Qualitative Methods courses: ANTHRO 91; CHPR 247; CSRE 146A; HUMBIO 82A; PEDS 202C; SOC 180A; URBANST 123B\". It shares the course counted in Methods."
+    },
+    {
+      "parent": "AuTTxyXn",
+      "node": {
+        "id": "ov-easys-sse-more",
+        "t": "courses",
+        "name": "Two more subcategory courses (any subcategory)",
+        "mode": "atLeast",
+        "n": 2,
+        "letter": true,
+        "items": [
+          [
+            "BUSGEN 115"
+          ],
+          [
+            "EARTHSYS 160"
+          ],
+          [
+            "EARTHSYS 179"
+          ],
+          [
+            "EARTHSYS 213"
+          ],
+          [
+            "EARTHSYS 227"
+          ],
+          [
+            "EBS 123"
+          ],
+          [
+            "EBS 237"
+          ],
+          [
+            "EBS 240"
+          ],
+          [
+            "EBS 281"
+          ],
+          [
+            "GSBGEN 367"
+          ],
+          [
+            "LAW 7508"
+          ],
+          [
+            "MS&E 252"
+          ],
+          [
+            "PSYCH 124"
+          ],
+          [
+            "PSYCH 154"
+          ],
+          [
+            "PSYCH 265"
+          ],
+          [
+            "PUBLPOL 135"
+          ],
+          [
+            "BUSGEN 143"
+          ],
+          [
+            "CEE 130B"
+          ],
+          [
+            "CEE 175A"
+          ],
+          [
+            "EARTHSYS 168"
+          ],
+          [
+            "EARTHSYS 174"
+          ],
+          [
+            "EARTHSYS 185"
+          ],
+          [
+            "EBS 130"
+          ],
+          [
+            "ECON 106"
+          ],
+          [
+            "ECON 156"
+          ],
+          [
+            "ENVRES 260"
+          ],
+          [
+            "EPS 194"
+          ],
+          [
+            "GEP 248"
+          ],
+          [
+            "GEP 382"
+          ],
+          [
+            "LAW 2504"
+          ],
+          [
+            "PUBLPOL 308"
+          ],
+          [
+            "POLISCI 124A"
+          ],
+          [
+            "SUSTAIN 101D"
+          ],
+          [
+            "SUSTAIN 170A"
+          ],
+          [
+            "SUST 234"
+          ],
+          [
+            "CEE 130R"
+          ],
+          [
+            "CSRE 328"
+          ],
+          [
+            "EARTHSYS 109"
+          ],
+          [
+            "EARTHSYS 120"
+          ],
+          [
+            "EARTHSYS 123"
+          ],
+          [
+            "EARTHSYS 125"
+          ],
+          [
+            "EARTHSYS 169"
+          ],
+          [
+            "EARTHSYS 170"
+          ],
+          [
+            "EARTHSYS 194"
+          ],
+          [
+            "EARTHSYS 195"
+          ],
+          [
+            "EARTHSYS 223E"
+          ],
+          [
+            "EBS 306"
+          ],
+          [
+            "ESS 166"
+          ],
+          [
+            "ESS 234"
+          ],
+          [
+            "ETHICSOC 178M"
+          ],
+          [
+            "HISTORY 200B"
+          ],
+          [
+            "HUMRTS 115"
+          ],
+          [
+            "PHIL 174L"
+          ],
+          [
+            "SOC 133D"
+          ],
+          [
+            "STS 190"
+          ]
+        ]
+      },
+      "why": "\"Take 5 courses ... Subcategory courses must be taken for a letter grade\"; the subcategory minimums add up to three."
+    },
+    {
+      "block": "JMncZF8W",
+      "node": {
+        "id": "ov-gpa",
+        "t": "text",
+        "name": "Cumulative GPA of 2.0",
+        "manual": "gpa"
+      },
+      "why": "GPA: \"In accordance with University policy, students must maintain a minimum cumulative GPA of 2.0.\""
+    }
+  ]
+}

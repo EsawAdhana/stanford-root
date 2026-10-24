@@ -1,0 +1,22 @@
+{
+  "code": "FILM-MIN",
+  "reviewed": "2026-10-23",
+  "summary": "Every course must be letter graded. The minor is the four required courses (FILMEDIA 4, 6 and 102, and one of FILMEDIA 100A, 100B or 100C) and three more FILMEDIA or FILMPROD courses with at most two FILMPROD courses, for 29 units. One elective from another department that stresses film analysis counts with your minor advisor's approval and is moved in by hand; Art Practice courses do not count, and at most one course (5 units) from other universities or Bing Overseas Studies applies.",
+  "program": {
+    "letterGrade": true,
+    "why": "Grading: \"All courses must be taken for a letter grade.\""
+  },
+  "nodes": {
+    "z5gi7S2n": {
+      "why": "Advice, not a requirement: \"Consult the Student Services Specialist if a course is not listed below\" and \"Only those courses that center on film and media ... may be used\".",
+      "patch": { "info": true }
+    },
+    "IOTPYRqJ": {
+      "why": "\"Students must complete 3 additional FILMEDIA and FILMPROD courses. Up to two Film Production (FILMPROD) courses may count toward completion of the minor. Current FILMEDIA and FILMPROD course offerings can be found on Navigate Classes.\"",
+      "patch": {
+        "pool": { "subjects": ["FILMEDIA", "FILMPROD"] },
+        "limits": [ { "label": "Film Production (FILMPROD) courses", "max": 2, "pool": { "subjects": ["FILMPROD"] } } ]
+      }
+    }
+  }
+}

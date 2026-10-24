@@ -1,0 +1,412 @@
+{
+  "code": "CLASS-PHD",
+  "reviewed": "2026-10-23",
+  "summary": "Every student takes CLASSICS 220, CLASSICS 297 twice and CLASSICS 304, then the courses of one subplan: Ancient History, Classical Archaeology, or Language and Literature, each with its own language path. The audit checks those listed courses and the 135 graduate units. You check by hand the seminar and skills-course counts, the diagnostic, general and translation exams, the modern-language bibliography, the prospectus, teaching, candidacy, the oral exam and the dissertation.",
+  "nodes": {
+    "XW0vLXsI": {
+      "why": "Option 2 was stored as a separate required rule beside \"Ancient Language Coursework\"; it moves inside that rule (MCU1W1eN) as the second option.",
+      "remove": true
+    },
+    "MCU1W1eN": {
+      "why": "\"Ancient History Track students must take courses in both Latin and Greek, but can choose to focus more on one ancient language or emphasize broader linguistic skills by selecting a Single Language Emphasis (Option 1) or a Dual Language Emphasis (Option 2)\". The data held only Option 1 here, with Option 2 required beside it. Special Topics courses in place of a Core quarter need the Director of Graduate Studies' pre-approval and are moved in by hand.",
+      "replace": {
+        "t": "any",
+        "name": "Ancient Language Coursework",
+        "children": [
+          {
+            "id": "YvM8RkOK",
+            "t": "any",
+            "name": "Option 1 - Single Language Emphasis",
+            "desc": "Students focus more on one ancient language by taking 15 units of the core series (CLASSICS 201L/202L/203L or CLASSICS 201G/202G/203G) and five units of the alternate series, plus the Prose Composition or Syntax course/s in the primary ancient language selected",
+            "children": [
+              {
+                "id": "0zmMLkpM",
+                "t": "courses",
+                "name": "Latin Core Emphasis",
+                "mode": "all",
+                "items": [
+                  [
+                    "CLASSICS 201L"
+                  ],
+                  [
+                    "CLASSICS 202L"
+                  ],
+                  [
+                    "CLASSICS 203L"
+                  ],
+                  [
+                    "CLASSICS 204",
+                    "CLASSICS 210"
+                  ],
+                  [
+                    "CLASSICS 201G",
+                    "CLASSICS 202G",
+                    "CLASSICS 203G"
+                  ]
+                ]
+              },
+              {
+                "id": "4S0v8I94",
+                "t": "courses",
+                "name": "Greek Core Emphasis",
+                "mode": "all",
+                "items": [
+                  [
+                    "CLASSICS 201G"
+                  ],
+                  [
+                    "CLASSICS 202G"
+                  ],
+                  [
+                    "CLASSICS 203G"
+                  ],
+                  [
+                    "CLASSICS 205",
+                    "CLASSICS 211G"
+                  ],
+                  [
+                    "CLASSICS 201L",
+                    "CLASSICS 202L",
+                    "CLASSICS 203L"
+                  ]
+                ]
+              }
+            ]
+          },
+          {
+            "id": "XW0vLXsI",
+            "t": "courses",
+            "name": "Option 2 - Dual Language Emphasis",
+            "mode": "all",
+            "desc": "Students emphasize broader linguistic skills. This requires students to take both ancient language series.",
+            "items": [
+              [
+                "CLASSICS 201G"
+              ],
+              [
+                "CLASSICS 202G"
+              ],
+              [
+                "CLASSICS 203G"
+              ],
+              [
+                "CLASSICS 201L"
+              ],
+              [
+                "CLASSICS 202L"
+              ],
+              [
+                "CLASSICS 203L"
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    "kATucETb": {
+      "why": "\"CLASSICS297 must be taken twice, usually in autumn and spring quarters if CLASSICS304 is offered in winter quarter.\"",
+      "patch": {
+        "items": [
+          [
+            "CLASSICS 297"
+          ],
+          [
+            "CLASSICS 297"
+          ],
+          [
+            "CLASSICS 304"
+          ]
+        ]
+      }
+    },
+    "A31jZGMT": {
+      "why": "\"All PhD students are required to complete four quarters of academic-year teaching experience by the end of their third year\"",
+      "patch": {
+        "name": "Teaching: four quarters by the end of the third year",
+        "manual": "milestone"
+      }
+    },
+    "eiiFbvAe": {
+      "why": "\"Students are expected to complete qualifying procedures, apply for candidacy by the end of their second year in the program, and be approved to advance to candidacy by the end of summer quarter of their second year.\"",
+      "patch": {
+        "name": "Advancement to candidacy",
+        "manual": "milestone"
+      }
+    },
+    "GpfcPRKp": {
+      "why": "\"The University Oral Examination is the defense of the candidate's dissertation.\"",
+      "patch": {
+        "name": "University Oral Examination",
+        "manual": "exam"
+      }
+    },
+    "hpwJ6PBi": {
+      "why": "\"Upon passing the defense of the candidate's dissertation, students must submit their completed and approved dissertation\"",
+      "patch": {
+        "name": "Dissertation",
+        "manual": "thesis"
+      }
+    },
+    "IsvSdow1": {
+      "why": "\"Complete five skills courses, three of which must be taken in other departments ... All skills courses require written adviser consent\". No list: the student moves the approved courses in.",
+      "patch": {
+        "manual": "approval",
+        "n": 5
+      }
+    },
+    "tlIvElWz": {
+      "why": "\"Complete six graduate seminars in the Classics department. Three graduate seminars must be in ancient history and one graduate seminar in classical archaeology.\" The Bulletin lists no seminars, so the student moves them in.",
+      "patch": {
+        "manual": "approval",
+        "n": 6
+      }
+    },
+    "GsKP5i2e": {
+      "why": "\"Two skills-based courses (generally outside of the department). Skills courses are any courses that help students acquire and develop specific skills that are relevant to their research interests\". Whether a course qualifies is a judgment; the student moves the two courses in.",
+      "patch": {
+        "manual": "approval",
+        "n": 2
+      }
+    },
+    "FRGFJaIL": {
+      "why": "\"A total of five graduate seminars: three in classical archaeology, one in ancient history, and one outside the Classics department.\" The Bulletin lists no seminars, so the student moves them in.",
+      "patch": {
+        "manual": "approval",
+        "n": 5
+      }
+    },
+    "YCfiaWnc": {
+      "why": "\"Students are required to spend two summers doing fieldwork at the end of Years 1 and 2.\"",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "V6l5pNBY": {
+      "why": "\"Classical Archaeologists have two options. They take two graduate-level ancient language courses (both in the same language, i.e. Greek or Latin) and a separate translation exam in the same language ... Alternatively, if they take three quarters of a given Core sequence, a separate language exam is not required.\" The Core series are CLASSICS 201L/202L/203L and 201G/202G/203G (Ancient History subplan text). Special Topics or other graduate courses need track advisor consent and are moved in by hand.",
+      "replace": {
+        "t": "any",
+        "name": "Latin or Greek Language",
+        "children": [
+          {
+            "id": "ov-arch-core",
+            "t": "any",
+            "name": "Three quarters of one Core sequence (no separate exam)",
+            "children": [
+              {
+                "id": "ov-arch-core-latin",
+                "t": "courses",
+                "name": "Latin Core sequence",
+                "mode": "all",
+                "items": [
+                  [
+                    "CLASSICS 201L"
+                  ],
+                  [
+                    "CLASSICS 202L"
+                  ],
+                  [
+                    "CLASSICS 203L"
+                  ]
+                ]
+              },
+              {
+                "id": "ov-arch-core-greek",
+                "t": "courses",
+                "name": "Greek Core sequence",
+                "mode": "all",
+                "items": [
+                  [
+                    "CLASSICS 201G"
+                  ],
+                  [
+                    "CLASSICS 202G"
+                  ],
+                  [
+                    "CLASSICS 203G"
+                  ]
+                ]
+              }
+            ]
+          },
+          {
+            "id": "ov-arch-two",
+            "t": "all",
+            "name": "Two graduate language courses in one language and a translation exam",
+            "children": [
+              {
+                "id": "ov-arch-two-courses",
+                "t": "any",
+                "name": "Two graduate-level courses in the same language",
+                "children": [
+                  {
+                    "id": "ov-arch-two-latin",
+                    "t": "courses",
+                    "name": "Two Latin Core courses",
+                    "mode": "atLeast",
+                    "n": 2,
+                    "items": [
+                      [
+                        "CLASSICS 201L"
+                      ],
+                      [
+                        "CLASSICS 202L"
+                      ],
+                      [
+                        "CLASSICS 203L"
+                      ]
+                    ]
+                  },
+                  {
+                    "id": "ov-arch-two-greek",
+                    "t": "courses",
+                    "name": "Two Greek Core courses",
+                    "mode": "atLeast",
+                    "n": 2,
+                    "items": [
+                      [
+                        "CLASSICS 201G"
+                      ],
+                      [
+                        "CLASSICS 202G"
+                      ],
+                      [
+                        "CLASSICS 203G"
+                      ]
+                    ]
+                  }
+                ]
+              },
+              {
+                "id": "ov-arch-two-exam",
+                "t": "text",
+                "name": "Translation exam in the same language (B- or better)",
+                "manual": "exam"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "PyQ5Q41J": {
+      "why": "\"Three language courses from the options below, including at least one from each language.\" Latin: CLASSICS 204 Latin Syntax, 210 Latin Prose Composition; Greek: 205 Greek Syntax, 211G Greek Prose Composition, 217 The Language of Homer (catalog titles).",
+      "replace": {
+        "t": "all",
+        "name": "Additional Language Courses",
+        "children": [
+          {
+            "id": "ov-ll-latin",
+            "t": "courses",
+            "name": "At least one Latin course",
+            "mode": "atLeast",
+            "n": 1,
+            "items": [
+              [
+                "CLASSICS 204"
+              ],
+              [
+                "CLASSICS 210"
+              ]
+            ]
+          },
+          {
+            "id": "ov-ll-greek",
+            "t": "courses",
+            "name": "At least one Greek course",
+            "mode": "atLeast",
+            "n": 1,
+            "items": [
+              [
+                "CLASSICS 205"
+              ],
+              [
+                "CLASSICS 211G"
+              ],
+              [
+                "CLASSICS 217"
+              ]
+            ]
+          },
+          {
+            "id": "ov-ll-third",
+            "t": "courses",
+            "name": "A third course from the options",
+            "mode": "atLeast",
+            "n": 1,
+            "items": [
+              [
+                "CLASSICS 204"
+              ],
+              [
+                "CLASSICS 205"
+              ],
+              [
+                "CLASSICS 210"
+              ],
+              [
+                "CLASSICS 211G"
+              ],
+              [
+                "CLASSICS 217"
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    "4vcN8hQ9": {
+      "why": "\"Nine graduate level seminars. These must be taken in the Classics department.\" Up to two directed readings and two CLASSICS 297 tutorials (as one seminar) may replace seminars. No list: the student moves the seminars in.",
+      "patch": {
+        "manual": "approval",
+        "n": 9
+      }
+    },
+    "Zlbfxvwp": {
+      "why": "\"Students on the Language and Literature track must take these translation exams in both Latin and Ancient Greek.\" \"Latin and Ancient Greek Language Translation Exams ... a choice of translating into English four out of six passages in a 3-hour period.\" \"A student who does not attain a B- or better, in a translation exam must retake the exam\"",
+      "patch": {
+        "manual": "exam"
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "0GzLObTh",
+      "node": {
+        "id": "ov-diagnostic",
+        "t": "text",
+        "name": "Diagnostic exams in Greek and Latin",
+        "manual": "exam"
+      },
+      "why": "Overview: \"Diagnostic Exams: By the end of the first week of their first quarter, students must take diagnostic exams in Greek and Latin.\""
+    },
+    {
+      "block": "0GzLObTh",
+      "node": {
+        "id": "ov-modern-language",
+        "t": "text",
+        "name": "Modern language requirement: bibliographical survey in a seminar",
+        "manual": "milestone"
+      },
+      "why": "Overview: \"Modern Language Requirement: During their first two years, students ... are required to identify one departmental seminar in which they will produce a critical bibliographical survey of relevant foreign-language scholarship, analyzing no fewer than 15 items in three languages other than English.\" \"A student's satisfaction of the requirement will be recorded by the course instructor\""
+    },
+    {
+      "block": "0GzLObTh",
+      "node": {
+        "id": "ov-general-exams",
+        "t": "text",
+        "name": "General examinations in four fields",
+        "manual": "exam"
+      },
+      "why": "Overview: \"General Exams: Students must take general examinations in four of the following fields: Greek literature, Latin literature, Greek history, Roman history, Greek archaeology, and Roman archaeology. Students must take both exams that correspond to their tracks\""
+    },
+    {
+      "block": "0GzLObTh",
+      "node": {
+        "id": "ov-prospectus",
+        "t": "text",
+        "name": "Dissertation proposal (prospectus) defense",
+        "manual": "milestone"
+      },
+      "why": "Overview: \"During the third year, the candidate ... writes a dissertation proposal, which is evaluated by a committee of faculty ... it must take place no later than the end of autumn quarter of the fourth year.\""
+    }
+  ]
+}

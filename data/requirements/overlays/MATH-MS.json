@@ -1,0 +1,98 @@
+{
+  "code": "MATH-MS",
+  "reviewed": "2026-10-23",
+  "summary": "The audit checks 45 units of graduate coursework, at least 36 of them letter-graded Math courses numbered 120 and above (units from MATH 360 do not count toward the degree at all, and Math courses below 120 do not count), with at least 18 of those units numbered 200-297. Checked by hand: the Director of Graduate Studies approves your course program before your first quarter, and you need a 3.0 GPA in your Math courses and, separately, in your 200-level courses.",
+  "program": {
+    "totals": [
+      {
+        "label": "MATH 360",
+        "maxUnits": 0,
+        "codes": [
+          "MATH 360"
+        ],
+        "why": "\"Units from Math 360 do not count toward this degree.\""
+      },
+      {
+        "label": "Math courses numbered below 120",
+        "maxUnits": 0,
+        "pool": {
+          "subjects": [
+            "MATH"
+          ],
+          "maxNumber": 119
+        },
+        "why": "\"The Mathematics Department courses must be numbered 120 and above\""
+      }
+    ]
+  },
+  "blocks": {
+    "mAbEGmbJ": {
+      "kind": "required"
+    }
+  },
+  "add": [
+    {
+      "block": "mAbEGmbJ",
+      "node": {
+        "id": "ov-math-200",
+        "t": "courses",
+        "name": "18 units of Mathematics courses numbered 200-297",
+        "mode": "units",
+        "units": 18,
+        "pool": {
+          "subjects": [
+            "MATH"
+          ],
+          "minNumber": 200,
+          "maxNumber": 297,
+          "exclude": [
+            "MATH 360"
+          ]
+        },
+        "letter": true
+      },
+      "why": "\"The Mathematics Department courses must be numbered 120 and above, and at least 18 units must be numbered between 200 and 297.\" Together with the 18 more Math units numbered 120 and above, this makes the 36 Math units. Grading: \"36 units of Mathematics Department courses must taken for a letter grade.\""
+    },
+    {
+      "block": "mAbEGmbJ",
+      "node": {
+        "id": "ov-math-36",
+        "t": "courses",
+        "name": "18 more units of Mathematics courses numbered 120 and above",
+        "mode": "units",
+        "units": 18,
+        "pool": {
+          "subjects": [
+            "MATH"
+          ],
+          "minNumber": 120,
+          "exclude": [
+            "MATH 360"
+          ]
+        },
+        "letter": true
+      },
+      "why": "\"Candidates must complete an approved course program of 45 units of courses beyond the department requirements for the BS degree\" \"of which at least 36 units must be Mathematics Department courses.\" \"The Mathematics Department courses must be numbered 120 and above\" \"Units from Math 360 do not count toward this degree.\" The 36 Math units are split into the 18 numbered 200-297 (next rule) and 18 more numbered 120 and above, so each course counts once. Grading: \"36 units of Mathematics Department courses must taken for a letter grade.\""
+    },
+    {
+      "block": "mAbEGmbJ",
+      "node": {
+        "id": "ov-dgs-approval",
+        "t": "text",
+        "name": "Course program approved by the Director of Graduate Studies before the first quarter",
+        "manual": "approval"
+      },
+      "why": "\"All coursework for the MS degree must be approved before the first quarter of enrollment in the program by the Director of Graduate Studies.\""
+    },
+    {
+      "block": "mAbEGmbJ",
+      "node": {
+        "id": "ov-gpa",
+        "t": "text",
+        "name": "3.0 GPA in Math courses and 3.0 in 200-level courses",
+        "manual": "gpa"
+      },
+      "why": "GPA: \"The candidate must have a grade point average (GPA) of 3.0 (B) in all coursework taken in Mathematics and a GPA of 3.0 (B) in the 200-level courses considered separately.\""
+    }
+  ]
+}

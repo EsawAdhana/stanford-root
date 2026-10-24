@@ -1,0 +1,32 @@
+{
+  "code": "SBIO-PHD",
+  "reviewed": "2026-10-23",
+  "summary": "You take the five core courses. The three graduate science electives (at least one in physical science and one in literature-based biological science) have no list in the Bulletin, so you move them in by hand, and the dissertation proposal defense, the oral exam and the dissertation are checked by hand.",
+  "nodes": {
+    "ZGGZcDCz": {
+      "why": "\"At least three additional graduate-level courses in physical or biological sciences, with at least one course in physical science and at least one in literature-based biological science.\" No list or subjects are given.",
+      "patch": {
+        "n": 3,
+        "manual": "approval"
+      }
+    },
+    "XkZi1IgB": {
+      "why": "\"The student must prepare a dissertation proposal ... it must be approved by a committee of at least three members ... The candidate must defend the dissertation proposal in an oral examination.\"",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "meEyn3qq": {
+      "why": "\"The student must pass the University Oral Examination, taken only after substantially completing the research.\"",
+      "patch": {
+        "manual": "exam"
+      }
+    },
+    "RSR9ZH9M": {
+      "why": "\"The student must present a PhD dissertation as the result of an independent investigation\"",
+      "patch": {
+        "manual": "thesis"
+      }
+    }
+  }
+}

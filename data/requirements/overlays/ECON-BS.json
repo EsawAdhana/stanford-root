@@ -1,0 +1,62 @@
+{
+  "code": "ECON-BS",
+  "reviewed": "2026-10-23",
+  "summary": "Core, field and non-economics elective courses must be letter graded, and each core course needs a C or better. ECON 101, or 5 units of ECON 199D, fills both Writing in the Major and the capstone. The major needs 85 units; honors needs 90, at least 2 of them in ECON 199D including the 1-unit winter 199D-20 section, and every quarter of 199D counts toward the 90. Your advisor checks by hand the 2.5 GPA in the major, the electronic portfolio, 200-level or petitioned courses and outside credit (at most 10 units of courses taken elsewhere), and for honors the 3.5 GPA and the thesis.",
+  "program": {
+    "totals": [
+      { "label": "90 units with honors", "minUnits": 90, "when": "QERlMybc", "why": "Honors: \"Completing all requirements for the ECON BS major plus five additional units, bringing the total to 90 units.\"" }
+    ]
+  },
+  "nodes": {
+    "sb4CHCzU": {
+      "why": "\"All Core courses must be taken for a letter grade. In Fall 24 and onward, students must earn a C or better in all courses completed for the ECON Core.\"",
+      "patch": { "letter": true, "minGrade": "C" }
+    },
+    "I2m2PJA2": {
+      "why": "\"All courses must be taken for a letter grade.\" A 200-level course \"with permission of DUS and course instructor\" is moved in by hand.",
+      "patch": { "letter": true }
+    },
+    "BdCn0SGT": {
+      "why": "\"All courses must be taken for a letter grade.\"",
+      "patch": { "letter": true }
+    },
+    "JwIqKLlc": {
+      "why": "\"Completing ECON 101 (5 units) or at least 5 units of ECON 199D will meet the WIM requirement for the ECON BS.\" One requirement filled by ECON 101 or by 5 units of ECON 199D, which may come from several quarters. \"These courses also complete the Capstone Requirement.\"",
+      "patch": { "mode": "all", "items": [["ECON 101", "ECON 199D"]], "n": null, "units": 5 }
+    },
+    "R6Cz9V3A": {
+      "why": "\"All students must submit an electronic portfolio of their work in the major. Submissions will be graded for completeness by the Economics Major Faculty Advisor.\"",
+      "patch": { "manual": "milestone" }
+    },
+    "vsrGV7pv": {
+      "why": "\"Candidates must write and present an honors thesis in their senior year for one to nine credit units in their thesis advisor's section of Econ 199D. Additionally, winter registration for one unit of Honors Thesis Research under the Director of the Honors Program section number (199D-20) is mandatory for all honors students.\" At least 2 units of ECON 199D, and every quarter of it counts toward the 90 units.",
+      "patch": { "units": 2 }
+    },
+    "8mfvFG89": {
+      "why": "\"Application Details: Prospective candidates should communicate with the Director of the Honors Program as soon as possible.\" How to apply, not a requirement.",
+      "patch": { "info": true, "name": "Application Details" }
+    }
+  },
+  "add": [
+    {
+      "block": "ZMRU6uws",
+      "why": "GPA: \"An overall GPA of 2.5 is required for all courses applied to the economics degree requirements.\"",
+      "node": { "id": "ov-econbs-gpa", "t": "text", "name": "GPA of at least 2.5 in courses applied to the major", "manual": "gpa" }
+    },
+    {
+      "block": "QERlMybc",
+      "why": "\"Achieving a grade point average (GPA) of at least 3.5 for the required courses of the Economics BS major (excluding course Directed Reading and course Honors Thesis Research).\"",
+      "node": { "id": "ov-econbs-hon-gpa", "t": "text", "name": "Honors GPA of at least 3.5 in the major", "manual": "gpa" }
+    },
+    {
+      "block": "QERlMybc",
+      "why": "\"Complete course Applied Econometrics (a core program requirement) and at least two Econ upper-division courses most relevant to the proposed topic of the honors thesis by the end of the junior year. (These can be included in the basic 85 units.)\" Applied Econometrics is already in the core; relevance to the topic is the advisor's call.",
+      "node": { "id": "ov-econbs-hon-topic", "t": "courses", "name": "Two upper-division ECON courses relevant to the thesis topic", "mode": "atLeast", "n": 2, "pool": { "subjects": ["ECON"], "minNumber": 100 }, "shares": true }
+    },
+    {
+      "block": "QERlMybc",
+      "why": "\"Candidates must write and present an honors thesis in their senior year ... Additionally, winter registration for one unit of Honors Thesis Research under the Director of the Honors Program section number (199D-20) is mandatory for all honors students.\" The 90-unit total is in program.totals.",
+      "node": { "id": "ov-econbs-hon-thesis", "t": "text", "name": "Honors thesis, presentation and 199D-20 section", "manual": "thesis" }
+    }
+  ]
+}

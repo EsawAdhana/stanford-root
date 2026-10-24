@@ -1,0 +1,289 @@
+{
+  "code": "CME-PMN",
+  "reviewed": "2026-10-23",
+  "summary": "The audit checks CME 302, 306 and 307, one programming course, and at least 3 courses and 9 units from the CME PhD's specialized depth electives, 21 units in all. Every course must be letter graded with a B or better. You check by hand that no elective is cross-listed with your own PhD department and that no course also counts toward a master's you are doing at the same time. A petitioned elective that is not on the list is moved in by hand once ICME student services approves it.",
+  "nodes": {
+    "Fo4HRm5E-text": {
+      "why": "\"a doctoral candidate must complete 21 units of approved graduate-level courses\" (the program minimum) and \"All courses must be taken for a letter grade and passed with a grade of B or better\" (on the program) are checked already. Left for a person: \"Elective courses cannot be cross-listed with the student’s primary department. If a student is concurrently enrolled in a Master's program, there can be no overlap between the MA/MS courses and the PhD minor courses.\" The audit does not know the student's primary department.",
+      "patch": { "name": "Electives not cross-listed with your primary department, and no courses shared with a concurrent master's", "manual": "other" }
+    },
+    "Zviy1YbI": {
+      "why": "\"Complete at least 3 courses and 9 units from the specialized depth electives list in the Computational and Mathematical Engineering PhD. To petition for a course that is not on this list to count toward the minor, please contact ICME student services.\" The list is the CME PhD's Specialized Depth Electives (rule dzkLeW9C there).",
+      "replace": {
+        "t": "courses",
+        "name": "Electives",
+        "mode": "atLeast",
+        "n": 3,
+        "units": 9,
+        "items": [
+          [
+            "APPPHYS 229"
+          ],
+          [
+            "APPPHYS 237"
+          ],
+          [
+            "CME 262"
+          ],
+          [
+            "CME 279"
+          ],
+          [
+            "CME 285"
+          ],
+          [
+            "CME 309"
+          ],
+          [
+            "CME 330"
+          ],
+          [
+            "CME 364A"
+          ],
+          [
+            "CME 364B"
+          ],
+          [
+            "CME 369"
+          ],
+          [
+            "CS 205L"
+          ],
+          [
+            "CS 221"
+          ],
+          [
+            "CS 224N"
+          ],
+          [
+            "CS 224W"
+          ],
+          [
+            "CS 228"
+          ],
+          [
+            "CS 229"
+          ],
+          [
+            "CS 229M"
+          ],
+          [
+            "CS 231N"
+          ],
+          [
+            "CS 234"
+          ],
+          [
+            "CS 236"
+          ],
+          [
+            "CS 238"
+          ],
+          [
+            "CS 246"
+          ],
+          [
+            "CS 251"
+          ],
+          [
+            "CS 264"
+          ],
+          [
+            "CS 271"
+          ],
+          [
+            "CS 328"
+          ],
+          [
+            "CS 329S"
+          ],
+          [
+            "CS 331X"
+          ],
+          [
+            "CS 336"
+          ],
+          [
+            "CS 361"
+          ],
+          [
+            "CS 448I"
+          ],
+          [
+            "ECON 273"
+          ],
+          [
+            "ECON 274"
+          ],
+          [
+            "EE 368"
+          ],
+          [
+            "ENERGY 223"
+          ],
+          [
+            "ENERGY 224"
+          ],
+          [
+            "ESS 239"
+          ],
+          [
+            "ESS 271"
+          ],
+          [
+            "MATH 205A"
+          ],
+          [
+            "MATH 205B"
+          ],
+          [
+            "MATH 205C"
+          ],
+          [
+            "MATH 210A"
+          ],
+          [
+            "MATH 210B"
+          ],
+          [
+            "MATH 215A"
+          ],
+          [
+            "MATH 215B"
+          ],
+          [
+            "MATH 236"
+          ],
+          [
+            "MATH 238"
+          ],
+          [
+            "MATH 273A"
+          ],
+          [
+            "MATH 273B"
+          ],
+          [
+            "MATH 275A"
+          ],
+          [
+            "MATH 275B"
+          ],
+          [
+            "MATH 275C"
+          ],
+          [
+            "MATSCI 331"
+          ],
+          [
+            "ME 334"
+          ],
+          [
+            "ME 335A"
+          ],
+          [
+            "ME 336"
+          ],
+          [
+            "ME 344"
+          ],
+          [
+            "ME 346A"
+          ],
+          [
+            "ME 351A"
+          ],
+          [
+            "ME 351B"
+          ],
+          [
+            "ME 361"
+          ],
+          [
+            "ME 408"
+          ],
+          [
+            "ME 470"
+          ],
+          [
+            "MS&E 228"
+          ],
+          [
+            "MS&E 232H"
+          ],
+          [
+            "MS&E 235B"
+          ],
+          [
+            "MS&E 321"
+          ],
+          [
+            "MS&E 323"
+          ],
+          [
+            "MS&E 325"
+          ],
+          [
+            "MS&E 328"
+          ],
+          [
+            "MS&E 334"
+          ],
+          [
+            "MS&E 338"
+          ],
+          [
+            "MS&E 349"
+          ],
+          [
+            "PHYSICS 234"
+          ],
+          [
+            "STATS 203"
+          ],
+          [
+            "STATS 217"
+          ],
+          [
+            "STATS 218"
+          ],
+          [
+            "STATS 219"
+          ],
+          [
+            "STATS 300A"
+          ],
+          [
+            "STATS 300B"
+          ],
+          [
+            "STATS 300C"
+          ],
+          [
+            "STATS 305A"
+          ],
+          [
+            "STATS 305B"
+          ],
+          [
+            "STATS 305C"
+          ],
+          [
+            "STATS 318"
+          ],
+          [
+            "STATS 354"
+          ],
+          [
+            "STATS 370"
+          ]
+        ]
+      }
+    }
+  },
+  "program": {
+    "letterGrade": true,
+    "minGrade": "B",
+    "why": "Grading: \"All courses must be taken for a letter grade and passed with a grade of B or better.\""
+  }
+}

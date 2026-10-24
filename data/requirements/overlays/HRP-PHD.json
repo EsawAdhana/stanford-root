@@ -1,0 +1,321 @@
+{
+  "code": "HRP-PHD",
+  "reviewed": "2026-10-23",
+  "summary": "The audit checks the 135 graduate units, research included, the Health Policy Foundations courses, six quarters of HRP 200, HRP 800 and MED 255, and the courses of the track you pick (Health Economics, Decision Science or Evaluative Methods), with every course at B- or better and letter grades where the Bulletin asks for them. Checked by hand: track electives and clusters chosen with your advisor, the practice-of-research seminars, the 3.0 GPA, yearly IDP and progress meetings, responsible conduct of research, the first-year proposal and second-year paper, the written qualifying exams, candidacy, the oral exam, the dissertation and the final presentation. Transfer credit is not accepted.",
+  "program": {
+    "minGrade": "B-",
+    "why": "Grading: \"All courses must be completed with a minimum grade of B-.\""
+  },
+  "nodes": {
+    "alcQk9b6": {
+      "why": "Overview. \"The minimum number of units required for a PhD at Stanford ... is 135\" is the program's minimum; \"Completion of coursework (see below) with minimum grades of B-\" is the program's grade floor; the GPA, milestones and exams are added as their own rules.",
+      "patch": {
+        "info": true
+      }
+    },
+    "H7Opt1pJ": {
+      "why": "\"All classes must be taken for a letter grade, if letter grades are offered.\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "wclEj5Jy": {
+      "why": "\"Students must enroll in HRP 200 PhD Research Seminar for 6 quarters: Autumn, Winter, and Spring quarters in the first & second years.\" HRP 200 is a repeatable 1-unit course, so six quarters are 6 units. \"All classes must be taken for a letter grade, if letter grades are offered.\"",
+      "replace": {
+        "t": "all",
+        "name": "Practice of Research",
+        "children": [
+          {
+            "id": "ov-hrp-phd-hrp200",
+            "t": "courses",
+            "name": "HRP 200 PhD Research Seminar, six quarters",
+            "mode": "units",
+            "units": 6,
+            "letter": true,
+            "items": [
+              [
+                "HRP 200"
+              ]
+            ]
+          },
+          {
+            "id": "ov-hrp-phd-practice",
+            "t": "courses",
+            "name": "HRP 800 and MED 255",
+            "mode": "all",
+            "letter": true,
+            "items": [
+              [
+                "HRP 800"
+              ],
+              [
+                "MED 255"
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    "WgDOqiG3": {
+      "why": "\"All classes must be taken for a letter grade, if letter grades are offered.\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "kvdRYFhU": {
+      "why": "\"Complete a 1-year sequence.\" Notes: \"GSBGEN 675 or MGTECON 600 can be substituted for ECON 202 and/or MGTECON 601 can be substituted for ECON 203. All classes must be taken for a letter grade, if letter grades are offered.\"",
+      "patch": {
+        "letter": true,
+        "items": [
+          [
+            "ECON 202",
+            "GSBGEN 675",
+            "MGTECON 600"
+          ],
+          [
+            "ECON 203",
+            "MGTECON 601"
+          ],
+          [
+            "ECON 204"
+          ]
+        ]
+      }
+    },
+    "zLaMGe9n": {
+      "why": "\"Must be taken for a letter grade, if letter grades are offered.\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "BpxcJqvN": {
+      "why": "\"Complete 4 courses in the following 4 fields in economics: Development Economics, Public Finance, Labor Economics, Industrial Organization\". The fields are not course lists, so the student moves the four courses in.",
+      "patch": {
+        "n": 4,
+        "manual": "approval"
+      }
+    },
+    "Nly2eB0P": {
+      "why": "\"Complete 3 quarters (Autumn, Winter & Spring)\" of the listed seminars, which are not courses in the data.",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "axW9GsHG": {
+      "why": "\"All classes must be taken for a letter grade, if letter grades are offered.\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "tCfQQa9m": {
+      "why": "\"Must be taken for a letter grade, if letter grades are offered.\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "hwLT0mjM": {
+      "why": "\"All classes must be taken for a letter grade, if letter grades are offered.\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "imxIwxN8": {
+      "why": "\"Complete at least 1 course (must be at least 3 units) that covers topics or methods relevant to the student's research and interests. Course to be chosen and approved in conversation with the student's advisor.\"",
+      "patch": {
+        "n": 1,
+        "manual": "approval"
+      }
+    },
+    "bVPMgJzJ": {
+      "why": "\"Complete 3 quarters (Autumn, Winter & Spring)\" of the listed seminars, which are not courses in the data.",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "xBrloH8u": {
+      "why": "\"All classes must be taken for a letter grade, if letter grades are offered.\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "vacmRKdk": {
+      "why": "\"All classes must be taken for a letter grade, if letter grades are offered.\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "axzdtTp9": {
+      "why": "\"Choose 4 advanced methods courses with advisor approval to create a defined cluster in a methodological area ... AND ... Choose 4 advanced courses with advisor approval to create a defined cluster in a content area\".",
+      "replace": {
+        "t": "all",
+        "name": "Discipline-Specific Courses",
+        "children": [
+          {
+            "id": "ov-hrp-phd-methods-cluster",
+            "t": "text",
+            "name": "Four advanced methods courses (advisor-approved cluster)",
+            "n": 4,
+            "manual": "approval"
+          },
+          {
+            "id": "ov-hrp-phd-content-cluster",
+            "t": "text",
+            "name": "Four advanced content courses (advisor-approved cluster)",
+            "n": 4,
+            "manual": "approval"
+          }
+        ]
+      }
+    },
+    "mzRF6Pz1": {
+      "why": "\"Complete 3 quarters (Autumn, Winter & Spring)\" of the Stanford Health Policy Seminar, which is not a course in the data.",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "opKegmMm": {
+      "why": "\"Approval by the advisor(s) ... Passing both Written Qualifying Exams ... Submission and approval by the advisor of the Second-Year Paper\"",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "YzFXCwMy": {
+      "why": "\"students must take and pass an Oral Examination as part of the PhD degree requirements\"",
+      "patch": {
+        "manual": "exam"
+      }
+    },
+    "bom9lOLD": {
+      "why": "\"Students must develop, write, and present a PhD dissertation ... The student's dissertation (or 'reading') committee members must review and approve this.\"",
+      "patch": {
+        "manual": "thesis"
+      }
+    },
+    "SX8Wx3JY": {
+      "why": "\"Complete at least 1 quarter-long course.\" Notes: \"Pass/fail grading is allowed for ECON 272. HRP 252 must be taken for a letter grade.\"",
+      "replace": {
+        "t": "any",
+        "name": "Applied Econometrics",
+        "children": [
+          {
+            "id": "ov-hrp-phd-ds-econ272",
+            "t": "courses",
+            "name": "ECON 272 (pass/fail allowed)",
+            "mode": "all",
+            "items": [
+              [
+                "ECON 272"
+              ]
+            ]
+          },
+          {
+            "id": "ov-hrp-phd-ds-hrp252",
+            "t": "courses",
+            "name": "HRP 252 (letter grade)",
+            "mode": "all",
+            "letter": true,
+            "items": [
+              [
+                "HRP 252"
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    "KqzJSrCB": {
+      "why": "\"Complete at least 1 quarter-long course.\" Notes: \"Pass/fail grades are allowed for ECON 272. HRP 252 must be taken for a letter grade.\"",
+      "replace": {
+        "t": "any",
+        "name": "Applied Econometrics",
+        "children": [
+          {
+            "id": "ov-hrp-phd-em-econ272",
+            "t": "courses",
+            "name": "ECON 272 (pass/fail allowed)",
+            "mode": "all",
+            "items": [
+              [
+                "ECON 272"
+              ]
+            ]
+          },
+          {
+            "id": "ov-hrp-phd-em-hrp252",
+            "t": "courses",
+            "name": "HRP 252 (letter grade)",
+            "mode": "all",
+            "letter": true,
+            "items": [
+              [
+                "HRP 252"
+              ]
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "0GzLObTh",
+      "why": "Overview: \"an overall/average GPA of B (3.0)\".",
+      "node": {
+        "id": "ov-hrp-phd-gpa",
+        "t": "text",
+        "name": "Overall GPA of B (3.0)",
+        "manual": "gpa"
+      }
+    },
+    {
+      "block": "0GzLObTh",
+      "why": "Overview: \"Individual development plan (IDP) meeting with a primary advisor within the first quarter of each year\", \"Meeting with an advisor(s) regularly\", \"Completion of progress assessment/milestone meeting with a primary advisor each year\".",
+      "node": {
+        "id": "ov-hrp-phd-idp",
+        "t": "text",
+        "name": "Yearly IDP and progress meetings with the advisor",
+        "manual": "milestone"
+      }
+    },
+    {
+      "block": "0GzLObTh",
+      "why": "Overview: \"Completion of coursework in the responsible conduct of research.\" No course is named here (MED 255 is in Practice of Research), so a person checks it.",
+      "node": {
+        "id": "ov-hrp-phd-rcr",
+        "t": "text",
+        "name": "Coursework in the responsible conduct of research",
+        "manual": "approval"
+      }
+    },
+    {
+      "block": "0GzLObTh",
+      "why": "Overview: \"Completion of a First Year Research Proposal, to be presented by the end of the Spring Quarter\" and \"Completion & presentation of a Second Year Paper, approved by the primary advisor.\"",
+      "node": {
+        "id": "ov-hrp-phd-papers",
+        "t": "text",
+        "name": "First Year Research Proposal and Second Year Paper",
+        "manual": "milestone"
+      }
+    },
+    {
+      "block": "0GzLObTh",
+      "why": "Overview: \"Taking and passing both Written Qualifying Exams (General and Track Specific Exams).\"",
+      "node": {
+        "id": "ov-hrp-phd-quals",
+        "t": "text",
+        "name": "Written Qualifying Exams (General and Track Specific)",
+        "manual": "exam"
+      }
+    },
+    {
+      "block": "0GzLObTh",
+      "why": "Overview: \"A final presentation is required for graduation - the final presentation summarizes the work accomplished on the PhD research.\"",
+      "node": {
+        "id": "ov-hrp-phd-final",
+        "t": "text",
+        "name": "Final presentation of the PhD research",
+        "manual": "milestone"
+      }
+    }
+  ]
+}

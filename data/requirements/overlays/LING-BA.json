@@ -1,0 +1,262 @@
+{
+  "code": "LING-BA",
+  "reviewed": "2026-10-23",
+  "summary": "The audit checks the 60 units, at least 36 in Linguistics: LINGUIST 196, a core course in each of three areas, breadth courses in two of four areas, two depth courses of 3-4 units, the WIM (LINGUIST 120A) and the capstone (LINGUIST 197A), all letter graded with a C- or better, plus further LINGUIST courses for the remaining units. At most 12 units below the 100 level and 8 CR/NC units count, and language courses do not count. Honors adds LINGUIST 199 and 198 (10 units) and 70 units in all. Checked by hand: courses from other departments (they need the Director of Undergraduate Studies' approval), that your additional courses form a coherent program, no more than three CR/NC courses, the language requirement, and the honors thesis.",
+  "program": {
+    "totals": [
+      {
+        "label": "Language courses",
+        "maxUnits": 0,
+        "pool": {
+          "subjects": [
+            "AMELANG",
+            "AMHRLANG",
+            "ARABLANG",
+            "ARMELANG",
+            "ASLLANG",
+            "ASNLANG",
+            "CATLANG",
+            "CHINLANG",
+            "CHRKELNG",
+            "CZECLANG",
+            "DUTCHLNG",
+            "FILILANG",
+            "FINNLANG",
+            "FRENLANG",
+            "GERLANG",
+            "GREELANG",
+            "GUJARLNG",
+            "HAITLANG",
+            "HAWALANG",
+            "HEBRLANG",
+            "HINDLANG",
+            "HITTLANG",
+            "HNGRLANG",
+            "HUPALANG",
+            "IBERLANG",
+            "IGBOLANG",
+            "INDOLANG",
+            "INUPQLNG",
+            "ITALLANG",
+            "JAPANLNG",
+            "KAZKHLNG",
+            "KHMRLANG",
+            "KINYLANG",
+            "KORLANG",
+            "LAKOTLNG",
+            "LUGALANG",
+            "NAHUALNG",
+            "NVJOLANG",
+            "OROMLANG",
+            "PERSLANG",
+            "POLSHLNG",
+            "PORTLANG",
+            "PUNJLANG",
+            "QUECHLNG",
+            "ROMALANG",
+            "RUSSLANG",
+            "SAMOALNG",
+            "SERBLANG",
+            "SLAVLANG",
+            "SLVNLANG",
+            "SNSKTLNG",
+            "SPANLANG",
+            "SPECLANG",
+            "SWAHLANG",
+            "TAMILANG",
+            "TELULANG",
+            "TIBETLNG",
+            "TIGRYLNG",
+            "TURKLANG",
+            "TWILANG",
+            "UKRNLANG",
+            "URDULANG",
+            "UYGHLANG",
+            "VIETLANG",
+            "YDDSHLNG",
+            "YORULANG",
+            "YUPKLANG",
+            "ZULULANG"
+          ]
+        },
+        "why": "Language Requirement: \"Language courses do not count toward the 60 required units for the major.\""
+      },
+      {
+        "label": "36 units in Linguistics",
+        "minUnits": 36,
+        "pool": {
+          "subjects": [
+            "LINGUIST"
+          ]
+        },
+        "why": "Policies: \"A minimum of 60 units of course work; at least 36 of these units must be in Linguistics.\""
+      },
+      {
+        "label": "Units below the 100 level",
+        "maxUnits": 12,
+        "pool": {
+          "anySubject": true,
+          "subjects": [],
+          "maxNumber": 99
+        },
+        "why": "Grading: \"Of the 60 units required for the major, no more than 12 may be below the 100-level\""
+      },
+      {
+        "label": "CR/NC units",
+        "maxUnits": 8,
+        "grading": "not-letter",
+        "why": "Grading: \"a maximum of 3 courses, totaling no more than 8 units, may be taken on a credit/no credit basis (CR/NC).\" The three-course part is checked by hand."
+      },
+      {
+        "label": "70 units with honors",
+        "minUnits": 70,
+        "when": "UTZZC07D",
+        "why": "Honors: \"Honors students complete 70 units, including the 60 units for the major, plus ten additional units of Honors Research.\""
+      }
+    ]
+  },
+  "nodes": {
+    "KpLRz8CF": {
+      "why": "Depth notes: \"Must be taken for 3-4 units each\" Grading: \"All required courses must be taken for a letter grade of C- or better.\"",
+      "patch": {
+        "minUnitsEach": 3,
+        "letter": true,
+        "minGrade": "C-"
+      }
+    },
+    "vNay7mMQ": {
+      "why": "\"The remaining units may be in linguistics or related fields and should form a coherent program of study ... get specific approval from the Linguistics Director of Undergraduate Studies for courses outside the department.\" Linguistics courses count toward the 60 units on their own; a course from another department is moved in once approved. The 60 units (\"the 60 required units for the major\") are the program's minimum. Other requirements: \"Additional courses counting toward the 60 unit requirement should form a coherent program of study, and specific courses must be approved by the Director of Undergraduate Studies.\"",
+      "replace": {
+        "t": "all",
+        "name": "Other Course Requirements",
+        "children": [
+          {
+            "id": "vNay7mMQ-ling",
+            "t": "courses",
+            "name": "Remaining units in Linguistics",
+            "mode": "any",
+            "pool": {
+              "subjects": [
+                "LINGUIST"
+              ]
+            },
+            "optional": true
+          },
+          {
+            "id": "vNay7mMQ-outside",
+            "t": "text",
+            "name": "Courses outside the department, with approval",
+            "manual": "approval",
+            "optional": true
+          }
+        ]
+      }
+    },
+    "UXCyrT7g": {
+      "why": "\"This requirement is fulfilled by completing six quarters of language coursework at Stanford or by certification of equivalent proficiency ... Language courses do not count toward the 60 required units for the major.\"",
+      "patch": {
+        "manual": "other"
+      }
+    },
+    "BAYtoWfE": {
+      "why": "\"Honors students complete 70 units, including the 60 units for the major, plus ten additional units of Honors Research\" and notes: \"In Autumn Quarter of the senior year, honors students enroll in LINGUIST199 ... In Winter and Spring quarters, honors students enroll in LINGUIST198\". Required once a student chooses the (optional) honors section.",
+      "patch": {
+        "optional": null,
+        "items": [
+          [
+            "LINGUIST 199"
+          ],
+          [
+            "LINGUIST 198"
+          ],
+          [
+            "LINGUIST 198"
+          ]
+        ],
+        "units": 10
+      }
+    },
+    "ajb3KFCO": {
+      "why": "Grading: \"All required courses must be taken for a letter grade of C- or better.\"",
+      "patch": {
+        "letter": true,
+        "minGrade": "C-"
+      }
+    },
+    "Qi06ZvUR": {
+      "why": "Grading: \"All required courses must be taken for a letter grade of C- or better.\"",
+      "patch": {
+        "letter": true,
+        "minGrade": "C-"
+      }
+    },
+    "GeIN2vmt": {
+      "why": "Grading: \"All required courses must be taken for a letter grade of C- or better.\"",
+      "patch": {
+        "letter": true,
+        "minGrade": "C-"
+      }
+    },
+    "fTjDjbCo": {
+      "why": "Grading: \"All required courses must be taken for a letter grade of C- or better.\"",
+      "patch": {
+        "letter": true,
+        "minGrade": "C-"
+      }
+    },
+    "sMw8AScj": {
+      "why": "Grading: \"All required courses must be taken for a letter grade of C- or better.\"",
+      "patch": {
+        "letter": true,
+        "minGrade": "C-"
+      }
+    },
+    "6uLJJuqn": {
+      "why": "Grading: \"All required courses must be taken for a letter grade of C- or better.\"",
+      "patch": {
+        "letter": true,
+        "minGrade": "C-"
+      }
+    },
+    "ahdBZZHD": {
+      "why": "Grading: \"All required courses must be taken for a letter grade of C- or better.\"",
+      "patch": {
+        "letter": true,
+        "minGrade": "C-"
+      }
+    },
+    "OXutcV7i": {
+      "why": "Grading: \"All required courses must be taken for a letter grade of C- or better.\"",
+      "patch": {
+        "letter": true,
+        "minGrade": "C-"
+      }
+    },
+    "JCiuc1md": {
+      "why": "Grading: \"All required courses must be taken for a letter grade of C- or better.\"",
+      "patch": {
+        "letter": true,
+        "minGrade": "C-"
+      }
+    },
+    "t14FufTZ": {
+      "why": "Grading: \"All required courses must be taken for a letter grade of C- or better.\"",
+      "patch": {
+        "letter": true,
+        "minGrade": "C-"
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "UTZZC07D",
+      "node": {
+        "id": "ov-honors-thesis",
+        "t": "text",
+        "name": "Honors thesis and Honors Colloquium presentation",
+        "manual": "thesis"
+      },
+      "why": "\"they must complete an honors thesis based on research conducted with a project advisor ... The thesis topic is presented orally at a department Honors Colloquium late in Spring Quarter.\""
+    }
+  ]
+}

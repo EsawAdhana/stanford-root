@@ -1,0 +1,101 @@
+{
+  "code": "FRENC-MIN",
+  "reviewed": "2026-10-23",
+  "summary": "The audit checks the 24 units in at least six courses, two FRENCH courses (or FRENLANG 124) for at least 8 units, and electives from FRENCH courses at the 100 or 200 level or up to three French language courses at or above FRENLANG 21C (12 units at most). Every course must be letter graded with a C or better. You or the Director of Undergraduate Studies check that one required course was taught in French, and approve electives from other departments, Bing Overseas Paris, ESF, SLE or Digital Humanities, which you add by hand. AP and transfer credit do not count, and the 24 units may not also count toward another major or minor.",
+  "blocks": {
+    "r4Jy3wac": {
+      "units": null
+    }
+  },
+  "nodes": {
+    "SpmTBiOI": {
+      "why": "Preparation, not a minor requirement: \"To enroll in all French literature courses taught in French, students must pass first-year French ... or complete the placement exam. Additionally, students are highly encouraged to complete FRENLANG124\". The data asked for two courses from a one-course list.",
+      "replace": {
+        "t": "text",
+        "name": "Preparing for the Minor",
+        "info": true
+      }
+    },
+    "MMUOJMgJ": {
+      "why": "\"Complete at least 2 FRENCH courses for a total of at least 8 units. At least 1 of the required courses must be taken in the French language at the 100- or 200-level (FRENLANG 124 is the only language class that counts for this requirement). Courses listed below are EXAMPLES and students are not restricted to this list.\" The unit floor moved here from the block. The language of instruction is not in the data.",
+      "patch": {
+        "units": 8,
+        "pool": {
+          "subjects": [
+            "FRENCH"
+          ]
+        }
+      }
+    },
+    "YvurcFe6": {
+      "why": "The minor is 24 units (Minimum Units in the Program); the 8 required units leave 16 of electives: \"Additional FRENCH courses taught by French faculty (may be conducted in English or French) at the 100- or 200- level.\" \"Up to three language courses in French at or above FRENLANG 21C for a maximum of 12 units.\" Courses in other departments, Bing Overseas Paris, ESF (up to ten units), SLE (up to 10 units) and Digital Humanities (up to five units) need the Director of Undergraduate Studies' approval or a judgment about who taught them, so they are moved in by hand.",
+      "replace": {
+        "t": "all",
+        "name": "Electives",
+        "children": [
+          {
+            "id": "ov-frenc-min-french",
+            "t": "courses",
+            "name": "FRENCH courses at the 100 or 200 level",
+            "mode": "any",
+            "optional": true,
+            "pool": {
+              "subjects": [
+                "FRENCH"
+              ],
+              "minNumber": 100,
+              "maxNumber": 299
+            }
+          },
+          {
+            "id": "ov-frenc-min-lang",
+            "t": "courses",
+            "name": "French language courses at or above FRENLANG 21C (up to three, 12 units)",
+            "mode": "any",
+            "optional": true,
+            "pool": {
+              "subjects": [
+                "FRENLANG"
+              ],
+              "minNumber": 21
+            },
+            "limits": [
+              {
+                "label": "French language courses",
+                "max": 3,
+                "maxUnits": 12,
+                "pool": {
+                  "subjects": [
+                    "FRENLANG"
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "id": "ov-frenc-min-approved",
+            "t": "text",
+            "name": "Approved courses elsewhere: other departments, Bing Overseas Paris, ESF (up to 10 units), SLE (up to 10 units), Digital Humanities (up to 5 units)",
+            "manual": "approval",
+            "optional": true
+          }
+        ]
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "r4Jy3wac",
+      "why": "Required Courses: \"At least 1 of the required courses must be taken in the French language at the 100- or 200-level (FRENLANG 124 is the only language class that counts for this requirement).\" The language a course is taught in is not in the course data.",
+      "node": { "id": "ov-frenc-min-in-french", "t": "text", "name": "One required course taught in French at the 100 or 200 level (or FRENLANG 124)", "manual": "approval" }
+    }
+  ],
+  "program": {
+    "totals": [
+      { "label": "At least six courses", "minCourses": 6, "why": "\"Complete at least six courses at three units or more and 24 overall units of coursework in the department.\"" }
+    ],
+    "letterGrade": true,
+    "minGrade": "C",
+    "why": "Grading: \"All courses must be taken for a letter grade and passed with at least a 'C'.\" GPA: \"A grade point average (GPA) of 2.0 or better must be achieved in each course.\""
+  }
+}

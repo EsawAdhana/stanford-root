@@ -1,0 +1,450 @@
+{
+  "code": "ECON-BA",
+  "reviewed": "2026-10-23",
+  "summary": "The core must be letter graded with a C or better, five field courses must be letter graded (ECON 135 counts in place of ECON 140 and 141, never alongside them), and electives are 20 units of ECON courses with at most 10 units from the listed math, statistics and computer science courses. ECON 101 or 5 units of ECON 199D fills Writing in the Major and the capstone, and the audit counts the major toward its 80 units (85 with honors). Your advisor checks by hand the 2.5 GPA in the major, the electronic portfolio, 200-level or petitioned courses and transfer credit, and for honors the 3.5 GPA and the thesis.",
+  "program": {
+    "totals": [
+      {
+        "label": "85 units with honors",
+        "minUnits": 85,
+        "when": "h93jaIdJ",
+        "why": "Honors: \"Completing all requirements for the ECON BA major plus five additional units, bringing the total to 85 units.\""
+      }
+    ]
+  },
+  "nodes": {
+    "hxyJiwIw": {
+      "why": "\"All Core Courses must be taken for a letter grade. In Fall 24 and onward, students must earn a C or better in all courses completed for the ECON Core.\"",
+      "patch": {
+        "letter": true,
+        "minGrade": "C"
+      }
+    },
+    "WOA5FvSn": {
+      "why": "\"Complete at least 5 of the following\", \"Must be taken at Stanford in California and must be taken for a letter grade.\" \"Students who have completed ECON 135 may not also count units for ECON 140 or ECON 141 as the content is too similar.\" The list offers ECON 135 in place of ECON 140 or ECON 141, so the two paths count either ECON 135 or ECON 140 and 141, never both. \"Students may count toward the econ field course requirement Econ 160, Econ 167G, or 180\" is one slot. A 200-level course \"with permission of DUS and course instructor\" is moved in by hand.",
+      "replace": {
+        "t": "any",
+        "name": "Field Courses",
+        "children": [
+          {
+            "id": "ov-econba-field",
+            "t": "courses",
+            "name": "Five field courses",
+            "mode": "atLeast",
+            "n": 5,
+            "letter": true,
+            "items": [
+              [
+                "ECON 47"
+              ],
+              [
+                "ECON 102C"
+              ],
+              [
+                "ECON 108"
+              ],
+              [
+                "ECON 111"
+              ],
+              [
+                "ECON 113"
+              ],
+              [
+                "ECON 115"
+              ],
+              [
+                "ECON 118"
+              ],
+              [
+                "ECON 122"
+              ],
+              [
+                "ECON 125"
+              ],
+              [
+                "ECON 126"
+              ],
+              [
+                "ECON 127"
+              ],
+              [
+                "ECON 131"
+              ],
+              [
+                "ECON 141"
+              ],
+              [
+                "ECON 140"
+              ],
+              [
+                "ECON 136"
+              ],
+              [
+                "ECON 137"
+              ],
+              [
+                "ECON 146"
+              ],
+              [
+                "ECON 149"
+              ],
+              [
+                "ECON 150"
+              ],
+              [
+                "ECON 152"
+              ],
+              [
+                "ECON 155"
+              ],
+              [
+                "ECON 156"
+              ],
+              [
+                "ECON 157"
+              ],
+              [
+                "ECON 160",
+                "ECON 167G",
+                "ECON 180"
+              ],
+              [
+                "ECON 165"
+              ],
+              [
+                "ECON 166"
+              ],
+              [
+                "ECON 169"
+              ],
+              [
+                "ECON 170"
+              ],
+              [
+                "ECON 177"
+              ],
+              [
+                "ECON 178"
+              ],
+              [
+                "ECON 179"
+              ],
+              [
+                "ECON 185"
+              ],
+              [
+                "ECON 198"
+              ]
+            ]
+          },
+          {
+            "id": "ov-econba-field-135",
+            "t": "courses",
+            "name": "Five field courses, with ECON 135 in place of ECON 140 and 141",
+            "mode": "atLeast",
+            "n": 5,
+            "letter": true,
+            "items": [
+              [
+                "ECON 47"
+              ],
+              [
+                "ECON 102C"
+              ],
+              [
+                "ECON 108"
+              ],
+              [
+                "ECON 111"
+              ],
+              [
+                "ECON 113"
+              ],
+              [
+                "ECON 115"
+              ],
+              [
+                "ECON 118"
+              ],
+              [
+                "ECON 122"
+              ],
+              [
+                "ECON 125"
+              ],
+              [
+                "ECON 126"
+              ],
+              [
+                "ECON 127"
+              ],
+              [
+                "ECON 131"
+              ],
+              [
+                "ECON 135"
+              ],
+              [
+                "ECON 136"
+              ],
+              [
+                "ECON 137"
+              ],
+              [
+                "ECON 146"
+              ],
+              [
+                "ECON 149"
+              ],
+              [
+                "ECON 150"
+              ],
+              [
+                "ECON 152"
+              ],
+              [
+                "ECON 155"
+              ],
+              [
+                "ECON 156"
+              ],
+              [
+                "ECON 157"
+              ],
+              [
+                "ECON 160",
+                "ECON 167G",
+                "ECON 180"
+              ],
+              [
+                "ECON 165"
+              ],
+              [
+                "ECON 166"
+              ],
+              [
+                "ECON 169"
+              ],
+              [
+                "ECON 170"
+              ],
+              [
+                "ECON 177"
+              ],
+              [
+                "ECON 178"
+              ],
+              [
+                "ECON 179"
+              ],
+              [
+                "ECON 185"
+              ],
+              [
+                "ECON 198"
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    "Y01tsyH3": {
+      "why": "\"Students complete 20-27 units in addition to the field courses taken; choose from any ECON courses offered for a letter grade.\" \"up to 10 units of this requirement may be satisfied by some combination of the following: Upper division math, statistics, and computer science courses (see list below). Approved non-economics courses ...\" 20 is the floor; the extra 5 units owed for a waived course, transfer credit and petitioned courses are checked by hand.",
+      "replace": {
+        "t": "courses",
+        "name": "Elective Courses (20 units)",
+        "mode": "units",
+        "units": 20,
+        "items": [
+          [
+            "CS 106B"
+          ],
+          [
+            "CS 161"
+          ],
+          [
+            "CS 221"
+          ],
+          [
+            "CS 227B"
+          ],
+          [
+            "CS 228"
+          ],
+          [
+            "CS 229"
+          ],
+          [
+            "MATH 113"
+          ],
+          [
+            "MATH 114"
+          ],
+          [
+            "MATH 115"
+          ],
+          [
+            "MATH 118"
+          ],
+          [
+            "MATH 120"
+          ],
+          [
+            "MATH 136"
+          ],
+          [
+            "MATH 151"
+          ],
+          [
+            "MATH 161"
+          ],
+          [
+            "MATH 171"
+          ],
+          [
+            "MATH 172"
+          ],
+          [
+            "MATH 175"
+          ],
+          [
+            "MS&E 244"
+          ],
+          [
+            "MS&E 245A"
+          ],
+          [
+            "MS&E 245B"
+          ],
+          [
+            "STATS 200"
+          ],
+          [
+            "STATS 202"
+          ],
+          [
+            "STATS 203"
+          ],
+          [
+            "STATS 206"
+          ],
+          [
+            "STATS 207"
+          ],
+          [
+            "STATS 208"
+          ],
+          [
+            "STATS 209"
+          ],
+          [
+            "STATS 217"
+          ],
+          [
+            "STATS 218"
+          ],
+          [
+            "STATS 219"
+          ],
+          [
+            "STATS 221"
+          ],
+          [
+            "STATS 315B"
+          ],
+          [
+            "POLISCI 110C"
+          ]
+        ],
+        "pool": {
+          "subjects": [
+            "ECON"
+          ]
+        },
+        "limits": [
+          {
+            "label": "non-ECON courses",
+            "maxUnits": 10,
+            "pool": {
+              "subjects": [],
+              "anySubject": true,
+              "excludeSubjects": [
+                "ECON"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "1GlyVTHD": {
+      "why": "\"Completing course (5 units) or at least 5 units of course will meet the WIM requirement for the ECON BA.\" One requirement filled by ECON 101 or by 5 units of ECON 199D, which may come from several quarters. \"These courses also complete the Capstone Requirement.\"",
+      "patch": {
+        "mode": "all",
+        "items": [
+          [
+            "ECON 101",
+            "ECON 199D"
+          ]
+        ],
+        "n": null,
+        "units": 5
+      }
+    },
+    "Bi0qMuAv": {
+      "why": "\"All students must submit an electronic portfolio of their work in the major. Submissions will be graded for completeness by the Economics Major Faculty Advisor.\"",
+      "patch": {
+        "manual": "milestone"
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "GKG3888t",
+      "why": "GPA: \"An overall GPA of 2.5 for all courses applied to the major is required for graduation.\"",
+      "node": {
+        "id": "ov-econba-gpa",
+        "t": "text",
+        "name": "GPA of at least 2.5 in courses applied to the major",
+        "manual": "gpa"
+      }
+    },
+    {
+      "block": "h93jaIdJ",
+      "why": "\"Achieving a grade point average (GPA) of at least 3.5 for the required courses of the Economics BA major (excluding course Directed Reading and course Honors Thesis Research).\"",
+      "node": {
+        "id": "ov-econba-hon-gpa",
+        "t": "text",
+        "name": "Honors GPA of at least 3.5 in the major",
+        "manual": "gpa"
+      }
+    },
+    {
+      "block": "h93jaIdJ",
+      "why": "\"Complete course Applied Econometrics (a core program requirement) and at least two Econ upper-division courses most relevant to the proposed topic of the honors thesis by the end of the junior year. (These can be included in the basic 80 units.)\" Applied Econometrics is already in the core; relevance to the topic is the advisor's call.",
+      "node": {
+        "id": "ov-econba-hon-topic",
+        "t": "courses",
+        "name": "Two upper-division ECON courses relevant to the thesis topic",
+        "mode": "atLeast",
+        "n": 2,
+        "pool": {
+          "subjects": [
+            "ECON"
+          ],
+          "minNumber": 100
+        },
+        "shares": true
+      }
+    },
+    {
+      "block": "h93jaIdJ",
+      "why": "\"Candidates must write and present an honors thesis in their senior year ... Additionally, winter registration for one unit of Honors Thesis Research under the Director of the Honors Program section number (199D-20) is mandatory for all honors students.\" The 85-unit total is in program.totals.",
+      "node": {
+        "id": "ov-econba-hon-thesis",
+        "t": "text",
+        "name": "Honors thesis, presentation and 199D-20 section",
+        "manual": "thesis"
+      }
+    }
+  ]
+}

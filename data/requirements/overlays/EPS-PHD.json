@@ -1,0 +1,115 @@
+{
+  "code": "EPS-PHD",
+  "reviewed": "2026-10-23",
+  "summary": "You need 135 graduate units, including the EPS 304, 305 and 307 core series and three letter-graded courses numbered 200 or above (9 units) in your first year, and 9 more units of letter-graded graduate courses or EPS 400 research, which is the only course that may be taken without a letter grade. Your advisor checks the 3.0 GPA and that first-year courses are taught by Academic Council faculty, two of them by different EPS faculty, and the department records the two TA appointments, the candidacy exam, the reading committee, the oral exam and the dissertation.",
+  "blocks": {
+    "1NxJyRG6": {
+      "kind": "required"
+    },
+    "ditT9SuK": {
+      "kind": "required"
+    }
+  },
+  "nodes": {
+    "PcVBnKUW": {
+      "why": "\"All first-year Ph.D. students must complete a minimum of three letter-graded graduate-level courses (200-level or above), totaling at least 9 units ... (research units are exempt from this requirement).\" \"In addition to the graduate coursework requirement, students must complete the EPS First-Year Graduate Core Series\". Grading: \"Students must earn letter grades in all graduate-level courses that count toward program requirements (not including EPS 400 Graduate Research).\" The instructor rules are checked by hand. EPS 400 Graduate Research is left out of the first-year pool so it fills the research-unit rule it is named in; a student who counts research units among the three first-year courses (\"with the exception of research units\" from the letter grade) moves them in by hand.",
+      "replace": {
+        "t": "all",
+        "name": "First-Year Requirements",
+        "children": [
+          {
+            "id": "ov-eps-phd-core-series",
+            "t": "courses",
+            "name": "EPS First-Year Graduate Core Series",
+            "mode": "all",
+            "letter": true,
+            "items": [["EPS 304"], ["EPS 305"], ["EPS 307"]]
+          },
+          {
+            "id": "ov-eps-phd-first-year",
+            "t": "courses",
+            "name": "Three letter-graded graduate courses in the first year (9 units)",
+            "mode": "atLeast",
+            "n": 3,
+            "units": 9,
+            "letter": true,
+            "pool": {
+              "anySubject": true,
+              "minNumber": 200,
+              "exclude": ["EPS 400"]
+            }
+          },
+          {
+            "id": "ov-eps-phd-instructors",
+            "t": "text",
+            "name": "First-year courses taught by Academic Council faculty, two by different EPS faculty",
+            "manual": "other"
+          }
+        ]
+      }
+    },
+    "NzFG83sc": {
+      "why": "\"9 additional units of graduate-level coursework in EPS or another department (recommended).\" and (Graduate Coursework) \"Additional 9 units of EPS 400 Graduate Research or other approved graduate-level courses may also count toward this requirement.\" One 9-unit rule that EPS 400 may fill: \"Minimum Units in the Program 22\" is the 4-unit core series plus the 9 first-year units plus these 9, and the candidacy text speaks of \"the six required graduate courses\". Grading: \"Students must earn letter grades in all graduate-level courses that count toward program requirements (not including EPS 400 Graduate Research).\" EPS 400 is offered only S/NC, so its S counts; other courses must be letter graded.",
+      "replace": {
+        "t": "courses",
+        "name": "9 additional graduate units (EPS 400 may count)",
+        "mode": "units",
+        "units": 9,
+        "letter": true,
+        "items": [["EPS 400"]],
+        "pool": { "anySubject": true, "minNumber": 200 }
+      }
+    },
+    "jyfHxQmO": {
+      "why": "Says what may count toward the 9 additional units in the rule above (\"may also count toward this requirement\"); not a separate count.",
+      "replace": {
+        "t": "text",
+        "name": "Graduate Coursework",
+        "info": true
+      }
+    },
+    "54ouAqYN": {
+      "why": "\"PhD students must complete at least two TA appointments (25%).\"",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "0yWJ9g66": {
+      "why": "\"University policy requires students to advance to candidacy by the end of their sixth quarter\"; \"The Candidacy Exam is oral and consists of three parts\". The written research proposal (Research Proposal Requirements) is part of it.",
+      "patch": {
+        "info": null,
+        "name": "Candidacy exam and advancement to candidacy",
+        "manual": "exam"
+      }
+    },
+    "xLN24uqq": {
+      "why": "\"Upon admission to Ph.D. candidacy, students ... must establish a Doctoral Dissertation Reading Committee.\" TGR status itself is optional.",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "foTBM9W8": {
+      "why": "\"The doctoral dissertation is defended in a University Oral Examination.\"",
+      "patch": {
+        "info": null,
+        "name": "University Oral Examination",
+        "manual": "exam"
+      }
+    },
+    "u6pTgrDV": {
+      "why": "\"the candidate must prepare a doctoral dissertation that contributes to knowledge and is the result of independent research\"; approval by the Reading Committee.",
+      "patch": {
+        "info": null,
+        "name": "Dissertation",
+        "manual": "thesis"
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "ThfsP7pJ",
+      "why": "GPA: \"University grade point average (GPA) of 3.0 (B) or higher\"",
+      "node": { "id": "ov-eps-phd-gpa", "t": "text", "name": "GPA of 3.0 or higher", "manual": "gpa" }
+    }
+  ]
+}

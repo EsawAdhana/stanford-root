@@ -1,0 +1,131 @@
+{
+  "code": "MCP-PHD",
+  "reviewed": "2026-10-23",
+  "summary": "The audit checks 135 units, with every course for the program letter graded (unless it is offered only satisfactory/no credit) and a B or better: the six required courses, two electives' worth of full-value courses and minicourses, MCP 299 rotations, MCP 399 research, and molecular biology (BIO 83, whose units do not count toward the 135, or competency from earlier study). Checked by hand: 6 units of advanced courses the Director of Graduate Studies approves, the 3.0 GPA, taking part in the MCP Seminar Series and the department's scientific meeting, 40 hours of service, the NRSA proposal, any courses your training grant or committee requires, a first-author paper, the qualifying exam, the dissertation and the oral exam.",
+  "nodes": {
+    "freeform-text": {
+      "why": "The page's free-form requirements restate most of the rules here: the 135 units, Advanced Cell Biology (MCP 221), MCP Bootcamp (MCP 207), MCP Journal Club (MCP 208), How Cells Work (MCP 256), Foundations in Experimental Biology (BIOS 200) and BIOS 217 (the Required Courses), the 6 approved advanced units, letter grades with a B or better, the 3.0 GPA, the laboratory rotations, the qualifying exam, the dissertation and the oral exam. \"The Responsible Conduct of Research, if funded on NSF or NIH training grants\" is one of the training-grant courses in rule lLN8V5hU. Its elective list, \"Two of the following courses: Biological Macromolecules, Advanced Genetics, MCP 222\", differs from the Electives section, which names BIOC 241 and MCP 222 as the full-value courses plus four minicourses and is kept as written; \"There are exceptions to the above; please discuss with DGS for approval.\" What it adds is checked by hand: \"Students are also required to participate in the Molecular and Cellular Physiology Seminar Series and attend the department's scientific meeting.\"",
+      "patch": {
+        "name": "Participate in the MCP Seminar Series and attend the department's scientific meeting",
+        "manual": "milestone"
+      }
+    },
+    "xveNcttw-text": {
+      "why": "\"The results of students' independent, original work are presented in a dissertation. The oral examination is largely a defense of the dissertation.\" The same requirements as rules ov-dissertation and ov-oral.",
+      "patch": {
+        "info": true
+      }
+    },
+    "FyAJdh95": {
+      "why": "\"Students should have basic competency in molecular biology. This requirement can be met based on undergrad curriculum/research. If not met, then the Stanford undergrad course BIO 83 can be taken to meet the requirement.\" The stored 6-unit floor is not in the text.",
+      "replace": {
+        "t": "any",
+        "name": "Molecular Biology",
+        "children": [
+          {
+            "id": "FyAJdh95-bio83",
+            "t": "courses",
+            "name": "BIO 83",
+            "mode": "all",
+            "items": [
+              [
+                "BIO 83"
+              ]
+            ]
+          },
+          {
+            "id": "FyAJdh95-prior",
+            "t": "text",
+            "name": "Competency from undergraduate curriculum or research",
+            "manual": "approval"
+          }
+        ]
+      }
+    },
+    "iK5R3yNI": {
+      "why": "\"Advanced graduate courses or minicourses for a minimum of 6 units total. These courses do not need to be MCP courses but must be in a relevant scientific topic and approved by the Director of Graduate Studies.\"",
+      "patch": {
+        "manual": "approval",
+        "units": 6
+      }
+    },
+    "AJ44dH6Q": {
+      "why": "\"Before graduation, you are expected to have performed a minimum of 40 hours, and you will be asked to document this before your 5th year in the program.\"",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "txuSMX1E": {
+      "why": "\"Proposal should be submitted by the 3rd year of study.\"",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "lLN8V5hU": {
+      "why": "\"Students should complete any additional courses required by their training grant or Qualifying Committee.\" Which courses depends on the student, so it is checked by hand.",
+      "patch": {
+        "manual": "approval"
+      }
+    },
+    "DXjdXVw1": {
+      "why": "\"Student must be the first author on a published paper containing the results of their original scientific research. To meet the graduation requirement, this paper must be complete and at least under review at a legitimate peer-reviewed journal (with an ISSN) or published.\"",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "eWta5gf4": {
+      "why": "\"All students in the program must pass a qualifying examination to advance to candidacy for the Ph.D.\"",
+      "patch": {
+        "name": "Qualifying Examination",
+        "manual": "exam"
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "UCSFvvo6",
+      "node": {
+        "id": "ov-dissertation",
+        "t": "text",
+        "name": "Dissertation",
+        "manual": "thesis"
+      },
+      "why": "\"Dissertation and University Oral Examination / The results of independent, original work by the students are presented in a dissertation.\" (in the Laboratory Rotations text)"
+    },
+    {
+      "block": "UCSFvvo6",
+      "node": {
+        "id": "ov-oral",
+        "t": "text",
+        "name": "University Oral Examination",
+        "manual": "exam"
+      },
+      "why": "\"The oral examination is largely a defense of the dissertation.\""
+    },
+    {
+      "block": "UCSFvvo6",
+      "node": {
+        "id": "ov-gpa",
+        "t": "text",
+        "name": "Minimum 3.0 GPA",
+        "manual": "gpa"
+      },
+      "why": "GPA: \"University policy requires that graduate students maintain a minimum of a 3.0 grade-point average.\""
+    }
+  ],
+  "program": {
+    "letterGrade": true,
+    "minGrade": "B",
+    "why": "Grading: \"Courses taken to meet program requirements must be taken for a letter grade, and students must earn a minimum passing grade of B in every course.\"",
+    "totals": [
+      {
+        "label": "BIO 83 does not count toward the 135 units",
+        "maxUnits": 0,
+        "codes": [
+          "BIO 83"
+        ],
+        "why": "Molecular Biology: \"Note: If this course is taken, its units will not be applied to the unit requirement for the PhD, per University policy.\""
+      }
+    ]
+  }
+}

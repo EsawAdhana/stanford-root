@@ -1,0 +1,38 @@
+{
+  "code": "FILM-MFA",
+  "reviewed": "2026-10-23",
+  "summary": "Every course must be letter graded. You take the seven core film production courses in sequence (FILMPROD 405, 406 and 407 also make up the thesis film), FILMEDIA 410 and 411, the three companion production courses, one Studio Art course (4 units), two Film and Media Studies courses (8 units) and one choice elective of at least 4 units, for 56 units. Your advisor checks the 3.0 GPA each quarter, and a B- or below in a core course or elective means academic probation. The companion courses FILMPROD 410, 411 and 413 may be taken in either of two orders, and all three are required either way.",
+  "program": {
+    "letterGrade": true,
+    "why": "Production Core: \"All courses must be taken for a letter grade.\""
+  },
+  "nodes": {
+    "uvNfyL08": {
+      "why": "An overview of the production core; its one rule, \"All courses must be taken for a letter grade\", is now program.letterGrade.",
+      "patch": { "info": true }
+    },
+    "Ie0MKC4t": {
+      "why": "\"The following elective groups are required\": \"Studio Art / one course / 4 units / Film and Media Studies / two courses / 8 units / Choice Elective / one courses / 4 units\". The choice elective can be any course of at least 4 units.",
+      "replace": {
+        "t": "all",
+        "name": "Electives",
+        "children": [
+          { "id": "ov-film-mfa-studio", "t": "courses", "name": "Studio Art (one course, 4 units)", "mode": "atLeast", "n": 1, "units": 4, "pool": { "subjects": ["ARTSTUDI"] } },
+          { "id": "ov-film-mfa-fms", "t": "courses", "name": "Film and Media Studies (two courses, 8 units)", "mode": "atLeast", "n": 2, "units": 8, "pool": { "subjects": ["FILMEDIA"] } },
+          { "id": "ov-film-mfa-choice", "t": "courses", "name": "Choice Elective (one course, 4 units)", "mode": "atLeast", "n": 1, "minUnitsEach": 4, "pool": { "anySubject": true } }
+        ]
+      }
+    },
+    "iASqA3UG": {
+      "why": "\"In FILMPROD 405, students research and develop their project ... (FILMPROD 406); post-production occurs in winter and spring quarters in FILMPROD 406 and FILMPROD 407.\" These are the same courses the Core Film Production Courses list requires, so they count for both.",
+      "patch": { "shares": true }
+    }
+  },
+  "add": [
+    {
+      "block": "mAbEGmbJ",
+      "why": "GPA: \"Students must maintain a 3.0 grade point average in courses applicable to the degree each quarter.\" Grading: a B- or below in a core course or elective places the student on academic probation; the course still counts, so this is checked by hand with the GPA.",
+      "node": { "id": "ov-film-mfa-gpa", "t": "text", "name": "GPA of 3.0 each quarter in degree courses", "manual": "gpa" }
+    }
+  ]
+}

@@ -1,0 +1,1321 @@
+{
+  "code": "EALC-PHD",
+  "reviewed": "2026-10-23",
+  "summary": "You choose one track in your subplan: four in East Asian Literatures (Chinese, Japanese, Korean, Trans-Asian), two in East Asian Linguistics (Chinese, Japanese), or the Chinese Archaeology subplan with its research courses and second proseminar. Everyone takes EALC 201, EALC 299 for the qualifying paper, DLCL 301 or the archaeology teaching path, the language proficiency courses for their language, and the track's courses; the program-wide proseminar, six-course and language rules count the same courses the track lists. Every required course must be taken for a letter grade when one is offered and passed with a B+ or better, and the degree needs 135 units. Non-heritage Chinese proficiency can be met with CHINLANG 225 and 251 or a semester abroad taught in Chinese. Thesis, dissertation research, practicum and TGR enrollments count toward the 135 units but never as seminars or field courses. Advisor-approved courses are counted by subject, level and number; you confirm by hand your advisor's approval of them, the supporting language, the comprehensive exams, qualifying papers, prospectus, teaching, candidacy, oral exam, dissertation and the 3.0 GPA.",
+  "blocks": {
+    "4DlYxlOY": {
+      "shares": true
+    }
+  },
+  "nodes": {
+    "KiCMaEB7": {
+      "why": "\"Complete two proseminar courses, course in the first year of study and an additional course as associated with the student's subplan.\" Every subplan track lists its own proseminar courses (EALC 201 with EALC 202, CHINA 290 or JAPAN 279; EALC 201 alone for archaeology), so this rule keeps EALC 201 and shares it. Grading: \"Students must take all required courses for a letter grade when this option is available, and receive a grade of B+ or better in all required coursework.\"",
+      "patch": {
+        "name": "Proseminar Sequence Requirement (EALC 201)",
+        "removeItems": [
+          "EALC 202",
+          "CHINA 290",
+          "JAPAN 279"
+        ],
+        "shares": true,
+        "letter": true,
+        "minGrade": "B+"
+      }
+    },
+    "yFvYWfEc": {
+      "why": "\"Complete six advisor-approved courses in Chinese, Japanese, Korean, and/or trans-Asian literature ... as approved by the student's advisor, not including courses taken to fulfill the proseminar or language requirements.\" Every subplan track spells out its courses (\"with at least six completed by the end of Year 2\"), so this rule shares them; the student moves the six in.",
+      "patch": {
+        "manual": "approval",
+        "n": 6,
+        "shares": true
+      }
+    },
+    "hpX5BGr6": {
+      "why": "\"Submit a full draft of the student's qualifying paper to the primary advisor by May 15 of Spring Quarter and the final version by the last Friday of May. Students are also required to present qualifying paper research at the last meeting of the East Asian Humanities and East Asian Linguistics workshops\"",
+      "patch": {
+        "name": "Qualifying paper and symposium presentation",
+        "manual": "thesis"
+      }
+    },
+    "sQKxRYcj": {
+      "why": "\"All students are required to complete three quarters of teaching experiences by Spring Quarter of Year 4\" and \"Students in East Asian Literatures or Linguistics are expected to fulfill the three-quarter teaching experience requirement through an East Asian language course sequence.\"",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "NqdqMK7C": {
+      "why": "\"Students in Chinese Archaeology are expected to fulfill the required three quarters of teaching experiences through East Asian archaeology courses or other courses as approved by the advisor.\"",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "CAv8u8Fd": {
+      "why": "\"Research is core to the academic and professional training of Chinese Archaeology Ph.D. students.\" It applies only to that subplan, so it moves (with its ids) into the Chinese Archaeology track 9SQTaf5i; see add.",
+      "remove": true
+    },
+    "PymgwBWK": {
+      "why": "\"Students are expected to complete qualifying procedures and apply for candidacy by the end of Year 2. ... EALC faculty vote on each second year student's admission to candidacy\"",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "8M87gwmy": {
+      "why": "\"the oral exam is a defense of the dissertation presented upon completion of a pre-final draft submitted to reading committee members\"",
+      "patch": {
+        "manual": "exam"
+      }
+    },
+    "Q91mWnp2": {
+      "why": "\"Students are required to submit an approved dissertation in English ... that makes an original contribution to the field of East Asian languages and cultures\"",
+      "patch": {
+        "manual": "thesis"
+      }
+    },
+    "yGUxLg7A": {
+      "why": "\"Demonstrate proficiency in at least one supporting language ... Reading proficiency must be certified through a written examination or an appropriate amount of coursework to be determined on a case-by-case basis.\"",
+      "patch": {
+        "manual": "exam"
+      }
+    },
+    "kOVS7XG4": {
+      "why": "\"Students whose first language is not Chinese must complete one of the following: Both of the listed courses. Study abroad in a program where the primary language of instruction is Chinese for at least one semester.\" A student whose first language is Chinese marks it done. Grading: \"Students must take all required courses for a letter grade when this option is available, and receive a grade of B+ or better in all required coursework.\"",
+      "replace": {
+        "t": "any",
+        "name": "Non-Heritage Chinese Language Proficiency Requirement",
+        "children": [
+          {
+            "id": "kOVS7XG4-courses",
+            "t": "courses",
+            "name": "CHINLANG 225 and CHINLANG 251",
+            "mode": "all",
+            "items": [
+              [
+                "CHINLANG 225"
+              ],
+              [
+                "CHINLANG 251"
+              ]
+            ],
+            "letter": true,
+            "minGrade": "B+"
+          },
+          {
+            "id": "kOVS7XG4-abroad",
+            "t": "text",
+            "name": "A semester of study abroad taught in Chinese",
+            "manual": "other"
+          }
+        ]
+      }
+    },
+    "Xu7znjVo": {
+      "why": "\"Students whose first language is not Chinese must complete one of the following: Both of the listed courses. Study abroad in a program where the primary language of instruction is Chinese for at least one semester.\" A student whose first language is Chinese marks it done. Grading: \"Students must take all required courses for a letter grade when this option is available, and receive a grade of B+ or better in all required coursework.\"",
+      "replace": {
+        "t": "any",
+        "name": "Non-Heritage Chinese Language Proficiency Requirement",
+        "children": [
+          {
+            "id": "Xu7znjVo-courses",
+            "t": "courses",
+            "name": "CHINLANG 225 and CHINLANG 251",
+            "mode": "all",
+            "items": [
+              [
+                "CHINLANG 225"
+              ],
+              [
+                "CHINLANG 251"
+              ]
+            ],
+            "letter": true,
+            "minGrade": "B+"
+          },
+          {
+            "id": "Xu7znjVo-abroad",
+            "t": "text",
+            "name": "A semester of study abroad taught in Chinese",
+            "manual": "other"
+          }
+        ]
+      }
+    },
+    "3HcoINu5": {
+      "why": "\"Demonstrate proficiency in at least one supporting language ... Reading proficiency must be certified through a written examination or an appropriate amount of coursework to be determined on a case-by-case basis.\"",
+      "patch": {
+        "manual": "exam"
+      }
+    },
+    "1BeNkceF": {
+      "why": "\"Four courses numbered above 200 in the field of China studies, at least two of which must be listed with the CHINA subject code, and the other two of which may be in different sub-fields such as anthropology, art history, history, philosophy, political science, religious studies, or another relevant field, as approved by the student's advisor.\" Checked as two CHINA courses and two more courses, all numbered 201 or higher; China focus of the other two is the advisor's call. Grading: \"Students must take all required courses for a letter grade when this option is available, and receive a grade of B+ or better in all required coursework.\" Thesis, dissertation research, practicum and TGR enrollments (EALC, CHINA and JAPAN 299, 390, 398, 399, 801, 802) are left out of this course pool: they are not seminars or courses in a field.",
+      "replace": {
+        "t": "all",
+        "name": "Additional Four Courses Requirement",
+        "children": [
+          {
+            "id": "1BeNkceF-china",
+            "t": "courses",
+            "name": "Two CHINA courses numbered above 200",
+            "mode": "atLeast",
+            "n": 2,
+            "pool": {
+              "subjects": [
+                "CHINA"
+              ],
+              "minNumber": 201,
+              "exclude": [
+                "CHINA 299",
+                "CHINA 390",
+                "CHINA 399",
+                "CHINA 801",
+                "CHINA 802",
+                "EALC 299",
+                "EALC 390",
+                "EALC 398",
+                "EALC 399",
+                "EALC 801",
+                "EALC 802",
+                "JAPAN 299",
+                "JAPAN 399",
+                "JAPAN 801",
+                "JAPAN 802"
+              ]
+            },
+            "letter": true,
+            "minGrade": "B+"
+          },
+          {
+            "id": "1BeNkceF-other",
+            "t": "courses",
+            "name": "Two more China-studies courses numbered above 200",
+            "mode": "atLeast",
+            "n": 2,
+            "pool": {
+              "subjects": [],
+              "anySubject": true,
+              "minNumber": 201,
+              "exclude": [
+                "CHINA 299",
+                "CHINA 390",
+                "CHINA 399",
+                "CHINA 801",
+                "CHINA 802",
+                "EALC 299",
+                "EALC 390",
+                "EALC 398",
+                "EALC 399",
+                "EALC 801",
+                "EALC 802",
+                "JAPAN 299",
+                "JAPAN 399",
+                "JAPAN 801",
+                "JAPAN 802"
+              ]
+            },
+            "letter": true,
+            "minGrade": "B+"
+          }
+        ]
+      }
+    },
+    "S8IswYQ9": {
+      "why": "\"Complete the following course and at least one EALC course in a field different from the student's primary specialization (e.g., a modern literature course for students specializing in premodern literature, and vice versa, or a course in Japanese or Korean literature).\" Checked as CHINA 291 and one more department course; the field is the advisor's call. The department's subjects are taken as EALC, CHINA, JAPAN and KOREA. Grading: \"Students must take all required courses for a letter grade when this option is available, and receive a grade of B+ or better in all required coursework.\" Thesis, dissertation research, practicum and TGR enrollments (EALC, CHINA and JAPAN 299, 390, 398, 399, 801, 802) are left out of this course pool: they are not seminars or courses in a field.",
+      "replace": {
+        "t": "all",
+        "name": "Outside Field Two Courses Requirement",
+        "children": [
+          {
+            "id": "S8IswYQ9-291",
+            "t": "courses",
+            "name": "CHINA 291",
+            "mode": "all",
+            "items": [
+              [
+                "CHINA 291"
+              ]
+            ],
+            "letter": true,
+            "minGrade": "B+"
+          },
+          {
+            "id": "S8IswYQ9-ealc",
+            "t": "courses",
+            "name": "One EALC course outside the primary specialization",
+            "mode": "atLeast",
+            "n": 1,
+            "pool": {
+              "subjects": [
+                "EALC",
+                "CHINA",
+                "JAPAN",
+                "KOREA"
+              ],
+              "exclude": [
+                "CHINA 299",
+                "CHINA 390",
+                "CHINA 399",
+                "CHINA 801",
+                "CHINA 802",
+                "EALC 299",
+                "EALC 390",
+                "EALC 398",
+                "EALC 399",
+                "EALC 801",
+                "EALC 802",
+                "JAPAN 299",
+                "JAPAN 399",
+                "JAPAN 801",
+                "JAPAN 802"
+              ]
+            },
+            "letter": true,
+            "minGrade": "B+"
+          }
+        ]
+      }
+    },
+    "8wez5VHb": {
+      "why": "\"Complete two relevant seminars at the 300-level. EALC 200 may be substituted for one of these two seminars.\" Checked as two courses numbered 300-399, or EALC 200 in place of one, as in the other tracks. Grading: \"Students must take all required courses for a letter grade when this option is available, and receive a grade of B+ or better in all required coursework.\" Thesis, dissertation research, practicum and TGR enrollments (EALC, CHINA and JAPAN 299, 390, 398, 399, 801, 802) are left out of this course pool: they are not seminars or courses in a field.",
+      "replace": {
+        "t": "courses",
+        "name": "Two Seminars Requirement (300-level)",
+        "mode": "atLeast",
+        "n": 2,
+        "items": [
+          [
+            "EALC 200"
+          ]
+        ],
+        "pool": {
+          "subjects": [],
+          "anySubject": true,
+          "minNumber": 300,
+          "maxNumber": 399,
+          "exclude": [
+            "CHINA 299",
+            "CHINA 390",
+            "CHINA 399",
+            "CHINA 801",
+            "CHINA 802",
+            "EALC 299",
+            "EALC 390",
+            "EALC 398",
+            "EALC 399",
+            "EALC 801",
+            "EALC 802",
+            "JAPAN 299",
+            "JAPAN 399",
+            "JAPAN 801",
+            "JAPAN 802"
+          ]
+        },
+        "limits": [
+          {
+            "label": "EALC 200 in place of a seminar",
+            "max": 1,
+            "codes": [
+              "EALC 200"
+            ]
+          }
+        ],
+        "letter": true,
+        "minGrade": "B+"
+      }
+    },
+    "ftkkwboR": {
+      "why": "\"Pass three comprehensive written examinations, one of which tests the candidate's methodological competence in the relevant discipline.\"",
+      "patch": {
+        "manual": "exam"
+      }
+    },
+    "pFY7e48b": {
+      "why": "\"Students are expected to submit a dissertation prospectus and pass a dissertation prospectus defense (oral exam) before advancing to Terminal Graduate Registration (TGR) status\"",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "xGatllL3": {
+      "why": "\"Demonstrate proficiency in at least one supporting language ... Reading proficiency must be certified through a written examination or an appropriate amount of coursework to be determined on a case-by-case basis.\"",
+      "patch": {
+        "manual": "exam"
+      }
+    },
+    "HdU0P0CE": {
+      "why": "\"Complete eight advisor-approved courses numbered above 200 from among the offerings of the Department of East Asian Languages and Cultures. At least four of these eight courses must be advanced seminars numbered above 300.\" Checked as four department courses numbered 301 or higher and four more numbered 201 or higher. \"At least one of these eight courses must deal with Japanese linguistics\" and the modern/premodern balance are the advisor's call. The department's subjects are taken as EALC, CHINA, JAPAN and KOREA. Grading: \"Students must take all required courses for a letter grade when this option is available, and receive a grade of B+ or better in all required coursework.\" Thesis, dissertation research, practicum and TGR enrollments (EALC, CHINA and JAPAN 299, 390, 398, 399, 801, 802) are left out of this course pool: they are not seminars or courses in a field.",
+      "replace": {
+        "t": "all",
+        "name": "Additional Eight Courses Requirement",
+        "children": [
+          {
+            "id": "HdU0P0CE-300",
+            "t": "courses",
+            "name": "Four advanced seminars numbered above 300",
+            "mode": "atLeast",
+            "n": 4,
+            "pool": {
+              "subjects": [
+                "EALC",
+                "CHINA",
+                "JAPAN",
+                "KOREA"
+              ],
+              "minNumber": 301,
+              "exclude": [
+                "CHINA 299",
+                "CHINA 390",
+                "CHINA 399",
+                "CHINA 801",
+                "CHINA 802",
+                "EALC 299",
+                "EALC 390",
+                "EALC 398",
+                "EALC 399",
+                "EALC 801",
+                "EALC 802",
+                "JAPAN 299",
+                "JAPAN 399",
+                "JAPAN 801",
+                "JAPAN 802"
+              ]
+            },
+            "letter": true,
+            "minGrade": "B+"
+          },
+          {
+            "id": "HdU0P0CE-200",
+            "t": "courses",
+            "name": "Four more department courses numbered above 200",
+            "mode": "atLeast",
+            "n": 4,
+            "pool": {
+              "subjects": [
+                "EALC",
+                "CHINA",
+                "JAPAN",
+                "KOREA"
+              ],
+              "minNumber": 201,
+              "exclude": [
+                "CHINA 299",
+                "CHINA 390",
+                "CHINA 399",
+                "CHINA 801",
+                "CHINA 802",
+                "EALC 299",
+                "EALC 390",
+                "EALC 398",
+                "EALC 399",
+                "EALC 801",
+                "EALC 802",
+                "JAPAN 299",
+                "JAPAN 399",
+                "JAPAN 801",
+                "JAPAN 802"
+              ]
+            },
+            "letter": true,
+            "minGrade": "B+"
+          }
+        ]
+      }
+    },
+    "FJIPr7yj": {
+      "why": "\"Complete two upper-division or graduate-level courses in two supporting fields for a total of four courses outside of Japanese literature or linguistics.\" Checked as four courses numbered 100 or above outside JAPAN; the two fields are set with the advisor. Grading: \"Students must take all required courses for a letter grade when this option is available, and receive a grade of B+ or better in all required coursework.\" Thesis, dissertation research, practicum and TGR enrollments (EALC, CHINA and JAPAN 299, 390, 398, 399, 801, 802) are left out of this course pool: they are not seminars or courses in a field.",
+      "replace": {
+        "id": "FJIPr7yj",
+        "t": "courses",
+        "name": "Four upper-division or graduate courses in two supporting fields",
+        "mode": "atLeast",
+        "n": 4,
+        "pool": {
+          "subjects": [],
+          "anySubject": true,
+          "excludeSubjects": [
+            "JAPAN"
+          ],
+          "minNumber": 100,
+          "exclude": [
+            "CHINA 299",
+            "CHINA 390",
+            "CHINA 399",
+            "CHINA 801",
+            "CHINA 802",
+            "EALC 299",
+            "EALC 390",
+            "EALC 398",
+            "EALC 399",
+            "EALC 801",
+            "EALC 802",
+            "JAPAN 299",
+            "JAPAN 399",
+            "JAPAN 801",
+            "JAPAN 802"
+          ]
+        },
+        "letter": true,
+        "minGrade": "B+"
+      }
+    },
+    "SzNjsiga": {
+      "why": "\"The comprehensive examination is a two-hour oral exam on Japanese literature with three examiners.\"",
+      "patch": {
+        "manual": "exam"
+      }
+    },
+    "drMlv8m0": {
+      "why": "\"Students are expected to submit a dissertation prospectus and pass a dissertation prospectus defense (oral exam) before advancing to Terminal Graduate Registration (TGR) status\"",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "VGmKHXzF": {
+      "why": "\"Demonstrate proficiency in at least one supporting language ... Reading proficiency must be certified through a written examination or an appropriate amount of coursework to be determined on a case-by-case basis.\"",
+      "patch": {
+        "manual": "exam"
+      }
+    },
+    "EOvdwrn5": {
+      "why": "\"Complete eight advisor-approved courses numbered above 200 from the offerings of the Department of East Asian Languages and Cultures for a letter grade of B or higher ... At least four of these eight courses must be advanced seminars numbered above 300, and two of these eight courses should be numbered at or above the 200-level and offered by departments outside EALC\". So four department seminars numbered 301 or higher, two more department courses numbered 201 or higher, and two outside courses numbered 200 or higher, all letter graded B or better. The department's subjects are taken as EALC, CHINA, JAPAN and KOREA. Grading: \"Students must take all required courses for a letter grade when this option is available, and receive a grade of B+ or better in all required coursework.\" Thesis, dissertation research, practicum and TGR enrollments (EALC, CHINA and JAPAN 299, 390, 398, 399, 801, 802) are left out of this course pool: they are not seminars or courses in a field.",
+      "replace": {
+        "t": "all",
+        "name": "Additional Eight Courses Requirement",
+        "children": [
+          {
+            "id": "EOvdwrn5-300",
+            "t": "courses",
+            "name": "Four advanced EALC seminars numbered above 300",
+            "mode": "atLeast",
+            "n": 4,
+            "pool": {
+              "subjects": [
+                "EALC",
+                "CHINA",
+                "JAPAN",
+                "KOREA"
+              ],
+              "minNumber": 301,
+              "exclude": [
+                "CHINA 299",
+                "CHINA 390",
+                "CHINA 399",
+                "CHINA 801",
+                "CHINA 802",
+                "EALC 299",
+                "EALC 390",
+                "EALC 398",
+                "EALC 399",
+                "EALC 801",
+                "EALC 802",
+                "JAPAN 299",
+                "JAPAN 399",
+                "JAPAN 801",
+                "JAPAN 802"
+              ]
+            },
+            "letter": true,
+            "minGrade": "B+"
+          },
+          {
+            "id": "EOvdwrn5-200",
+            "t": "courses",
+            "name": "Two more EALC courses numbered above 200",
+            "mode": "atLeast",
+            "n": 2,
+            "pool": {
+              "subjects": [
+                "EALC",
+                "CHINA",
+                "JAPAN",
+                "KOREA"
+              ],
+              "minNumber": 201,
+              "exclude": [
+                "CHINA 299",
+                "CHINA 390",
+                "CHINA 399",
+                "CHINA 801",
+                "CHINA 802",
+                "EALC 299",
+                "EALC 390",
+                "EALC 398",
+                "EALC 399",
+                "EALC 801",
+                "EALC 802",
+                "JAPAN 299",
+                "JAPAN 399",
+                "JAPAN 801",
+                "JAPAN 802"
+              ]
+            },
+            "letter": true,
+            "minGrade": "B+"
+          },
+          {
+            "id": "EOvdwrn5-outside",
+            "t": "courses",
+            "name": "Two courses outside EALC numbered 200 or above",
+            "mode": "atLeast",
+            "n": 2,
+            "pool": {
+              "subjects": [],
+              "anySubject": true,
+              "excludeSubjects": [
+                "EALC",
+                "CHINA",
+                "JAPAN",
+                "KOREA"
+              ],
+              "minNumber": 200,
+              "exclude": [
+                "CHINA 299",
+                "CHINA 390",
+                "CHINA 399",
+                "CHINA 801",
+                "CHINA 802",
+                "EALC 299",
+                "EALC 390",
+                "EALC 398",
+                "EALC 399",
+                "EALC 801",
+                "EALC 802",
+                "JAPAN 299",
+                "JAPAN 399",
+                "JAPAN 801",
+                "JAPAN 802"
+              ]
+            },
+            "letter": true,
+            "minGrade": "B+"
+          }
+        ]
+      }
+    },
+    "I70rZEEg": {
+      "why": "\"Pass a comprehensive qualifying examination that tests the candidate's breadth and depth in the primary field of research\"",
+      "patch": {
+        "manual": "exam"
+      }
+    },
+    "6hclQ0Fl": {
+      "why": "\"Students are expected to submit a dissertation prospectus and pass a dissertation prospectus defense (oral exam) before advancing to Terminal Graduate Registration (TGR) status\"",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "kbTKKgcN": {
+      "why": "\"Two advisor-approved courses in Korean/Japanese/Chinese literature and culture or linguistics from among the offerings of the Department of East Asian Languages and Cultures, not including courses taken to fulfill the language requirement.\" The department's subjects are taken as EALC, CHINA, JAPAN and KOREA. Grading: \"Students must take all required courses for a letter grade when this option is available, and receive a grade of B+ or better in all required coursework.\" Thesis, dissertation research, practicum and TGR enrollments (EALC, CHINA and JAPAN 299, 390, 398, 399, 801, 802) are left out of this course pool: they are not seminars or courses in a field.",
+      "replace": {
+        "id": "kbTKKgcN",
+        "t": "courses",
+        "name": "Two advisor-approved EALC literature, culture or linguistics courses",
+        "mode": "atLeast",
+        "n": 2,
+        "pool": {
+          "subjects": [
+            "EALC",
+            "CHINA",
+            "JAPAN",
+            "KOREA"
+          ],
+          "exclude": [
+            "CHINA 299",
+            "CHINA 390",
+            "CHINA 399",
+            "CHINA 801",
+            "CHINA 802",
+            "EALC 299",
+            "EALC 390",
+            "EALC 398",
+            "EALC 399",
+            "EALC 801",
+            "EALC 802",
+            "JAPAN 299",
+            "JAPAN 399",
+            "JAPAN 801",
+            "JAPAN 802"
+          ]
+        },
+        "letter": true,
+        "minGrade": "B+"
+      }
+    },
+    "aHxbongD": {
+      "why": "\"Complete the following and/or similar courses as approved by the student's advisor with a letter grade of B or higher.\" Similar courses are moved in by hand. Grading: \"Students must take all required courses for a letter grade when this option is available, and receive a grade of B+ or better in all required coursework.\"",
+      "patch": {
+        "letter": true,
+        "minGrade": "B+"
+      }
+    },
+    "8vtuuqAN": {
+      "why": "\"Two upper-division or graduate-level Asia-focused courses in fields outside the department, as approved by the student's advisor.\" Checked as courses numbered 100 or above outside EALC, CHINA, JAPAN and KOREA. Grading: \"Students must take all required courses for a letter grade when this option is available, and receive a grade of B+ or better in all required coursework.\" Thesis, dissertation research, practicum and TGR enrollments (EALC, CHINA and JAPAN 299, 390, 398, 399, 801, 802) are left out of this course pool: they are not seminars or courses in a field.",
+      "replace": {
+        "id": "8vtuuqAN",
+        "t": "courses",
+        "name": "Two upper-division or graduate Asia-focused courses outside the department",
+        "mode": "atLeast",
+        "n": 2,
+        "pool": {
+          "subjects": [],
+          "anySubject": true,
+          "excludeSubjects": [
+            "EALC",
+            "CHINA",
+            "JAPAN",
+            "KOREA"
+          ],
+          "minNumber": 100,
+          "exclude": [
+            "CHINA 299",
+            "CHINA 390",
+            "CHINA 399",
+            "CHINA 801",
+            "CHINA 802",
+            "EALC 299",
+            "EALC 390",
+            "EALC 398",
+            "EALC 399",
+            "EALC 801",
+            "EALC 802",
+            "JAPAN 299",
+            "JAPAN 399",
+            "JAPAN 801",
+            "JAPAN 802"
+          ]
+        },
+        "letter": true,
+        "minGrade": "B+"
+      }
+    },
+    "553aUjrv": {
+      "why": "\"Complete two seminars at the 300-level. EALC 200 may be substituted for one of these two seminars.\" Grading: \"Students must take all required courses for a letter grade when this option is available, and receive a grade of B+ or better in all required coursework.\" Thesis, dissertation research, practicum and TGR enrollments (EALC, CHINA and JAPAN 299, 390, 398, 399, 801, 802) are left out of this course pool: they are not seminars or courses in a field.",
+      "replace": {
+        "t": "courses",
+        "name": "Two Seminars Requirement (300-level)",
+        "mode": "atLeast",
+        "n": 2,
+        "items": [
+          [
+            "EALC 200"
+          ]
+        ],
+        "pool": {
+          "subjects": [],
+          "anySubject": true,
+          "minNumber": 300,
+          "maxNumber": 399,
+          "exclude": [
+            "CHINA 299",
+            "CHINA 390",
+            "CHINA 399",
+            "CHINA 801",
+            "CHINA 802",
+            "EALC 299",
+            "EALC 390",
+            "EALC 398",
+            "EALC 399",
+            "EALC 801",
+            "EALC 802",
+            "JAPAN 299",
+            "JAPAN 399",
+            "JAPAN 801",
+            "JAPAN 802"
+          ]
+        },
+        "limits": [
+          {
+            "label": "EALC 200 in place of a seminar",
+            "max": 1,
+            "codes": [
+              "EALC 200"
+            ]
+          }
+        ],
+        "letter": true,
+        "minGrade": "B+"
+      }
+    },
+    "QswYjbLa": {
+      "why": "\"Pass a comprehensive qualifying examination that tests the candidate's breadth and depth in the primary field of research\"",
+      "patch": {
+        "manual": "exam"
+      }
+    },
+    "eTehLtZ2": {
+      "why": "\"Students are expected to submit a dissertation prospectus and pass a dissertation prospectus defense (oral exam) before advancing to Terminal Graduate Registration (TGR) status\"",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "RPiGRGZ4": {
+      "why": "\"Students whose first language is not Chinese must complete one of the following: Both of the listed courses. Study abroad in a program where the primary language of instruction is Chinese for at least one semester.\" A student whose first language is Chinese marks it done. Grading: \"Students must take all required courses for a letter grade when this option is available, and receive a grade of B+ or better in all required coursework.\"",
+      "replace": {
+        "t": "any",
+        "name": "Non-Heritage Chinese Language Proficiency Requirement",
+        "children": [
+          {
+            "id": "RPiGRGZ4-courses",
+            "t": "courses",
+            "name": "CHINLANG 225 and CHINLANG 251",
+            "mode": "all",
+            "items": [
+              [
+                "CHINLANG 225"
+              ],
+              [
+                "CHINLANG 251"
+              ]
+            ],
+            "letter": true,
+            "minGrade": "B+"
+          },
+          {
+            "id": "RPiGRGZ4-abroad",
+            "t": "text",
+            "name": "A semester of study abroad taught in Chinese",
+            "manual": "other"
+          }
+        ]
+      }
+    },
+    "yKvveQBW": {
+      "why": "\"Demonstrate proficiency in at least one supporting language ... Reading proficiency must be certified through a written examination or an appropriate amount of coursework to be determined on a case-by-case basis.\"",
+      "patch": {
+        "manual": "exam"
+      }
+    },
+    "lL2RfUKp": {
+      "why": "\"Four courses numbered above 200 in the field of China studies, at least two of which must be listed with the CHINA subject code, and the other two of which may be in different sub-fields such as anthropology, art history, history, philosophy, political science, religious studies, or another relevant field, as approved by the student's advisor.\" Checked as two CHINA courses and two more courses, all numbered 201 or higher; China focus of the other two is the advisor's call. Grading: \"Students must take all required courses for a letter grade when this option is available, and receive a grade of B+ or better in all required coursework.\" Thesis, dissertation research, practicum and TGR enrollments (EALC, CHINA and JAPAN 299, 390, 398, 399, 801, 802) are left out of this course pool: they are not seminars or courses in a field.",
+      "replace": {
+        "t": "all",
+        "name": "Additional Four Courses Requirement",
+        "children": [
+          {
+            "id": "lL2RfUKp-china",
+            "t": "courses",
+            "name": "Two CHINA courses numbered above 200",
+            "mode": "atLeast",
+            "n": 2,
+            "pool": {
+              "subjects": [
+                "CHINA"
+              ],
+              "minNumber": 201,
+              "exclude": [
+                "CHINA 299",
+                "CHINA 390",
+                "CHINA 399",
+                "CHINA 801",
+                "CHINA 802",
+                "EALC 299",
+                "EALC 390",
+                "EALC 398",
+                "EALC 399",
+                "EALC 801",
+                "EALC 802",
+                "JAPAN 299",
+                "JAPAN 399",
+                "JAPAN 801",
+                "JAPAN 802"
+              ]
+            },
+            "letter": true,
+            "minGrade": "B+"
+          },
+          {
+            "id": "lL2RfUKp-other",
+            "t": "courses",
+            "name": "Two more China-studies courses numbered above 200",
+            "mode": "atLeast",
+            "n": 2,
+            "pool": {
+              "subjects": [],
+              "anySubject": true,
+              "minNumber": 201,
+              "exclude": [
+                "CHINA 299",
+                "CHINA 390",
+                "CHINA 399",
+                "CHINA 801",
+                "CHINA 802",
+                "EALC 299",
+                "EALC 390",
+                "EALC 398",
+                "EALC 399",
+                "EALC 801",
+                "EALC 802",
+                "JAPAN 299",
+                "JAPAN 399",
+                "JAPAN 801",
+                "JAPAN 802"
+              ]
+            },
+            "letter": true,
+            "minGrade": "B+"
+          }
+        ]
+      }
+    },
+    "HScdBlbZ": {
+      "why": "\"Complete at least one literature course, as approved by the student's advisor.\" No list or department is given.",
+      "patch": {
+        "manual": "approval",
+        "n": 1
+      }
+    },
+    "awKbZOq3": {
+      "why": "\"Complete two relevant seminars at the 300-level. EALC 200 may be substituted for one of these two seminars.\" Grading: \"Students must take all required courses for a letter grade when this option is available, and receive a grade of B+ or better in all required coursework.\" Thesis, dissertation research, practicum and TGR enrollments (EALC, CHINA and JAPAN 299, 390, 398, 399, 801, 802) are left out of this course pool: they are not seminars or courses in a field.",
+      "replace": {
+        "t": "courses",
+        "name": "Two Seminars Requirement (300-level)",
+        "mode": "atLeast",
+        "n": 2,
+        "items": [
+          [
+            "EALC 200"
+          ]
+        ],
+        "pool": {
+          "subjects": [],
+          "anySubject": true,
+          "minNumber": 300,
+          "maxNumber": 399,
+          "exclude": [
+            "CHINA 299",
+            "CHINA 390",
+            "CHINA 399",
+            "CHINA 801",
+            "CHINA 802",
+            "EALC 299",
+            "EALC 390",
+            "EALC 398",
+            "EALC 399",
+            "EALC 801",
+            "EALC 802",
+            "JAPAN 299",
+            "JAPAN 399",
+            "JAPAN 801",
+            "JAPAN 802"
+          ]
+        },
+        "limits": [
+          {
+            "label": "EALC 200 in place of a seminar",
+            "max": 1,
+            "codes": [
+              "EALC 200"
+            ]
+          }
+        ],
+        "letter": true,
+        "minGrade": "B+"
+      }
+    },
+    "RGVKs0EN": {
+      "why": "\"Pass three comprehensive written examinations, one of which tests the candidate's methodological competence in the relevant discipline.\"",
+      "patch": {
+        "manual": "exam"
+      }
+    },
+    "Kmryfh0O": {
+      "why": "\"Students are expected to submit a dissertation prospectus and pass a dissertation prospectus defense (oral exam) before advancing to Terminal Graduate Registration (TGR) status\"",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "gKkBlerJ": {
+      "why": "\"Demonstrate proficiency in at least one supporting language ... Reading proficiency must be certified through a written examination or an appropriate amount of coursework to be determined on a case-by-case basis.\"",
+      "patch": {
+        "manual": "exam"
+      }
+    },
+    "F7r8kFeq": {
+      "why": "\"Complete six advisor-approved courses numbered above 200 from among the offerings of the Department of East Asian Languages and Cultures. At least one of these six courses must be an advanced seminar numbered above 300.\" \"At least one of these six courses must deal with Japanese literature\" is the advisor's call. The department's subjects are taken as EALC, CHINA, JAPAN and KOREA. Grading: \"Students must take all required courses for a letter grade when this option is available, and receive a grade of B+ or better in all required coursework.\" Thesis, dissertation research, practicum and TGR enrollments (EALC, CHINA and JAPAN 299, 390, 398, 399, 801, 802) are left out of this course pool: they are not seminars or courses in a field.",
+      "replace": {
+        "t": "all",
+        "name": "Additional Six Courses Requirement",
+        "children": [
+          {
+            "id": "F7r8kFeq-300",
+            "t": "courses",
+            "name": "One advanced seminar numbered above 300",
+            "mode": "atLeast",
+            "n": 1,
+            "pool": {
+              "subjects": [
+                "EALC",
+                "CHINA",
+                "JAPAN",
+                "KOREA"
+              ],
+              "minNumber": 301,
+              "exclude": [
+                "CHINA 299",
+                "CHINA 390",
+                "CHINA 399",
+                "CHINA 801",
+                "CHINA 802",
+                "EALC 299",
+                "EALC 390",
+                "EALC 398",
+                "EALC 399",
+                "EALC 801",
+                "EALC 802",
+                "JAPAN 299",
+                "JAPAN 399",
+                "JAPAN 801",
+                "JAPAN 802"
+              ]
+            },
+            "letter": true,
+            "minGrade": "B+"
+          },
+          {
+            "id": "F7r8kFeq-200",
+            "t": "courses",
+            "name": "Five more department courses numbered above 200",
+            "mode": "atLeast",
+            "n": 5,
+            "pool": {
+              "subjects": [
+                "EALC",
+                "CHINA",
+                "JAPAN",
+                "KOREA"
+              ],
+              "minNumber": 201,
+              "exclude": [
+                "CHINA 299",
+                "CHINA 390",
+                "CHINA 399",
+                "CHINA 801",
+                "CHINA 802",
+                "EALC 299",
+                "EALC 390",
+                "EALC 398",
+                "EALC 399",
+                "EALC 801",
+                "EALC 802",
+                "JAPAN 299",
+                "JAPAN 399",
+                "JAPAN 801",
+                "JAPAN 802"
+              ]
+            },
+            "letter": true,
+            "minGrade": "B+"
+          }
+        ]
+      }
+    },
+    "ZUt6lIuR": {
+      "why": "\"Complete five upper-division or graduate-level courses in linguistics and other supporting fields. To be determined in consultation with the student's primary advisor\". Checked as courses numbered 100 or above. Grading: \"Students must take all required courses for a letter grade when this option is available, and receive a grade of B+ or better in all required coursework.\" Thesis, dissertation research, practicum and TGR enrollments (EALC, CHINA and JAPAN 299, 390, 398, 399, 801, 802) are left out of this course pool: they are not seminars or courses in a field.",
+      "replace": {
+        "id": "ZUt6lIuR",
+        "t": "courses",
+        "name": "Five upper-division or graduate courses in linguistics and supporting fields",
+        "mode": "atLeast",
+        "n": 5,
+        "pool": {
+          "subjects": [],
+          "anySubject": true,
+          "minNumber": 100,
+          "exclude": [
+            "CHINA 299",
+            "CHINA 390",
+            "CHINA 399",
+            "CHINA 801",
+            "CHINA 802",
+            "EALC 299",
+            "EALC 390",
+            "EALC 398",
+            "EALC 399",
+            "EALC 801",
+            "EALC 802",
+            "JAPAN 299",
+            "JAPAN 399",
+            "JAPAN 801",
+            "JAPAN 802"
+          ]
+        },
+        "letter": true,
+        "minGrade": "B+"
+      }
+    },
+    "q5Ehmy2C": {
+      "why": "\"Submit two qualifying papers (QPs) that present the student's original research in two different subfields of linguistics ... evaluated by a faculty committee\"",
+      "patch": {
+        "manual": "thesis"
+      }
+    },
+    "MNteamUS": {
+      "why": "\"Students are expected to submit a dissertation prospectus and pass a dissertation prospectus defense (oral exam) before advancing to Terminal Graduate Registration (TGR) status\"",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "VaslVx5y": {
+      "why": "\"Proficiency in language(s) and/or laboratory skills must be certified through a written examination or an appropriate amount of course work, to be determined on a case-by-case basis.\"",
+      "patch": {
+        "manual": "exam"
+      }
+    },
+    "AEbMGuWn": {
+      "why": "\"The process includes the following five components: Bibliographies, Literature Review, Setting the Examination Questions, the Written Examinations, and the Oral Component Meeting of the Written Examinations.\"",
+      "patch": {
+        "manual": "exam"
+      }
+    },
+    "v3O5jOj9": {
+      "why": "\"Students are expected to submit a dissertation prospectus and pass a dissertation prospectus defense (oral exam) before advancing to Terminal Graduate Registration (TGR) status by the end of spring quarter of the third year of study.\"",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "qdldFfEk": {
+      "why": "Grading: \"Students must take all required courses for a letter grade when this option is available, and receive a grade of B+ or better in all required coursework.\" The Bulletin left this rule without a name.",
+      "patch": {
+        "letter": true,
+        "minGrade": "B+",
+        "name": "Qualifying paper course (EALC 299)"
+      }
+    },
+    "slAPrF8X": {
+      "why": "Grading: \"Students must take all required courses for a letter grade when this option is available, and receive a grade of B+ or better in all required coursework.\"",
+      "patch": {
+        "letter": true,
+        "minGrade": "B+"
+      }
+    },
+    "mIrZxvGU": {
+      "why": "Grading: \"Students must take all required courses for a letter grade when this option is available, and receive a grade of B+ or better in all required coursework.\"",
+      "patch": {
+        "letter": true,
+        "minGrade": "B+"
+      }
+    },
+    "h0V4sdjP": {
+      "why": "Grading: \"Students must take all required courses for a letter grade when this option is available, and receive a grade of B+ or better in all required coursework.\"",
+      "patch": {
+        "letter": true,
+        "minGrade": "B+"
+      }
+    },
+    "auOlTXD6": {
+      "why": "Grading: \"Students must take all required courses for a letter grade when this option is available, and receive a grade of B+ or better in all required coursework.\"",
+      "patch": {
+        "letter": true,
+        "minGrade": "B+"
+      }
+    },
+    "qWCSLDHw": {
+      "why": "Grading: \"Students must take all required courses for a letter grade when this option is available, and receive a grade of B+ or better in all required coursework.\"",
+      "patch": {
+        "letter": true,
+        "minGrade": "B+"
+      }
+    },
+    "yOiDFwsd": {
+      "why": "Grading: \"Students must take all required courses for a letter grade when this option is available, and receive a grade of B+ or better in all required coursework.\"",
+      "patch": {
+        "letter": true,
+        "minGrade": "B+"
+      }
+    },
+    "392Yb0Bz": {
+      "why": "Grading: \"Students must take all required courses for a letter grade when this option is available, and receive a grade of B+ or better in all required coursework.\"",
+      "patch": {
+        "letter": true,
+        "minGrade": "B+"
+      }
+    },
+    "GjWTDoy9": {
+      "why": "Grading: \"Students must take all required courses for a letter grade when this option is available, and receive a grade of B+ or better in all required coursework.\"",
+      "patch": {
+        "letter": true,
+        "minGrade": "B+"
+      }
+    },
+    "Tp6KgVhP": {
+      "why": "Grading: \"Students must take all required courses for a letter grade when this option is available, and receive a grade of B+ or better in all required coursework.\"",
+      "patch": {
+        "letter": true,
+        "minGrade": "B+"
+      }
+    },
+    "SRXkutnE": {
+      "why": "Grading: \"Students must take all required courses for a letter grade when this option is available, and receive a grade of B+ or better in all required coursework.\"",
+      "patch": {
+        "letter": true,
+        "minGrade": "B+"
+      }
+    },
+    "pRcNaLKo": {
+      "why": "Grading: \"Students must take all required courses for a letter grade when this option is available, and receive a grade of B+ or better in all required coursework.\"",
+      "patch": {
+        "letter": true,
+        "minGrade": "B+"
+      }
+    },
+    "0xe0xZxc": {
+      "why": "Grading: \"Students must take all required courses for a letter grade when this option is available, and receive a grade of B+ or better in all required coursework.\"",
+      "patch": {
+        "letter": true,
+        "minGrade": "B+"
+      }
+    },
+    "moLKzj40": {
+      "why": "Grading: \"Students must take all required courses for a letter grade when this option is available, and receive a grade of B+ or better in all required coursework.\"",
+      "patch": {
+        "letter": true,
+        "minGrade": "B+"
+      }
+    },
+    "mH03Ncm0": {
+      "why": "Grading: \"Students must take all required courses for a letter grade when this option is available, and receive a grade of B+ or better in all required coursework.\"",
+      "patch": {
+        "letter": true,
+        "minGrade": "B+"
+      }
+    },
+    "WpCRZKKm": {
+      "why": "Grading: \"Students must take all required courses for a letter grade when this option is available, and receive a grade of B+ or better in all required coursework.\"",
+      "patch": {
+        "letter": true,
+        "minGrade": "B+"
+      }
+    },
+    "Aafsbwtn": {
+      "why": "Grading: \"Students must take all required courses for a letter grade when this option is available, and receive a grade of B+ or better in all required coursework.\"",
+      "patch": {
+        "letter": true,
+        "minGrade": "B+"
+      }
+    },
+    "WX02yIV4": {
+      "why": "Grading: \"Students must take all required courses for a letter grade when this option is available, and receive a grade of B+ or better in all required coursework.\"",
+      "patch": {
+        "letter": true,
+        "minGrade": "B+"
+      }
+    },
+    "5SsiRqaZ": {
+      "why": "Grading: \"Students must take all required courses for a letter grade when this option is available, and receive a grade of B+ or better in all required coursework.\"",
+      "patch": {
+        "letter": true,
+        "minGrade": "B+"
+      }
+    },
+    "E8wF3QR1": {
+      "why": "Grading: \"Students must take all required courses for a letter grade when this option is available, and receive a grade of B+ or better in all required coursework.\"",
+      "patch": {
+        "letter": true,
+        "minGrade": "B+"
+      }
+    }
+  },
+  "alternatives": [
+    {
+      "id": "ov-ealc-phd-lit-track",
+      "name": "Literature track (choose one)",
+      "of": [
+        "cyYk5LBL",
+        "jtuNoN2Z",
+        "XxghMeI5",
+        "ohDmSmfs"
+      ],
+      "why": "The subplan lists four tracks, each with its own language proficiency, proseminar, courses, comprehensive examination and \"dissertation prospectus\" (a student writes one), so a student completes one track. The Bulletin does not say \"choose one\" in words."
+    },
+    {
+      "id": "ov-ealc-phd-ling-track",
+      "name": "Linguistics track (choose one)",
+      "of": [
+        "iPhQRpFk",
+        "FJdmfUiV"
+      ],
+      "why": "\"course is required for all Chinese linguistics students, and course is required for all Japanese linguistics students\": separate groups of students, each track with its own proseminar, courses, examinations and dissertation prospectus."
+    }
+  ],
+  "add": [
+    {
+      "parent": "9SQTaf5i",
+      "node": {
+        "id": "ov-ealc-phd-arch-proseminar",
+        "t": "courses",
+        "name": "Second proseminar: advisor-approved CHINA, ARCHLGY or ANTHRO course",
+        "mode": "any",
+        "pool": {
+          "subjects": [
+            "CHINA",
+            "ARCHLGY",
+            "ANTHRO"
+          ],
+          "exclude": [
+            "CHINA 299",
+            "CHINA 390",
+            "CHINA 399",
+            "CHINA 801",
+            "CHINA 802",
+            "EALC 299",
+            "EALC 390",
+            "EALC 398",
+            "EALC 399",
+            "EALC 801",
+            "EALC 802",
+            "JAPAN 299",
+            "JAPAN 399",
+            "JAPAN 801",
+            "JAPAN 802"
+          ]
+        },
+        "letter": true,
+        "minGrade": "B+"
+      },
+      "why": "\"Students in Chinese archaeology must take an advisor-approved course with subject code CHINA, ARCHLGY, or ANTHRO.\" The advisor's approval is by hand. Grading: \"Students must take all required courses for a letter grade when this option is available, and receive a grade of B+ or better in all required coursework.\" Thesis, dissertation research, practicum and TGR enrollments (EALC, CHINA and JAPAN 299, 390, 398, 399, 801, 802) are left out of this course pool: they are not seminars or courses in a field."
+    },
+    {
+      "parent": "9SQTaf5i",
+      "node": {
+        "id": "CAv8u8Fd",
+        "t": "all",
+        "name": "Chinese Archaeology Research Requirement",
+        "desc": "Research is core to the academic and professional training of Chinese Archaeology Ph.D. students. Demonstrate research proficiency by participating in supervised research in an archaeology laboratory (under the supervision of Prof. Li Liu or another laboratory with advisor approval) for at least two quarters.",
+        "children": [
+          {
+            "id": "kji6yWB1",
+            "t": "courses",
+            "name": "Prerequisite Research Courses",
+            "mode": "all",
+            "items": [
+              [
+                "ARCHLGY 224"
+              ],
+              [
+                "ARCHLGY 233"
+              ]
+            ],
+            "desc": "Complete the following courses or obtain advisor approval prior to starting supervised laboratory research.",
+            "letter": true,
+            "minGrade": "B+"
+          },
+          {
+            "id": "PwLdOuOI",
+            "t": "text",
+            "name": "Two-Quarter Research Requirement",
+            "manual": "milestone",
+            "desc": "Complete two quarters of supervised research regardless of financial support to fulfill degree requirements. The research requirement should be completed by the end of Year 4. Students may complete more than the required number of supervised research quarters as part of their financial support and professional training."
+          }
+        ]
+      },
+      "why": "Moved from the Research Requirement block, which applied it to every subplan: \"Research is core to the academic and professional training of Chinese Archaeology Ph.D. students. Demonstrate research proficiency by participating in supervised research in an archaeology laboratory ... for at least two quarters.\" \"Complete two quarters of supervised research\" Grading: \"Students must take all required courses for a letter grade when this option is available, and receive a grade of B+ or better in all required coursework.\""
+    },
+    {
+      "block": "G8FmRMrp",
+      "node": {
+        "id": "ov-gpa",
+        "t": "text",
+        "name": "Overall GPA of 3.0",
+        "manual": "gpa"
+      },
+      "why": "GPA: \"Students are expected to earn an overall GPA of 3.0 or better across all courses.\""
+    }
+  ]
+}

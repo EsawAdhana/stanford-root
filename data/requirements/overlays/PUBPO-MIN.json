@@ -1,0 +1,93 @@
+{
+  "code": "PUBPO-MIN",
+  "reviewed": "2026-10-23",
+  "summary": "You take ECON 1, ECON 102A, ECON 102B, PUBLPOL 104, PUBLPOL 50 or ECON 50, and one or more electives from the list, at least six courses of five units each and 30 units in all. At most 10 units may be CR/NC, and at most 5 of them in ECON 102A and 102B. Reviewing your course plan with a program administrator is checked by hand, and so are courses you substitute because your major already uses a requirement (an Economics major replaces PUBLPOL 50 with another course).",
+  "add": [
+    {
+      "block": "wyBfVgbk",
+      "node": {
+        "id": "ov-plan-review",
+        "t": "text",
+        "name": "Course plan reviewed with a program administrator",
+        "manual": "approval"
+      },
+      "why": "\"It is required that students review their course plans with a program administrator.\""
+    },
+    {
+      "block": "wyBfVgbk",
+      "why": "Electives: \"Select one or more of the following depending on major requirements.\" Overview: \"Students with a Major in Economics will not take PUBLPOL50 and must make up the units with another course.\" Electives past the first count here toward the six courses and 30 units.",
+      "node": {
+        "id": "ov-more-electives",
+        "t": "courses",
+        "mode": "any",
+        "optional": true,
+        "name": "Additional electives from the list",
+        "items": [
+          [
+            "PUBLPOL 101"
+          ],
+          [
+            "PUBLPOL 105"
+          ],
+          [
+            "ECON 102C"
+          ],
+          [
+            "PUBLPOL 134"
+          ],
+          [
+            "PUBLPOL 103F"
+          ],
+          [
+            "PUBLPOL 103C"
+          ],
+          [
+            "PUBLPOL 154"
+          ],
+          [
+            "PUBLPOL 156"
+          ]
+        ]
+      }
+    }
+  ],
+  "program": {
+    "totals": [
+      {
+        "label": "Six courses",
+        "minCourses": 6,
+        "why": "\"All students must take, without double counting, at least six courses for five units each toward the minor for a total of 30 units.\""
+      },
+      {
+        "label": "CR/NC units",
+        "maxUnits": 10,
+        "grading": "not-letter",
+        "why": "Note: \"At most, 10 units of course work may be taken as credit/no credit.\""
+      },
+      {
+        "label": "CR/NC units in ECON 102A and 102B",
+        "maxUnits": 5,
+        "grading": "not-letter",
+        "codes": [
+          "ECON 102A",
+          "ECON 102B"
+        ],
+        "why": "Note: \"Between ECON 102A and ECON 102B, no more than 5 units can be taken for credit/no credit.\""
+      }
+    ]
+  },
+  "nodes": {
+    "OmvkSBaV": {
+      "why": "\"All students must take, without double counting, at least six courses for five units each toward the minor\". PUBLPOL 50 is offered for 4-5 units.",
+      "patch": {
+        "minUnitsEach": 5
+      }
+    },
+    "KrhozePb-5": {
+      "why": "\"at least six courses for five units each toward the minor\". PUBLPOL 103C is offered for 4-5 units.",
+      "patch": {
+        "minUnitsEach": 5
+      }
+    }
+  }
+}

@@ -1,0 +1,121 @@
+{
+  "code": "ITAL-PHD",
+  "reviewed": "2026-10-23",
+  "summary": "The audit checks the 135 graduate units, all in courses numbered 200 or above, DLCL 301 and DLCL 369 (letter graded where a letter grade is offered), at least 60 units of graduate ITALIAN courses, and five graduate ITALIAN courses on Italian literature and culture. Faculty expect a B+ or better and review lower grades, which the audit does not treat as failing. Checked by hand: a class of 5 or more units with each of three core Italian faculty, no independent study in the first year, the qualifying and field exams, candidacy, the University Oral, the dissertation and the language requirement.",
+  "nodes": {
+    "d8fLQwpk": {
+      "why": "\"students are granted considerable freedom in structuring a course of study ... Students are encouraged to take various courses\": no requirement.",
+      "patch": {
+        "info": true
+      }
+    },
+    "yLI3Ritm": {
+      "why": "\"The Qualifying Exam is an oral exam ... and takes place two weeks prior to the Autumn quarter of the second year\"",
+      "patch": {
+        "manual": "exam"
+      }
+    },
+    "jSRL2bPz": {
+      "why": "\"The Field Exam is an oral exam ... takes place in the Spring quarter of the second year\"",
+      "patch": {
+        "manual": "exam"
+      }
+    },
+    "GuXRW2nl": {
+      "why": "\"Although teaching is not a requirement for the degree\"",
+      "patch": {
+        "info": true
+      }
+    },
+    "cMgSmaWt": {
+      "why": "\"apply for candidacy by the end of the second year in residence ... Candidacy is determined by faculty vote.\"",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "jgS8EhRg": {
+      "why": "\"Students are expected to complete this milestone in the Winter quarter of their third year\"",
+      "patch": {
+        "manual": "exam"
+      }
+    },
+    "QmaZmWqf": {
+      "why": "\"Students are expected to submit the dissertation by the end of their fifth year in the program.\"",
+      "patch": {
+        "manual": "thesis"
+      }
+    },
+    "d9q6XzkT": {
+      "why": "\"students are required to achieve a high level of proficiency in one additional foreign language ... The language requirements must be completed by the end of the third year.\"",
+      "patch": {
+        "manual": "exam"
+      }
+    },
+    "Kfo2IWnq": {
+      "why": "Grading: \"PhD students in the department must take required courses for a letter grade if available\". The B+ is an expectation that faculty review (\"The grade stands, and the student's academic performance is monitored\"), not a floor.",
+      "patch": {
+        "letter": true
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "0GzLObTh",
+      "node": {
+        "id": "ov-italian-60",
+        "t": "courses",
+        "name": "60 units of ITALIAN courses",
+        "mode": "units",
+        "units": 60,
+        "pool": {
+          "subjects": [
+            "ITALIAN"
+          ],
+          "minNumber": 200
+        }
+      },
+      "why": "\"Students must take at least 60 units under the ITALIAN course designation.\" They are part of the 135 units, which \"must be at the graduate level\", so courses numbered 200 or above."
+    },
+    {
+      "block": "0GzLObTh",
+      "node": {
+        "id": "ov-five-courses",
+        "t": "courses",
+        "name": "Five graduate-level courses on Italian literature and culture",
+        "mode": "atLeast",
+        "n": 5,
+        "pool": {
+          "subjects": [
+            "ITALIAN"
+          ],
+          "minNumber": 200
+        },
+        "shares": true
+      },
+      "why": "\"A minimum of five graduate-level courses on Italian literature and culture are required.\" Counted among the ITALIAN units, so it shares them."
+    },
+    {
+      "block": "0GzLObTh",
+      "node": {
+        "id": "ov-graduate-professors",
+        "t": "text",
+        "name": "5+ units with each of three core Italian faculty",
+        "manual": "other"
+      },
+      "why": "\"All courses counted toward the 135-unit requirement for the Ph.D. must be at the graduate level ... Students must take classes from at least three different core members of the professoriate in Italian literature and culture. From each of these professors, students must take at least one class for at least 5 units.\" Neither level nor instructor is in the data."
+    }
+  ],
+  "program": {
+    "totals": [
+      {
+        "label": "Courses below the graduate level",
+        "maxUnits": 0,
+        "pool": {
+          "anySubject": true,
+          "maxNumber": 199
+        },
+        "why": "\"All courses counted toward the 135-unit requirement for the Ph.D. must be at the graduate level.\" Courses numbered below 200 do not count toward the 135 units."
+      }
+    ]
+  }
+}

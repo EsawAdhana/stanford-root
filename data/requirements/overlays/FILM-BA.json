@@ -1,0 +1,148 @@
+{
+  "code": "FILM-BA",
+  "reviewed": "2026-10-23",
+  "summary": "Every course must be letter graded. You take the foundation courses (ARTHIST 1A or 1B, and FILMEDIA 4 and 6 for 5 units each), FILMEDIA 101 and 102 (102 is also Writing in the Major) and two film history courses for at least 4 units each, one studio course, the FILMEDIA 290 capstone, and five subplan electives of at least 4 units, for 61 units. Culture and Criticism allows at most one FILMPROD course among its five, and Screenwriting needs at least one FILMEDIA course among its five. Your advisor approves your subplan electives and checks the library orientation, an Art History elective used in place of ARTHIST 1A or 1B, and courses taken away from Stanford (at most two). Honors adds 10 units of FILMEDIA 297, the 3.5 GPA overall and in the major, and an approved proposal and thesis.",
+  "program": {
+    "letterGrade": true,
+    "why": "Grading: \"All courses must be taken for a letter grade.\""
+  },
+  "nodes": {
+    "bekH2SGE": {
+      "why": "Notes: \"Both courses should be taken for four units.\"",
+      "patch": {
+        "minUnitsEach": 4
+      }
+    },
+    "BRKnBG9E": {
+      "why": "Notes: \"Both Film History courses must be taken for four units.\"",
+      "patch": {
+        "minUnitsEach": 4
+      }
+    },
+    "wBS79wH9": {
+      "why": "Notes: \"During their senior year, students enroll in two to five units of course - Honors Thesis Writing each quarter for a total of 10 units.\"",
+      "patch": {
+        "units": 10
+      }
+    },
+    "kLqVTsip": {
+      "why": "\"Subplan electives must be selected in consultation with, and approved by, the student's faculty advisor.\"",
+      "patch": {
+        "info": null,
+        "name": "Subplan electives approved by the faculty advisor",
+        "manual": "approval"
+      }
+    },
+    "MjWJ3JCy": {
+      "why": "\"Subplan electives must be selected in consultation with, and approved by, the student's faculty advisor.\"",
+      "patch": {
+        "info": null,
+        "name": "Subplan electives approved by the faculty advisor",
+        "manual": "approval"
+      }
+    },
+    "H1Ryhrl1": {
+      "why": "\"students must complete five additional FILMEDIA courses, taken for a minimum of 4 units each. Only one of the five courses may be a production-oriented course (FILMPROD).\"",
+      "patch": {
+        "minUnitsEach": 4,
+        "limits": [
+          {
+            "label": "production-oriented (FILMPROD) courses",
+            "max": 1,
+            "pool": {
+              "subjects": [
+                "FILMPROD"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "ZY3lPgny": {
+      "why": "\"students must complete five production-oriented (FILMPROD) elective courses, taken for a minimum of 4 units each. At least one of the five elective courses must be a FILMEDIA course.\" At least one FILMEDIA course is the same as at most four from other subjects.",
+      "patch": {
+        "minUnitsEach": 4,
+        "limits": [
+          {
+            "label": "courses other than FILMEDIA",
+            "max": 4,
+            "pool": {
+              "anySubject": true,
+              "excludeSubjects": [
+                "FILMEDIA"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "dSyY6Hbn": {
+      "why": "Foundation: \"Complete ALL of the following Courses: ARTHIST 1A OR ARTHIST 1B, FILMEDIA 4, FILMEDIA 6\", with the notes \"An Art History elective may be used instead of [ARTHIST 1A] or [ARTHIST 1B]\" and \"[FILMEDIA 4] and [FILMEDIA 6] must each be taken for five units.\" The page names the two courses through its course links (the rendered text reads \"course and course\"). The Art History elective in place of ARTHIST 1A or 1B is moved in by hand.",
+      "replace": {
+        "t": "all",
+        "name": "Foundation",
+        "children": [
+          {
+            "id": "ov-film-ba-arthist",
+            "t": "courses",
+            "name": "ARTHIST 1A or ARTHIST 1B",
+            "mode": "all",
+            "items": [
+              [
+                "ARTHIST 1A",
+                "ARTHIST 1B"
+              ]
+            ]
+          },
+          {
+            "id": "ov-film-ba-filmedia",
+            "t": "courses",
+            "name": "FILMEDIA 4 and FILMEDIA 6, 5 units each",
+            "mode": "all",
+            "items": [
+              [
+                "FILMEDIA 4"
+              ],
+              [
+                "FILMEDIA 6"
+              ]
+            ],
+            "minUnitsEach": 5
+          }
+        ]
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "UCEsNeEG",
+      "why": "Other requirements: \"library orientation, senior seminar\". The senior seminar is the capstone course; the library orientation is not a course, so it is checked by hand.",
+      "node": {
+        "id": "ov-film-ba-library",
+        "t": "text",
+        "name": "Library orientation",
+        "manual": "milestone"
+      }
+    },
+    {
+      "block": "CB3CwB9X",
+      "why": "\"The minimum requirement for admission to the honors program is an overall GPA of 3.5 and at least 3.5 in Film & Media Studies courses.\"",
+      "node": {
+        "id": "ov-film-ba-honors-gpa",
+        "t": "text",
+        "name": "GPA of 3.5 overall and in Film & Media Studies courses",
+        "manual": "gpa"
+      }
+    },
+    {
+      "block": "CB3CwB9X",
+      "why": "\"Candidates for the honors program must submit a five-page (double-spaced) thesis proposal\"; \"Students must submit the final draft of their honors thesis to their faculty advisor, the second faculty reader\".",
+      "node": {
+        "id": "ov-film-ba-honors-thesis",
+        "t": "text",
+        "name": "Approved thesis proposal and honors thesis",
+        "manual": "thesis"
+      }
+    }
+  ]
+}

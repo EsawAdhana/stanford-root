@@ -1,0 +1,777 @@
+{
+  "code": "COMMU-BA",
+  "reviewed": "2026-10-23",
+  "summary": "The audit checks a statistics course, COMM 1, 106 and 108, four area courses with at least one from each area, a WIM course (it can also be one of the area courses), a capstone, and 65 units in all, made up with any COMM electives plus up to 10 units from the pre-approved list in other departments. Every course needs a C- or better, and every COMM course a letter grade unless it is only offered S/NC. You check by hand the 2.0 GPA in major courses, petitioned courses, and for honors the 3.3 GPA in COMM courses, the application and the faculty recommendation.",
+  "program": {
+    "minGrade": "C-",
+    "why": "Grading: \"Only courses with a C- or above grade count towards the major.\" The 65-unit minimum now comes from the Bulletin's Minimum Units (Policies: \"you must complete at least 65 units (approximately 12 courses) toward the Communication major\")."
+  },
+  "nodes": {
+    "f4PtMxt9": {
+      "why": "\"Majors choose four area courses, taking at least one from each area. The Writing in the Major (WIM) course also fulfills one of the area course requirements.\" \"Select a total of four courses, at least one from each area.\" The data asked for one from each area only. Grading: \"Communication majors must receive a letter grade for all Communication courses unless they are offered only for satisfactory/no credit (S/NC).\"",
+      "replace": {
+        "t": "all",
+        "name": "Area Courses",
+        "children": [
+          {
+            "id": "PpbcY5S0",
+            "t": "courses",
+            "name": "Area I: Communication Processes and Effects",
+            "mode": "atLeast",
+            "n": 1,
+            "items": [
+              [
+                "COMM 124"
+              ],
+              [
+                "COMM 135W"
+              ],
+              [
+                "COMM 137W"
+              ],
+              [
+                "COMM 145"
+              ],
+              [
+                "COMM 162"
+              ],
+              [
+                "COMM 164"
+              ],
+              [
+                "COMM 166"
+              ],
+              [
+                "COMM 172"
+              ]
+            ],
+            "letter": true
+          },
+          {
+            "id": "V10ouUae",
+            "t": "courses",
+            "name": "Area II: Communication Systems and Institutions",
+            "mode": "atLeast",
+            "n": 1,
+            "items": [
+              [
+                "COMM 104W"
+              ],
+              [
+                "COMM 116"
+              ],
+              [
+                "COMM 120W"
+              ],
+              [
+                "COMM 125"
+              ],
+              [
+                "COMM 151"
+              ],
+              [
+                "COMM 152A"
+              ],
+              [
+                "COMM 154"
+              ],
+              [
+                "COMM 158"
+              ],
+              [
+                "COMM 173A"
+              ],
+              [
+                "COMM 177A"
+              ],
+              [
+                "COMM 177B"
+              ],
+              [
+                "COMM 177C"
+              ],
+              [
+                "COMM 177D"
+              ],
+              [
+                "COMM 177G"
+              ],
+              [
+                "COMM 177I"
+              ],
+              [
+                "COMM 177M"
+              ],
+              [
+                "COMM 177SW"
+              ],
+              [
+                "COMM 177T"
+              ],
+              [
+                "COMM 177Y"
+              ],
+              [
+                "COMM 178A"
+              ],
+              [
+                "COMM 184"
+              ],
+              [
+                "COMM 186W"
+              ]
+            ],
+            "letter": true
+          },
+          {
+            "id": "ov-area-more",
+            "t": "courses",
+            "name": "Two more area courses from either area",
+            "mode": "atLeast",
+            "n": 2,
+            "items": [
+              [
+                "COMM 124"
+              ],
+              [
+                "COMM 135W"
+              ],
+              [
+                "COMM 137W"
+              ],
+              [
+                "COMM 145"
+              ],
+              [
+                "COMM 162"
+              ],
+              [
+                "COMM 164"
+              ],
+              [
+                "COMM 166"
+              ],
+              [
+                "COMM 172"
+              ],
+              [
+                "COMM 104W"
+              ],
+              [
+                "COMM 116"
+              ],
+              [
+                "COMM 120W"
+              ],
+              [
+                "COMM 125"
+              ],
+              [
+                "COMM 151"
+              ],
+              [
+                "COMM 152A"
+              ],
+              [
+                "COMM 154"
+              ],
+              [
+                "COMM 158"
+              ],
+              [
+                "COMM 173A"
+              ],
+              [
+                "COMM 177A"
+              ],
+              [
+                "COMM 177B"
+              ],
+              [
+                "COMM 177C"
+              ],
+              [
+                "COMM 177D"
+              ],
+              [
+                "COMM 177G"
+              ],
+              [
+                "COMM 177I"
+              ],
+              [
+                "COMM 177M"
+              ],
+              [
+                "COMM 177SW"
+              ],
+              [
+                "COMM 177T"
+              ],
+              [
+                "COMM 177Y"
+              ],
+              [
+                "COMM 178A"
+              ],
+              [
+                "COMM 184"
+              ],
+              [
+                "COMM 186W"
+              ]
+            ],
+            "letter": true
+          }
+        ]
+      }
+    },
+    "bn3GMo1B": {
+      "why": "\"The remainder of the 65 required units may be fulfilled with any elective Communication courses, or a combination of communication courses and up to 10 units from a list of pre-approved courses in other departments (list below).\" The pre-approved list is rule ov-preapproved; petitioned courses are moved in by hand. The remainder depends on the other courses' units, so the 65 is program.unitsMin and this rule takes every COMM elective. Grading: \"Communication majors must receive a letter grade for all Communication courses unless they are offered only for satisfactory/no credit (S/NC).\"",
+      "replace": {
+        "t": "courses",
+        "name": "Communication Electives",
+        "mode": "any",
+        "pool": {
+          "subjects": [
+            "COMM"
+          ]
+        },
+        "letter": true
+      }
+    },
+    "yw5KHJK9": {
+      "why": "Overview; its requirements are the honors rules ov-honors-thesis, ov-honors-comm106, ov-honors-gpa and ov-honors-approval.",
+      "patch": {
+        "info": true
+      }
+    },
+    "qfp9l6JG": {
+      "why": "Grading: \"Communication majors must receive a letter grade for all Communication courses unless they are offered only for satisfactory/no credit (S/NC).\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "bxKN4kKz": {
+      "why": "Grading: \"Communication majors must receive a letter grade for all Communication courses unless they are offered only for satisfactory/no credit (S/NC).\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "BKaoKEji": {
+      "why": "Grading: \"Communication majors must receive a letter grade for all Communication courses unless they are offered only for satisfactory/no credit (S/NC).\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "z74hXF4W": {
+      "why": "Grading: \"Communication majors must receive a letter grade for all Communication courses unless they are offered only for satisfactory/no credit (S/NC).\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "HkAZZjB6": {
+      "why": "Grading: \"Communication majors must receive a letter grade for all Communication courses unless they are offered only for satisfactory/no credit (S/NC).\"",
+      "patch": {
+        "letter": true
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "zlo0PVj5",
+      "node": {
+        "id": "ov-preapproved",
+        "t": "courses",
+        "name": "Up to 10 units of pre-approved courses in other departments",
+        "mode": "any",
+        "optional": true,
+        "items": [
+          [
+            "AFRICAAM 113N"
+          ],
+          [
+            "AMSTUD 43X"
+          ],
+          [
+            "AMSTUD 111"
+          ],
+          [
+            "AMSTUD 113N"
+          ],
+          [
+            "AMSTUD 114X"
+          ],
+          [
+            "AMSTUD 120A"
+          ],
+          [
+            "AMSTUD 120B"
+          ],
+          [
+            "AMSTUD 123X"
+          ],
+          [
+            "AMSTUD 124A"
+          ],
+          [
+            "AMSTUD 129"
+          ],
+          [
+            "AMSTUD 145"
+          ],
+          [
+            "ANTHRO 162A"
+          ],
+          [
+            "ARCHLGY 123"
+          ],
+          [
+            "ARTHIST 120"
+          ],
+          [
+            "ARTHIST 152"
+          ],
+          [
+            "ARTHIST 264B"
+          ],
+          [
+            "ARTSTUDI 126"
+          ],
+          [
+            "ARTSTUDI 169"
+          ],
+          [
+            "ARTSTUDI 173E"
+          ],
+          [
+            "ARTSTUDI 173S"
+          ],
+          [
+            "ARTSTUDI 177"
+          ],
+          [
+            "ARTSTUDI 277A"
+          ],
+          [
+            "BUSGEN 115"
+          ],
+          [
+            "CS 24"
+          ],
+          [
+            "CS 105"
+          ],
+          [
+            "CS 106A"
+          ],
+          [
+            "CS 106B"
+          ],
+          [
+            "CS 147"
+          ],
+          [
+            "CS 181"
+          ],
+          [
+            "CS 278"
+          ],
+          [
+            "CS 347"
+          ],
+          [
+            "CS 547"
+          ],
+          [
+            "CSRE 141E"
+          ],
+          [
+            "EARTHSYS 149"
+          ],
+          [
+            "ECON 150"
+          ],
+          [
+            "EDUC 141"
+          ],
+          [
+            "EDUC 374"
+          ],
+          [
+            "ENGLISH 13P"
+          ],
+          [
+            "ENGLISH 90"
+          ],
+          [
+            "ENGLISH 90V"
+          ],
+          [
+            "ENGLISH 91"
+          ],
+          [
+            "ENGLISH 124"
+          ],
+          [
+            "FEMGEN 147"
+          ],
+          [
+            "FEMGEN 252"
+          ],
+          [
+            "FILMEDIA 4"
+          ],
+          [
+            "FILMEDIA 4S"
+          ],
+          [
+            "FILMEDIA 6"
+          ],
+          [
+            "FILMEDIA 114"
+          ],
+          [
+            "FILMEDIA 120"
+          ],
+          [
+            "FILMEDIA 129"
+          ],
+          [
+            "FILMEDIA 264B"
+          ],
+          [
+            "FILMEDIA 314"
+          ],
+          [
+            "FILMPROD 13AX"
+          ],
+          [
+            "FILMPROD 101"
+          ],
+          [
+            "FILMPROD 104"
+          ],
+          [
+            "FILMPROD 105"
+          ],
+          [
+            "FILMPROD 106"
+          ],
+          [
+            "FILMPROD 107"
+          ],
+          [
+            "FILMPROD 110"
+          ],
+          [
+            "FILMPROD 114"
+          ],
+          [
+            "HISTORY 13P"
+          ],
+          [
+            "HISTORY 151"
+          ],
+          [
+            "HISTORY 207F"
+          ],
+          [
+            "HISTORY 254G"
+          ],
+          [
+            "HISTORY 262A"
+          ],
+          [
+            "ITALIAN 302"
+          ],
+          [
+            "LAW 4053"
+          ],
+          [
+            "LINGUIST 35"
+          ],
+          [
+            "ME 101"
+          ],
+          [
+            "MTL 10"
+          ],
+          [
+            "MUSIC 8A"
+          ],
+          [
+            "MUSIC 13P"
+          ],
+          [
+            "OB 110N"
+          ],
+          [
+            "OSPFLOR 11"
+          ],
+          [
+            "OSPFLOR 33"
+          ],
+          [
+            "OSPFLOR 67"
+          ],
+          [
+            "OSPHONGK 41"
+          ],
+          [
+            "OSPKYOTO 55"
+          ],
+          [
+            "OSPOXFRD 54"
+          ],
+          [
+            "OSPPARIS 21"
+          ],
+          [
+            "OSPPARIS 30"
+          ],
+          [
+            "OSPPARIS 52"
+          ],
+          [
+            "OSPPARIS 72"
+          ],
+          [
+            "OSPSANTG 118X"
+          ],
+          [
+            "PHIL 99"
+          ],
+          [
+            "POLISCI 102"
+          ],
+          [
+            "POLISCI 124A"
+          ],
+          [
+            "POLISCI 241K"
+          ],
+          [
+            "POLISCI 334"
+          ],
+          [
+            "PSYCH 35"
+          ],
+          [
+            "PUBLPOL 101"
+          ],
+          [
+            "PUBLPOL 104"
+          ],
+          [
+            "RELIGST 3"
+          ],
+          [
+            "SINY 122"
+          ],
+          [
+            "SINY 130"
+          ],
+          [
+            "SINY 132"
+          ],
+          [
+            "SINY 146"
+          ],
+          [
+            "SOC 174"
+          ],
+          [
+            "SOC 374"
+          ],
+          [
+            "SUSTAIN 324"
+          ],
+          [
+            "SYMSYS 1"
+          ],
+          [
+            "TAPS 178C"
+          ]
+        ],
+        "limits": [
+          {
+            "label": "pre-approved courses in other departments",
+            "maxUnits": 10,
+            "codes": [
+              "AFRICAAM 113N",
+              "AMSTUD 43X",
+              "AMSTUD 111",
+              "AMSTUD 113N",
+              "AMSTUD 114X",
+              "AMSTUD 120A",
+              "AMSTUD 120B",
+              "AMSTUD 123X",
+              "AMSTUD 124A",
+              "AMSTUD 129",
+              "AMSTUD 145",
+              "ANTHRO 162A",
+              "ARCHLGY 123",
+              "ARTHIST 120",
+              "ARTHIST 152",
+              "ARTHIST 264B",
+              "ARTSTUDI 126",
+              "ARTSTUDI 169",
+              "ARTSTUDI 173E",
+              "ARTSTUDI 173S",
+              "ARTSTUDI 177",
+              "ARTSTUDI 277A",
+              "BUSGEN 115",
+              "CS 24",
+              "CS 105",
+              "CS 106A",
+              "CS 106B",
+              "CS 147",
+              "CS 181",
+              "CS 278",
+              "CS 347",
+              "CS 547",
+              "CSRE 141E",
+              "EARTHSYS 149",
+              "ECON 150",
+              "EDUC 141",
+              "EDUC 374",
+              "ENGLISH 13P",
+              "ENGLISH 90",
+              "ENGLISH 90V",
+              "ENGLISH 91",
+              "ENGLISH 124",
+              "FEMGEN 147",
+              "FEMGEN 252",
+              "FILMEDIA 4",
+              "FILMEDIA 4S",
+              "FILMEDIA 6",
+              "FILMEDIA 114",
+              "FILMEDIA 120",
+              "FILMEDIA 129",
+              "FILMEDIA 264B",
+              "FILMEDIA 314",
+              "FILMPROD 13AX",
+              "FILMPROD 101",
+              "FILMPROD 104",
+              "FILMPROD 105",
+              "FILMPROD 106",
+              "FILMPROD 107",
+              "FILMPROD 110",
+              "FILMPROD 114",
+              "HISTORY 13P",
+              "HISTORY 151",
+              "HISTORY 207F",
+              "HISTORY 254G",
+              "HISTORY 262A",
+              "ITALIAN 302",
+              "LAW 4053",
+              "LINGUIST 35",
+              "ME 101",
+              "MTL 10",
+              "MUSIC 8A",
+              "MUSIC 13P",
+              "OB 110N",
+              "OSPFLOR 11",
+              "OSPFLOR 33",
+              "OSPFLOR 67",
+              "OSPHONGK 41",
+              "OSPKYOTO 55",
+              "OSPOXFRD 54",
+              "OSPPARIS 21",
+              "OSPPARIS 30",
+              "OSPPARIS 52",
+              "OSPPARIS 72",
+              "OSPSANTG 118X",
+              "PHIL 99",
+              "POLISCI 102",
+              "POLISCI 124A",
+              "POLISCI 241K",
+              "POLISCI 334",
+              "PSYCH 35",
+              "PUBLPOL 101",
+              "PUBLPOL 104",
+              "RELIGST 3",
+              "SINY 122",
+              "SINY 130",
+              "SINY 132",
+              "SINY 146",
+              "SOC 174",
+              "SOC 374",
+              "SUSTAIN 324",
+              "SYMSYS 1",
+              "TAPS 178C"
+            ]
+          }
+        ]
+      },
+      "why": "\"a combination of communication courses and up to 10 units from a list of pre-approved courses in other departments (list below).\" Optional: these units count toward the 65 but are not required."
+    },
+    {
+      "block": "sPTL1QgC",
+      "node": {
+        "id": "ov-honors-thesis",
+        "t": "courses",
+        "name": "15 units of honors thesis (COMM 195)",
+        "mode": "units",
+        "units": 15,
+        "items": [
+          [
+            "COMM 195"
+          ]
+        ],
+        "shares": true,
+        "letter": true
+      },
+      "why": "\"Working one-on-one with a faculty advisor, seniors earn 15 Communication units culminating in an honors thesis.\" The honors thesis course is COMM 195 (Capstone: \"Students may complete an honors thesis in Communication (COMM 195)\"). \"Honors work may be used to fulfill Communication elective credit\", so it shares. Grading: \"Communication majors must receive a letter grade for all Communication courses unless they are offered only for satisfactory/no credit (S/NC).\""
+    },
+    {
+      "block": "sPTL1QgC",
+      "node": {
+        "id": "ov-honors-comm106",
+        "t": "courses",
+        "name": "B+ or better in COMM 106",
+        "mode": "all",
+        "items": [
+          [
+            "COMM 106"
+          ]
+        ],
+        "minGrade": "B+",
+        "shares": true,
+        "letter": true
+      },
+      "why": "\"Receive a grade of B+ or better in course Communication Research Methods (see Core Program Requirements > Core Courses)\". COMM 106 is the core course, so it shares. Grading: \"Communication majors must receive a letter grade for all Communication courses unless they are offered only for satisfactory/no credit (S/NC).\""
+    },
+    {
+      "block": "sPTL1QgC",
+      "node": {
+        "id": "ov-honors-gpa",
+        "t": "text",
+        "name": "GPA of 3.3 in Communication courses",
+        "manual": "gpa"
+      },
+      "why": "\"Achieve a GPA of 3.3 in Communication courses\" \"Maintain a distinguished GPA in all communication coursework\""
+    },
+    {
+      "block": "sPTL1QgC",
+      "node": {
+        "id": "ov-honors-approval",
+        "t": "text",
+        "name": "Honors application, tenure-line advisor and faculty recommendation",
+        "manual": "approval"
+      },
+      "why": "\"Select an advisor; only tenured or tenure-track faculty can be advisors for an honors thesis in Communication\" \"Submit an application to the department by the end of their junior year\" \"Are recommended by the Communication faculty.\""
+    },
+    {
+      "block": "u5tdNXbW",
+      "node": {
+        "id": "ov-gpa",
+        "t": "text",
+        "name": "GPA of 2.0 in courses toward the major",
+        "manual": "gpa"
+      },
+      "why": "GPA: \"Communication Majors must maintain a grade point average (GPA) of 2.0 (C) in courses towards the major.\""
+    }
+  ]
+}

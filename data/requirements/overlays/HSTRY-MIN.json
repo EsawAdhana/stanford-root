@@ -1,0 +1,76 @@
+{
+  "code": "HSTRY-MIN",
+  "reviewed": "2026-10-23",
+  "summary": "The audit checks six HISTORY courses and 18 units, each taken for 3-5 units and a letter grade, with at most one HISTORY 299S. Checked by hand: that three of the six share a field or thematic focus, that two are small-group courses, the 2.0 GPA in History courses, and petitions for a 1-unit History course or one outside course (at most 5 units). AP credit does not count, and at most three transfer courses may.",
+  "blocks": {
+    "HmMFZCm5": {
+      "kind": "required"
+    }
+  },
+  "nodes": {
+    "bcolXsxO": {
+      "why": "\"Candidates for the minor in history must complete six courses, at least three of which must have a field or thematic focus.\" \"Two of the six courses must be in small-group format (Stanford Introductory Seminars, Sources and Methods Seminars, departmental colloquia, and research seminars).\" \"At least five courses must be taken from the Stanford Department of History and carry the HISTORY designation or ... be courses that the Stanford History Department has officially cross-listed.\" \"the required minimum 18-unit count\". The focus and the small-group format are checked by hand among the same six courses. Grading: \"Courses counting toward the minor must be taken for 3-5 units and a letter grade.\" \"One Undergraduate Directed Research and Writing (course) course may count toward the minor if taken for 3-5 units and a letter grade.\" Petitioned 1-unit HISTORY courses and the one petitioned course from outside the department (Policies: \"A maximum of 5 units of history-related coursework taken outside of the department may be petitioned\") are moved in by hand.",
+      "replace": {
+        "t": "all",
+        "name": "Minor requirements",
+        "children": [
+          {
+            "id": "ov-hstry-min-courses",
+            "t": "courses",
+            "name": "Six courses (at least five HISTORY), 18 units",
+            "mode": "atLeast",
+            "n": 6,
+            "units": 18,
+            "pool": {
+              "subjects": [
+                "HISTORY"
+              ]
+            },
+            "minUnitsEach": 3,
+            "limits": [
+              {
+                "label": "HISTORY 299S",
+                "max": 1,
+                "codes": [
+                  "HISTORY 299S"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "ov-hstry-min-focus",
+            "t": "text",
+            "name": "Three of the six with a field or thematic focus",
+            "n": 3,
+            "manual": "approval",
+            "shares": true
+          },
+          {
+            "id": "ov-hstry-min-small",
+            "t": "text",
+            "name": "Two of the six in small-group format",
+            "n": 2,
+            "manual": "approval",
+            "shares": true
+          }
+        ]
+      }
+    }
+  },
+  "program": {
+    "letterGrade": true,
+    "why": "Grading: \"Courses counting toward the minor must be taken for 3-5 units and a letter grade.\""
+  },
+  "add": [
+    {
+      "block": "HmMFZCm5",
+      "why": "GPA: \"The student must maintain a grade point average (GPA) in History courses of 2.0 (C) or higher.\"",
+      "node": {
+        "id": "ov-hstry-min-gpa",
+        "t": "text",
+        "name": "GPA of 2.0 (C) or higher in History courses",
+        "manual": "gpa"
+      }
+    }
+  ]
+}

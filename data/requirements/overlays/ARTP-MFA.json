@@ -1,0 +1,81 @@
+{
+  "code": "ARTP-MFA",
+  "reviewed": "2026-10-23",
+  "summary": "The audit checks six quarters of ARTSTUDI 342 tutorials, four each of the ARTSTUDI 342A and 342B seminars and two of 342C (letter graded), and 48 units taken at Stanford. You move in the three DGS-approved 4-unit electives from year one; at least one must be in Art History, Film and Media Studies, or art theory and criticism, which the audit checks for ARTHIST and FILMEDIA courses. The 3.0 GPA each quarter (with a B or better, or S, expected in every required course), the summer plan, the four faculty reviews, six quarters of teaching and the thesis are checked by hand.",
+  "blocks": {
+    "freeform": { "name": "Elective Requirements", "why": "The page's free-form section is headed \"Elective Requirements\"." }
+  },
+  "nodes": {
+    "freeform-text": {
+      "why": "\"Of the three electives taken during the first year, at least one must be selected from Art History (ARTHIST), Film and Media Studies (FILMEDIA), or Art Theory & Criticism. Students are expected to consult first with Art History faculty and obtain approval from the Director of Graduate Studies (DGS) before enrolling\". One of the three year-one electives (rule ov-artpmfa-electives), so it shares. Art Theory & Criticism has no subject code; such a course is moved in by hand.",
+      "replace": {
+        "t": "courses",
+        "name": "One year-one elective in Art History (ARTHIST), Film and Media Studies (FILMEDIA), or Art Theory & Criticism",
+        "mode": "atLeast",
+        "n": 1,
+        "shares": true,
+        "pool": { "subjects": ["ARTHIST", "FILMEDIA"] }
+      }
+    },
+    "cqROHFhY": {
+      "why": "\"Six quarters (minimum of 36 units), which includes one seminar in the spring (ARTSTUDI342C) and two in the autumn and in the winter (ARTSTUDI342A and ARTSTUDI342B). In addition students are required to enroll in quarterly individual tutorials with a selected member of the faculty (ARTSTUDI342). All seminars must be taken for a letter grade.\" The term notes say \"All courses should be taken once in autumn and again in winter\" and year one adds \"one elective course each quarter for four units approved by the DGS\".",
+      "replace": {
+        "t": "all",
+        "name": "Course Requirement (36 units over six quarters)",
+        "units": 36,
+        "children": [
+          {
+            "id": "ov-artpmfa-tutorial",
+            "t": "courses",
+            "name": "ARTSTUDI 342 tutorial each quarter (six quarters)",
+            "mode": "all",
+            "items": [["ARTSTUDI 342"], ["ARTSTUDI 342"], ["ARTSTUDI 342"], ["ARTSTUDI 342"], ["ARTSTUDI 342"], ["ARTSTUDI 342"]]
+          },
+          {
+            "id": "ov-artpmfa-seminars",
+            "t": "courses",
+            "name": "Seminars: ARTSTUDI 342A and 342B each autumn and winter, 342C each spring (letter grade)",
+            "mode": "all",
+            "letter": true,
+            "items": [["ARTSTUDI 342A"], ["ARTSTUDI 342A"], ["ARTSTUDI 342A"], ["ARTSTUDI 342A"], ["ARTSTUDI 342B"], ["ARTSTUDI 342B"], ["ARTSTUDI 342B"], ["ARTSTUDI 342B"], ["ARTSTUDI 342C"], ["ARTSTUDI 342C"]]
+          },
+          {
+            "id": "ov-artpmfa-electives",
+            "t": "text",
+            "name": "Year one: one 4-unit elective each quarter, approved by the DGS",
+            "n": 3,
+            "manual": "approval"
+          }
+        ]
+      }
+    },
+    "Dumu7AZg": {
+      "why": "\"Six quarters (minimum of 36 units) ... All seminars must be taken for a letter grade.\" Encoded in the Course Requirement rule above.",
+      "patch": { "info": true }
+    },
+    "CTPrS4sC": {
+      "why": "\"The student is expected to pass four formal academic reviews conducted by the faculty.\"",
+      "patch": { "manual": "milestone" }
+    },
+    "ZfJ67rMC": {
+      "why": "\"All students are required to complete a total of 6 quarters of teaching experience during their time in the program.\"",
+      "patch": { "manual": "milestone" }
+    },
+    "4NIEwqJg": {
+      "why": "\"The MFA thesis consists of two components: an exhibition presented at the end of the sixth quarter and a written thesis ... must be approved by the faculty thesis committee.\"",
+      "patch": { "manual": "thesis" }
+    }
+  },
+  "add": [
+    {
+      "block": "mAbEGmbJ",
+      "why": "GPA: \"Students must maintain a 3.0 grade point average in courses applicable to the degree each quarter.\" Grading: \"Students are expected to earn a grade of “B” or higher (or “S” in courses graded on an S/NC basis) in all courses required for the degree. Failure to meet this standard may result in academic probation or dismissal from the program.\" A lower grade leads to probation, not to the course not counting, so it is checked with the GPA.",
+      "node": { "id": "ov-gpa", "t": "text", "name": "GPA of 3.0 each quarter, with a B or better (or S) expected in every required course", "manual": "gpa" }
+    },
+    {
+      "block": "mAbEGmbJ",
+      "why": "Policies: \"Graduate students are expected to be in residence at Stanford for the duration of the MFA program, and submit a summer plan to the DGS by the end of the spring quarter in the first year of study.\"",
+      "node": { "id": "ov-summer-plan", "t": "text", "name": "Summer plan submitted to the DGS by the end of spring quarter of the first year", "manual": "milestone" }
+    }
+  ]
+}

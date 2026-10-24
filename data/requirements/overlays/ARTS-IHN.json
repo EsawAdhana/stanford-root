@@ -1,0 +1,30 @@
+{
+  "code": "ARTS-IHN",
+  "reviewed": "2026-10-23",
+  "summary": "The audit checks the Honors in the Arts workshop in all three quarters of senior year (ARTSINST 201A, 201B and 201C, 2 to 5 units each, letter graded), with an A- or better in ARTSINST 201C, the honors project. You move in the three preparation courses and check the honors project and its critical framing by hand.",
+  "program": {
+    "letterGrade": true,
+    "why": "Grading: \"All honors courses must be taken for a letter grade.\""
+  },
+  "nodes": {
+    "905xgbuD": {
+      "why": "Other requirements: \"During senior year, students must enroll in the Honors in the Arts Workshop (ARTSINST 201A,B,C) in all three quarters. Students may enroll in the workshop for a range of 2-5 units each quarter.\" Grading: \"Honors Project must receive a grade of “A-” or better to receive honors (ARTSINST 201C).\"",
+      "replace": {
+        "t": "all",
+        "name": "Thesis Workshop Sequence",
+        "children": [
+          { "id": "ov-artsihn-201ab", "t": "courses", "name": "ARTSINST 201A and 201B", "mode": "all", "minUnitsEach": 2, "items": [["ARTSINST 201A"], ["ARTSINST 201B"]] },
+          { "id": "ov-artsihn-201c", "t": "courses", "name": "ARTSINST 201C, the honors project, with an A- or better", "mode": "all", "minUnitsEach": 2, "minGrade": "A-", "items": [["ARTSINST 201C"]] }
+        ]
+      }
+    },
+    "0jB1rOXZ": {
+      "why": "\"To qualify for admission, students must identify three courses, at least two of which must be completed by the end of junior year, that have provided the necessary foundation for the honors project.\"",
+      "patch": { "n": 3, "manual": "approval" }
+    },
+    "12YkhvTR": {
+      "why": "\"Through a yearlong process, students develop a creative thesis project\" and \"Students must receive at least an 'A-' on the project and its critical framing.\" Workshop sequence text: \"Each Spring, students present their honors projects at a public exhibition and online symposium.\"",
+      "patch": { "manual": "thesis" }
+    }
+  }
+}

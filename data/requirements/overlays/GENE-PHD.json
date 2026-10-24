@@ -1,0 +1,49 @@
+{
+  "code": "GENE-PHD",
+  "reviewed": "2026-10-23",
+  "summary": "The audit checks the 135 graduate units, research included, the eight core and statistics courses (one of EPI 259, STATS 112 or STATS 141 for statistics), one computational course, at least one elective and 28 units from these departmental courses. Any course may be taken S/NC. Checked by hand: a first-author paper, the qualifying exam, committee meetings and 60 hours of community service. Electives off the listed examples, and substitutions the Graduate Program Director approves, are added by hand.",
+  "blocks": {
+    "eUTE1jey": {
+      "units": 28
+    }
+  },
+  "nodes": {
+    "drmjtQwm": {
+      "why": "\"students must complete a minimum of 28 units from the required departmental courses\" (now the block's unit floor) and \"Stanford University mandates that students earn a total of 135 units for the PhD degree\" (the program's minimum). The rest is description.",
+      "patch": {
+        "info": true
+      }
+    },
+    "dbU5d72c": {
+      "why": "\"Core & Statistics Requirements\" are \"the required departmental courses\"; the statistics options are one slot (EPI 259, STATS 112 or STATS 141). Notes: \"If a student has taken a computational course in the past then that is one less course they need to take. Their total course load would be 10 classes\": eight core courses, the computational course and electives. The data asked for one course.",
+      "patch": {
+        "mode": "all",
+        "n": null
+      }
+    },
+    "YtXXMDa0": {
+      "why": "\"All students are required to submit a first author paper by the time they graduate.\"",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "NVsw7TCz": {
+      "why": "\"All students must pass their qualifying exam in the autumn quarter of their second year.\"",
+      "patch": {
+        "manual": "exam"
+      }
+    },
+    "qQJ4wssa": {
+      "why": "\"students must assemble their thesis reading committee and hold their first meeting ... committee meetings must be held every 12 months\"",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "Kyes1arX": {
+      "why": "\"Complete 60 hours of community service.\"",
+      "patch": {
+        "manual": "other"
+      }
+    }
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "code": "ITAL-PMN",
+  "reviewed": "2026-10-23",
+  "summary": "The audit checks 24 units of ITALIAN courses numbered 200 or above, taken for a letter grade where one is offered (ITALLANG courses do not count). Faculty expect a B+ or better and review lower grades. Choosing the courses with the Chair of Graduate Studies is checked by hand.",
+  "blocks": {
+    "OFu1Cfdg": {
+      "kind": "required"
+    }
+  },
+  "nodes": {
+    "F25oQ4Gw": {
+      "why": "\"Student must complete a minimum of 24 units of ITALIAN 200+ level coursework to fulfill PhD Minor requirements, and must consult with the Chair of Graduate Studies when selecting courses. / ITALLANG courses do not count toward the Italian PhD Minor.\" Grading: \"PhD students in the department must take required courses for a letter grade if available\". The B+ is an expectation that faculty review (\"The grade stands, and the student's academic performance is monitored\"), not a floor.",
+      "replace": {
+        "t": "all",
+        "name": "PhD Minor Requirements",
+        "children": [
+          {
+            "id": "ov-units",
+            "t": "courses",
+            "name": "24 units of ITALIAN 200+ coursework",
+            "mode": "units",
+            "units": 24,
+            "pool": {
+              "subjects": [
+                "ITALIAN"
+              ],
+              "minNumber": 200
+            },
+            "letter": true
+          },
+          {
+            "id": "ov-consult",
+            "t": "text",
+            "name": "Courses selected with the Chair of Graduate Studies",
+            "manual": "approval"
+          }
+        ]
+      }
+    }
+  }
+}

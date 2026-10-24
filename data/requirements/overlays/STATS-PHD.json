@@ -1,0 +1,191 @@
+{
+  "code": "STATS-PHD",
+  "reviewed": "2026-10-23",
+  "summary": "You take the twelve first-year core courses for a letter grade, STATS 319 and STATS 390 twice each, and depth (three advanced STATS courses) and breadth (three courses outside Statistics) courses totaling 24 units, toward 135 units. The qualifying exams, the dissertation proposal meeting, four quarters of teaching, candidacy, your 3.0 GPA, the oral exam and the dissertation are checked by hand.",
+  "nodes": {
+    "1iNaTsC9": {
+      "why": "\"All first-year courses must be taken for a letter grade where offered.\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "nSwZ43xS": {
+      "why": "\"successfully complete the following: two offerings each of Stats 319 and Stats 390 (typically second and third years)\". Both are 1-unit repeatable courses; the 9-unit figure is not in the text.",
+      "patch": {
+        "items": [
+          [
+            "STATS 319"
+          ],
+          [
+            "STATS 319"
+          ],
+          [
+            "STATS 390"
+          ],
+          [
+            "STATS 390"
+          ]
+        ],
+        "units": null
+      }
+    },
+    "GRNGPDZR": {
+      "why": "Moved into the 24-unit depth and breadth group below.",
+      "remove": true
+    },
+    "ZMC2BWNS": {
+      "why": "Moved into the 24-unit depth and breadth group below.",
+      "remove": true
+    },
+    "mhgENcxi": {
+      "why": "\"The meeting must be successfully completed by the end of winter quarter of the third year.\"",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "tVRfOFj2": {
+      "why": "\"All students are required to satisfactorily complete at least four academic quarters of teaching experience by the end of their fourth year in the program\"",
+      "patch": {
+        "manual": "milestone",
+        "name": "Teaching (four quarters)"
+      }
+    },
+    "TZ6SY02N": {
+      "why": "\"Students are expected to complete qualifying procedures and apply for candidacy by the final study list deadline for spring quarter of the second year.\"",
+      "patch": {
+        "manual": "milestone",
+        "name": "Advancement to Candidacy"
+      }
+    },
+    "AeggPOTr": {
+      "why": "\"the oral exam is a defense of the dissertation presented upon the completion of a substantial portion of the dissertation.\"",
+      "patch": {
+        "manual": "exam",
+        "name": "University Oral Examination"
+      }
+    },
+    "IpSXqu1o": {
+      "why": "\"Students are required to submit an approved dissertation that makes an original contribution to scholarship\"",
+      "patch": {
+        "manual": "thesis",
+        "name": "Dissertation"
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "iCWYohkY",
+      "node": {
+        "id": "ov-depth-breadth",
+        "t": "all",
+        "name": "Depth and breadth (24 units combined)",
+        "units": 24,
+        "children": [
+          {
+            "id": "GRNGPDZR",
+            "t": "courses",
+            "name": "Depth Requirement",
+            "mode": "atLeast",
+            "n": 3,
+            "units": 9,
+            "items": [
+              [
+                "STATS 307"
+              ],
+              [
+                "STATS 311"
+              ],
+              [
+                "STATS 314A"
+              ],
+              [
+                "STATS 315A"
+              ],
+              [
+                "STATS 317"
+              ],
+              [
+                "STATS 318"
+              ],
+              [
+                "STATS 320"
+              ],
+              [
+                "STATS 322"
+              ],
+              [
+                "STATS 325"
+              ],
+              [
+                "STATS 354"
+              ],
+              [
+                "STATS 357"
+              ],
+              [
+                "STATS 361"
+              ],
+              [
+                "STATS 362"
+              ],
+              [
+                "STATS 363"
+              ],
+              [
+                "STATS 370"
+              ],
+              [
+                "EE 364A"
+              ],
+              [
+                "EE 364B"
+              ]
+            ],
+            "notes": "Students must complete a depth requirement consisting of a minimum of three courses (minimum nine units) of advanced topics courses offered by the department. Courses may be taken for a letter grade or credit. Courses for the depth and breadth requirements must equal a combined minimum of 24 units, i.e. the final two courses (minimum six units) can be either depth or breadth. Recommended advanced topics courses include, but are not limited to, those listed above."
+          },
+          {
+            "id": "ZMC2BWNS",
+            "t": "courses",
+            "name": "Breadth Requirement",
+            "mode": "atLeast",
+            "n": 3,
+            "units": 9,
+            "pool": {
+              "anySubject": true,
+              "subjects": [],
+              "excludeSubjects": [
+                "STATS"
+              ]
+            },
+            "notes": "Students must take at least three courses (minimum nine units) outside the department. Courses may be taken for a letter grade or credit. They are advised to choose an area of concentration in a specific scientific field of statistical applications approved by their PhD program advisor. Courses for the depth and breadth requirements must equal a combined minimum of 24 units units, i.e. the final two courses (minimum six units) can be either depth or breadth.\nPopular areas include Computational Biology and Statistical Genomics, Machine Learning, Applied Probability, Earth Science Statistics, and Social and Behavioral Sciences."
+          }
+        ]
+      },
+      "why": "Depth: \"a minimum of three courses (minimum nine units) of advanced topics courses offered by the department ... Recommended advanced topics courses include, but are not limited to, those listed above\" (others are moved in). Breadth: \"at least three courses (minimum nine units) outside the department. Courses may be taken for a letter grade or credit.\" Both: \"Courses for the depth and breadth requirements must equal a combined minimum of 24 units, i.e. the final two courses (minimum six units) can be either depth or breadth.\" The group floor checks the 24 units; the last six can be depth or breadth courses."
+    },
+    {
+      "block": "iCWYohkY",
+      "node": {
+        "id": "ov-qualifying-exams",
+        "t": "text",
+        "name": "Qualifying examinations (pass two of three)",
+        "manual": "exam"
+      },
+      "why": "\"pass two of three parts of the qualifying examinations (end of the first year)\". \"Students are expected to receive a passing score in two of the three examinations.\""
+    },
+    {
+      "block": "iCWYohkY",
+      "why": "GPA: \"Graduate students must maintain an overall GPA of at least 3.0 to graduate and remain in good standing.\"",
+      "node": {
+        "id": "ov-gpa",
+        "t": "text",
+        "manual": "gpa",
+        "name": "Overall GPA of 3.0"
+      }
+    }
+  ],
+  "program": {
+    "unitsMin": 135,
+    "why": "Transfer and AP credit: \"Students who have completed graduate coursework at another accredited institution are encouraged to transfer course units towards the 135 required for the PhD\". The Bulletin's 62-unit figure is below the university's PhD minimum the text names."
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "code": "RELST-MA",
+  "reviewed": "2026-10-23",
+  "summary": "You take RELIGST 290 and eight more graduate courses (numbered 200 and above), at most two from other departments, for at least 45 units, each letter graded A or B. At most 10 units of directed reading (RELIGST 389) count. The Director of Graduate Studies' approval of your course plan, and the all-department rule for students whose preparation is judged inadequate, are checked by hand.",
+  "program": {
+    "letterGrade": true,
+    "minGrade": "B-",
+    "why": "Overview: \"The department does not recognize for credit toward the MA degree any work that has not received a grade of A or B.\"",
+    "totals": [
+      {
+        "label": "Directed reading at the 300 level",
+        "maxUnits": 10,
+        "codes": [
+          "RELIGST 389"
+        ],
+        "why": "\"Directed reading at the 300 level may be counted for a maximum of ten units.\" RELIGST 389 is Individual Work for Graduate Students."
+      }
+    ]
+  },
+  "blocks": {
+    "mAbEGmbJ": {
+      "units": 45
+    }
+  },
+  "add": [
+    {
+      "block": "mAbEGmbJ",
+      "node": {
+        "id": "ov-graduate-courses",
+        "t": "courses",
+        "name": "Eight more graduate courses (200 and above)",
+        "mode": "atLeast",
+        "n": 8,
+        "pool": {
+          "subjects": [
+            "RELIGST"
+          ],
+          "minNumber": 200
+        },
+        "limits": [
+          {
+            "label": "courses in other departments",
+            "max": 2,
+            "pool": {
+              "anySubject": true,
+              "excludeSubjects": [
+                "RELIGST"
+              ]
+            }
+          }
+        ]
+      },
+      "why": "\"The department requires the completion of nine courses (totaling not less than 45 units) of graduate work (courses numbered 200 and above); seven courses of this work must be Department of Religious Studies courses.\" With RELIGST 290 that is nine. \"Advanced and graduate courses in other departments may be taken with the approval of the advisor and the DGS\", so those are moved in, at most two."
+    },
+    {
+      "block": "mAbEGmbJ",
+      "node": {
+        "id": "ov-plan-approval",
+        "t": "text",
+        "name": "Course plan approved by the Director of Graduate Studies",
+        "manual": "approval"
+      },
+      "why": "\"The student’s plan of courses is subject to approval by the Director of Graduate Studies (DGS).\""
+    }
+  ]
+}

@@ -1,0 +1,89 @@
+{
+  "code": "CSB-PHD",
+  "reviewed": "2026-10-23",
+  "summary": "In your first two years you take the listed required courses (with CSB 270 in the fall, winter and spring of years one and two), one chemical biology course, two CSB electives and one more elective. Each of these must be letter graded with a B- or better when a letter grade is offered; courses offered only S/NC, like CSB 399 research, count as they are. You need 135 units in all, and external credit is not accepted. An elective the Student Advisory Committee approves, or a writing course in place of BIOS 242 once you hold a fellowship, is moved in by hand. You check by hand the university's PhD requirements (described under Graduate Degrees, including the thesis defense), the quarterly ethics discussion and the accepted first-author article.",
+  "nodes": {
+    "sseYR6eb": {
+      "why": "A heading whose only text is the grading note: \"Normally, if a course has the option to be taken as a letter grade, the student must take the course as a letter grade and receive a B- or better to have the course count towards the CSB PhD requirements.\" The note is on each course rule.",
+      "patch": {
+        "info": true
+      }
+    },
+    "zrCPBlZB": {
+      "why": "Grading: \"If a course has the option to be taken as a letter grade, the student must take the course as a letter grade and receive a B- or better to have the course count towards the CSB PhD requirements.\" It is on the course rules, not the program, so S/NC and lower-graded units still count toward the 135.",
+      "patch": {
+        "letter": true,
+        "minGrade": "B-"
+      }
+    },
+    "58xRXMal": {
+      "why": "Grading: \"the student must take the course as a letter grade and receive a B- or better to have the course count towards the CSB PhD requirements.\" Notes: \"CSB 270: Research Seminar (Fall, Winter, and Spring) / To be taken fall, winter, and spring of years one and two\": six enrollments, one in Required Courses and five here.",
+      "patch": {
+        "letter": true,
+        "minGrade": "B-",
+        "addItems": [
+          [
+            "CSB 270"
+          ],
+          [
+            "CSB 270"
+          ],
+          [
+            "CSB 270"
+          ],
+          [
+            "CSB 270"
+          ]
+        ]
+      }
+    },
+    "DQJQtuNb": {
+      "why": "Grading: \"the student must take the course as a letter grade and receive a B- or better to have the course count towards the CSB PhD requirements.\"",
+      "patch": {
+        "letter": true,
+        "minGrade": "B-"
+      }
+    },
+    "Ku7478j3": {
+      "why": "Grading: \"the student must take the course as a letter grade and receive a B- or better to have the course count towards the CSB PhD requirements.\"",
+      "patch": {
+        "letter": true,
+        "minGrade": "B-"
+      }
+    },
+    "M99KUpnJ": {
+      "why": "Grading: \"the student must take the course as a letter grade and receive a B- or better to have the course count towards the CSB PhD requirements.\"",
+      "patch": {
+        "letter": true,
+        "minGrade": "B-"
+      }
+    },
+    "z7Hb3Ojj": {
+      "why": "\"Chemical and Systems Biology has required departmental milestones: The quarterly ethics discussion is required for first and second-year students; By the time a student is scheduling their thesis defense, the student's first-author research article should be accepted for publication\" The section opens \"In addition to the university requirements for the PhD described in Graduate Degrees\", and the page names no oral exam or dissertation rule of its own, so those university requirements are one check by hand (z7Hb3Ojj-university).",
+      "replace": {
+        "t": "all",
+        "name": "Departmental Milestones",
+        "children": [
+          {
+            "id": "z7Hb3Ojj-university",
+            "t": "text",
+            "name": "University requirements for the PhD (see Graduate Degrees), including the thesis defense",
+            "manual": "milestone"
+          },
+          {
+            "id": "z7Hb3Ojj-ethics",
+            "t": "text",
+            "name": "Quarterly ethics discussion (first and second year)",
+            "manual": "milestone"
+          },
+          {
+            "id": "z7Hb3Ojj-article",
+            "t": "text",
+            "name": "First-author research article accepted before scheduling the thesis defense",
+            "manual": "milestone"
+          }
+        ]
+      }
+    }
+  }
+}

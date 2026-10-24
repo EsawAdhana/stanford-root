@@ -1,0 +1,95 @@
+{
+  "code": "EPS-MS",
+  "reviewed": "2026-10-23",
+  "summary": "You need 45 graduate units: three letter-graded courses numbered 200 or above (9 units) in your first year, 6 more letter-graded graduate units, and 30 units of EPS 400 research or other letter-graded graduate courses; only EPS 400 may be taken without a letter grade. Your advisor checks the 3.0 GPA and that first-year courses are taught by Academic Council faculty, two of them by different EPS faculty, and the department records the MS proposal, the TA appointment, the reading committee and the thesis.",
+  "nodes": {
+    "ZENif6Xz": {
+      "why": "\"All first-year M.S. students must complete a minimum of three letter-graded graduate-level courses (200-level or above), totaling at least 9 units ... By the time of graduation, students must also complete: 6 additional units of graduate-level coursework in EPS or another department (recommended) / Up to 30 units of residency, which typically includes 18-30 units of EPS 400 Graduate Research, though other graduate-level courses may also count toward this total\". \"Up to 30\" is read as the 30 units that make up the rest; the instructor rules (\"taught by Academic Council faculty\", two by different EPS faculty) are checked by hand. Grading: \"Students must earn letter grades in all graduate-level courses that count toward program requirements (not including EPS 400 Graduate Research).\" So every course here except EPS 400 is letter graded, and the 30 residency units are any mix of EPS 400 (offered only S/NC, so its S counts) and letter-graded graduate courses, with no minimum of either. EPS 400 Graduate Research is left out of the first-year pool so it fills the research-unit rule it is named in; a student who counts research units among the three first-year courses (\"with the exception of research units\" from the letter grade) moves them in by hand.",
+      "replace": {
+        "t": "all",
+        "name": "Course Requirements",
+        "children": [
+          {
+            "id": "ov-eps-ms-first-year",
+            "t": "courses",
+            "name": "Three letter-graded graduate courses in the first year (9 units)",
+            "mode": "atLeast",
+            "n": 3,
+            "units": 9,
+            "letter": true,
+            "pool": {
+              "anySubject": true,
+              "minNumber": 200,
+              "exclude": ["EPS 400"]
+            }
+          },
+          {
+            "id": "ov-eps-ms-instructors",
+            "t": "text",
+            "name": "First-year courses taught by Academic Council faculty, two by different EPS faculty",
+            "manual": "other"
+          },
+          {
+            "id": "ov-eps-ms-additional",
+            "t": "courses",
+            "name": "6 additional graduate units",
+            "mode": "units",
+            "units": 6,
+            "letter": true,
+            "pool": {
+              "anySubject": true,
+              "minNumber": 200,
+              "exclude": ["EPS 400"]
+            }
+          },
+          {
+            "id": "ov-eps-ms-residency",
+            "t": "courses",
+            "name": "30 units of EPS 400 Graduate Research or other graduate-level courses",
+            "mode": "units",
+            "units": 30,
+            "letter": true,
+            "items": [["EPS 400"]],
+            "pool": {
+              "anySubject": true,
+              "minNumber": 200
+            }
+          }
+        ]
+      }
+    },
+    "p6w6JTnW": {
+      "why": "\"Submit the MS Program Proposal form by the end of the first quarter in residence.\"",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "utYxoN2S": {
+      "why": "\"MS students must complete at least one TA appointment (25%).\"",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "63jRZxGp": {
+      "why": "\"students need to select a second reader, who must be approved by the EPS Director of Graduate Studies\"; \"submit the Thesis Reading Committee Form before the start of their second year\"",
+      "patch": {
+        "manual": "approval"
+      }
+    },
+    "GojgqTnl": {
+      "why": "\"Each student is required to complete a thesis describing their original research.\"",
+      "patch": {
+        "info": null,
+        "name": "Thesis",
+        "manual": "thesis"
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "9cSs1qVe",
+      "why": "GPA: \"University grade point average (GPA) of 3.0 (B) or higher\"",
+      "node": { "id": "ov-eps-ms-gpa", "t": "text", "name": "GPA of 3.0 or higher", "manual": "gpa" }
+    }
+  ]
+}

@@ -1,0 +1,191 @@
+{
+  "code": "CPLIT-BA",
+  "reviewed": "2026-10-23",
+  "summary": "Everyone takes the COMPLIT 101 gateway (also the WIM course), COMPLIT 121, 122 and 123, and the COMPLIT 199 capstone, then either completes the electives or the Comparative Literature and Philosophy subplan. Without a subplan you need 40 units of electives, at least 15 of them COMPLIT courses (not COMPLIT 194), for 65 units in all. The Philosophy subplan needs COMPLIT 181, PHIL 80, a 170-series and a 180-series course, two history of philosophy courses, its other listed courses and a capstone, for 66 units in all. Every course must be letter graded, with a C or better in the gateway and core courses. You check by hand the electives that form your approved focus, the courses on the Philosophy and Literature website, the second literary tradition, and for honors the GPA and thesis.",
+  "program": {
+    "letterGrade": true,
+    "why": "Grading: \"All courses applied to the major must be taken for a letter grade and passed with at least a 'C' in core courses.\" The C floor is on the gateway and core course rules.",
+    "totals": [
+      {
+        "label": "66 units with the Comparative Literature and Philosophy subplan",
+        "minUnits": 66,
+        "when": "ERQBcvrp",
+        "why": "\"The Comparative Literature and Philosophy subplan requires 66 units.\" Units spent acquiring language proficiency do not count; those are left out by hand."
+      }
+    ]
+  },
+  "blocks": {
+    "Ea8nBmrU": {
+      "units": 40,
+      "name": "Comparative Literature electives",
+      "kind": "required",
+      "unlessSubplan": true,
+      "why": "\"Majors must complete at least 40 units of electives\" is the path for a major without a subplan (the Bulletin does not require one); the Comparative Literature and Philosophy subplan has its own electives and \"requires 66 units\" in all, so these 40 units apply only without it."
+    },
+    "ERQBcvrp": {
+      "kind": "subplan"
+    }
+  },
+  "nodes": {
+    "PfWKMTmC": {
+      "why": "Block notes: \"a grade point average (GPA) of 2.0 or better must be achieved in each core course\", a C in each.",
+      "patch": {
+        "minGrade": "C"
+      }
+    },
+    "O2Zg4Rh7": {
+      "why": "Block notes: \"a grade point average (GPA) of 2.0 or better must be achieved in each core course\", a C in each.",
+      "patch": {
+        "minGrade": "C"
+      }
+    },
+    "lrDHWSFi": {
+      "why": "\"Majors must complete at least 40 units of electives\" is the block floor; \"15 of the 40 units must be COMPLIT courses (excluding COMPLIT 194)\" is ov-el-complit and the DUS-approved remainder is ov-el-focus. The block was read as optional because its only other rule says \"(optional)\"; it is the electives path of the major, and the Comparative Literature and Philosophy subplan (whose 66 units cover the same ground) is the other.",
+      "patch": {
+        "info": true
+      }
+    },
+    "dGw25CA2": {
+      "why": "\"Students whose major concentration involves languages other than their native language(s) are encouraged to receive the Foreign Language Proficiency Notation.\" Encouraged, not required.",
+      "patch": {
+        "info": true
+      }
+    },
+    "Lqcpa6Jy": {
+      "why": "The subplan's capstone options apply only to students in the Comparative Literature and Philosophy subplan; moved into that block as ov-pl-capstone.",
+      "remove": true
+    },
+    "JB8egIaz": {
+      "why": "\"Complete at least 2 courses from the PHIL100-199 course sets.\" Notes: \"Up to five units of SLE may be counted in place of one of these two courses\"; that is moved in by hand.",
+      "patch": {
+        "n": 2
+      }
+    },
+    "SvK5Coun": {
+      "why": "\"Two upper-division courses relevant to the study of philosophy and literature as identified by the committee in charge of the program. A list of approved courses may be found on the Philosophy and Literature website.\" The list is not in the Bulletin; the student moves the courses in.",
+      "patch": {
+        "manual": "approval",
+        "n": 2
+      }
+    },
+    "ilEL47tB": {
+      "why": "\"One course, typically in translation, in a literature distant from that of the student's concentration\". Which literature qualifies is a judgment; the student moves the course in.",
+      "patch": {
+        "manual": "approval",
+        "n": 1
+      }
+    },
+    "gnJcnRex": {
+      "why": "\"The remaining two courses must be instructed by the Comparative Literature faculty and approved by the Director of Undergraduate Studies.\"",
+      "patch": {
+        "manual": "approval",
+        "n": 2
+      }
+    },
+    "ZwmRlVt2": {
+      "why": "COMPLIT 199 is also the major's capstone (OSzuuT1V); \"This is a requirement in addition to the capstone option for students who declare this subplan\", so the same course counts for both.",
+      "patch": {
+        "shares": true
+      }
+    },
+    "EPHboB45": {
+      "why": "\"To earn honors, students must complete a minimum of 9 units (3 units per quarter)\" of DLCL 189H; the thesis, colloquium and GPA are rules ov-honors-thesis and ov-honors-gpa.",
+      "patch": {
+        "name": "Honors thesis units (DLCL 189H)"
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "Ea8nBmrU",
+      "node": {
+        "id": "ov-el-complit",
+        "t": "courses",
+        "name": "15 units of COMPLIT electives",
+        "mode": "units",
+        "units": 15,
+        "pool": {
+          "subjects": [
+            "COMPLIT"
+          ],
+          "exclude": [
+            "COMPLIT 194",
+            "COMPLIT 199"
+          ]
+        }
+      },
+      "why": "\"15 of the 40 units must be COMPLIT courses (excluding COMPLIT 194).\" COMPLIT 199 is the capstone, listed apart from the electives in Other requirements: \"Core course,course,course,course, COMPLIT199; and 15 units of electives in COMPLIT\", so it does not also count as a COMPLIT elective."
+    },
+    {
+      "block": "Ea8nBmrU",
+      "node": {
+        "id": "ov-el-focus",
+        "t": "text",
+        "name": "Remaining elective units in an approved intellectual focus",
+        "manual": "approval",
+        "units": 25
+      },
+      "why": "\"The remaining courses should form a coherent intellectual focus requiring approval from the Director of Undergraduate Studies (DUS). They may be drawn from Comparative Literature offerings, other literature departments, or other fields of interdisciplinary relevance.\" \"Language classes taken for a letter grade (excluding conversational courses) and up to ten units of SLE or COLLEGE courses taught at least partially by a Comparative Literature Department faculty member may be counted\". The student moves the approved courses in."
+    },
+    {
+      "block": "ERQBcvrp",
+      "node": {
+        "id": "ov-pl-capstone",
+        "t": "any",
+        "name": "Comparative Literature and Philosophy Subplan Capstone Experience",
+        "children": [
+          {
+            "id": "EXlfBxCd",
+            "t": "text",
+            "name": "Philosophy and Literature Capstone Seminar",
+            "manual": "approval",
+            "n": 1,
+            "desc": "Students should discuss their choice of capstone seminar with the Director of Undergraduate Studies and the Faculty Advisor for Philosophy."
+          },
+          {
+            "id": "PrLmkc8Z",
+            "t": "courses",
+            "name": "Honors Thesis",
+            "mode": "units",
+            "units": 9,
+            "items": [
+              [
+                "DLCL 189H"
+              ]
+            ],
+            "desc": "Only available if accepted into the Honors program: a minimum of 9 units (3 units per quarter), a thesis, and a presentation at the Honors Colloquium."
+          },
+          {
+            "id": "nOBUPCD9",
+            "t": "text",
+            "name": "5,000-word Topic Paper",
+            "manual": "approval",
+            "n": 1,
+            "desc": "A 5,000-word paper on philosophy and literature, written in a 3-unit, letter-grade independent study with a faculty member in the Philosophy and Literature Focal Group, who approves the topic by the add/drop deadline."
+          }
+        ]
+      },
+      "why": "The subplan's capstone, moved from the Capstone block: \"Students should discuss their choice of capstone seminar with the Director of Undergraduate Studies\"; the honors thesis option \"is only available if accepted into the Honors program\"; the topic paper requires \"a 3-unit, letter-grade independent study with a faculty member ... the faculty member must approve the topic\". Seminar and independent study are moved in by hand."
+    },
+    {
+      "block": "wmCsflOR",
+      "node": {
+        "id": "ov-honors-gpa",
+        "t": "text",
+        "name": "GPA of 3.3 overall and 3.5 in the major",
+        "manual": "gpa"
+      },
+      "why": "\"who have an overall grade point average (GPA) of 3.3 or above and who maintain a 3.5 (GPA) in their major courses, are eligible to participate in the DLCL's honors program.\""
+    },
+    {
+      "block": "wmCsflOR",
+      "node": {
+        "id": "ov-honors-thesis",
+        "t": "text",
+        "name": "Honors thesis and Honors Colloquium presentation",
+        "manual": "thesis"
+      },
+      "why": "\"To earn honors, students must complete a minimum of 9 units (3 units per quarter), submit a thesis, and present at the Honors Colloquium at the end of their senior year.\""
+    }
+  ]
+}

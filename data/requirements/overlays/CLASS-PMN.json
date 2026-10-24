@@ -1,0 +1,81 @@
+{
+  "code": "CLASS-PMN",
+  "reviewed": "2026-10-23",
+  "summary": "The audit checks 20 units of CLASSICS courses numbered 200 and above, one of them from the Latin or Greek Core sequence. One course may be Credit/No Credit; the audit counts at most 5 such units, about one Classics course. You check by hand the course plan the Director of Graduate Studies approves, and any course from outside Classics that the Director allows.",
+  "blocks": {
+    "RAFciB97": {
+      "kind": "required"
+    }
+  },
+  "add": [
+    {
+      "block": "RAFciB97",
+      "node": {
+        "id": "ov-units",
+        "t": "courses",
+        "name": "20 units of graduate-level Classics coursework",
+        "mode": "units",
+        "units": 20,
+        "pool": {
+          "subjects": [
+            "CLASSICS"
+          ],
+          "minNumber": 200
+        }
+      },
+      "why": "\"For a Ph.D. minor, the department requires 20 units of Classics coursework at the graduate level (i.e. courses numbered 200 and above). Other courses can count towards this requirement with written consent from the Director of Graduate Studies\"; those are moved in by hand."
+    },
+    {
+      "block": "RAFciB97",
+      "node": {
+        "id": "ov-core",
+        "t": "courses",
+        "name": "One Latin Core or Greek Core course",
+        "mode": "atLeast",
+        "n": 1,
+        "items": [
+          [
+            "CLASSICS 201L"
+          ],
+          [
+            "CLASSICS 202L"
+          ],
+          [
+            "CLASSICS 203L"
+          ],
+          [
+            "CLASSICS 201G"
+          ],
+          [
+            "CLASSICS 202G"
+          ],
+          [
+            "CLASSICS 203G"
+          ]
+        ],
+        "shares": true
+      },
+      "why": "\"Those pursuing a Ph.D. minor in Classics must take one course in the Latin Core or Greek Core sequence. The remaining units (typically graduate seminars)...\" The core course is part of the 20 units, so it shares. The Core series are CLASSICS 201L/202L/203L and 201G/202G/203G (Classics PhD text)."
+    },
+    {
+      "block": "RAFciB97",
+      "node": {
+        "id": "ov-plan",
+        "t": "text",
+        "name": "Course plan approved by the Classics department",
+        "manual": "approval"
+      },
+      "why": "\"The remaining units (typically graduate seminars) must be selected in consultation with the candidate's Classics advisor or Director of Graduate Studies. Before obtaining Classics department approval, students interested in this minor must discuss their proposed course plan with the Director of Graduate Studies and their Ph.D. department.\""
+    }
+  ],
+  "program": {
+    "totals": [
+      {
+        "label": "One Credit/No Credit course (up to 5 units)",
+        "maxUnits": 5,
+        "grading": "not-letter",
+        "why": "Grading: \"One course can be taken as Credit/NoCredit; a letter grade is required for all other courses.\" The cap is in units; graduate Classics courses carry at most 5."
+      }
+    ]
+  }
+}

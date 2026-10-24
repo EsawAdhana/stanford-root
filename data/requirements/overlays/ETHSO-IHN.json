@@ -1,0 +1,81 @@
+{
+  "code": "ETHSO-IHN",
+  "reviewed": "2026-10-23",
+  "summary": "Every course must be letter graded. You take one political philosophy and one moral philosophy course of 4-5 units, two or three 100-level undergraduate courses of at least 3 units totaling 8 units that the Student Services Administrator approves, ETHICSOC 190 and 195, and ETHICSOC 200A, 200B and 200C totaling at least 10 units. Your advisor checks that the program's own courses are not also counted toward another program, and any transfer or abroad courses.",
+  "program": {
+    "letterGrade": true,
+    "why": "Grading: \"All required courses for the program must be taken for a letter grade\""
+  },
+  "nodes": {
+    "ee80BtgR": {
+      "why": "Notes: \"Must be taken for a letter grade, and for 4-5 units.\"",
+      "patch": {
+        "letter": true,
+        "minUnitsEach": 4
+      }
+    },
+    "U8tRAl8o": {
+      "why": "Notes: \"Must be taken for a letter grade, and for 4-5 units.\"",
+      "patch": {
+        "letter": true,
+        "minUnitsEach": 4
+      }
+    },
+    "bEWY1BvY": {
+      "why": "\"Two or three university-wide undergraduate courses at the 100-level, totaling a minimum of 8 units. These courses must be taken for a letter grade, and be a minimum of 3 units each.\" \"These course choices must be reviewed and approved for counting towards the Honors Program with the Student Services Administrator.\"",
+      "replace": {
+        "t": "all",
+        "name": "Elective/Specialization Courses",
+        "children": [
+          {
+            "id": "ov-ethso-ihn-electives",
+            "t": "courses",
+            "name": "Two or three 100-level undergraduate courses (8 units)",
+            "mode": "atLeast",
+            "n": 2,
+            "units": 8,
+            "letter": true,
+            "minUnitsEach": 3,
+            "pool": {
+              "anySubject": true,
+              "minNumber": 100,
+              "maxNumber": 199,
+              "excludeGraduate": true
+            }
+          },
+          {
+            "id": "ov-ethso-ihn-approval",
+            "t": "text",
+            "name": "Elective choices approved by the Student Services Administrator",
+            "manual": "approval"
+          }
+        ]
+      }
+    },
+    "Y7E5JpZO": {
+      "why": "\"ETHICSOC190 is a mandatory seminar\"; \"ETHICSOC195 is a mandatory one-unit writing workshop\"; \"students enroll in graded thesis writing units (200A-C) that can vary between 3-5 units per quarter, and should total to a minimum of 10 units over the course of the senior year.\"",
+      "replace": {
+        "t": "all",
+        "name": "EiS Program Specific Coursework",
+        "children": [
+          {
+            "id": "ov-ethso-ihn-seminars",
+            "t": "courses",
+            "name": "ETHICSOC 190 and 195",
+            "mode": "all",
+            "items": [["ETHICSOC 190"], ["ETHICSOC 195"]]
+          },
+          {
+            "id": "ov-ethso-ihn-thesis",
+            "t": "courses",
+            "name": "Thesis writing units, ETHICSOC 200A-C (10 units)",
+            "mode": "all",
+            "units": 10,
+            "letter": true,
+            "items": [["ETHICSOC 200A"], ["ETHICSOC 200B"], ["ETHICSOC 200C"]]
+          }
+        ]
+      }
+    }
+  }
+}

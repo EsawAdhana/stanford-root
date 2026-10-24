@@ -1,0 +1,25 @@
+{
+  "code": "CEE-PMN",
+  "reviewed": "2026-10-23",
+  "summary": "The audit checks 20 units of CEE courses numbered 200 or above, taken at Stanford, leaving out special studies, research and thesis courses. You check by hand the 3.0 GPA in those courses, the application approved by both your major and the CEE department, and your minor advisor (CEE faculty, Academic Council, on your oral and reading committees) approving the course list with the CEE chair.",
+  "blocks": {
+    "5zXPtLDd": { "kind": "required" }
+  },
+  "nodes": {
+    "jKkxGVD3": {
+      "why": "\"The program must include at least 20 graduate-level coursework units (courses numbered 200 or above, excluding special studies and thesis) in CEE completed at Stanford University. The list of courses must form a coherent program and must be approved by the minor program advisor and the CEE chair. A minimum GPA of 3.0 must be achieved in these courses.\" Policies: \"Application for the PhD minor must be approved by both the major and the minor department.\" Special studies and thesis are the CEE courses titled independent study, research, special study, problems, practical training, thesis or TGR.",
+      "replace": {
+        "t": "all",
+        "name": "Requirements",
+        "children": [
+          {
+            "id": "ov-units", "t": "courses", "name": "20 units of CEE courses at the 200 level or above", "mode": "units", "units": 20,
+            "pool": { "subjects": ["CEE"], "minNumber": 200, "exclude": ["CEE 220S", "CEE 259A", "CEE 259B", "CEE 299", "CEE 299C", "CEE 299E", "CEE 299I", "CEE 299J", "CEE 299L", "CEE 300", "CEE 370A", "CEE 370B", "CEE 370C", "CEE 370D", "CEE 370M", "CEE 398", "CEE 399", "CEE 400", "CEE 801", "CEE 802"] }
+          },
+          { "id": "ov-approval", "t": "text", "name": "Application approved by both departments; minor advisor (CEE faculty, Academic Council, on the oral and reading committees) and course list approved by the advisor and CEE chair", "manual": "approval" },
+          { "id": "ov-gpa", "t": "text", "name": "GPA of 3.0 in the minor's courses", "manual": "gpa" }
+        ]
+      }
+    }
+  }
+}

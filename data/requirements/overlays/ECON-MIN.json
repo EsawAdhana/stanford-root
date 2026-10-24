@@ -1,0 +1,118 @@
+{
+  "code": "ECON-MIN",
+  "reviewed": "2026-10-23",
+  "summary": "Every course must be letter graded. The minor is the four core courses, two field courses (only one of ECON 135, 140 and 141, and only one of ECON 160, 167G and 180, anywhere in the minor), and at least 5 units of any ECON courses, and the audit checks the 35-unit total, so a waived ECON 1 or field courses under 10 units mean more elective units. Your advisor checks the 2.0 GPA in the minor, that at least 20 units were taken at Stanford, and any transfer credit.",
+  "program": {
+    "letterGrade": true,
+    "why": "\"No courses receiving Department of Economics credit under the preceding requirements may be taken credit/no credit.\"",
+    "totals": [
+      {
+        "label": "Only one of ECON 135, 140, 141",
+        "maxUnits": 5,
+        "codes": [
+          "ECON 135",
+          "ECON 140",
+          "ECON 141"
+        ],
+        "why": "\"Students may only count units from ECON 135, ECON 140, or ECON 141 toward their minor as the courses are too similar in content.\" Each is 5 units.",
+        "inRules": true
+      },
+      {
+        "label": "Only one of ECON 160, 167G, 180",
+        "maxUnits": 5,
+        "codes": [
+          "ECON 160",
+          "ECON 167G",
+          "ECON 180"
+        ],
+        "why": "\"Students may not count units from ECON 160, ECON 167G, and ECON 180 toward their minor as the courses cover similar subject matter.\" Read as one of the three, as on the field list. Each is 5 units.",
+        "inRules": true
+      }
+    ]
+  },
+  "nodes": {
+    "KBKlP6PI": {
+      "why": "\"Students who complete 2 Field courses with a combined unit total of less than 10 units must also complete more units of electives to satisfy the 35 unit requirement.\" The field requirement is two courses; a shortfall under 10 units moves to electives and the 35-unit total. It was read as 10 units, which failed two field courses totaling 8 units. \"Students may only count units from ECON 135, ECON 140, or ECON 141 toward their minor as the courses are too similar in content.\" \"Students may not count units from ECON 160, ECON 167G, and ECON 180 toward their minor as the courses cover similar subject matter.\" The second sentence is read like the first (one of the three), since the Bulletin lists the three as one choice on the field list.",
+      "patch": {
+        "limits": [
+          {
+            "label": "one of ECON 135, 140, 141",
+            "max": 1,
+            "codes": [
+              "ECON 135",
+              "ECON 140",
+              "ECON 141"
+            ]
+          },
+          {
+            "label": "one of ECON 160, 167G, 180",
+            "max": 1,
+            "codes": [
+              "ECON 160",
+              "ECON 167G",
+              "ECON 180"
+            ]
+          }
+        ],
+        "n": 2,
+        "units": null
+      }
+    },
+    "6UXhUtmg": {
+      "why": "\"Complete a total of five units, selecting from any ECON courses offered for letter grades.\" The extra 5 units owed for a waived course, or for field courses under 10 units, are checked by hand. The two similar-course caps apply to the whole minor (\"Students may only count units from ECON 135, ECON 140, or ECON 141 toward their minor\"), so they sit here too and in program totals, or ECON 140 as a field course and ECON 141 as an elective both counted.",
+      "replace": {
+        "t": "courses",
+        "name": "Electives (at least 5 units)",
+        "mode": "units",
+        "units": 5,
+        "pool": {
+          "subjects": [
+            "ECON"
+          ]
+        },
+        "limits": [
+          {
+            "label": "one of ECON 135, 140, 141",
+            "max": 1,
+            "codes": [
+              "ECON 135",
+              "ECON 140",
+              "ECON 141"
+            ]
+          },
+          {
+            "label": "one of ECON 160, 167G, 180",
+            "max": 1,
+            "codes": [
+              "ECON 160",
+              "ECON 167G",
+              "ECON 180"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "9umjr5jv",
+      "why": "\"The combined total of all minor units must equal the grade point average (GPA) of 2.0 (C) or better.\"",
+      "node": {
+        "id": "ov-econmin-gpa",
+        "t": "text",
+        "name": "GPA of 2.0 in the minor",
+        "manual": "gpa"
+      }
+    },
+    {
+      "block": "9umjr5jv",
+      "why": "\"At least 20 out of the 35 units for the minor must be taken at Stanford.\"",
+      "node": {
+        "id": "ov-econmin-residency",
+        "t": "text",
+        "name": "20 of the 35 units taken at Stanford",
+        "manual": "residency"
+      }
+    }
+  ]
+}

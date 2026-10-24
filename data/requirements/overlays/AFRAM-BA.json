@@ -1,0 +1,230 @@
+{
+  "code": "AFRAM-BA",
+  "reviewed": "2026-10-23",
+  "summary": "Every course must be taken for a letter grade, and the audit counts your courses toward the 64 units the major needs. Foundations takes one of its two courses, Breadth three courses and 15 units, and Depth five courses and 15 units in one cluster; the Science, Technology & Society cluster lists only four courses, so you move in its last two (the fourth listed course, or courses from another department the DUS approves). Community Engaged Learning is AFRICAAM 212 or 214, or a listed overseas course plus a 2-unit re-entry directed reading you move in. AFRICAAM 200X counts as both WIM and capstone. The senior presentation, and for honors the thesis graded A, the 3.5 GPA and the presentation, are checked by hand. The honors courses AFRICAAM 200Y and 200Z do not count toward the 64 units.",
+  "program": {
+    "letterGrade": true,
+    "totals": [
+      {
+        "label": "Honors courses (AFRICAAM 200Y, 200Z)",
+        "maxUnits": 0,
+        "codes": [
+          "AFRICAAM 200Y",
+          "AFRICAAM 200Z"
+        ],
+        "why": "\"Please note that the DAAAS honors program courses (course and course) do not count toward students’ overall units required for the DAAAS major.\" The courses are the Winter and Spring honors courses, AFRICAAM 200Y and 200Z."
+      }
+    ],
+    "why": "Grading: \"All courses must be taken for a letter grade.\""
+  },
+  "blocks": {
+    "bse7V3Jv": {
+      "units": null
+    }
+  },
+  "nodes": {
+    "fB2ZL1PB": {
+      "why": "\"Foundations of African Studies OR Foundations of African American Studies\": one of the two courses.",
+      "patch": {
+        "mode": "atLeast",
+        "n": 1
+      }
+    },
+    "LVvOCH8q": {
+      "why": "\"At least 15 units are selected ... Select 3 courses; at least 2 must be DAAAS; the other may be taken from another department if approved by the DUS.\" An approved outside course is moved in by hand.",
+      "patch": {
+        "units": 15
+      }
+    },
+    "vmZXglMV": {
+      "why": "\"Select 5 courses and a minimum of 15 units from 1 thematic cluster; 3 courses must be in DAAAS. The others may be taken from another department if approved by the DUS.\"",
+      "patch": {
+        "units": 15
+      }
+    },
+    "e91u5WXm": {
+      "why": "\"Select 5 courses and a minimum of 15 units from 1 thematic cluster\". Approved courses from another department are moved in by hand.",
+      "patch": {
+        "n": 5
+      }
+    },
+    "ilRIZnVq": {
+      "why": "\"Select 5 courses and a minimum of 15 units from 1 thematic cluster\". Approved courses from another department are moved in by hand.",
+      "patch": {
+        "n": 5
+      }
+    },
+    "TeltRgzW": {
+      "why": "\"Select 5 courses and a minimum of 15 units from 1 thematic cluster; 3 courses must be in DAAAS. The others may be taken from another department if approved by the DUS.\" This cluster lists four DAAAS courses, so three come from the list and the other two are moved in: the fourth listed course or approved outside courses.",
+      "replace": {
+        "t": "all",
+        "name": "Science, Technology & Society",
+        "children": [
+          {
+            "id": "ov-aframba-sts-daaas",
+            "t": "courses",
+            "name": "Three Science, Technology & Society courses in DAAAS",
+            "mode": "atLeast",
+            "n": 3,
+            "items": [
+              [
+                "AFRICAAM 198"
+              ],
+              [
+                "AFRICAAM 263"
+              ],
+              [
+                "AFRICAAM 274"
+              ],
+              [
+                "AFRICAAM 151"
+              ]
+            ]
+          },
+          {
+            "id": "ov-aframba-sts-more",
+            "t": "text",
+            "name": "Two more cluster courses: the remaining listed course or courses from another department approved by the DUS",
+            "n": 2,
+            "manual": "approval"
+          }
+        ]
+      }
+    },
+    "PT1sc4xm": {
+      "why": "\"The other 15 units (to make the total of 64 units required by our Major) will consist of Department approved electives both within and outside of DAAAS.\" The 64 units are the major total (the Bulletin's program minimum, which the audit checks); approved outside electives are moved in by hand.",
+      "patch": {
+        "units": 15
+      }
+    },
+    "evMTfOgy": {
+      "why": "The only WIM course is AFRICAAM 200X, and \"Note: course also satisfies Capstone/Senior Seminar\": one named course, shared with the capstone.",
+      "patch": {
+        "mode": "all",
+        "n": null
+      }
+    },
+    "R9f9ryrw": {
+      "why": "\"DAAAS majors participating in the honors program must enroll in 5 units of course (the DAAAS Capstone course, which is also a WIM course) in the Autumn, 5 units of course in the Winter, and 5 units of course in the Spring.\" \"culminating in a 40-60 page honors thesis\", \"The final honors or creative honors thesis must receive a grade of an “A”\", \"students must average a minimum 3.5 overall GPA average\" and \"Students must also prepare and deliver a conference-style presentation of their work during the DAAAS Senior Presentations\".",
+      "replace": {
+        "t": "all",
+        "name": "Honors Requirements",
+        "children": [
+          {
+            "id": "ov-aframba-honors-courses",
+            "t": "courses",
+            "name": "AFRICAAM 200X, 200Y and 200Z (5 units each)",
+            "mode": "all",
+            "items": [
+              [
+                "AFRICAAM 200X"
+              ],
+              [
+                "AFRICAAM 200Y"
+              ],
+              [
+                "AFRICAAM 200Z"
+              ]
+            ],
+            "minUnitsEach": 5
+          },
+          {
+            "id": "ov-aframba-honors-thesis",
+            "t": "text",
+            "name": "Honors thesis (40-60 pages) graded A",
+            "manual": "thesis"
+          },
+          {
+            "id": "ov-aframba-honors-gpa",
+            "t": "text",
+            "name": "Overall GPA of 3.5",
+            "manual": "gpa"
+          },
+          {
+            "id": "ov-aframba-honors-presentation",
+            "t": "text",
+            "name": "Presentation at DAAAS Senior Presentations",
+            "manual": "milestone"
+          }
+        ]
+      }
+    },
+    "Iaq1nnYP": {
+      "why": "\"Earn at least 4 credits from the following: AFRICAAM 212, AFRICAAM 214, OSPGEN 24, OSPGEN 26, OSPCPTWN 10, OSPCPTWN 100S, OSPCPTWN 15, OSPCPTWN 17\". \"Students are also able to fulfill the requirement through participation in a one of Stanford's Bing Overseas Study programs (BOSP) ... DAAAS students must take a 2 credit 're-entry' directed readings course with their faculty advisor upon returning from an overseas study course.\" A self-designed community engaged learning experience is marked met by hand.",
+      "replace": {
+        "t": "any",
+        "name": "Community Engaged Learning",
+        "children": [
+          {
+            "id": "ov-aframba-cel-course",
+            "t": "courses",
+            "name": "A Community Engaged Learning course (4 units)",
+            "mode": "units",
+            "units": 4,
+            "items": [
+              [
+                "AFRICAAM 212"
+              ],
+              [
+                "AFRICAAM 214"
+              ]
+            ]
+          },
+          {
+            "id": "ov-aframba-cel-osp",
+            "t": "all",
+            "name": "An overseas Community Engaged Learning course and a re-entry directed reading",
+            "children": [
+              {
+                "id": "ov-aframba-cel-osp-course",
+                "t": "courses",
+                "name": "Overseas Community Engaged Learning course (4 units)",
+                "mode": "units",
+                "units": 4,
+                "items": [
+                  [
+                    "OSPGEN 24"
+                  ],
+                  [
+                    "OSPGEN 26"
+                  ],
+                  [
+                    "OSPCPTWN 10"
+                  ],
+                  [
+                    "OSPCPTWN 100S"
+                  ],
+                  [
+                    "OSPCPTWN 15"
+                  ],
+                  [
+                    "OSPCPTWN 17"
+                  ]
+                ]
+              },
+              {
+                "id": "ov-aframba-cel-reentry",
+                "t": "text",
+                "name": "2-unit re-entry directed reading with your faculty advisor",
+                "manual": "approval",
+                "units": 2
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "cZtS1yNw",
+      "why": "\"All senior majors will present their Capstone or Honors thesis projects at DAAAS Senior Presentations during the Spring quarter of their senior year.\"",
+      "node": {
+        "id": "ov-aframba-senior-presentation",
+        "t": "text",
+        "name": "Present the capstone or honors project at DAAAS Senior Presentations",
+        "manual": "milestone"
+      }
+    }
+  ]
+}

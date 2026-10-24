@@ -1,0 +1,183 @@
+{
+  "code": "MUSIC-PHD",
+  "reviewed": "2026-10-23",
+  "summary": "You pick one subplan: Computer-Based Music Theory and Acoustics, Musicology, or Ethnomusicology. The audit checks its required courses, letter graded unless no letter grade is offered (MUSIC 310 five times for Musicology and twice for Ethnomusicology, and MUSIC 300 seminars for at least 3 units each), and 135 units of graduate work. In Ethnomusicology, Music courses below the 100 level do not count. Checked by hand: the 3.0 GPA, the qualifying and special area exams, six quarters of teaching, candidacy, languages, the oral exam and the dissertation, plus Ethnomusicology's non-Western practicum and four related graduate courses, which you move in.",
+  "nodes": {
+    "mPmGnuAq": {
+      "why": "\"Departmental Qualifying Exams, taken during the first two years of doctoral study, assess student's knowledge of core subjects ... Failure to pass qualifying exams results in dismissal from the PhD program.\"",
+      "patch": {
+        "manual": "exam"
+      }
+    },
+    "cYYeXAFb": {
+      "why": "\"A written and oral examination testing the student's knowledge of music and research in the student's field of concentration is completed during the fourth year of study\" (and the Musicology and Ethnomusicology Special Area examinations).",
+      "patch": {
+        "manual": "exam"
+      }
+    },
+    "KMh3BkXC": {
+      "why": "\"All students are required to complete six quarters of teaching experiences by the end of their third year in the program regardless of their financial support.\"",
+      "patch": {
+        "manual": "milestone",
+        "name": "Six quarters of teaching"
+      }
+    },
+    "oyr7Pfg8": {
+      "why": "\"Students are expected to complete qualifying procedures and apply for candidacy at the end of their second year in the PhD program.\"",
+      "patch": {
+        "manual": "milestone"
+      }
+    },
+    "aSb67QTp": {
+      "why": "\"the oral exam is a defense of the dissertation presented upon completion of a substantial portion of the dissertation.\"",
+      "patch": {
+        "manual": "exam",
+        "name": "Oral exam (dissertation defense)"
+      }
+    },
+    "ied3hRle": {
+      "why": "\"Students are required to submit an approved dissertation that makes an original contribution to scholarship in the field of Music.\"",
+      "patch": {
+        "manual": "thesis",
+        "name": "Dissertation"
+      }
+    },
+    "lqZVJR1T": {
+      "why": "\"all PhD students in Musicology must pass PhD language reading examinations in German and a second language\"; CBMTA \"must demonstrate a reading knowledge of one language other than English\"; Ethnomusicology \"must demonstrate proficiency in one field language and either one 'classical' language ... or a second field language.\" Shown by coursework or examination, checked by hand.",
+      "patch": {
+        "manual": "exam",
+        "name": "Language requirement"
+      }
+    },
+    "TT6WkKzs": {
+      "why": "Course note: \"The requirement is five MUSIC 310 seminars of 3-5 units each, to be taken in the first three years of study.\" MUSIC 310 is repeatable, so it is listed five times. Enrolling in the colloquium \"each quarter during Terminal Graduate Registration\" is an expectation the audit does not count. Grading: \"Students are expected to enroll in all required courses for a letter grade, unless that option is not available.\"",
+      "patch": {
+        "items": [
+          [
+            "MUSIC 200A"
+          ],
+          [
+            "MUSIC 200B"
+          ],
+          [
+            "MUSIC 310"
+          ],
+          [
+            "MUSIC 310"
+          ],
+          [
+            "MUSIC 310"
+          ],
+          [
+            "MUSIC 310"
+          ],
+          [
+            "MUSIC 310"
+          ],
+          [
+            "MUSIC 330"
+          ]
+        ],
+        "letter": true
+      }
+    },
+    "eWDl3cCJ": {
+      "why": "\"Seminars are to be taken for 3-4 units each, in the first two years of study.\" Grading: \"Students are expected to enroll in all required courses for a letter grade, unless that option is not available.\"",
+      "patch": {
+        "minUnitsEach": 3,
+        "letter": true
+      }
+    },
+    "6NLJ7gRQ": {
+      "why": "Course note: \"The requirement is two 310 seminars of 3-5 units each, to be taken in the first three years of study.\" Block note: \"All courses in Music must be taken at the 100 level or higher and for a letter grade, unless the course has been designated Pass/Fail.\"",
+      "patch": {
+        "items": [
+          [
+            "MUSIC 200A"
+          ],
+          [
+            "MUSIC 200B"
+          ],
+          [
+            "MUSIC 300D"
+          ],
+          [
+            "MUSIC 310"
+          ],
+          [
+            "MUSIC 310"
+          ],
+          [
+            "MUSIC 330"
+          ]
+        ],
+        "letter": true
+      }
+    },
+    "AkvVX6hY": {
+      "why": "\"Complete one additional MUSIC 300 seminar, for 3-4 units\" and the block note \"All courses in Music must be taken ... for a letter grade, unless the course has been designated Pass/Fail.\" The petition to take another MUSIC 310 instead is moved in by hand.",
+      "patch": {
+        "minUnitsEach": 3,
+        "letter": true
+      }
+    },
+    "g6cQlMON": {
+      "why": "Grading: \"Students are expected to enroll in all required courses for a letter grade, unless that option is not available.\"",
+      "patch": {
+        "letter": true
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "uRtOOHx1",
+      "why": "Block note: \"One practicum, lesson, or ensemble in 'non-Western' music must be completed at 0-3 units by the end of the third year.\" The Bulletin lists none, so the student moves one in. Ethnomusicology block note: \"All courses in Music must be taken at the 100 level or higher and for a letter grade, unless the course has been designated Pass/Fail.\"",
+      "node": {
+        "id": "ov-ethno-nonwestern",
+        "t": "text",
+        "name": "One non-Western practicum, lesson, or ensemble",
+        "n": 1,
+        "manual": "approval",
+        "letter": true
+      }
+    },
+    {
+      "block": "uRtOOHx1",
+      "why": "Note: \"Four graduate-level courses (3-5 units each) in: Anthropology; TAPS; race/ethnicity (i.e., CCSRE or AAAS); global/regional/linguistic area; and gender/sexuality (i.e., FGSS) by the end of the third year.\" The global/regional/linguistic area has no subject code, so the four are moved in by hand.",
+      "node": {
+        "id": "ov-ethno-outside",
+        "t": "text",
+        "name": "Four graduate-level courses in related fields",
+        "n": 4,
+        "manual": "approval"
+      }
+    },
+    {
+      "block": "DtO1nRs4",
+      "node": {
+        "id": "ov-gpa",
+        "t": "text",
+        "name": "GPA of 3.0 (B) in courses for the degree",
+        "manual": "gpa"
+      },
+      "why": "GPA: \"Students must maintain a minimum 3.0 (B) grade point average overall in courses applicable to the degree.\""
+    }
+  ],
+  "program": {
+    "totals": [
+      {
+        "label": "Music courses below the 100 level (Ethnomusicology)",
+        "maxUnits": 0,
+        "pool": {
+          "subjects": [
+            "MUSIC"
+          ],
+          "maxNumber": 99
+        },
+        "when": "uRtOOHx1",
+        "inRules": true,
+        "why": "Ethnomusicology block note: \"All courses in Music must be taken at the 100 level or higher and for a letter grade, unless the course has been designated Pass/Fail.\""
+      }
+    ]
+  }
+}

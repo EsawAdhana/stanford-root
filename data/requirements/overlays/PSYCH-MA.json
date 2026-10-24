@@ -1,0 +1,42 @@
+{
+  "code": "PSYCH-MA",
+  "reviewed": "2026-10-23",
+  "summary": "You take four of the five core courses and PSYCH 251 and 252, letter graded with a B- or better (core courses for at least 3 units), toward 45 units, at least 27 of them in graduate Psychology courses other than labs, independent study and practica. Any course taken for a letter grade needs a B- or better to count. The First Year Project or master's thesis is checked by hand.",
+  "program": {
+    "minGrade": "B-",
+    "why": "Grading: \"All core and stats courses must be taken for a letter grade and passed with a grade of B- or better. For advanced units, courses taken for a letter grade must receive a B- or better to count toward the requirement.\" Every course counts toward one of the two, so the floor is program-wide; a course taken CR/S is not held to it.",
+    "totals": [
+      {
+        "label": "27 units of Psychology courses other than labs, independent study and practica",
+        "minUnits": 27,
+        "pool": {
+          "subjects": ["PSYCH"],
+          "onlyGraduate": true,
+          "exclude": ["PSYCH 222", "PSYCH 258", "PSYCH 269", "PSYCH 281", "PSYCH 297", "PSYCH 282", "PSYCH 290"]
+        },
+        "why": "\"Completion of 45 units of graduate-level Psychology courses. A maximum of 18 units may be from lab courses, independent study, outside units, and practica (e.g., 222, 258, 269, 281, 297, 282, 290). Successful completion of the First Year Project (FYP) or equivalent master's thesis.\" At most 18 of the 45 units may be labs, independent study, outside units or practica, so at least 27 must be other PSYCH courses. Only the example numbers are excluded; others of those kinds are not known from the text. \"graduate-level\" limits the 27 units to graduate-career listings."
+      }
+    ]
+  },
+  "nodes": {
+    "J3xr9AFe": {
+      "why": "\"Completion of 45 units of graduate-level Psychology courses. A maximum of 18 units may be from lab courses, independent study, outside units, and practica (e.g., 222, 258, 269, 281, 297, 282, 290). Successful completion of the First Year Project (FYP) or equivalent master's thesis.\" The 45 units and the 18-unit cap are program checks; the First Year Project is ov-fyp.",
+      "patch": {"info": true}
+    },
+    "rN179Vu0": {
+      "why": "\"master's students must complete 4 Core Courses and 2 Statistical Methods Courses\" and \"students are encouraged to take all 5 core courses ... If a student takes 5 core courses, the units and grade of the fifth course are counted toward the student's advanced units.\" The same rule's first sentence says \"Students must take 5 core courses\"; the overview and the encouragement both read as four required, so four is used. \"All core courses must be taken for a letter grade for three units and passed with a B- or better grade.\"",
+      "patch": {"mode": "atLeast", "n": 4, "letter": true, "minUnitsEach": 3, "minGrade": "B-"}
+    },
+    "LPwBvrU6": {
+      "why": "Note: \"Quantitative methods courses must be taken for a letter grade and passed with a B- or better grade.\"",
+      "patch": {"letter": true, "minGrade": "B-"}
+    }
+  },
+  "add": [
+    {
+      "block": "mAbEGmbJ",
+      "why": "\"Successful completion of the First Year Project (FYP) or equivalent master's thesis\"",
+      "node": {"id": "ov-fyp", "t": "text", "name": "First Year Project or master's thesis", "manual": "thesis"}
+    }
+  ]
+}

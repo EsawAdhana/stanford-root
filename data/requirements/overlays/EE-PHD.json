@@ -1,0 +1,45 @@
+{
+  "code": "EE-PHD",
+  "reviewed": "2026-10-23",
+  "summary": "You need 135 graduate units: EE 301 in your first autumn, 21 units of letter-graded lecture or lab courses at the 200 level or above in engineering, natural sciences, math or statistics, which you move in by hand for your advisor to confirm, and any other courses, research or seminars for the rest. Your advisor checks the 3.0 GPA and any master's units transferred toward the 135, and the department records the qualifying exams, the candidacy application, the reading committee, the oral exam and the dissertation.",
+  "blocks": {
+    "0GzLObTh": { "units": 135 }
+  },
+  "nodes": {
+    "qpbbsNoX": {
+      "why": "\"21 units of letter-graded lecture/lab courses at the 200 level or above in STEM fields - engineering, natural sciences, math, or statistics.\" The text names fields, not departments, so the student moves the 21 units in and the advisor confirms them.",
+      "patch": { "manual": "approval", "units": 21 }
+    },
+    "M6q6v15v": {
+      "why": "\"Students in the PhD program are required to complete 135 units of unduplicated coursework.\" \"The remaining units required to complete the 135 total units may be comprised of: Special Studies (e.g. EE390 or EE391), Research units (e.g. EE400), Seminar units, Additional lecture/lab courses taken CR/NC or for letter grades, Non-departmental units in nontechnical areas\" Any course counts; \"up to 45 units of a master's degree earned at Stanford or another institution ... may be counted\" is checked by hand.",
+      "patch": { "pool": { "subjects": [], "anySubject": true } }
+    },
+    "i33O2Icc": {
+      "why": "\"Students in the PhD program wishing to advance to candidacy must first pass the Electrical Engineering Qualifying Exams before the end of winter quarter of their second year of study\"",
+      "patch": { "manual": "exam" }
+    },
+    "iaFTyATU": {
+      "why": "\"The student's Principal Dissertation Advisor and the Second Reader must sign the Application for Candidacy.\" \"Students must advance to candidacy before the end of their second year\" Stored as information; it is a required milestone.",
+      "patch": { "info": null, "manual": "milestone" }
+    },
+    "tjx9scPZ": {
+      "why": "\"Form a Dissertation Reading Committee of at least three members, including your Dissertation Advisor, in your third year and submit the Doctoral Dissertation Reading Committee Form\"",
+      "patch": { "manual": "milestone" }
+    },
+    "WoHKBsvb": {
+      "why": "\"Complete the University Oral Examination in the fourth year.\"",
+      "patch": { "manual": "exam" }
+    },
+    "HJHWzRmZ": {
+      "why": "\"The doctoral dissertation is the most essential part of a PhD program, which the reading committee must approve.\"",
+      "patch": { "manual": "thesis" }
+    }
+  },
+  "add": [
+    {
+      "block": "0GzLObTh",
+      "why": "GPA: \"Students must maintain a minimum cumulative GPA of 3.0 to maintain good academic standing and graduate with the EE PhD degree.\"",
+      "node": { "id": "ov-eephd-gpa", "t": "text", "name": "Cumulative GPA of at least 3.0", "manual": "gpa" }
+    }
+  ]
+}

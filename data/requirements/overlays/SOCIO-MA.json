@@ -1,0 +1,180 @@
+{
+  "code": "SOCIO-MA",
+  "reviewed": "2026-10-23",
+  "summary": "You choose the coterminal MA or the MA. Coterminal: SOC 270 and 280A and 45 units at the 100 level or above, at least 23 at the 200 level, with at most 12 units in the SOC 290 series (5 of them SOC 290) and 5 from other social science departments. MA: 45 units of Sociology, up to 15 of them petitioned flex units from elsewhere. Both are letter graded. Your 3.0 GPA, advance approval of outside courses, a research-track student's 18 units in the 290 series and the rule that workshops and colloquia do not count are checked by hand.",
+  "program": {
+    "letterGrade": true,
+    "why": "Coterminal: \"All units applied to the coterminal master's degree must be taken for a letter grade\". MA: \"All courses must be taken for a letter grade when possible.\"",
+    "totals": [
+      {
+        "label": "SOC 290 series (SOC 290, 291, 292)",
+        "maxUnits": 12,
+        "codes": [
+          "SOC 290",
+          "SOC 291",
+          "SOC 292"
+        ],
+        "inRules": true,
+        "when": "mAbEGmbJ",
+        "why": "Coterminal: \"Coterminal master's students are limited to five units from other Social Sciences departments (Anthropology, Communications, Economics, Political Science and Psychology). Up to five units can be taken as an independent study or directed reading (SOC 290 Coterminal MA individual study) with a faculty member appointed in Sociology, but no more than 12 units of coursework across the 290 series (including SOC 291, SOC 292) can be counted toward the degree.\" The 290 series is SOC 290, 291 and 292 (SOC 297 and 298 are ordinary courses). A research-track student's 18 units (\"Student in the research track can count up to 18 units across the SOC 290 series\") are moved in by hand. The caps cover the whole degree, not each rule."
+      },
+      {
+        "label": "SOC 290 individual study",
+        "maxUnits": 5,
+        "codes": [
+          "SOC 290"
+        ],
+        "inRules": true,
+        "when": "mAbEGmbJ",
+        "why": "Coterminal: \"Coterminal master's students are limited to five units from other Social Sciences departments (Anthropology, Communications, Economics, Political Science and Psychology). Up to five units can be taken as an independent study or directed reading (SOC 290 Coterminal MA individual study) with a faculty member appointed in Sociology, but no more than 12 units of coursework across the 290 series (including SOC 291, SOC 292) can be counted toward the degree.\""
+      },
+      {
+        "label": "Other Social Sciences departments",
+        "maxUnits": 5,
+        "pool": {
+          "subjects": [
+            "ANTHRO",
+            "COMM",
+            "ECON",
+            "POLISCI",
+            "PSYCH"
+          ]
+        },
+        "inRules": true,
+        "when": "mAbEGmbJ",
+        "why": "Coterminal: \"Coterminal master's students are limited to five units from other Social Sciences departments (Anthropology, Communications, Economics, Political Science and Psychology). Up to five units can be taken as an independent study or directed reading (SOC 290 Coterminal MA individual study) with a faculty member appointed in Sociology, but no more than 12 units of coursework across the 290 series (including SOC 291, SOC 292) can be counted toward the degree.\""
+      },
+      {
+        "label": "Courses below the 100 level",
+        "maxUnits": 0,
+        "pool": {
+          "subjects": [],
+          "anySubject": true,
+          "maxNumber": 99
+        },
+        "when": "mAbEGmbJ",
+        "why": "Coterminal: \"All units for the coterminal MA must be taken at or above the 100 level\"."
+      }
+    ]
+  },
+  "blocks": {
+    "mAbEGmbJ": {
+      "kind": "subplan",
+      "units": 45
+    },
+    "M29QHlDu": {
+      "kind": "subplan"
+    }
+  },
+  "nodes": {
+    "6PWafBBl": {
+      "why": "Moved into the 200-level group below, since the core courses count toward the 23 graduate-level units.",
+      "remove": true
+    }
+  },
+  "add": [
+    {
+      "block": "mAbEGmbJ",
+      "node": {
+        "id": "ov-coterm-grad",
+        "t": "all",
+        "name": "At least 23 units at the 200 level or above",
+        "units": 23,
+        "children": [
+          {
+            "id": "6PWafBBl",
+            "t": "courses",
+            "name": "Core Course Requirements",
+            "mode": "all",
+            "items": [
+              [
+                "SOC 270"
+              ],
+              [
+                "SOC 280A"
+              ]
+            ],
+            "notes": "All coterminal students are required to take course Classics of Modern Social Theory and course Foundations of Social Research (or their 100-level counterparts if taken previously as a Sociology BA). These introductory theory and methods courses are essential to graduate training in the social sciences."
+          },
+          {
+            "id": "ov-coterm-grad-courses",
+            "t": "courses",
+            "name": "Sociology courses at the 200 level or above",
+            "mode": "any",
+            "pool": {
+              "subjects": [
+                "SOC"
+              ],
+              "minNumber": 200
+            }
+          }
+        ]
+      },
+      "why": "Two kinds of student with different rules: \"Coterminal MA Program Requirements\" (core SOC 270 and SOC 280A, \"45 unduplicated units\", 23 at the 200 level) and the M.A. (\"a minimum of 45 units of Sociology coursework\", 30 taught by Sociology faculty). Each is a choice the student is in, so each block is one option. \"All units for the coterminal MA must be taken at or above the 100 level; and at least 23 units must be at the 200 level or above.\" \"All coterminal students are required to take course Classics of Modern Social Theory and course Foundations of Social Research (or their 100-level counterparts if taken previously as a Sociology BA).\""
+    },
+    {
+      "block": "mAbEGmbJ",
+      "node": {
+        "id": "ov-coterm-courses",
+        "t": "courses",
+        "name": "Other courses at the 100 level or above",
+        "mode": "any",
+        "pool": {
+          "subjects": [
+            "SOC"
+          ],
+          "minNumber": 100
+        }
+      },
+      "why": "\"Coterminal MA students are required to take 45 unduplicated units ... All units for the coterminal MA must be taken at or above the 100 level\". \"Students who wish to take courses outside the department must seek approval in advance. Coterminal master’s students are limited to five units from other Social Sciences departments ... no more than 12 units of coursework across the 290 series (including SOC 291, SOC 292) can be counted\". Outside courses are moved in; the block floor checks the 45 units."
+    },
+    {
+      "block": "mAbEGmbJ",
+      "node": {
+        "id": "ov-coterm-gpa",
+        "t": "text",
+        "name": "GPA of 3.0 (B) or better",
+        "manual": "gpa"
+      },
+      "why": "\"All units applied to the coterminal master’s degree must be taken for a letter grade, and an overall grade point average (GPA) of 3.0 (B) or better is required for the degree.\""
+    },
+    {
+      "block": "M29QHlDu",
+      "node": {
+        "id": "ov-ma-units",
+        "t": "courses",
+        "name": "45 units of Sociology coursework",
+        "mode": "units",
+        "units": 45,
+        "pool": {
+          "subjects": [
+            "SOC"
+          ]
+        },
+        "limits": [
+          {
+            "label": "flex units outside Sociology (by petition)",
+            "maxUnits": 15,
+            "pool": {
+              "anySubject": true,
+              "excludeSubjects": [
+                "SOC"
+              ]
+            }
+          }
+        ]
+      },
+      "why": "Two kinds of student with different rules: \"Coterminal MA Program Requirements\" (core SOC 270 and SOC 280A, \"45 unduplicated units\", 23 at the 200 level) and the M.A. (\"a minimum of 45 units of Sociology coursework\", 30 taught by Sociology faculty). Each is a choice the student is in, so each block is one option. \"students must complete a minimum of 45 units of Sociology coursework ... Of these units, 30 units must be taken in courses taught by faculty appointed in the Sociology department. Students may petition to use the remaining 15 units as flex units for courses not offered by faculty appointed in Sociology\". Flex courses are moved in after the DGS approves them."
+    },
+    {
+      "block": "M29QHlDu",
+      "node": {
+        "id": "ov-ma-gpa",
+        "t": "text",
+        "name": "GPA of 3.0 (B) or better",
+        "manual": "gpa"
+      },
+      "why": "\"students must complete a minimum of 45 units of Sociology coursework with a grade point average (GPA) of 3.0 (B) or better.\" \"All courses must be taken for a letter grade when possible.\""
+    }
+  ]
+}

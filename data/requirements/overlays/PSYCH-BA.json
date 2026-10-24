@@ -1,0 +1,375 @@
+{
+  "code": "PSYCH-BA",
+  "reviewed": "2026-10-23",
+  "summary": "You take PSYCH 1 and PSYCH 10, five core courses with at least two from each of Areas A and B, the WIM and a capstone, and electives for 70 units. Electives are PSYCH courses of 3 or more units or the cognates BIO 150, PSYC 135 and PSYC 139; up to 10 units of research, independent study and practica (such as PSYCH 194, 195, 198, 182 and 281) also count, 15 for honors students. At most 10 units may come from outside Psychology, so at least 60 are in the department. Every course needs a letter grade of C- or better unless it is offered only S/NC. Outside courses, a TA's extra research units, and a statistics course standing in for PSYCH 10 because your other program requires it are moved in by hand. Core courses taken in summer, the honors application and thesis, and the no-AP-credit and no-double-counting rules are checked by hand.",
+  "program": {
+    "letterGrade": true,
+    "minGrade": "C-",
+    "why": "Grading: \"All courses towards the 70-unit requirement must be taken for a letter grade of C- or better, except for courses offered only on an S/NC (Satisfactory/No Credit) basis.\"",
+    "totals": [
+      {
+        "label": "Units from outside Psychology",
+        "maxUnits": 10,
+        "pool": {
+          "subjects": [],
+          "anySubject": true,
+          "excludeSubjects": [
+            "PSYCH"
+          ],
+          "exclude": [
+            "BIO 150",
+            "PSYC 135",
+            "PSYC 139"
+          ]
+        },
+        "why": "Policies: \"Psychology majors must complete at least 60 units of coursework toward their major at Stanford within the Psychology department. Psychology majors may count no more than a total of ten units of credit from outside the department toward the major\". Electives: the three cognate courses \"count as PSYCH courses, not outside units\". With the 70-unit minimum, a 10-unit cap on outside units is the 60-unit Psychology minimum, cognates included."
+      },
+      {
+        "label": "Research, independent study and practicum units",
+        "maxUnits": 10,
+        "codes": [
+          "PSYCH 50A",
+          "PSYCH 150B",
+          "PSYCH 182",
+          "PSYCH 188",
+          "PSYCH 188A",
+          "PSYCH 189",
+          "PSYCH 190",
+          "PSYCH 191",
+          "PSYCH 193",
+          "PSYCH 194",
+          "PSYCH 195",
+          "PSYCH 195S",
+          "PSYCH 197",
+          "PSYCH 198",
+          "PSYCH 257",
+          "PSYCH 275",
+          "PSYCH 281",
+          "PSYCH 282"
+        ],
+        "unless": "OydLHIA8",
+        "why": "\"Students may count up to 10 units of Psychology research (PSYCH 195 and PSYCH 198), independent study (PSYCH 194), and practica (PSYCH 182 and PSYCH 281) toward the Psychology major.\" \"Any units beyond these limits may be counted toward the 180 units required for graduation.\""
+      },
+      {
+        "label": "Research, independent study and practicum units (honors)",
+        "maxUnits": 15,
+        "codes": [
+          "PSYCH 50A",
+          "PSYCH 150B",
+          "PSYCH 182",
+          "PSYCH 188",
+          "PSYCH 188A",
+          "PSYCH 189",
+          "PSYCH 190",
+          "PSYCH 191",
+          "PSYCH 193",
+          "PSYCH 194",
+          "PSYCH 195",
+          "PSYCH 195S",
+          "PSYCH 197",
+          "PSYCH 198",
+          "PSYCH 257",
+          "PSYCH 275",
+          "PSYCH 281",
+          "PSYCH 282"
+        ],
+        "when": "OydLHIA8",
+        "why": "\"Honors students may only count up to 15 units of independent research (including Psychology 194, 195, and 198) toward the psychology major.\""
+      }
+    ]
+  },
+  "nodes": {
+    "qOqP9V7d": {
+      "why": "\"In their senior year, students will complete a seminar course (PSYCH 196) each quarter which at the end they will summarize and synthesize their experience in a final capstone project.\" Three quarters, so three enrollments of PSYCH 196.",
+      "patch": {
+        "items": [
+          [
+            "PSYCH 196"
+          ],
+          [
+            "PSYCH 196"
+          ],
+          [
+            "PSYCH 196"
+          ]
+        ]
+      }
+    },
+    "VuuXPNPX": {
+      "why": "\"Complete five of the following Core Courses, with a minimum of two each from Area A and Area B.\" The Bulletin data asked only for two from each area; a fifth from either area is added. Area A and B keep their ids.",
+      "replace": {
+        "t": "all",
+        "name": "Core Courses",
+        "children": [
+          {
+            "id": "tumYSWHD",
+            "t": "courses",
+            "name": "Area A Courses",
+            "mode": "atLeast",
+            "n": 2,
+            "items": [
+              [
+                "PSYCH 30"
+              ],
+              [
+                "PSYCH 35"
+              ],
+              [
+                "PSYCH 45"
+              ],
+              [
+                "PSYCH 50"
+              ]
+            ]
+          },
+          {
+            "id": "UD0Fg5gP",
+            "t": "courses",
+            "name": "Area B Courses",
+            "mode": "atLeast",
+            "n": 2,
+            "items": [
+              [
+                "PSYCH 60"
+              ],
+              [
+                "PSYCH 70"
+              ],
+              [
+                "PSYCH 80"
+              ],
+              [
+                "PSYCH 90"
+              ],
+              [
+                "PSYCH 95"
+              ],
+              [
+                "PSYCH 124"
+              ]
+            ]
+          },
+          {
+            "id": "ov-core-fifth",
+            "t": "courses",
+            "name": "Fifth core course (Area A or B)",
+            "mode": "atLeast",
+            "n": 1,
+            "items": [
+              [
+                "PSYCH 30"
+              ],
+              [
+                "PSYCH 35"
+              ],
+              [
+                "PSYCH 45"
+              ],
+              [
+                "PSYCH 50"
+              ],
+              [
+                "PSYCH 60"
+              ],
+              [
+                "PSYCH 70"
+              ],
+              [
+                "PSYCH 80"
+              ],
+              [
+                "PSYCH 90"
+              ],
+              [
+                "PSYCH 95"
+              ],
+              [
+                "PSYCH 124"
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    "cjO4wofK": {
+      "why": "\"The remaining unit requirements can be fulfilled through elective PSYCH courses. An elective Psychology course is any PSYCH course that is three units or more (excluding independent study, research, and practicum). There are also three cognate courses from other departments that count as PSYCH courses, not outside units. These courses are: BIO 150, PSYC 135, and PSYC 139\". The 70 units (\"the 70 units needed for the major\") are program.unitsMin, which counts every course the program's rules hold, so this pool takes the rest. Research, independent study and practica (the five the text names, PSYCH 194, 195, 198, 182, 281, and the other PSYCH courses whose catalog titles name them as research projects, independent study or practica) are left out here and counted in ov-research.",
+      "replace": {
+        "t": "courses",
+        "name": "Psychology (PSYCH) Elective Courses",
+        "mode": "any",
+        "minUnitsEach": 3,
+        "items": [
+          [
+            "BIO 150"
+          ],
+          [
+            "PSYC 135"
+          ],
+          [
+            "PSYC 139"
+          ]
+        ],
+        "pool": {
+          "subjects": [
+            "PSYCH"
+          ],
+          "exclude": [
+            "PSYCH 50A",
+            "PSYCH 150B",
+            "PSYCH 182",
+            "PSYCH 188",
+            "PSYCH 188A",
+            "PSYCH 189",
+            "PSYCH 190",
+            "PSYCH 191",
+            "PSYCH 193",
+            "PSYCH 194",
+            "PSYCH 195",
+            "PSYCH 195S",
+            "PSYCH 197",
+            "PSYCH 198",
+            "PSYCH 257",
+            "PSYCH 275",
+            "PSYCH 281",
+            "PSYCH 282"
+          ]
+        }
+      }
+    },
+    "A0YPCtGJ": {
+      "why": "\"This is a year-long seminar taken in the senior year ... Students may opt for 1-4 units in each of the three quarters.\" PSYCH 198 is repeatable, so it is listed three times.",
+      "patch": {
+        "items": [
+          [
+            "PSYCH 198"
+          ],
+          [
+            "PSYCH 198"
+          ],
+          [
+            "PSYCH 198"
+          ]
+        ]
+      }
+    },
+    "fmGYJQGm": {
+      "why": "\"Three quarters of Honors Research ... [PSYCH 198] (Senior Honors Research) autumn, winter, and spring quarter\". PSYCH 198 is repeatable, so it is listed three times. These are the same three quarters of PSYCH 198 that the Honors capstone option asks for (\"students should complete either the Psychology Honors option or Capstone: Psych Applied option\"), so the rule shares them.",
+      "patch": {
+        "items": [
+          [
+            "PSYCH 198"
+          ],
+          [
+            "PSYCH 198"
+          ],
+          [
+            "PSYCH 198"
+          ]
+        ],
+        "shares": true
+      }
+    },
+    "RZmfQDAC": {
+      "why": "\"Students may apply to the program at the end of their junior year. Admission to the program is based on academic performance, previous research experience, and faculty or graduate student recommendations.\"",
+      "patch": {
+        "manual": "approval"
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "OydLHIA8",
+      "why": "\"Completion of the Honors Thesis. Presentation at the Honors Convention\"",
+      "node": {
+        "id": "ov-honors-thesis",
+        "t": "text",
+        "name": "Honors thesis and Honors Convention presentation",
+        "manual": "thesis"
+      }
+    },
+    {
+      "block": "wIVTy0dj",
+      "why": "Policies: \"Psychology majors may count no more than a total of ten units of credit from outside the department toward the major and must be approved by the student services office or faculty advisor.\" The 60-unit Psychology minimum leaves room for these 10.",
+      "node": {
+        "id": "ov-outside",
+        "t": "text",
+        "manual": "approval",
+        "optional": true,
+        "name": "Up to 10 units from outside Psychology, approved by student services or your faculty advisor"
+      }
+    },
+    {
+      "block": "wIVTy0dj",
+      "why": "\"Students may count up to 10 units of Psychology research (PSYCH 195 and PSYCH 198), independent study (PSYCH 194), and practica (PSYCH 182 and PSYCH 281) toward the Psychology major. Students who are teaching assistants for a Psychology course or enrolled in the senior Honors Program are allowed up to 15 units in independent study and research.\" The caps are program totals; a TA's extra 5 units are moved in by hand.",
+      "node": {
+        "id": "ov-research",
+        "t": "courses",
+        "mode": "any",
+        "optional": true,
+        "items": [
+          [
+            "PSYCH 50A"
+          ],
+          [
+            "PSYCH 150B"
+          ],
+          [
+            "PSYCH 182"
+          ],
+          [
+            "PSYCH 188"
+          ],
+          [
+            "PSYCH 188A"
+          ],
+          [
+            "PSYCH 189"
+          ],
+          [
+            "PSYCH 190"
+          ],
+          [
+            "PSYCH 191"
+          ],
+          [
+            "PSYCH 193"
+          ],
+          [
+            "PSYCH 194"
+          ],
+          [
+            "PSYCH 195"
+          ],
+          [
+            "PSYCH 195S"
+          ],
+          [
+            "PSYCH 197"
+          ],
+          [
+            "PSYCH 198"
+          ],
+          [
+            "PSYCH 257"
+          ],
+          [
+            "PSYCH 275"
+          ],
+          [
+            "PSYCH 281"
+          ],
+          [
+            "PSYCH 282"
+          ]
+        ],
+        "name": "Research, independent study and practica (up to 10 units, 15 for honors students and TAs)"
+      }
+    }
+  ],
+  "blocks": {
+    "4fKBv7AX": {
+      "shares": false,
+      "why": "\"students will complete a seminar course (PSYCH 196) each quarter\" and Honors' three quarters of PSYCH 198: each enrollment counts once. The electives have no count of their own, so the capstone courses still count toward the 70 units."
+    }
+  }
+}

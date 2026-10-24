@@ -1,0 +1,60 @@
+{
+  "code": "PSYCH-PMN",
+  "reviewed": "2026-10-23",
+  "summary": "You take 20 units of graduate Psychology courses (numbered 200 and above, cross-listings included), each letter graded with a B- or better; a course not offered for a letter grade does not count.",
+  "program": {
+    "letterGrade": true,
+    "minGrade": "B-",
+    "why": "\"All courses counting toward the PhD minor must be taken for a letter grade and passed with a B- or better grade. If the course is not offered for a letter grade, it cannot be counted toward the PhD minor.\""
+  },
+  "blocks": {
+    "mBDCHYxG": {
+      "kind": "required"
+    }
+  },
+  "nodes": {
+    "OmSgFcrO": {
+      "why": "\"the student must complete 20 units of coursework at the graduate level in the Department of Psychology. Crosslisted graduate courses can be used to satisfy this requirement. All courses counting toward the PhD minor must be taken for a letter grade and passed with a B- or better grade.\" Graduate level is read as numbered 200 and above, the numbering of every graduate course the department's MA and PhD text lists; a cross-listed graduate course counts through its PSYCH listing. The audit otherwise lets an S count in a course offered only S/NC, so the PSYCH graduate courses offered only S/NC are excluded from the pool.",
+      "replace": {
+        "t": "courses",
+        "name": "20 units of graduate-level Psychology coursework",
+        "mode": "units",
+        "units": 20,
+        "pool": {
+          "subjects": [
+            "PSYCH"
+          ],
+          "minNumber": 200,
+          "exclude": [
+            "PSYCH 201",
+            "PSYCH 207",
+            "PSYCH 207B",
+            "PSYCH 208",
+            "PSYCH 218",
+            "PSYCH 220",
+            "PSYCH 224",
+            "PSYCH 225",
+            "PSYCH 243",
+            "PSYCH 246",
+            "PSYCH 249L",
+            "PSYCH 258",
+            "PSYCH 261A",
+            "PSYCH 267",
+            "PSYCH 269",
+            "PSYCH 273",
+            "PSYCH 275",
+            "PSYCH 281",
+            "PSYCH 282",
+            "PSYCH 283",
+            "PSYCH 288",
+            "PSYCH 290",
+            "PSYCH 291",
+            "PSYCH 292R",
+            "PSYCH 373",
+            "PSYCH 459"
+          ]
+        }
+      }
+    }
+  }
+}

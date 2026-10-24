@@ -1,0 +1,1018 @@
+{
+  "code": "GLBLST-MIN",
+  "reviewed": "2026-10-23",
+  "summary": "You pick one specialization (African, European, Iranian, Islamic, Latin American, REEES or South Asian Studies), and every specialization also takes one globally focused core course such as COLLEGE 119. The audit checks the 28 units, the core course and each specialization's listed courses, unit floors, letter grades and language-unit caps (15 units in Iranian, Islamic and South Asian Studies, 6 in Latin American Studies, and at most 3 units of REEES Current Issues courses). Checked by hand: language proficiency where a test or an unlisted language is used, focus-of-study choices, how many units were taken on campus, and outside credit, which the subplan advisor approves. The capstones are optional.",
+  "blocks": {
+    "NJUkog7Q": {
+      "kind": "required"
+    }
+  },
+  "nodes": {
+    "BTDQ839n": {
+      "why": "Description, not a requirement: \"The Global Studies minor, African Studies specialization, offers students the opportunity to complement their primary course of study\"",
+      "patch": {
+        "info": true
+      }
+    },
+    "rZ0a7nDf": {
+      "why": "Description, not a requirement: \"The Global Studies minor specialization in African Studies enables students to develop critical knowledge and skills\"",
+      "patch": {
+        "info": true
+      }
+    },
+    "Mub84LJA": {
+      "why": "\"One entry-level course that covers more than one region of Africa.\" The 25 units belong to all the requirements together (\"a total of 25 Units combined through the requirements listed below\", the block's floor), not to this one course. Notes: \"Coursework must be letter-graded, except where letter grades are not offered.\"",
+      "patch": {
+        "letter": true,
+        "units": null
+      }
+    },
+    "DQfksrmV": {
+      "why": "\"At least one quarter's exposure to a sub-Saharan African language.\" The languages are arranged individually, so the student moves the course in.",
+      "patch": {
+        "n": 1,
+        "manual": "approval"
+      }
+    },
+    "cMlE6RcC": {
+      "why": "\"A designated focus of study, either disciplinary or regional, through a three-course concentration developed with the minor advisor.\"",
+      "patch": {
+        "n": 3,
+        "manual": "approval"
+      }
+    },
+    "ho7WiXzF": {
+      "why": "\"Capstone (optional)\": \"Students may work with the subplan advisor to develop a capstone project to count towards the unit fulfillment of the minor.\"",
+      "patch": {
+        "optional": true
+      }
+    },
+    "Rj5OhEp2": {
+      "why": "Description, not a requirement: \"The Stanford Global Studies minor, European Studies specialization, is designed for undergraduates with an interdisciplinary interest\"",
+      "patch": {
+        "info": true
+      }
+    },
+    "Z0K6XTfb": {
+      "why": "Description, not a requirement: \"The Global Studies minor specialization in European Studies enables students to\"",
+      "patch": {
+        "info": true
+      }
+    },
+    "akLaPnUS": {
+      "why": "Electives notes: \"Coursework must be letter-graded work, except where letter grades are not offered.\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "f4vg1YNR": {
+      "why": "The rule's title: \"Required Survey Course (5 units) on European History or Culture\". Electives notes: \"Coursework must be letter-graded work, except where letter grades are not offered.\" \"Complete at least 1 of the following courses or another similar course approved by the advisor.\"",
+      "patch": {
+        "letter": true,
+        "minUnitsEach": 5
+      }
+    },
+    "ChCOO3BG": {
+      "why": "Electives notes: \"Coursework must be letter-graded work, except where letter grades are not offered.\" \"Earn at least 15 credits from the following courses or other similar courses approved by the advisor.\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "QuahosEe": {
+      "why": "\"Advanced proficiency in a modern European language achieved by one of the following: Completion of six quarters of college-level study ... Completion of a course taught in a modern European language at the 100-level or higher and with a letter grade of B or higher ... Achieve the advanced proficiency level on the ACTFL scale\".",
+      "patch": {
+        "manual": "other"
+      }
+    },
+    "08PdvyCE": {
+      "why": "\"Capstone (optional)\": \"Students may work with the subplan advisor to develop a capstone project to count towards the unit fulfillment of the minor.\"",
+      "patch": {
+        "optional": true
+      }
+    },
+    "06mQWCCo": {
+      "why": "Description, not a requirement: \"The Stanford Global Studies minor, Iranian Studies specialization, is designed for undergraduates with an interdisciplinary interest\"",
+      "patch": {
+        "info": true
+      }
+    },
+    "zmvUzkyx": {
+      "why": "Description, not a requirement: \"The Global Studies minor specialization in Iranian Studies enables students to\"",
+      "patch": {
+        "info": true
+      }
+    },
+    "Htc77joP": {
+      "why": "\"One area or region-specific entry-level course on Iran and the Middle East ... At least 3-5 units must be from the list of area courses.\" The data's 25 units are not in the text. \"Coursework must be taken for a letter-grade, except where letter grades are not offered.\"",
+      "patch": {
+        "letter": true,
+        "units": null
+      }
+    },
+    "tCIpYaXM": {
+      "why": "\"Complete two quarters of Persian Language courses, or proven Persian Language proficiency.\" \"Coursework must be taken for a letter-grade, except where letter grades are not offered.\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "1eLUVhEI": {
+      "why": "\"15 units must be from the list of core courses.\" The data asked for three courses. \"Coursework must be taken for a letter-grade, except where letter grades are not offered.\"",
+      "patch": {
+        "letter": true,
+        "mode": "units",
+        "units": 15,
+        "n": null
+      }
+    },
+    "JIELPR9h": {
+      "why": "\"5-10 units may be from the list of elective courses.\" Read as at least 5 units: the rule is the \"Elective Course Requirement\" and the area, core and elective units make up the 28. The data asked for two courses. \"Coursework must be taken for a letter-grade, except where letter grades are not offered.\"",
+      "patch": {
+        "letter": true,
+        "mode": "units",
+        "units": 5,
+        "n": null
+      }
+    },
+    "s2yVFKDa": {
+      "why": "\"Capstone (optional)\": \"Students may work with the subplan advisor to develop a capstone project to count towards the unit fulfillment of the minor.\"",
+      "patch": {
+        "optional": true
+      }
+    },
+    "J7UmFDe2": {
+      "why": "Description, not a requirement: \"The minor in Global Studies with specialization in Islamic Studies offers students an interdisciplinary and global exploration\"",
+      "patch": {
+        "info": true
+      }
+    },
+    "HSqPTApJ": {
+      "why": "Description, not a requirement: \"The Global Studies minor specialization in Islamic Studies enables students to\"",
+      "patch": {
+        "info": true
+      }
+    },
+    "Rm0uAH05": {
+      "why": "\"A minimum of 25 units of Islamic studies-related courses.\" A floor over the subplan's requirements (entry course, the three areas and languages), which with the globally focused core course make the 28; the data had put 25 units on the single entry course.",
+      "patch": {
+        "units": 25
+      }
+    },
+    "qSyuDC5P": {
+      "why": "\"At least one course must be an area-specific entry course focusing on the Islamic world.\" The 25 units are the subplan's floor (Rm0uAH05). \"Coursework must be letter-graded, except where letter grades are not offered.\"",
+      "patch": {
+        "letter": true,
+        "units": null
+      }
+    },
+    "fOBlm6KS": {
+      "why": "\"Coursework must be letter-graded, except where letter grades are not offered.\" \"At least one course must be from each of the following areas\".",
+      "patch": {
+        "letter": true
+      }
+    },
+    "i6RenDTH": {
+      "why": "\"Coursework must be letter-graded, except where letter grades are not offered.\" \"At least one course must be from each of the following areas\".",
+      "patch": {
+        "letter": true
+      }
+    },
+    "JVNNfIY8": {
+      "why": "\"Coursework must be letter-graded, except where letter grades are not offered.\" \"At least one course must be from each of the following areas\".",
+      "patch": {
+        "letter": true
+      }
+    },
+    "LzxqGddT": {
+      "why": "\"Coursework must be letter-graded, except where letter grades are not offered.\" \"Completion of three courses in a relevant language\".",
+      "patch": {
+        "letter": true
+      }
+    },
+    "rikC4k8t": {
+      "why": "\"Capstone (optional)\": \"Students may work with the subplan advisor to develop a capstone project to count towards the unit fulfillment of the minor.\"",
+      "patch": {
+        "optional": true
+      }
+    },
+    "dD5pnJRT": {
+      "why": "Description, not a requirement: \"The Global Studies minor, Latin American Studies (GS-LAS) specialization, consists of courses surveying the Latin American region\"",
+      "patch": {
+        "info": true
+      }
+    },
+    "R0R7hBwk": {
+      "why": "Description, not a requirement: \"The Global Studies minor specialization in Latin American Studies enables students to\"",
+      "patch": {
+        "info": true
+      }
+    },
+    "vtsIlBBV": {
+      "why": "\"Introductory course must be taken for 5 units.\" \"All courses counted toward the minor must be taken for a letter grade, except where letter grades are not offered.\"",
+      "patch": {
+        "letter": true,
+        "minUnitsEach": 5
+      }
+    },
+    "dzLsybWY": {
+      "why": "\"At least 14 units in courses comprising a coherent area focus on a theoretical problem or regional issue in the fields of humanities, social sciences, and/or environment and health.\" \"and/or\" lets the 14 units mix the three lists, so they are one unit rule over all of them (the data took one list, one course). Coherence of the focus is the advisor's call. \"All courses counted toward the minor must be taken for a letter grade, except where letter grades are not offered.\"",
+      "replace": {
+        "t": "courses",
+        "name": "Theoretical or geographic area courses (14 units)",
+        "mode": "units",
+        "units": 14,
+        "letter": true,
+        "items": [
+          [
+            "ANTHRO 153",
+            "CHILATST 153C",
+            "CSRE 153C"
+          ],
+          [
+            "ARTHIST 293",
+            "CSRE 293",
+            "CHILATST 293",
+            "AFRICAAM 193",
+            "AMSTUD 293A"
+          ],
+          [
+            "CHILATST 100"
+          ],
+          [
+            "CHILATST 140",
+            "ILAC 140"
+          ],
+          [
+            "COMPLIT 142",
+            "AMSTUD 142",
+            "CSRE 142"
+          ],
+          [
+            "COMPLIT 209"
+          ],
+          [
+            "COMPLIT 348",
+            "ILAC 348"
+          ],
+          [
+            "CSRE 101A",
+            "AMSTUD 101A",
+            "FEMGEN 101A"
+          ],
+          [
+            "CSRE 250",
+            "CHILATST 248",
+            "ILAC 248",
+            "FILMEDIA 248"
+          ],
+          [
+            "DLCL 100",
+            "FRENCH 175",
+            "COMPLIT 100",
+            "ITALIAN 175",
+            "GERMAN 175",
+            "HISTORY 106E",
+            "ILAC 175",
+            "URBANST 153"
+          ],
+          [
+            "EDUC 306A"
+          ],
+          [
+            "EDUC 404"
+          ],
+          [
+            "FRENCH 264E",
+            "AFRICAAM 264",
+            "COMPLIT 264",
+            "CSRE 165A",
+            "HISTORY 246E"
+          ],
+          [
+            "HISTORY 106B"
+          ],
+          [
+            "HISTORY 166C",
+            "INTNLREL 154"
+          ],
+          [
+            "HISTORY 173",
+            "HISTORY 73",
+            "AMSTUD 73",
+            "CHILATST 173",
+            "AMSTUD 173",
+            "CHILATST 73"
+          ],
+          [
+            "HISTORY 178",
+            "HISTORY 78",
+            "FILMEDIA 178",
+            "ILAC 178"
+          ],
+          [
+            "HISTORY 201A",
+            "HISTORY 301A"
+          ],
+          [
+            "HISTORY 272",
+            "ILAC 214",
+            "ILAC 314",
+            "HISTORY 372B",
+            "ARTHIST 277"
+          ],
+          [
+            "HISTORY 371",
+            "ILAC 371"
+          ],
+          [
+            "HUMRTS 108"
+          ],
+          [
+            "ILAC 105"
+          ],
+          [
+            "ILAC 113"
+          ],
+          [
+            "ILAC 113Q",
+            "DLCL 113Q",
+            "COMPLIT 113Q"
+          ],
+          [
+            "ILAC 122A",
+            "COMPLIT 122A"
+          ],
+          [
+            "ILAC 128",
+            "CHILATST 128"
+          ],
+          [
+            "ILAC 131"
+          ],
+          [
+            "ILAC 136"
+          ],
+          [
+            "ILAC 141",
+            "COMPLIT 141F"
+          ],
+          [
+            "ILAC 142N",
+            "GLOBAL 142N"
+          ],
+          [
+            "ILAC 143"
+          ],
+          [
+            "ILAC 157"
+          ],
+          [
+            "ILAC 161",
+            "ILAC 361"
+          ],
+          [
+            "ILAC 242",
+            "COMPLIT 242"
+          ],
+          [
+            "ILAC 247",
+            "COMPLIT 248"
+          ],
+          [
+            "ILAC 256",
+            "ILAC 356"
+          ],
+          [
+            "ILAC 267"
+          ],
+          [
+            "ILAC 268"
+          ],
+          [
+            "ILAC 273"
+          ],
+          [
+            "ILAC 277"
+          ],
+          [
+            "ILAC 278"
+          ],
+          [
+            "ILAC 278A"
+          ],
+          [
+            "INTNLREL 141A"
+          ],
+          [
+            "LATINAM 200"
+          ],
+          [
+            "LATINAM 248",
+            "CHILATST 248A",
+            "AFRICAAM 248",
+            "CSRE 248"
+          ],
+          [
+            "LATINAM 252"
+          ],
+          [
+            "OSPMADRD 55"
+          ],
+          [
+            "OSPSANTG 14"
+          ],
+          [
+            "OSPSANTG 30"
+          ],
+          [
+            "OSPSANTG 68"
+          ],
+          [
+            "OSPSANTG 89"
+          ],
+          [
+            "SOC 189",
+            "SOC 289",
+            "CSRE 289"
+          ],
+          [
+            "SPANLANG 108SL"
+          ],
+          [
+            "INTNLREL 146A",
+            "INTNLREL 246A"
+          ],
+          [
+            "INTNLREL 147",
+            "INTNLREL 247"
+          ],
+          [
+            "INTNLREL 153",
+            "POLISCI 243"
+          ],
+          [
+            "INTNLREL 179"
+          ],
+          [
+            "OSPSANTG 66"
+          ],
+          [
+            "OSPSANTG 119X"
+          ],
+          [
+            "POLISCI 247G",
+            "POLISCI 347G"
+          ],
+          [
+            "POLISCI 248S",
+            "POLISCI 348S"
+          ],
+          [
+            "POLISCI 440B"
+          ],
+          [
+            "BIO 234",
+            "HUMBIO 112",
+            "BIO 144"
+          ],
+          [
+            "ECON 106",
+            "EARTHSYS 106",
+            "ECON 206",
+            "ESS 106",
+            "ESS 206",
+            "EARTHSYS 206",
+            "GEP 106",
+            "GEP 206"
+          ],
+          [
+            "ETHICSOC 278M",
+            "ETHICSOC 178M",
+            "EARTHSYS 178M",
+            "PHIL 178M",
+            "PHIL 278M",
+            "POLISCI 134L"
+          ],
+          [
+            "HISTORY 278B",
+            "HISTORY 378"
+          ],
+          [
+            "OSPSANTG 29"
+          ],
+          [
+            "OSPSANTG 58"
+          ],
+          [
+            "OSPSANTG 95"
+          ]
+        ]
+      }
+    },
+    "Vyi4HtQ4": {
+      "why": "\"Completion of three quarters, or equivalent, of college-level study of a language spoken in Latin America or achieving intermediate level of proficiency ... on the ACTFL scale\". Spanish is a language spoken in Latin America, so SPANLANG courses count besides the listed Portuguese, Nahuatl, Quechua and Haitian Creole courses. A test result is marked met by hand. Core requirements: \"All courses counted toward the minor must be taken for a letter grade, except where letter grades are not offered.\"",
+      "patch": {
+        "mode": "atLeast",
+        "n": 3,
+        "pool": {
+          "subjects": [
+            "SPANLANG"
+          ]
+        },
+        "letter": true
+      }
+    },
+    "Z7Uxn4HR": {
+      "why": "\"Capstone (optional)\": \"Students may work with the subplan advisor to develop a capstone project to count towards the unit fulfillment of the minor.\"",
+      "patch": {
+        "optional": true
+      }
+    },
+    "vY2WkLjP": {
+      "why": "Description, not a requirement: \"The Stanford Global Studies minor, Russian, East European and Eurasian Studies specialization, is designed for undergraduates\"",
+      "patch": {
+        "info": true
+      }
+    },
+    "DkYWHS94": {
+      "why": "Description, not a requirement: \"The Global Studies minor specialization in Russian, East European and Eurasian Studies enables students to\"",
+      "patch": {
+        "info": true
+      }
+    },
+    "VFzu61Ks": {
+      "why": "\"0-10 units: Proficiency Requirement in a Language of either Central Europe; Eastern Europe; or Eurasia. May be satisfied by any of the following: A one-year sequence at any level ... Intermediate-High level Russian language proficiency on the ACTFL OPI\".",
+      "patch": {
+        "manual": "other"
+      }
+    },
+    "wHSDTDij": {
+      "why": "\"≥ 12 units: Core Courses (from pre-approved list). Core courses must be spread across at least 2, ideally 3, disciplines.\" The 12 units come from all three lists together, and a second rule checks that they cover at least two of the disciplines (the earlier version let each discipline hold one course, so a third core course counted for nothing).",
+      "replace": {
+        "t": "all",
+        "name": "REEES Core Courses",
+        "children": [
+          {
+            "id": "ov-glblst-reees-core",
+            "t": "courses",
+            "name": "At least 12 units of REEES core courses",
+            "mode": "units",
+            "units": 12,
+            "items": [
+              [
+                "SLAVIC 230"
+              ],
+              [
+                "SLAVIC 388"
+              ],
+              [
+                "REES 322"
+              ],
+              [
+                "SLAVIC 387"
+              ],
+              [
+                "REES 303"
+              ],
+              [
+                "SLAVIC 347"
+              ],
+              [
+                "SLAVIC 204"
+              ],
+              [
+                "REES 210"
+              ],
+              [
+                "SLAVIC 223"
+              ],
+              [
+                "REES 328"
+              ],
+              [
+                "REES 348"
+              ],
+              [
+                "REES 345C"
+              ],
+              [
+                "REES 224C"
+              ],
+              [
+                "REES 221"
+              ],
+              [
+                "SLAVIC 286"
+              ],
+              [
+                "SLAVIC 332"
+              ],
+              [
+                "SLAVIC 360"
+              ],
+              [
+                "SLAVIC 370"
+              ],
+              [
+                "SLAVIC 263"
+              ],
+              [
+                "SLAVIC 327"
+              ],
+              [
+                "SLAVIC 146"
+              ],
+              [
+                "SLAVIC 235"
+              ],
+              [
+                "SLAVIC 140"
+              ],
+              [
+                "SLAVIC 322"
+              ],
+              [
+                "HISTORY 327"
+              ],
+              [
+                "OSPGEN 31"
+              ],
+              [
+                "HISTORY 321B"
+              ],
+              [
+                "HISTORY 224A"
+              ],
+              [
+                "HISTORY 307E"
+              ],
+              [
+                "HISTORY 302G"
+              ],
+              [
+                "HISTORY 384"
+              ],
+              [
+                "INTNLREL 140C"
+              ],
+              [
+                "HISTORY 320"
+              ],
+              [
+                "HISTORY 204G"
+              ],
+              [
+                "HISTORY 208G"
+              ],
+              [
+                "HISTORY 228"
+              ],
+              [
+                "REES 219"
+              ],
+              [
+                "REES 231B"
+              ],
+              [
+                "INTLPOL 230"
+              ],
+              [
+                "INTLPOL 247"
+              ],
+              [
+                "REES 327R"
+              ]
+            ]
+          },
+          {
+            "id": "ov-glblst-reees-spread",
+            "t": "some",
+            "name": "Core courses in at least two disciplines",
+            "n": 2,
+            "shares": true,
+            "children": [
+              {
+                "id": "VWMnbY1b",
+                "t": "courses",
+                "name": "Slavic/Humanities Core Courses",
+                "mode": "any",
+                "items": [
+                  [
+                    "SLAVIC 230"
+                  ],
+                  [
+                    "SLAVIC 388"
+                  ],
+                  [
+                    "REES 322"
+                  ],
+                  [
+                    "SLAVIC 387"
+                  ],
+                  [
+                    "REES 303"
+                  ],
+                  [
+                    "SLAVIC 347"
+                  ],
+                  [
+                    "SLAVIC 204"
+                  ],
+                  [
+                    "REES 210"
+                  ],
+                  [
+                    "SLAVIC 223"
+                  ],
+                  [
+                    "REES 328"
+                  ],
+                  [
+                    "REES 348"
+                  ],
+                  [
+                    "REES 345C"
+                  ],
+                  [
+                    "REES 224C"
+                  ],
+                  [
+                    "REES 221"
+                  ],
+                  [
+                    "SLAVIC 286"
+                  ],
+                  [
+                    "SLAVIC 332"
+                  ],
+                  [
+                    "SLAVIC 360"
+                  ],
+                  [
+                    "SLAVIC 370"
+                  ],
+                  [
+                    "SLAVIC 263"
+                  ],
+                  [
+                    "SLAVIC 327"
+                  ],
+                  [
+                    "SLAVIC 146"
+                  ],
+                  [
+                    "SLAVIC 235"
+                  ],
+                  [
+                    "SLAVIC 140"
+                  ],
+                  [
+                    "SLAVIC 322"
+                  ]
+                ],
+                "shares": true
+              },
+              {
+                "id": "FIxpUGdU",
+                "t": "courses",
+                "name": "History Core Courses",
+                "mode": "any",
+                "items": [
+                  [
+                    "HISTORY 327"
+                  ],
+                  [
+                    "OSPGEN 31"
+                  ],
+                  [
+                    "HISTORY 321B"
+                  ],
+                  [
+                    "REES 224C"
+                  ],
+                  [
+                    "HISTORY 224A"
+                  ],
+                  [
+                    "HISTORY 307E"
+                  ],
+                  [
+                    "HISTORY 302G"
+                  ],
+                  [
+                    "HISTORY 384"
+                  ],
+                  [
+                    "INTNLREL 140C"
+                  ],
+                  [
+                    "HISTORY 320"
+                  ],
+                  [
+                    "HISTORY 204G"
+                  ],
+                  [
+                    "HISTORY 208G"
+                  ],
+                  [
+                    "HISTORY 228"
+                  ]
+                ],
+                "shares": true
+              },
+              {
+                "id": "YspVLj5T",
+                "t": "courses",
+                "name": "Social Science Core Courses",
+                "mode": "any",
+                "items": [
+                  [
+                    "REES 219"
+                  ],
+                  [
+                    "REES 231B"
+                  ],
+                  [
+                    "INTLPOL 230"
+                  ],
+                  [
+                    "INTLPOL 247"
+                  ],
+                  [
+                    "REES 327R"
+                  ]
+                ],
+                "shares": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "wK5WhXor": {
+      "why": "\"Capstone (optional)\": \"Students may work with the subplan advisor to develop a capstone project to count towards the unit fulfillment of the minor.\"",
+      "patch": {
+        "optional": true
+      }
+    },
+    "GkU3iXio": {
+      "why": "Description, not a requirement: \"The Global Studies minor, South Asian Studies specialization, offers students a focused study\"",
+      "patch": {
+        "info": true
+      }
+    },
+    "JxiGvwSB": {
+      "why": "Description, not a requirement: \"The Global Studies minor specialization in South Asian Studies enables students to\"",
+      "patch": {
+        "info": true
+      }
+    },
+    "8N6p8ju4": {
+      "why": "\"At least 25 units of qualifying courses.\" A floor over the introductory course, electives and language, not 25 units of electives alone.",
+      "patch": {
+        "units": 25
+      }
+    },
+    "sYSo6zCA": {
+      "why": "\"All courses counted toward the minor must be taken for a letter grade, except where letter grades are not offered.\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "agKJAz7y": {
+      "why": "The 25 units are the floor over all the subplan's courses (8N6p8ju4), so the electives fill whatever the introductory course and language leave. \"All courses counted toward the minor must be taken for a letter grade, except where letter grades are not offered.\"",
+      "patch": {
+        "letter": true,
+        "mode": "any",
+        "units": null
+      }
+    },
+    "tJwuJVYL": {
+      "why": "\"Intermediate proficiency in a South Asian language by one of the following methods: Completion of two introductory language courses in a South Asian language ... Intermediate proficiency ... as measured by the ACTFL scale\". The languages are not a list, so the courses are moved in; a test is marked met by hand.",
+      "patch": {
+        "n": 2,
+        "manual": "other"
+      }
+    },
+    "eoxq9VYn": {
+      "why": "\"Capstone (optional)\": \"Students may work with the subplan advisor to develop a capstone project to count towards the unit fulfillment of the minor.\"",
+      "patch": {
+        "optional": true
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "GpFYEAXP",
+      "why": "Electives notes: \"At least 13 of the 28 units must be completed on the Stanford campus.\"",
+      "node": {
+        "id": "ov-glblst-eur-residency",
+        "t": "text",
+        "name": "At least 13 of the 28 units on the Stanford campus",
+        "manual": "residency"
+      }
+    },
+    {
+      "block": "ANWmptXm",
+      "why": "\"At least 15 of the 28 units must be completed at Stanford.\"",
+      "node": {
+        "id": "ov-glblst-las-residency",
+        "t": "text",
+        "name": "At least 15 of the 28 units at Stanford",
+        "manual": "residency"
+      }
+    },
+    {
+      "block": "lxcE0J1A",
+      "why": "\"At least 10 of the 25 units must be completed at Stanford.\"",
+      "node": {
+        "id": "ov-glblst-sa-residency",
+        "t": "text",
+        "name": "At least 10 of the 25 units at Stanford",
+        "manual": "residency"
+      }
+    }
+  ],
+  "program": {
+    "totals": [
+      {
+        "label": "Language units in Iranian Studies",
+        "maxUnits": 15,
+        "pool": {
+          "subjects": [
+            "PERSLANG"
+          ]
+        },
+        "when": "0yZnVK1H",
+        "inRules": true,
+        "why": "Persian Language Requirement: \"Up to 15 units of language courses may be applied toward the minor.\""
+      },
+      {
+        "label": "Language units in Islamic Studies",
+        "maxUnits": 15,
+        "pool": {
+          "subjects": [
+            "ARABLANG",
+            "PERSLANG",
+            "TURKLANG",
+            "URDULANG",
+            "HINDLANG",
+            "KAZKHLNG",
+            "SWAHLANG"
+          ]
+        },
+        "when": "OE1ILyjW",
+        "inRules": true,
+        "why": "Languages: \"A maximum of 15 relevant language course units may be counted towards the Global Minor, Islamic Studies subplan.\""
+      },
+      {
+        "label": "Language units in Latin American Studies",
+        "maxUnits": 6,
+        "pool": {
+          "subjects": [
+            "SPANLANG",
+            "PORTLANG",
+            "NAHUALNG",
+            "QUECHLNG",
+            "HAITLANG"
+          ]
+        },
+        "when": "ANWmptXm",
+        "why": "Foreign language requirement: \"If completion of the three-quarter sequence of language training is done at Stanford University, students may apply up to six units towards the 28-unit minimum requirement.\""
+      },
+      {
+        "label": "REEES Current Issues units",
+        "maxUnits": 3,
+        "codes": [
+          "REES 100",
+          "REES 200",
+          "REES 100A",
+          "REES 200A",
+          "REES 100B",
+          "REES 200B"
+        ],
+        "when": "XV0CwLBZ",
+        "why": "REEES Current Issues Courses: \"A maximum of 3 units may be counted towards the 28-unit total\""
+      },
+      {
+        "label": "Language units in South Asian Studies",
+        "maxUnits": 15,
+        "pool": {
+          "subjects": [
+            "HINDLANG",
+            "URDULANG",
+            "PERSLANG",
+            "PUNJLANG",
+            "SNSKTLNG",
+            "TAMILANG",
+            "TELULANG",
+            "GUJARLNG",
+            "TIBETLNG"
+          ]
+        },
+        "when": "lxcE0J1A",
+        "inRules": true,
+        "why": "Foreign Language Requirement: \"A maximum of 15 language units, in a relevant language as described above, may be counted towards the total units required for the Global Minor, South Asia Subplan.\""
+      }
+    ]
+  }
+}

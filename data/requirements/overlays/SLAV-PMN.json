@@ -1,0 +1,23 @@
+{
+  "code": "SLAV-PMN",
+  "reviewed": "2026-10-23",
+  "summary": "You take 25 units of graduate SLAVIC courses (numbered 200 and above) for a letter grade where one is offered. Make your study plan with the Director of Slavic Languages and Literatures; the department expects a B+ in each course and reviews lower grades.",
+  "nodes": {
+    "4GbMT7Ke": {
+      "why": "\"The Ph.D. minor requires the student to complete 25 units of graduate coursework in Slavic Literature and Culture classes.\" Graduate coursework is read as SLAVIC courses numbered 200 and above, the way the department's PhD treats SLAVIC 230. Grading: \"PhD students in the department must take required courses for a letter grade if available\".",
+      "replace": {
+        "t": "courses",
+        "name": "25 units of graduate Slavic literature and culture courses",
+        "mode": "units",
+        "units": 25,
+        "pool": {
+          "subjects": [
+            "SLAVIC"
+          ],
+          "minNumber": 200
+        },
+        "letter": true
+      }
+    }
+  }
+}

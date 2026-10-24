@@ -1,0 +1,591 @@
+{
+  "code": "EE-BS",
+  "reviewed": "2026-10-23",
+  "summary": "Every course must be letter graded when the instructor offers a letter grade. The audit checks 40 units of math and science (the calculus, math sequence, EE math and probability courses, physics, and a science elective), a Technology in Society course, 8 units of Engineering Fundamentals with CS 106B, 18 units of EE core, and 31 units across the required course, a design or capstone course and electives, for 100 units in all; a course counts toward one requirement only, except that the WIM course is also your design course. Courses from the School of Engineering's approved science, TiS and fundamentals lists, the 2.0 GPA, the program sheet due the quarter before you graduate, and EE 191W for WIM are checked by hand. Honors adds 10 letter-graded units of EE 191 or 191W at B+ or better, a 3.5 GPA in EE courses, and the thesis and presentation.",
+  "program": {
+    "letterGrade": true,
+    "why": "Grading: \"All courses for the EE major must be taken for a letter grade if letter grading basis is offered.\" A course offered only without a letter grade still counts."
+  },
+  "blocks": {
+    "yJCoueHh": {
+      "units": null
+    }
+  },
+  "nodes": {
+    "MkeCgE3l": {
+      "why": "Moved into the 40-unit Mathematics and Science group that replaces OCwKdfpn.",
+      "remove": true
+    },
+    "OCwKdfpn": {
+      "why": "\"Minimum 40 units Math and Science combined, plus three units of TIS, for a total of 43 units.\" The 43-unit floor sat on the whole School Requirements block, where Engineering Fundamentals units also counted toward it; it is now 40 units over Mathematics and Science, with TiS its own course. Mathematics Sequence: \"CME 100 and CME 102 can be substituted for MATH 51 and MATH 53. MATH 52 can be substituted for MATH 51.\", so two courses, not one. Science: \"3 courses, minimum 12 units\", one of them the Science Elective, so Physics is two courses; the Bulletin lists them in the pairs PHYSICS 41 or 61 with EE 65 or PHYSICS 71. The Science Elective is on the School of Engineering's approved list, which is not in the Bulletin text. With the page's course links filled in: \"[CME 100] is same as [ENGR 154]. [CME 102] is same as [ENGR 155A].\" and \"Students may use [CS 109] in place of [EE 178].\"",
+      "replace": {
+        "id": "ov-eebs-mathsci",
+        "t": "all",
+        "name": "Mathematics and Science (40 units)",
+        "units": 40,
+        "children": [
+          {
+            "id": "OCwKdfpn",
+            "t": "all",
+            "name": "Mathematics",
+            "children": [
+              {
+                "id": "oxSpZfZD",
+                "notes": "This requirement may also be satisfied with AP Calculus.",
+                "t": "courses",
+                "name": "Calculus",
+                "mode": "all",
+                "items": [
+                  [
+                    "MATH 19"
+                  ],
+                  [
+                    "MATH 20"
+                  ],
+                  [
+                    "MATH 21"
+                  ]
+                ]
+              },
+              {
+                "id": "eoFkNM6a",
+                "notes": "CME 100 and CME 102 can be substituted for MATH 51 and MATH 53. MATH 52 can be substituted for MATH 51. MATH 51 and MATH 53 are recommended, in part, for providing substantial early exposure to linear algebra.\ncourse is same as course. course is same as course.\ncourse may be replaced by course. course may be replaced by course.",
+                "t": "courses",
+                "name": "Mathematics Sequence",
+                "mode": "all",
+                "items": [
+                  [
+                    "MATH 51",
+                    "MATH 52",
+                    "CME 100",
+                    "ENGR 154"
+                  ],
+                  [
+                    "MATH 53",
+                    "CME 102",
+                    "ENGR 155A"
+                  ]
+                ]
+              },
+              {
+                "id": "QQYrjEkr",
+                "notes": "If used for math, course may not be used as an EE elective.",
+                "t": "courses",
+                "name": "EE Math",
+                "mode": "any",
+                "items": [
+                  [
+                    "CS 103"
+                  ],
+                  [
+                    "ENGR 108"
+                  ],
+                  [
+                    "MATH 113"
+                  ]
+                ]
+              },
+              {
+                "id": "QaSjKnD6",
+                "notes": "Students may use course in place of course. Students are strongly encouraged to take course to learn key EE topics.",
+                "t": "courses",
+                "name": "Statistics/Probability",
+                "mode": "all",
+                "items": [
+                  [
+                    "EE 178",
+                    "CS 109"
+                  ]
+                ]
+              }
+            ]
+          },
+          {
+            "id": "MkeCgE3l",
+            "t": "all",
+            "name": "Science",
+            "units": 12,
+            "desc": "3 courses, minimum 12 units",
+            "children": [
+              {
+                "id": "NEQttz5I",
+                "t": "courses",
+                "name": "Physics",
+                "mode": "all",
+                "items": [
+                  [
+                    "PHYSICS 41",
+                    "PHYSICS 61"
+                  ],
+                  [
+                    "EE 65",
+                    "PHYSICS 71"
+                  ]
+                ]
+              },
+              {
+                "id": "xpPKuSRO",
+                "desc": "Students must complete at least one course from the School of Engineering's approved Science course list for 2026-27. The list is available in the Science subsection within the Engineering-BS School Requirements.",
+                "t": "text",
+                "name": "Science Elective",
+                "n": 1,
+                "manual": "approval"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "Za0Zoqqy": {
+      "why": "\"Students must complete at least one course from the School of Engineering's approved Technology in Society list for 2026-27.\" The list is not in the Bulletin text.",
+      "patch": {
+        "manual": "approval",
+        "n": 1
+      }
+    },
+    "Yjjuc6jE": {
+      "why": "\"Engineering Fundamentals (minimum eight units)\"",
+      "patch": {
+        "units": 8
+      }
+    },
+    "vasuEw5O": {
+      "why": "\"Students must complete at least one course from the School of Engineering's approved Engineering Fundamentals list for 2026-27.\" The list is not in the Bulletin text.",
+      "patch": {
+        "manual": "approval"
+      }
+    },
+    "RWhqlBej": {
+      "why": "\"Minimum 18 units.\"",
+      "patch": {
+        "units": 18
+      }
+    },
+    "XaJ7rvAF": {
+      "why": "Moved into the 31-unit group that replaces Cco0CCvS.",
+      "remove": true
+    },
+    "x1HzlpnW": {
+      "why": "Moved into the 31-unit group that replaces Cco0CCvS.",
+      "remove": true
+    },
+    "Cco0CCvS": {
+      "why": "\"31 units must be completed between the Required Course, WIM/Design/Capstone, and Electives.\" \"Students may have fewer elective units if they have more than seven units in the Required Course and WIM/Design/Capstone course areas.\" So the 31 is the floor and the electives' 24 is not fixed. \"A course may only be counted toward one requirement, not double-counted.\": the Design/Capstone course now counts once, here, rather than also as an elective. Required Course: \"One course must be completed for a minimum of 4 units.\" Electives: \"Electives may include up to two additional Engineering Fundamentals and any letter-graded lecture/lab EE courses\"; Honors \"course units do not count toward the required 57 units\" (EE 191). Engineering Fundamentals from the School list, frosh and sophomore seminars, and non-lecture EE courses are checked by hand. \"Frosh and Sophomore seminars and [EE 191] do not count toward the 57 units\", so the EE Introductory and Sophomore Seminars (N and Q courses) are left out of the EE pool.",
+      "replace": {
+        "id": "ov-eebs-31",
+        "t": "all",
+        "name": "Required Course, Design/Capstone and Electives (31 units)",
+        "units": 31,
+        "children": [
+          {
+            "id": "XaJ7rvAF",
+            "desc": "One course must be completed for a minimum of 4 units.",
+            "notes": "Engineering Fundamentals, EE Core, one Required Course, WIM/Design/Capstone, and Electives must total a minimum of 57 units, over and above the 43 units of Math and Science.\nStudents may select any combination of electives from the Electives list. Electives may include up to two additional Engineering Fundamentals and any letter-graded lecture/lab EE courses (minus any previously noted restrictions).\nFrosh and Sophomore seminars and course do not count toward the 57 units. Students may have fewer elective units if they have more than seven units in the Required Course and WIM/Design/Capstone course areas. course may only be used towards the 57 units if being used for WIM.\nA course may only be counted toward one requirement, not double-counted. All courses taken for the major must be taken for a letter grade if the instructor offers that option.",
+            "t": "courses",
+            "name": "Required Course",
+            "mode": "atLeast",
+            "n": 1,
+            "minUnitsEach": 4,
+            "items": [
+              [
+                "EE 101B",
+                "EE 102B",
+                "EE 180",
+                "CS 107",
+                "CS 107E"
+              ]
+            ]
+          },
+          {
+            "id": "x1HzlpnW",
+            "desc": "All courses below can satisfy the WIM/Design/Capstone requirements, with the exception of course and course which only meet the Design/Capstone requirement and do not meet the WIM requirement.",
+            "t": "courses",
+            "name": "Design/Capstone",
+            "mode": "any",
+            "items": [
+              [
+                "CS 194W"
+              ],
+              [
+                "EE 109"
+              ],
+              [
+                "EE 133"
+              ],
+              [
+                "EE 134"
+              ],
+              [
+                "EE 153"
+              ],
+              [
+                "EE 264"
+              ],
+              [
+                "EE 264W"
+              ],
+              [
+                "EE 267"
+              ],
+              [
+                "EE 267W"
+              ]
+            ]
+          },
+          {
+            "id": "Cco0CCvS",
+            "desc": "A minimum of 24 units must be completed.",
+            "notes": "31 units must be completed between the Required Course, WIM/Design/Capstone, and Electives.",
+            "t": "courses",
+            "name": "Electives",
+            "mode": "any",
+            "items": [
+              [
+                "EE 101B"
+              ],
+              [
+                "EE 102B"
+              ],
+              [
+                "EE 104"
+              ],
+              [
+                "EE 109"
+              ],
+              [
+                "EE 114"
+              ],
+              [
+                "EE 116"
+              ],
+              [
+                "EE 117"
+              ],
+              [
+                "EE 118"
+              ],
+              [
+                "EE 124"
+              ],
+              [
+                "EE 133"
+              ],
+              [
+                "EE 134"
+              ],
+              [
+                "EE 142"
+              ],
+              [
+                "EE 153"
+              ],
+              [
+                "EE 160A"
+              ],
+              [
+                "EE 156"
+              ],
+              [
+                "EE 165"
+              ],
+              [
+                "EE 168"
+              ],
+              [
+                "EE 179"
+              ],
+              [
+                "EE 180"
+              ],
+              [
+                "EE 184"
+              ],
+              [
+                "EE 212"
+              ],
+              [
+                "EE 214B"
+              ],
+              [
+                "EE 216"
+              ],
+              [
+                "EE 222"
+              ],
+              [
+                "EE 223"
+              ],
+              [
+                "EE 228"
+              ],
+              [
+                "EE 235"
+              ],
+              [
+                "EE 236A"
+              ],
+              [
+                "EE 236B"
+              ],
+              [
+                "EE 242"
+              ],
+              [
+                "EE 247"
+              ],
+              [
+                "EE 259"
+              ],
+              [
+                "EE 260A"
+              ],
+              [
+                "EE 260B"
+              ],
+              [
+                "EE 261"
+              ],
+              [
+                "EE 263"
+              ],
+              [
+                "EE 264"
+              ],
+              [
+                "EE 267"
+              ],
+              [
+                "EE 269"
+              ],
+              [
+                "EE 271"
+              ],
+              [
+                "EE 272"
+              ],
+              [
+                "EE 273"
+              ],
+              [
+                "EE 274"
+              ],
+              [
+                "EE 276"
+              ],
+              [
+                "EE 278"
+              ],
+              [
+                "EE 279"
+              ],
+              [
+                "EE 282"
+              ],
+              [
+                "EE 285"
+              ],
+              [
+                "EE 372D"
+              ],
+              [
+                "BIOE 131"
+              ],
+              [
+                "CEE 155"
+              ],
+              [
+                "CEE 176A"
+              ],
+              [
+                "CEE 176B"
+              ],
+              [
+                "CS 107"
+              ],
+              [
+                "CS 107E"
+              ],
+              [
+                "CS 108"
+              ],
+              [
+                "CS 111"
+              ],
+              [
+                "CS 112"
+              ],
+              [
+                "CS 131"
+              ],
+              [
+                "CS 140"
+              ],
+              [
+                "CS 143"
+              ],
+              [
+                "CS 144"
+              ],
+              [
+                "CS 145"
+              ],
+              [
+                "CS 148"
+              ],
+              [
+                "CS 149"
+              ],
+              [
+                "CS 155"
+              ],
+              [
+                "CS 161"
+              ],
+              [
+                "CS 221"
+              ],
+              [
+                "CS 223A"
+              ],
+              [
+                "CS 224N"
+              ],
+              [
+                "CS 225A"
+              ],
+              [
+                "CS 229"
+              ],
+              [
+                "CS 231A"
+              ],
+              [
+                "CS 231N"
+              ],
+              [
+                "CS 241"
+              ],
+              [
+                "CS 244"
+              ],
+              [
+                "ENGR 105"
+              ],
+              [
+                "ENGR 205"
+              ],
+              [
+                "ENERGY 201B"
+              ],
+              [
+                "MATSCI 142"
+              ],
+              [
+                "MATSCI 152"
+              ],
+              [
+                "MATSCI 156"
+              ],
+              [
+                "MATSCI 164"
+              ],
+              [
+                "ME 220"
+              ],
+              [
+                "MED 275B"
+              ],
+              [
+                "MUSIC 250A"
+              ],
+              [
+                "MUSIC 253"
+              ],
+              [
+                "MUSIC 254"
+              ],
+              [
+                "MUSIC 256A"
+              ],
+              [
+                "MUSIC 257"
+              ],
+              [
+                "MUSIC 356"
+              ],
+              [
+                "MUSIC 422"
+              ],
+              [
+                "RAD 206"
+              ],
+              [
+                "RAD 220"
+              ]
+            ],
+            "pool": {
+              "subjects": [
+                "EE"
+              ],
+              "exclude": [
+                "EE 191",
+                "EE 12Q",
+                "EE 14N",
+                "EE 15Q",
+                "EE 17N",
+                "EE 17Q",
+                "EE 21N",
+                "EE 22N",
+                "EE 25N",
+                "EE 26N",
+                "EE 29N",
+                "EE 60N",
+                "EE 84N",
+                "EE 93Q"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "d9Q7H9SD": {
+      "why": "\"Complete at least ten units of course or course with the thesis advisor for a letter grade.\" \"A minimum grade of B+ is required for course or course to receive honors.\"",
+      "patch": {
+        "letter": true,
+        "minGrade": "B+"
+      }
+    }
+  },
+  "add": [
+    {
+      "block": "ZpYjX5fI",
+      "why": "GPA: \"Minimum GPA of 2.0 is required.\"",
+      "node": { "id": "ov-eebs-gpa", "t": "text", "name": "GPA of at least 2.0", "manual": "gpa" }
+    },
+    {
+      "block": "ZpYjX5fI",
+      "why": "Policies: \"You are required to submit a completed program sheet to the EE Department the quarter prior to conferring your EE BS degree.\"",
+      "node": { "id": "ov-eebs-program-sheet", "t": "text", "name": "Program sheet submitted the quarter before graduation", "manual": "other" }
+    },
+    {
+      "block": "UxKjfXSi",
+      "why": "\"Maintain a grade point average of at least 3.5 in Electrical Engineering courses.\"",
+      "node": {
+        "id": "ov-eebs-hon-gpa",
+        "t": "text",
+        "name": "GPA of 3.5 in EE courses",
+        "manual": "gpa"
+      }
+    },
+    {
+      "block": "UxKjfXSi",
+      "why": "\"Submit an Undergraduate Honors Program Application, including the thesis proposal\" \"Submit one final copy of the honors thesis approved by the advisor and second reader to the Degree Progress Officer by May 15th.\" \"Attend poster and oral presentation at the end of spring quarter\"",
+      "node": {
+        "id": "ov-eebs-hon-thesis",
+        "t": "text",
+        "name": "Honors application, thesis and presentation",
+        "manual": "thesis"
+      }
+    }
+  ]
+}

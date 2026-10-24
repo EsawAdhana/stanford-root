@@ -1,0 +1,27 @@
+{
+  "code": "CHEM-PMN",
+  "reviewed": "2026-10-23",
+  "summary": "You need 20 units of CHEM courses numbered 200 and above, including four lecture courses of at least 3 units each (research and teaching courses do not count as lectures). You check by hand the 3.0 GPA in the minor's courses. All of the minor's coursework must be taken at Stanford.",
+  "blocks": {
+    "jk6CEWHP": { "kind": "required" }
+  },
+  "nodes": {
+    "IyCXja3g": {
+      "why": "\"must complete, with a GPA of 3.0 or higher, 20 graduate-level units in Chemistry, including four lecture courses of at least three units each.\" The four courses count toward the 20 units, with other graduate CHEM units making up the rest. Whether a course is a lecture is not in the audit's data; CHEM research and teaching courses are left out of the four.",
+      "replace": {
+        "t": "all",
+        "name": "Requirements",
+        "children": [
+          {
+            "id": "ov-units", "t": "all", "name": "20 graduate-level units in Chemistry", "units": 20,
+            "children": [
+              { "id": "ov-lectures", "t": "courses", "name": "Four Chemistry lecture courses of at least 3 units", "mode": "atLeast", "n": 4, "minUnitsEach": 3, "pool": { "subjects": ["CHEM"], "minNumber": 200, "exclude": ["CHEM 200", "CHEM 299", "CHEM 301", "CHEM 390"] } },
+              { "id": "ov-more", "t": "courses", "name": "Other graduate-level Chemistry units (to reach 20)", "mode": "any", "optional": true, "pool": { "subjects": ["CHEM"], "minNumber": 200 } }
+            ]
+          },
+          { "id": "ov-gpa", "t": "text", "name": "GPA of 3.0 or higher in the minor's courses", "manual": "gpa" }
+        ]
+      }
+    }
+  }
+}

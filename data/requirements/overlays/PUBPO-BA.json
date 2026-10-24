@@ -1,0 +1,399 @@
+{
+  "code": "PUBPO-BA",
+  "reviewed": "2026-10-23",
+  "summary": "You take the preparatory economics and psychology courses, the policy core, an ethics course, the WIM, the capstone and one concentration of 15 letter-graded units, for 60 units, each with a C- or better. Core, ethics, WIM, capstone and concentration courses and PUBLPOL 50 or ECON 50 must be letter graded; at most 10 preparatory units may be CR/NC, and at most 5 of them in ECON 102A and 102B. Variable-unit courses count for 5 units (PUBLPOL 50, PSYCH 138), and CSRE 126C, ETHICSOC 135F and PUBLPOL 134 on its own need 4 units for ethics. Your concentration form's approval, the self-designed concentration, and the honors GPA and thesis are checked by hand.",
+  "blocks": {
+    "8n6Duf01": {
+      "kind": "subplan"
+    }
+  },
+  "nodes": {
+    "Or6oaCEM": {
+      "why": "Economics note: \"Students must receive a C- or better in all courses.\"",
+      "patch": {
+        "minGrade": "C-"
+      }
+    },
+    "JiWcQuff": {
+      "why": "Economics note: \"PUBLPOL 50 and ECON 50 must be taken for a letter grade. Students must receive a C- or better in all courses. Variable unit courses must be taken for five units.\" PUBLPOL 50 is offered for 4-5 units and ECON 50 for 5.",
+      "patch": {
+        "minGrade": "C-",
+        "minUnitsEach": 5,
+        "letter": true
+      }
+    },
+    "asCpVaap": {
+      "why": "Preparatory notes: \"Students must receive a C- or better in all courses. Variable unit courses must be taken for five units.\" PSYCH 138 is the variable-unit course here (3-5 units), so it counts for 5 units; MS&E 180 and PSYCH 70 are fixed at 4.",
+      "replace": {
+        "t": "any",
+        "name": "Psychology",
+        "children": [
+          {
+            "id": "ov-psych-fixed",
+            "t": "courses",
+            "name": "MS&E 180 or PSYCH 70",
+            "mode": "atLeast",
+            "n": 1,
+            "items": [
+              [
+                "MS&E 180"
+              ],
+              [
+                "PSYCH 70"
+              ]
+            ],
+            "minGrade": "C-"
+          },
+          {
+            "id": "ov-psych-138",
+            "t": "courses",
+            "name": "PSYCH 138 for 5 units",
+            "mode": "all",
+            "items": [
+              [
+                "PSYCH 138"
+              ]
+            ],
+            "minGrade": "C-",
+            "minUnitsEach": 5
+          }
+        ]
+      }
+    },
+    "2BQJaE0S": {
+      "why": "\"Core Course Grading & Units: All core courses must be completed for a letter grade. Students must receive a C-or better in all courses.\"",
+      "patch": {
+        "letter": true,
+        "minGrade": "C-"
+      }
+    },
+    "qOTv58H8": {
+      "why": "\"Core Course Grading & Units: All core courses must be completed for a letter grade. Students must receive a C-or better in all courses.\" Honors notes: \"the advanced empirical methods course (preferred course is PUBLPOL 105, other options for this requirement include ECON 102C, STATS 202, PUBLPOL 303D)\", so PUBLPOL 303D is added to the list.",
+      "patch": {
+        "letter": true,
+        "minGrade": "C-",
+        "items": [
+          [
+            "PUBLPOL 105"
+          ],
+          [
+            "ECON 102C"
+          ],
+          [
+            "STATS 202"
+          ],
+          [
+            "PUBLPOL 303D"
+          ]
+        ]
+      }
+    },
+    "kqF4S5RZ": {
+      "why": "Note: \"Must be taken for a letter grade.\" The 4-unit minimums are on the options they name (kqF4S5RZ-1, kqF4S5RZ-2, ov-ethics-134).",
+      "patch": {
+        "letter": true
+      }
+    },
+    "mVopEPt9": {
+      "why": "Notes: \"Complete for 3-5 Units\" \"Must be taken for a letter grade\"",
+      "patch": {
+        "letter": true,
+        "minUnitsEach": 3
+      }
+    },
+    "snKiaJ4A": {
+      "why": "\"The capstone research requirement must be completed for a letter grade.\"",
+      "patch": {
+        "letter": true
+      }
+    },
+    "mlzomp81": {
+      "why": "\"During senior year, the student must enroll in at least 8 but no more than 15 units of PUBLPOL 199 Senior Honors Thesis Research ... All PUBLPOL 199 Senior Honors Thesis Research units must receive a final grade of at least a 'B+' in order to graduate with honors.\" PUBLPOL 200H is only \"strongly recommended\" (\"If a student is unable to take PUBLPOL 200H and still plans to complete an honors thesis, they will also need to complete one quarter of practicum\"), so it is not required here. The 3.5 GPA and the thesis are hand checks.",
+      "replace": {
+        "t": "all",
+        "name": "Honors",
+        "children": [
+          {
+            "id": "ov-honors-199",
+            "t": "courses",
+            "name": "8 units of PUBLPOL 199 Senior Honors Thesis Research, B+ or better",
+            "mode": "units",
+            "units": 8,
+            "items": [
+              [
+                "PUBLPOL 199"
+              ]
+            ],
+            "minGrade": "B+"
+          },
+          {
+            "id": "ov-honors-gpa",
+            "t": "text",
+            "name": "GPA of 3.5 in the major's course requirements",
+            "manual": "gpa"
+          },
+          {
+            "id": "ov-honors-thesis",
+            "t": "text",
+            "name": "Honors thesis approved by the adviser and honors director, and presented",
+            "manual": "thesis"
+          }
+        ]
+      }
+    },
+    "038FEOV6": {
+      "why": "\"A self-designed concentration requires a detailed statement of study goals and the relationship of each proposed course to those goals, as well as the approval of the student's faculty advisor and the Program Director.\" Like every concentration it is \"at least 15 units of coursework for a letter grade\", moved in by hand.",
+      "patch": {
+        "units": 15,
+        "manual": "approval",
+        "name": "Self-designed concentration (15 approved units)"
+      }
+    },
+    "q92XVDIW": {
+      "why": "\"Majors must complete at least 15 units of coursework for a letter grade in an area of concentration. This post-core coursework must be approved by the student's faculty advisor and the program director no later than the end of spring quarter of the junior year.\" The approval of the concentration form is checked by hand.",
+      "patch": {
+        "info": null,
+        "manual": "approval",
+        "name": "Concentration courses approved by the faculty advisor and program director"
+      }
+    },
+    "oTVpPGpQ": {
+      "why": "\"Majors must complete at least 15 units of coursework for a letter grade in an area of concentration. This post-core coursework must be approved by the student's faculty advisor and the program director no later than the end of spring quarter of the junior year.\" The approval of the concentration form is checked by hand.",
+      "patch": {
+        "info": null,
+        "manual": "approval",
+        "name": "Concentration courses approved by the faculty advisor and program director"
+      }
+    },
+    "GoXTDw9c": {
+      "why": "\"Majors must complete at least 15 units of coursework for a letter grade in an area of concentration. This post-core coursework must be approved by the student's faculty advisor and the program director no later than the end of spring quarter of the junior year.\" The approval of the concentration form is checked by hand.",
+      "patch": {
+        "info": null,
+        "manual": "approval",
+        "name": "Concentration courses approved by the faculty advisor and program director"
+      }
+    },
+    "wt2Z2Cyy": {
+      "why": "\"Majors must complete at least 15 units of coursework for a letter grade in an area of concentration. This post-core coursework must be approved by the student's faculty advisor and the program director no later than the end of spring quarter of the junior year.\" The approval of the concentration form is checked by hand.",
+      "patch": {
+        "info": null,
+        "manual": "approval",
+        "name": "Concentration courses approved by the faculty advisor and program director"
+      }
+    },
+    "ZAkQlzh0": {
+      "why": "\"Majors must complete at least 15 units of coursework for a letter grade in an area of concentration. This post-core coursework must be approved by the student's faculty advisor and the program director no later than the end of spring quarter of the junior year.\" The approval of the concentration form is checked by hand.",
+      "patch": {
+        "info": null,
+        "manual": "approval",
+        "name": "Concentration courses approved by the faculty advisor and program director"
+      }
+    },
+    "SXYJw7Ny": {
+      "why": "\"Majors must complete at least 15 units of coursework for a letter grade in an area of concentration. This post-core coursework must be approved by the student's faculty advisor and the program director no later than the end of spring quarter of the junior year.\" The approval of the concentration form is checked by hand.",
+      "patch": {
+        "info": null,
+        "manual": "approval",
+        "name": "Concentration courses approved by the faculty advisor and program director"
+      }
+    },
+    "YoTJlloG": {
+      "why": "\"Majors must complete at least 15 units of coursework for a letter grade in an area of concentration. This post-core coursework must be approved by the student's faculty advisor and the program director no later than the end of spring quarter of the junior year.\" The approval of the concentration form is checked by hand.",
+      "patch": {
+        "info": null,
+        "manual": "approval",
+        "name": "Concentration courses approved by the faculty advisor and program director"
+      }
+    },
+    "WqOFI887": {
+      "why": "\"Majors must complete at least 15 units of coursework for a letter grade in an area of concentration. This post-core coursework must be approved by the student's faculty advisor and the program director no later than the end of spring quarter of the junior year.\" The approval of the concentration form is checked by hand.",
+      "patch": {
+        "info": null,
+        "manual": "approval",
+        "name": "Concentration courses approved by the faculty advisor and program director"
+      }
+    },
+    "PGS7taf3": {
+      "why": "\"Majors must complete at least 15 units of coursework for a letter grade in an area of concentration. This post-core coursework must be approved by the student's faculty advisor and the program director no later than the end of spring quarter of the junior year.\" The approval of the concentration form is checked by hand.",
+      "patch": {
+        "info": null,
+        "manual": "approval",
+        "name": "Concentration courses approved by the faculty advisor and program director"
+      }
+    },
+    "q4afFZ0C": {
+      "why": "\"Majors must complete at least 15 units of coursework for a letter grade in an area of concentration. This post-core coursework must be approved by the student's faculty advisor and the program director no later than the end of spring quarter of the junior year.\" The approval of the concentration form is checked by hand.",
+      "patch": {
+        "info": null,
+        "manual": "approval",
+        "name": "Concentration courses approved by the faculty advisor and program director"
+      }
+    },
+    "CvjNrqdZ": {
+      "why": "\"Majors must complete at least 15 units of coursework for a letter grade in an area of concentration. This post-core coursework must be approved by the student's faculty advisor and the program director no later than the end of spring quarter of the junior year.\" The approval of the concentration form is checked by hand.",
+      "patch": {
+        "info": null,
+        "manual": "approval",
+        "name": "Concentration courses approved by the faculty advisor and program director"
+      }
+    },
+    "iKZNbkK5": {
+      "why": "\"Majors must complete at least 15 units of coursework for a letter grade in an area of concentration. This post-core coursework must be approved by the student's faculty advisor and the program director no later than the end of spring quarter of the junior year.\" The approval of the concentration form is checked by hand.",
+      "patch": {
+        "info": null,
+        "manual": "approval",
+        "name": "Concentration courses approved by the faculty advisor and program director"
+      }
+    },
+    "W88FLvUs": {
+      "why": "\"Majors must complete at least 15 units of coursework for a letter grade in an area of concentration. This post-core coursework must be approved by the student's faculty advisor and the program director no later than the end of spring quarter of the junior year.\" The approval of the concentration form is checked by hand.",
+      "patch": {
+        "info": null,
+        "manual": "approval",
+        "name": "Concentration courses approved by the faculty advisor and program director"
+      }
+    },
+    "l6Hxm8bf": {
+      "why": "\"Majors must complete at least 15 units of coursework for a letter grade in an area of concentration.\" The listed courses are suggestions (\"Students may choose to take other courses, though all concentration courses must be discussed with and approved by the faculty advisor whether or not they are on the suggested list\"), so an approved course that is not listed is moved in by hand.",
+      "patch": {
+        "letter": true
+      }
+    },
+    "rQwiZN5S": {
+      "why": "\"Majors must complete at least 15 units of coursework for a letter grade in an area of concentration.\" The listed courses are suggestions (\"Students may choose to take other courses, though all concentration courses must be discussed with and approved by the faculty advisor whether or not they are on the suggested list\"), so an approved course that is not listed is moved in by hand.",
+      "patch": {
+        "letter": true
+      }
+    },
+    "0l1mMt2D": {
+      "why": "\"Majors must complete at least 15 units of coursework for a letter grade in an area of concentration.\" The listed courses are suggestions (\"Students may choose to take other courses, though all concentration courses must be discussed with and approved by the faculty advisor whether or not they are on the suggested list\"), so an approved course that is not listed is moved in by hand.",
+      "patch": {
+        "letter": true
+      }
+    },
+    "TCuv4zWF": {
+      "why": "\"Majors must complete at least 15 units of coursework for a letter grade in an area of concentration.\" The listed courses are suggestions (\"Students may choose to take other courses, though all concentration courses must be discussed with and approved by the faculty advisor whether or not they are on the suggested list\"), so an approved course that is not listed is moved in by hand.",
+      "patch": {
+        "letter": true
+      }
+    },
+    "WUAlViqp": {
+      "why": "\"Majors must complete at least 15 units of coursework for a letter grade in an area of concentration.\" The listed courses are suggestions (\"Students may choose to take other courses, though all concentration courses must be discussed with and approved by the faculty advisor whether or not they are on the suggested list\"), so an approved course that is not listed is moved in by hand.",
+      "patch": {
+        "letter": true
+      }
+    },
+    "RVgIhy87": {
+      "why": "\"Majors must complete at least 15 units of coursework for a letter grade in an area of concentration.\" The listed courses are suggestions (\"Students may choose to take other courses, though all concentration courses must be discussed with and approved by the faculty advisor whether or not they are on the suggested list\"), so an approved course that is not listed is moved in by hand.",
+      "patch": {
+        "letter": true
+      }
+    },
+    "jNlXlqsw": {
+      "why": "\"Majors must complete at least 15 units of coursework for a letter grade in an area of concentration.\" The listed courses are suggestions (\"Students may choose to take other courses, though all concentration courses must be discussed with and approved by the faculty advisor whether or not they are on the suggested list\"), so an approved course that is not listed is moved in by hand.",
+      "patch": {
+        "letter": true
+      }
+    },
+    "v52CY1fa": {
+      "why": "\"Majors must complete at least 15 units of coursework for a letter grade in an area of concentration.\" The listed courses are suggestions (\"Students may choose to take other courses, though all concentration courses must be discussed with and approved by the faculty advisor whether or not they are on the suggested list\"), so an approved course that is not listed is moved in by hand.",
+      "patch": {
+        "letter": true
+      }
+    },
+    "VSoOaT03": {
+      "why": "\"Majors must complete at least 15 units of coursework for a letter grade in an area of concentration.\" The listed courses are suggestions (\"Students may choose to take other courses, though all concentration courses must be discussed with and approved by the faculty advisor whether or not they are on the suggested list\"), so an approved course that is not listed is moved in by hand.",
+      "patch": {
+        "letter": true
+      }
+    },
+    "y7fnSKDd": {
+      "why": "\"Majors must complete at least 15 units of coursework for a letter grade in an area of concentration.\" The listed courses are suggestions (\"Students may choose to take other courses, though all concentration courses must be discussed with and approved by the faculty advisor whether or not they are on the suggested list\"), so an approved course that is not listed is moved in by hand.",
+      "patch": {
+        "letter": true
+      }
+    },
+    "V6wjyLro": {
+      "why": "\"Majors must complete at least 15 units of coursework for a letter grade in an area of concentration.\" The listed courses are suggestions (\"Students may choose to take other courses, though all concentration courses must be discussed with and approved by the faculty advisor whether or not they are on the suggested list\"), so an approved course that is not listed is moved in by hand.",
+      "patch": {
+        "letter": true
+      }
+    },
+    "297AHpZe": {
+      "why": "\"Majors must complete at least 15 units of coursework for a letter grade in an area of concentration.\" The listed courses are suggestions (\"Students may choose to take other courses, though all concentration courses must be discussed with and approved by the faculty advisor whether or not they are on the suggested list\"), so an approved course that is not listed is moved in by hand.",
+      "patch": {
+        "letter": true
+      }
+    },
+    "k0Q7n3ms": {
+      "why": "\"Majors must complete at least 15 units of coursework for a letter grade in an area of concentration.\" The listed courses are suggestions (\"Students may choose to take other courses, though all concentration courses must be discussed with and approved by the faculty advisor whether or not they are on the suggested list\"), so an approved course that is not listed is moved in by hand.",
+      "patch": {
+        "letter": true
+      }
+    },
+    "kqF4S5RZ-1": {
+      "why": "Ethics note: \"PUBLPOL 134 and CSRE 126C must be taken for 4 units in order to fulfill the Ethics Requirement on their own.\"",
+      "patch": {
+        "minUnitsEach": 4
+      }
+    },
+    "kqF4S5RZ-2": {
+      "why": "Ethics note: \"ETHICSOC 135F must be take for at least 4 units.\"",
+      "patch": {
+        "minUnitsEach": 4
+      }
+    }
+  },
+  "program": {
+    "minGrade": "C-",
+    "why": "Grading: \"Students must complete the Public Policy core, concentration, and senior capstone requirements for a letter grade. Must receive a grade of C- or better for each course.\" Letter grades are set on the core, concentration and capstone rules, since some preparatory units may be CR/NC.",
+    "totals": [
+      {
+        "label": "CR/NC preparatory units",
+        "maxUnits": 10,
+        "grading": "not-letter",
+        "codes": [
+          "ECON 1",
+          "ECON 102A",
+          "ECON 102B",
+          "PUBLPOL 50",
+          "ECON 50",
+          "MS&E 180",
+          "PSYCH 70",
+          "PSYCH 138"
+        ],
+        "why": "Preparatory courses note: \"At most, ten units of preparatory coursework may be taken as credit/no credit.\""
+      },
+      {
+        "label": "CR/NC units in ECON 102A and 102B",
+        "maxUnits": 5,
+        "grading": "not-letter",
+        "codes": [
+          "ECON 102A",
+          "ECON 102B"
+        ],
+        "why": "Economics note: \"Between ECON 102A and ECON 102B, no more than five units can be taken for credit/no credit.\""
+      }
+    ]
+  },
+  "add": [
+    {
+      "block": "3ZMNKEbY",
+      "parent": "kqF4S5RZ",
+      "why": "Ethics note: \"PUBLPOL 134 and CSRE 126C must be taken for 4 units in order to fulfill the Ethics Requirement on their own.\" Taken for fewer units, PUBLPOL 134 counts with PUBLPOL 103F, the option the list shows.",
+      "node": {
+        "id": "ov-ethics-134",
+        "t": "courses",
+        "name": "PUBLPOL 134 on its own, for 4 units",
+        "mode": "all",
+        "items": [
+          [
+            "PUBLPOL 134"
+          ]
+        ],
+        "letter": true,
+        "minUnitsEach": 4
+      }
+    }
+  ]
+}
