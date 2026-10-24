@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { useMemo, useState } from 'react'
 import { ChevronRight } from 'lucide-react'
 import type { NodeResult } from '@/lib/requirements/audit'
-import { courseInPool, nodeKey } from '@/lib/requirements/audit'
+import { nodeKey } from '@/lib/requirements/audit'
 import { rootCourseId } from '@/lib/requirements/course-index'
 import { useDegreeStore } from '@/lib/requirements/degree-store'
 import { WAY_NAMES } from '@/lib/requirements/general-education'
@@ -13,7 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { cn } from '@/lib/utils'
 import { CourseChip } from './course-chip'
 import { StatusMark, StatusText } from './status'
-import { shortTerm, useAudit, type AuditContextValue } from './audit-context'
+import { shortTerm, useAudit } from './audit-context'
 
 function ruleTitle(n: RuleNode): string {
   if (n.name) return n.name
@@ -29,57 +29,28 @@ function amount(have: number, need: number, word: string): string {
   return `${have} of ${need} ${plural(need, word)}`
 }
 
-const MANUAL_LABEL: Record<NonNullable<RuleNode['manual']>, string> = {
-  approval: 'Needs department approval',
-  milestone: 'Program milestone',
-  exam: 'Exam',
-  thesis: 'Thesis or dissertation',
-  gpa: 'GPA requirement',
-  residency: 'Residency requirement',
-  other: 'Check with your department',
-}
-
-/** What the rule asks of each course: "3+ units each · letter grade · at most 1 creative writing workshop". */
-function conditions(n: RuleNode): string {
-  const parts: string[] = []
-  if (n.minUnitsEach) parts.push(`${n.minUnitsEach}+ units each`)
-  if (n.letter) parts.push('letter grade')
-  if (n.minGrade) parts.push(`${n.minGrade} or better`)
-  for (const l of n.limits ?? []) {
-    if (l.max !== undefined) parts.push(`${l.label}: at most ${l.max}`)
-    if (l.maxUnits !== undefined) parts.push(`${l.label}: at most ${l.maxUnits} units`)
-  }
-  return parts.length ? ` · ${parts.join(' · ')}` : ''
-}
-
 function summary(r: NodeResult): string | null {
   const n = r.node
   if (r.status === 'info' || r.status === 'inactive') return null
   if (n.t === 'text') {
-    const label = n.manual ? MANUAL_LABEL[n.manual] : 'Set in the Bulletin text'
-    if (r.applied.length) {
-      if (n.units) return `${amount(r.have.units, n.units, 'unit')} moved here`
-      return n.n ? amount(r.applied.length, n.n, 'course') : `${r.applied.length} moved here`
-    }
-    if (n.units) return `${n.units} units, ${label.toLowerCase()}`
-    if (n.n) return `${n.n} ${plural(n.n, 'course')}, ${label.toLowerCase()}`
-    return label
+    if (r.applied.length) return n.n ? amount(r.applied.length, n.n, 'course') : `${r.applied.length} moved here`
+    if (n.n) return `${n.n} ${plural(n.n, 'course')}, set in the Bulletin text`
+    return 'Set in the Bulletin text'
   }
   const choices = n.children?.length ?? 0
   if (n.t === 'any' && choices > 1) return 'Choose one'
   if (n.t === 'some' && choices > (n.n ?? 1)) return `Choose ${n.n} of ${choices}`
   if (n.t !== 'courses') return r.floor ? amount(r.floor.have, r.floor.need, 'unit') : null
   const units = r.need?.units && n.mode !== 'units' ? ` · ${amount(r.have.units, r.need.units, 'unit')}` : ''
-  const extra = conditions(n)
   if (n.optional) return r.applied.length ? `${r.applied.length} applied, optional` : 'Optional'
   switch (n.mode) {
-    case 'all': return `${amount(r.have.courses, n.items?.length ?? 0, 'course')}${units}${extra}`
-    case 'atLeast': return `${amount(r.have.courses, n.n ?? 1, 'course')}${units}${extra}`
-    case 'units': return `${amount(r.have.units, n.units ?? 0, 'unit')}${extra}`
+    case 'all': return `${amount(r.have.courses, n.items?.length ?? 0, 'course')}${units}`
+    case 'atLeast': return `${amount(r.have.courses, n.n ?? 1, 'course')}${units}`
+    case 'units': return amount(r.have.units, n.units ?? 0, 'unit')
     default:
-      if (n.n) return `${amount(r.have.courses, n.n, 'course')}${extra}`
-      if (n.units) return `${amount(r.have.units, n.units, 'unit')}${extra}`
-      return (r.applied.length ? `${r.applied.length} ${plural(r.applied.length, 'course')}` : 'At least one course') + extra
+      if (n.n) return amount(r.have.courses, n.n, 'course')
+      if (n.units) return amount(r.have.units, n.units, 'unit')
+      return r.applied.length ? `${r.applied.length} ${plural(r.applied.length, 'course')}` : 'At least one course'
   }
 }
 
@@ -165,14 +136,7 @@ export function RequirementNode({ result, program, depth = 0 }: { result: NodeRe
             </div>
           ) : null}
 
-          {result.belowGrade?.length ? (
-            <p className="text-xs text-amber-700 dark:text-amber-400">
-              {result.belowGrade.map(id => ctx.result.courses.get(id)?.course.code ?? id).join(', ')} {result.belowGrade.length === 1 ? 'was' : 'were'} moved here but {result.belowGrade.length === 1 ? 'does' : 'do'} not count: the grade or units do not meet this requirement{gradeRule(n, program, ctx)}. If your department approved it anyway, mark the requirement as met.
-            </p>
-          ) : null}
-
-          {/* A pool takes any course in it, and one course asked for six times is a repeat ("MUSIC 323, six times"). */}
-          {n.t === 'courses' && n.mode === 'atLeast' && (n.n ?? 0) > (n.items?.length ?? 0) && !n.match && !n.pool && n.items?.length !== 1 && (
+          {n.t === 'courses' && n.mode === 'atLeast' && (n.n ?? 0) > (n.items?.length ?? 0) && !n.match && (
             <p className="text-xs text-muted-foreground">The Bulletin lists fewer courses here than it asks for. Move in the course your department approved.</p>
           )}
 
@@ -301,14 +265,6 @@ function Options({ result }: { result: NodeResult }) {
       codes = [...ctx.catalog.values()].map(c => `${c.subject} ${c.code}`).filter(code => ctx.courseIndex.get(code)?.tags.includes(tag))
     } else {
       codes = [...new Set((n.items ?? []).flat())]
-      if (n.pool) {
-        // A pool is a whole department: what it offers this year is what helps.
-        const pool = n.pool
-        for (const c of ctx.catalog.values()) {
-          const code = `${c.subject} ${c.code}`
-          if (courseInPool(pool, [code], ctx.courseIndex.get(code))) codes.push(code)
-        }
-      }
     }
     return codes
       .filter(code => !taken.has(code))
@@ -346,13 +302,4 @@ function Options({ result }: { result: NodeResult }) {
       )}
     </div>
   )
-}
-
-/** " (letter grade, C or better)": the grading a rule asks for, its own or its program's. */
-function gradeRule(n: RuleNode, program: string, ctx: AuditContextValue): string {
-  const data = ctx.programs.get(program)
-  const letter = n.letter || data?.letterGrade
-  const min = n.minGrade ?? data?.minGrade
-  const parts = [letter && 'letter grade', min && `${min} or better`, n.minUnitsEach && `at least ${n.minUnitsEach} units`].filter(Boolean)
-  return parts.length ? ` (${parts.join(', ')})` : ''
 }

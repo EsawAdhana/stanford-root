@@ -8,7 +8,6 @@ import { forEachApplied, type AuditCourse } from '@/lib/requirements/audit'
 import { rootCourseId } from '@/lib/requirements/course-index'
 import { useDegreeStore } from '@/lib/requirements/degree-store'
 import { academicYear, compareCourseTerms } from '@/lib/requirements/student-courses'
-import { compareTerms, getCurrentTerm } from '@/lib/terms'
 import { cn } from '@/lib/utils'
 import { courseStatusTone } from './status'
 import { useAudit } from './audit-context'
@@ -16,19 +15,6 @@ import { useAudit } from './audit-context'
 const GRADES = ['A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'D-', 'CR', 'S', 'NP', 'NC', 'W']
 const GE_SHORT: Record<string, string> = { 'GE-COLLEGE': 'COLLEGE', 'GE-WAYS': 'Ways', 'GE-WRITING': 'Writing', 'GE-LANGUAGE': 'Language' }
 const STATUS_TEXT: Record<string, string> = { completed: 'Completed', 'in-progress': 'In progress', planned: 'Planned', failed: 'Not passed', withdrawn: 'Withdrawn' }
-
-/**
- * Stanford's quarter load rules for undergraduates: at most 20 units, and at
- * least 12 to be enrolled full time. Only the second is worth saying about
- * terms still ahead; a past light quarter is history.
- */
-function loadNote(term: string, units: number): string | null {
-  const m = /^(Autumn|Winter|Spring|Summer) \d{4}$/.exec(term)
-  if (!m || m[1] === 'Summer') return null
-  if (units > 20) return 'over the 20-unit maximum'
-  if (units > 0 && units < 12 && compareTerms(term, getCurrentTerm()) >= 0) return 'under 12 units, below full time'
-  return null
-}
 
 /**
  * Every course the audit sees, quarter by quarter: My Academic Path's class
@@ -110,7 +96,6 @@ export function CourseHistory({ onAdd, onImport }: { onAdd: (term?: string) => v
               <div className="flex items-center justify-between border-b border-border/60 px-4 py-2">
                 <h4 className="text-sm font-semibold">{term}</h4>
                 <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                  {loadNote(term, termUnits) && <span className="text-amber-700 dark:text-amber-400">{loadNote(term, termUnits)}</span>}
                   <span className="tabular-nums">{termUnits} units</span>
                   <button className="text-primary hover:underline" onClick={() => onAdd(term)}>Add</button>
                 </div>

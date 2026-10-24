@@ -17,9 +17,6 @@ const KIND_LABEL: Record<string, string> = {
   honors: 'Interdisciplinary honors',
 }
 
-// Select items cannot have an empty value.
-const NO_SUBPLAN = '__none'
-
 export function programAnchor(code: string): string {
   return `program-${code.replace(/[^A-Za-z0-9-]/g, '')}`
 }
@@ -47,20 +44,13 @@ export function ProgramCard({ result, majorsCount }: { result: ProgramResult; ma
               <a href={data.url} target="_blank" rel="noreferrer" className="underline-offset-2 hover:text-foreground hover:underline">
                 {data.year} Bulletin
               </a>
-              {data.letterGrade && ' · letter grades required'}
-              {data.minGrade && ` · ${data.minGrade} or better in each course`}
               {choice.exploring && ' · What-if: not counted against your other programs'}
               {choice.secondary && ' · Secondary major: may share courses'}
             </p>
           </div>
-          {result.total === 0 && !result.needsSubplan ? (
-            <p className="w-full max-w-[16rem] text-xs text-muted-foreground sm:w-56">
-              The Bulletin lists no course rules here for the audit to check. Follow the program page and your advisor.
-            </p>
-          ) : (
           <div className="w-full max-w-[16rem] sm:w-56">
             <div className="flex items-baseline justify-between text-xs">
-              <span className="font-medium">{result.met} of {result.total} {result.total === 1 ? 'requirement' : 'requirements'}</span>
+              <span className="font-medium">{result.met} of {result.total} requirements</span>
               <span className="tabular-nums text-muted-foreground">{pct}%</span>
             </div>
             <ProgressBar className="mt-1.5" met={result.met} withPlan={result.metWithPlan} total={result.total} />
@@ -69,23 +59,17 @@ export function ProgramCard({ result, majorsCount }: { result: ProgramResult; ma
               {result.metWithPlan > result.met ? ` · ${result.metWithPlan - result.met} more met by planned classes` : ''}
             </p>
           </div>
-          )}
         </div>
 
         <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs">
           {subplans.length > 0 && (
             <label className="flex items-center gap-2">
               <span className="text-muted-foreground">Subplan</span>
-              <Select
-                value={choice.subplan ?? (data.subplanRequired === false ? NO_SUBPLAN : '')}
-                onValueChange={v => update(data.code, { subplan: v === NO_SUBPLAN ? undefined : v })}
-              >
+              <Select value={choice.subplan ?? ''} onValueChange={v => update(data.code, { subplan: v })}>
                 <SelectTrigger className={cn('h-8 w-auto min-w-[12rem] text-xs', result.needsSubplan && 'border-red-500/50')}>
                   <SelectValue placeholder="Pick one" />
                 </SelectTrigger>
                 <SelectContent>
-                  {/* The Bulletin lets these programs be finished without one. */}
-                  {data.subplanRequired === false && <SelectItem value={NO_SUBPLAN} className="text-xs">No subplan</SelectItem>}
                   {subplans.map(b => <SelectItem key={b.id} value={b.id} className="text-xs">{b.name}</SelectItem>)}
                 </SelectContent>
               </Select>
@@ -122,23 +106,6 @@ export function ProgramCard({ result, majorsCount }: { result: ProgramResult; ma
       </header>
 
       <div className="divide-y divide-border/50">
-        {result.checks.length > 0 && (
-          <div className="px-4 py-3 sm:px-5">
-            <h3 className="text-sm font-semibold">Across the whole program</h3>
-            <ul className="mt-1 space-y-1.5 text-sm">
-              {result.checks.map(c => (
-                <li key={c.label} className="flex items-start gap-2">
-                  <StatusMark status={c.status} className="mt-0.5" />
-                  <span className="flex-1">
-                    <span className="font-medium">{c.label}</span>
-                    <span className="ml-2 text-xs text-muted-foreground">{c.detail}</span>
-                  </span>
-                  <StatusText status={c.status} className="hidden sm:inline" />
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
         {result.blocks.filter(b => b.included).map(b => (
           <BlockSection key={b.block.id} block={b} program={data.code} />
         ))}
@@ -149,8 +116,7 @@ export function ProgramCard({ result, majorsCount }: { result: ProgramResult; ma
             ))}
           </div>
         )}
-        {(data.gpa || data.grading || data.policies || data.otherRequirements || data.transferPolicy) && <ProgramPolicies data={result.data} />}
-        {data.reviewNotes && <ReviewNotes data={result.data} />}
+        {(data.gpa || data.grading || data.policies) && <ProgramPolicies data={result.data} />}
       </div>
     </section>
   )
@@ -187,37 +153,14 @@ function rulesShown(block: ProgramResult['blocks'][number]) {
   return block.rules
 }
 
-/**
- * What was corrected in the Bulletin's data for this program, and when, so a
- * student can see why the audit reads a rule the way it does.
- */
-function ReviewNotes({ data }: { data: ProgramResult['data'] }) {
-  const [open, setOpen] = useState(false)
-  return (
-    <div className="px-4 py-3 text-xs sm:px-5">
-      <button className="flex items-center gap-1 text-muted-foreground hover:text-foreground" onClick={() => setOpen(v => !v)}>
-        <ChevronRight className={cn('h-3.5 w-3.5 transition-transform', open && 'rotate-90')} />
-        How these rules were read{data.reviewed ? ` (checked against the Bulletin text ${data.reviewed})` : ''}
-      </button>
-      {open && <p className="mt-2 max-w-prose whitespace-pre-line leading-relaxed text-muted-foreground">{data.reviewNotes}</p>}
-    </div>
-  )
-}
-
 function ProgramPolicies({ data }: { data: ProgramResult['data'] }) {
   const [open, setOpen] = useState(false)
-  const text = [
-    data.gpa && `GPA: ${data.gpa}`,
-    data.grading && `Grading: ${data.grading}`,
-    data.policies,
-    data.otherRequirements && `Other requirements on the registrar's record: ${data.otherRequirements}`,
-    data.transferPolicy && `Transfer and AP credit: ${data.transferPolicy}`,
-  ].filter(Boolean).join('\n\n')
+  const text = [data.gpa && `GPA: ${data.gpa}`, data.grading && `Grading: ${data.grading}`, data.policies].filter(Boolean).join('\n\n')
   return (
     <div className="px-4 py-3 text-xs sm:px-5">
       <button className="flex items-center gap-1 text-muted-foreground hover:text-foreground" onClick={() => setOpen(v => !v)}>
         <ChevronRight className={cn('h-3.5 w-3.5 transition-transform', open && 'rotate-90')} />
-        Grading, GPA and other policies, as the Bulletin words them
+        Grading and GPA rules (not checked by the audit)
       </button>
       {open && <p className="mt-2 max-w-prose whitespace-pre-line leading-relaxed text-muted-foreground">{text}</p>}
     </div>

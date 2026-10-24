@@ -1,9 +1,0 @@
-{
-  "code": "ENGRBS21",
-  "reviewed": "2026-10-23",
-  "summary": "Left: the Bulletin's page for this program has section headings but no requirements, so there is nothing to check here, not even its 95-unit minimum. The Sustainable Architecture and Engineering requirements are checked under Engineering (BS) with the Sustainable Architecture and Engineering subplan.",
-  "program": {
-    "unitsMin": null,
-    "why": "The Bulletin gives \"Minimum Units in the Program\" as 95, but the sheet has no rules for any course to count toward, so the count could never be met here. The 95 units are checked under ENGR-BS with the Sustainable Architecture and Engineering subplan."
-  }
-}

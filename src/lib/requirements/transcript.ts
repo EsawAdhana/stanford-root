@@ -72,8 +72,6 @@ function careerHeading(line: string): Career | undefined {
   if (t.length > 70) return undefined
   if (/\bundergraduate\b.*\b(record|career|program|matriculated)\b|\b(beginning of|start of) undergraduate\b/i.test(t)) return 'UG'
   if (/(^|[^r])\bgraduate\b.*\b(record|career|program)\b|\b(beginning of|start of) graduate\b/i.test(t) && !/undergraduate/i.test(t)) return 'GR'
-  // The Law, Medicine and GSB careers are graduate study for the audit.
-  if (/^(beginning of |start of )?(law|medicine|medical|graduate school of business|business)\b.*\b(record|career|program)\b/i.test(t)) return 'GR'
   return undefined
 }
 

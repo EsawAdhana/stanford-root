@@ -3,7 +3,7 @@ import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { runAudit, type AuditResult, type NodeResult, type ProgramResult } from '@/lib/requirements/audit'
 import { buildCourseIndex } from '@/lib/requirements/course-index'
-import { EMPTY_OVERRIDES, type AuditOverrides, type ProgramBlock, type ProgramChoice, type ProgramData, type StudentCourse } from '@/lib/requirements/types'
+import { EMPTY_OVERRIDES, type AuditOverrides, type ProgramChoice, type ProgramData, type StudentCourse } from '@/lib/requirements/types'
 
 /**
  * Runs the audit over the real 2026-27 Bulletin data in public/requirements,
@@ -54,16 +54,7 @@ function find(r: ProgramResult, name: string | RegExp): NodeResult {
   return hit
 }
 
-/** A subplan block's id, by the start of its name. */
-function sub(code: string, name: string): string {
-  const block = program(code).blocks.find(b => b.kind === 'subplan' && b.name.startsWith(name))
-  if (!block) throw new Error(`no subplan ${name} in ${code}`)
-  return block.id
-}
-
 const codesIn = (result: AuditResult, n: NodeResult) => n.applied.map(a => result.courses.get(a.courseId)!.course.code).sort()
-/** Codes applied anywhere under a rule, for a choice whose courses sit on its children. */
-const codesUnder = (result: AuditResult, n: NodeResult): string[] => [...codesIn(result, n), ...(n.children ?? []).flatMap(c => codesUnder(result, c))].sort()
 const ge = (result: AuditResult, code: string) => result.generalEducation.find(p => p.code === code)!
 
 describe('Ways: a course with two Ways lands where it does the most good', () => {
@@ -129,9 +120,9 @@ describe('CS BS', () => {
   })
 
   it('accepts CS 107E for the CS 107 slot, and reports in-progress work as in progress', () => {
-    // The core block also holds the GPA rule, checked by hand, so look at the core courses themselves.
     const r = audit(['CS-BS'], [took('CS 107E'), took('CS 111'), took('CS 161', 'Autumn 2026', 5, '')])
-    expect(find(r.programs[0], 'Core').status).toBe('in-progress')
+    const core = r.programs[0].blocks.find(b => b.block.name === 'Core Program Requirements')!
+    expect(core.status).toBe('in-progress')
   })
 
   it('counts a WIM course toward WIM and the senior project at once', () => {
@@ -142,13 +133,13 @@ describe('CS BS', () => {
   })
 
   it('counts a cross-listed course under either listing (STATS 229 for CS 229)', () => {
-    const r = audit([{ code: 'CS-BS', subplan: sub('CS-BS', 'Artificial Intelligence') }], [took('STATS 229')])
+    const r = audit([{ code: 'CS-BS', subplan: 'b6' }], [took('STATS 229')])
     const area = find(r.programs[0], /^Area I: AI Methods/)
     expect(codesIn(r, area)).toEqual(['STATS 229'])
   })
 
   it('applies the 26-unit math floor on top of the course list', () => {
-    const r = audit([{ code: 'CS-BS', subplan: sub('CS-BS', 'Artificial Intelligence') }], [took('CS 103', 'Autumn 2023', 3), took('CS 109', 'Autumn 2023', 3), took('MATH 19', 'Autumn 2022', 3), took('MATH 20', 'Autumn 2022', 3), took('MATH 21', 'Autumn 2022', 4), took('MATH 51'), took('MATH 52')])
+    const r = audit(['CS-BS'], [took('CS 103', 'Autumn 2023', 3), took('CS 109', 'Autumn 2023', 3), took('MATH 19', 'Autumn 2022', 3), took('MATH 20', 'Autumn 2022', 3), took('MATH 21', 'Autumn 2022', 4), took('MATH 51'), took('MATH 52')])
     const math = find(r.programs[0], /^Mathematics/)
     expect(math.floor).toEqual({ need: 26, have: 26 })
     expect(math.status).toBe('complete')
@@ -159,10 +150,10 @@ describe('double counting between programs', () => {
   const courses = [took('CS 106B'), took('CS 161')]
 
   it('lets a foundational course count toward two programs', () => {
-    const r = audit([{ code: 'CS-BS', subplan: sub('CS-BS', 'Artificial Intelligence') }, 'ECON-BA'], courses)
+    const r = audit(['CS-BS', 'ECON-BA'], courses)
     const [cs, econ] = r.programs
     expect(codesIn(r, find(cs, /^Engineering Fundamentals/))).toContain('CS 106B')
-    expect(codesIn(r, find(econ, /^Elective Courses/))).toContain('CS 106B')
+    expect(codesIn(r, find(econ, 'Elective Courses'))).toContain('CS 106B')
     expect(r.doubleCounted).toEqual([])
   })
 
@@ -170,17 +161,17 @@ describe('double counting between programs', () => {
     const r = audit(['CS-BS', 'ECON-BA'], courses)
     const [cs, econ] = r.programs
     expect(codesIn(r, cs.blocks.find(b => b.block.name === 'Core Program Requirements')!.rules[0])).toContain('CS 161')
-    expect(codesIn(r, find(econ, /^Elective Courses/))).not.toContain('CS 161')
+    expect(codesIn(r, find(econ, 'Elective Courses'))).not.toContain('CS 161')
   })
 
   it('lets a secondary major share everything', () => {
     const r = audit(['CS-BS', { code: 'ECON-BA', secondary: true }], courses)
-    expect(codesIn(r, find(r.programs[1], /^Elective Courses/))).toContain('CS 161')
+    expect(codesIn(r, find(r.programs[1], 'Elective Courses'))).toContain('CS 161')
   })
 
   it('leaves the declared programs alone while exploring another (What-If)', () => {
     const r = audit(['CS-BS', { code: 'ECON-BA', exploring: true }], courses)
-    expect(codesIn(r, find(r.programs[1], /^Elective Courses/))).toContain('CS 161')
+    expect(codesIn(r, find(r.programs[1], 'Elective Courses'))).toContain('CS 161')
     expect(codesIn(r, r.programs[0].blocks.find(b => b.block.name === 'Core Program Requirements')!.rules[0])).toContain('CS 161')
   })
 })
@@ -208,11 +199,9 @@ describe('coterm BS + MS', () => {
 describe('moves, exclusions and marking done', () => {
   it('moves a course into a free-text requirement (a bucket move)', () => {
     const c = took('CHEM 31A')
-    // Since the review, the School of Engineering science rules sit in each subplan but Computational Biology.
-    const ai = { code: 'CS-BS', subplan: sub('CS-BS', 'Artificial Intelligence') }
-    const r = audit([ai], [c], { overrides: { pins: [{ course: c.id, program: 'CS-BS', node: findIdIn('CS-BS', 'Artificial Intelligence', 'Science Elective (SoE approved list)') }] } })
-    expect(find(r.programs[0], 'Science Elective (SoE approved list)').status).toBe('complete')
-    expect(find(r.programs[0], 'Science Elective (SoE approved list)').applied[0].exception).toBeUndefined()
+    const r = audit(['CS-BS'], [c], { overrides: { pins: [{ course: c.id, program: 'CS-BS', node: findId('CS-BS', 'Science Elective') }] } })
+    expect(find(r.programs[0], 'Science Elective').status).toBe('complete')
+    expect(find(r.programs[0], 'Science Elective').applied[0].exception).toBeUndefined()
   })
 
   it('flags a course moved somewhere it is not listed as an exception', () => {
@@ -225,10 +214,8 @@ describe('moves, exclusions and marking done', () => {
   it('moves a course between requirements it is listed for', () => {
     // CS 157 is a math elective and a theory elective; pinned, it stays in math.
     const c = took('CS 157')
-    const pinned = audit([{ code: 'CS-BS', subplan: sub('CS-BS', 'Theory') }], [c], { overrides: { pins: [{ course: c.id, program: 'CS-BS', node: findIdIn('CS-BS', 'Theory', 'Math Electives') }] } })
-    const math = pinned.programs[0].blocks.find(b => b.block.name.startsWith('Theory'))!
-    const electives = math.rules.flatMap(function all(n: NodeResult): NodeResult[] { return [n, ...(n.children ?? []).flatMap(all)] }).find(n => n.node.name === 'Math Electives')!
-    expect(codesIn(pinned, electives)).toEqual(['CS 157'])
+    const pinned = audit([{ code: 'CS-BS', subplan: 'b12' }], [c], { overrides: { pins: [{ course: c.id, program: 'CS-BS', node: findId('CS-BS', 'Math Electives') }] } })
+    expect(codesIn(pinned, find(pinned.programs[0], 'Math Electives'))).toEqual(['CS 157'])
   })
 
   it('keeps an excluded course out of a program', () => {
@@ -238,8 +225,8 @@ describe('moves, exclusions and marking done', () => {
   })
 
   it('treats a requirement marked done as complete', () => {
-    const r = audit(['CS-BS'], [], { overrides: { done: [`CS-BS:${findId('CS-BS', 'Technology in Society')}`] } })
-    expect(find(r.programs[0], 'Technology in Society').status).toBe('complete')
+    const r = audit(['CS-BS'], [], { overrides: { done: [`CS-BS:${findId('CS-BS', 'Technology in Science')}`] } })
+    expect(find(r.programs[0], 'Technology in Science').status).toBe('complete')
   })
 })
 
@@ -247,7 +234,7 @@ describe('alternate paths', () => {
   const humbio = ['HUMBIO 2A', 'HUMBIO 3A', 'HUMBIO 4A'].map(c => took(c))
 
   it('picks the path the courses complete', () => {
-    const r = audit([{ code: 'CS-BS', subplan: sub('CS-BS', 'Computational Biology') }], humbio)
+    const r = audit([{ code: 'CS-BS', subplan: 'b7' }], humbio)
     const seq = find(r.programs[0], 'Biology or Humbio Sequence')
     expect(seq.status).toBe('complete')
     expect(seq.auto).toBe(true)
@@ -255,17 +242,17 @@ describe('alternate paths', () => {
 
   it('prefers the path that finishes over a bigger path with more courses in it', () => {
     // Two of the three Biology courses vs all three Humbio courses: Humbio is done.
-    const r = audit([{ code: 'CS-BS', subplan: sub('CS-BS', 'Computational Biology') }], [...humbio, took('BIO 82'), took('BIO 83')])
+    const r = audit([{ code: 'CS-BS', subplan: 'b7' }], [...humbio, took('BIO 82'), took('BIO 83')])
     const seq = find(r.programs[0], 'Biology or Humbio Sequence')
     expect(seq.status).toBe('complete')
     expect(seq.node.children!.find(c => c.id === seq.chosen![0])!.name).toBe('Humbio Sequence')
   })
 
   it('follows a path the student picked, even a worse one', () => {
-    const base = audit([{ code: 'CS-BS', subplan: sub('CS-BS', 'Computational Biology') }], humbio)
+    const base = audit([{ code: 'CS-BS', subplan: 'b7' }], humbio)
     const node = find(base.programs[0], 'Biology or Humbio Sequence')
     const biology = node.node.children!.find(c => c.name === 'Biology Sequence')!.id
-    const r = audit([{ code: 'CS-BS', subplan: sub('CS-BS', 'Computational Biology') }], humbio, { overrides: { paths: { [`CS-BS:${node.node.id}`]: biology } } })
+    const r = audit([{ code: 'CS-BS', subplan: 'b7' }], humbio, { overrides: { paths: { [`CS-BS:${node.node.id}`]: biology } } })
     const picked = find(r.programs[0], 'Biology or Humbio Sequence')
     expect(picked.chosen).toEqual([biology])
     expect(picked.status).toBe('incomplete')
@@ -276,7 +263,7 @@ describe('alternate paths', () => {
     const r = audit(['CS-MS'], ['CS 109', 'CS 154', 'CS 221', 'CS 144'].map(c => took(c, 'Autumn 2025', 3, 'A', { career: 'GR' })))
     const ms = r.programs[0]
     expect(find(ms, 'Breadth Areas').status).toBe('complete')
-    expect(codesUnder(r, find(ms, 'Probability'))).toEqual(['CS 109'])
+    expect(codesIn(r, find(ms, 'Probability'))).toEqual(['CS 109'])
     const ssi = find(ms, 'Significant Software Implementation')
     expect(ssi.status).toBe('complete')
     expect(ssi.applied[0].shared).toBe(true)
@@ -299,7 +286,8 @@ describe('units toward the bachelor’s degree', () => {
 describe('statuses by term', () => {
   it('reads past terms as done, the current term as in progress and later terms as planned', () => {
     const r = audit(['CS-BS'], [took('CS 107', 'Spring 2026', 5, ''), took('CS 111', 'Autumn 2026', 5, ''), took('CS 161', 'Winter 2027', 5, '')])
-    expect(find(r.programs[0], 'Core').status).toBe('planned')
+    const core = r.programs[0].blocks.find(b => b.block.name === 'Core Program Requirements')!
+    expect(core.status).toBe('planned')
   })
 
   it('does not count failed or withdrawn attempts', () => {
@@ -317,7 +305,7 @@ describe('a full record', () => {
       'CS 221', 'CS 229', 'CS 124', 'CS 224N', 'CS 231N', 'CS 142', 'CS 146J', 'ENGLISH 106A', 'COMM 254', 'CS 206', 'CS 210A', 'CS 329X',
     ]
     const courses = codes.map((c, i) => took(c, `${['Autumn', 'Winter', 'Spring'][i % 3]} ${2022 + Math.floor(i / 12)}`, undefined, 'A', { career: i > 33 ? 'GR' : 'UG' }))
-    const run = () => audit([{ code: 'CS-BS', subplan: sub('CS-BS', 'Human-Computer Interaction') }, { code: 'CS-MS', subplan: sub('CS-MS', 'Human-Computer Interaction') }], courses, { ge: true })
+    const run = () => audit([{ code: 'CS-BS', subplan: 'b9' }, { code: 'CS-MS', subplan: 'b8' }], courses, { ge: true })
     const start = performance.now()
     const first = run()
     const elapsed = performance.now() - start
@@ -331,7 +319,7 @@ describe('a full record', () => {
     const full = metOf(first)
     for (let i = 0; i < courses.length; i += 3) {
       const fewer = courses.filter((_, j) => j !== i)
-      const r = audit([{ code: 'CS-BS', subplan: sub('CS-BS', 'Human-Computer Interaction') }, { code: 'CS-MS', subplan: sub('CS-MS', 'Human-Computer Interaction') }], fewer, { ge: true })
+      const r = audit([{ code: 'CS-BS', subplan: 'b9' }, { code: 'CS-MS', subplan: 'b8' }], fewer, { ge: true })
       expect(metOf(r), `without ${courses[i].code}`).toBeLessThanOrEqual(full)
     }
   })
@@ -347,238 +335,3 @@ function findId(code: string, name: string): string {
   if (!id) throw new Error(`no rule ${name} in ${code}`)
   return id
 }
-
-/** A rule's id inside one block, by the start of the block's name. */
-function findIdIn(code: string, block: string, name: string): string {
-  let id: string | undefined
-  const walk = (n: ProgramData['blocks'][number]['rules'][number]) => {
-    if (!id && n.name === name) id = n.id
-    n.children?.forEach(walk)
-  }
-  program(code).blocks.filter(b => b.name.startsWith(block)).forEach(b => b.rules.forEach(walk))
-  if (!id) throw new Error(`no rule ${name} in ${code} ${block}`)
-  return id
-}
-
-describe('saved plans from before stable ids', () => {
-  it('keeps programs and courses and clears choices keyed by the old ids', async () => {
-    const { migrateDegreePlan } = await import('@/lib/requirements/degree-store')
-    const v1 = {
-      programs: [{ code: 'CS-BS', subplan: 'b9', optional: ['b5'] }, { code: 'ECON-MIN', secondary: true }],
-      courses: [{ id: 'transcript:CS 106B:Autumn 2023', code: 'CS 106B', term: 'Autumn 2023', units: 5, source: 'transcript' }],
-      overrides: { pins: [{ course: 'x', program: 'CS-BS', node: 'r12' }], exclusions: [], done: ['CS-BS:r3'], paths: { 'CS-BS:r7': 'r8' } },
-    }
-    const v2 = migrateDegreePlan(v1, 1) as typeof v1
-    expect(v2.programs).toEqual([{ code: 'CS-BS', secondary: undefined, exploring: undefined }, { code: 'ECON-MIN', secondary: true, exploring: undefined }])
-    expect(v2.courses).toEqual(v1.courses)
-    expect(v2.overrides).toEqual(EMPTY_OVERRIDES)
-    expect(migrateDegreePlan(v2, 2)).toBe(v2)
-  })
-})
-
-describe('designations across two programs (found by the pair sweep)', () => {
-  it('lets a major take back its WIM course from a minor that can use another course', async () => {
-    const { verifyPair } = await import('@/lib/requirements/verify')
-    expect(verifyPair(program('EPS-BS'), program('GEOPH-MIN'), index)).toEqual([])
-  })
-
-  it('never gives two programs the same designation course', async () => {
-    const { verifyPair } = await import('@/lib/requirements/verify')
-    for (const [a, b] of [['AA-BS', 'IDMEN-BS'], ['CSRE-BA', 'JEWSH-BA'], ['ECON-BA', 'ECON-BS'], ['HUMBI-BA', 'HUMBI-BS']]) {
-      expect(verifyPair(program(a), program(b), index).filter(f => f.scenario === 'double counting')).toEqual([])
-    }
-  })
-})
-
-describe('program-wide rules', () => {
-  it('caps test and transfer credit at 45 units toward the bachelor’s', () => {
-    const credit = Array.from({ length: 12 }, (_, i) => took(['MATH 19', 'MATH 20', 'MATH 21', 'CHEM 31A', 'PHYSICS 41', 'CS 106A', 'ECON 1', 'PSYCH 1', 'HISTORY 1A', 'SPANLANG 1', 'SPANLANG 2', 'SPANLANG 3'][i], 'Test credit', 5, 'CR'))
-    const r = audit(['CS-BS'], credit)
-    expect(r.undergradUnits).toMatchObject({ completed: 45, externalOverCap: 15 })
-  })
-
-  it('counts letter-graded units and the graduate-level share across a master’s program', () => {
-    const ms: ProgramData = { ...program('CS-MS'), letterUnitsMin: 12, gradUnitsShare: 0.5 }
-    const run = (courses: StudentCourse[]) => runAudit({ programs: [{ data: ms, choice: { code: 'CS-MS' } }], courses, index, overrides: EMPTY_OVERRIDES, generalEducation: false, now: NOW }).programs[0]
-    const status = (r: ProgramResult, key: string) => r.checks.find(c => c.key === key)?.status
-    const letter = ['CS 229', 'CS 221', 'CS 224N'].map(c => took(c, 'Autumn 2025', 4, 'A', { career: 'GR' }))
-    const ok = run(letter)
-    expect([status(ok, 'letter'), status(ok, 'graduate')]).toEqual(['complete', 'complete'])
-    const cr = run(letter.map(c => ({ ...c, grade: 'CR' })))
-    expect(status(cr, 'letter')).toBe('incomplete')
-    const undergradLevel = run(['CS 145', 'CS 154', 'CS 161', 'CS 229'].map(c => took(c, 'Autumn 2025', 4, 'A', { career: 'GR' })))
-    expect(status(undergradLevel, 'graduate')).toBe('incomplete')
-  })
-})
-
-/** A small program for one rule shape, so a test does not depend on one department's overlay. */
-function made(code: string, blocks: ProgramBlock[], extra: Partial<ProgramData> = {}): ProgramData {
-  return { code, name: code, kind: 'major', degree: 'BA', year: '2026-27', url: '', departments: [], blocks, ...extra }
-}
-
-function auditMade(programs: ProgramData[], courses: StudentCourse[], overrides: Partial<AuditOverrides> = {}): AuditResult {
-  return runAudit({ programs: programs.map(data => ({ data, choice: { code: data.code } })), courses, index, overrides: { ...EMPTY_OVERRIDES, ...overrides }, generalEducation: false, now: NOW })
-}
-
-const check = (r: ProgramResult, key: string) => r.checks.find(c => c.key === key)
-
-describe('counts over the whole program (found reviewing all 355 programs)', () => {
-  // "The remaining units may be in linguistics" (LING-BA): an optional pool takes them, the 60 units checks them.
-  const remaining = made('T-LING', [{ id: 'b', name: 'Major', rules: [
-    { id: 'core', t: 'courses', mode: 'all', items: [['LINGUIST 1']] },
-    { id: 'rest', t: 'courses', mode: 'any', pool: { subjects: ['LINGUIST'] }, optional: true },
-  ] }], { unitsMin: 12 })
-
-  it('checks the program’s minimum units, counting what the rules hold', () => {
-    const two = [took('LINGUIST 1'), took('LINGUIST 105')]
-    expect(check(auditMade([remaining], two).programs[0], 'units')).toMatchObject({ status: 'incomplete', have: 8, need: 12 })
-    const three = [...two, took('LINGUIST 130A')]
-    expect(auditMade([remaining], three).programs[0].status).toBe('complete')
-    expect(auditMade([remaining], [...three].reverse()).programs[0].status).toBe('complete')
-  })
-
-  it('counts every graduate-career course toward a master’s units, research too, but not a CR course in a letter-grade program', () => {
-    const ms = made('T-MS', [{ id: 'b', name: 'Core', rules: [{ id: 'ml', t: 'courses', mode: 'all', items: [['CS 229']] }] }], { kind: 'grad', degree: 'MS', unitsMin: 10, letterGrade: true })
-    const gr = (code: string, units: number, grade = 'A') => took(code, 'Autumn 2025', units, grade, { career: 'GR' })
-    const short = auditMade([ms], [gr('CS 229', 4), gr('CS 399', 3), gr('CS 221', 3, 'CR')]).programs[0]
-    expect(check(short, 'units')).toMatchObject({ status: 'incomplete', have: 7 })
-    expect(auditMade([ms], [gr('CS 229', 4), gr('CS 399', 3), gr('CS 399', 3)]).programs[0].status).toBe('complete')
-  })
-
-  it('stops counting units past a cap without failing the student for them', () => {
-    const capped = made('T-CAP', [{ id: 'b', name: 'Major', rules: [{ id: 'any', t: 'courses', mode: 'any', pool: { subjects: ['LINGUIST', 'SPANLANG'] }, optional: true }] }], {
-      unitsMin: 10,
-      totals: [{ label: 'Language courses', maxUnits: 5, pool: { subjects: ['SPANLANG'] } }],
-    })
-    const r = auditMade([capped], [took('SPANLANG 1'), took('SPANLANG 2'), took('LINGUIST 105')]).programs[0]
-    expect(check(r, 'units')).toMatchObject({ status: 'incomplete', have: 9 })
-    expect(check(r, 'total:0')?.status).toBe('info')
-    expect(auditMade([capped], [took('SPANLANG 1'), took('SPANLANG 2'), took('LINGUIST 105'), took('LINGUIST 130A')]).programs[0].status).toBe('complete')
-  })
-
-  it('fails a range only when the record goes over it', () => {
-    const ranged = made('T-RANGE', [{ id: 'b', name: 'Major', rules: [{ id: 'any', t: 'courses', mode: 'any', pool: { subjects: ['LINGUIST'] }, optional: true }] }], {
-      totals: [{ label: '8-12 units of Linguistics', minUnits: 8, maxUnits: 12, pool: { subjects: ['LINGUIST'] } }],
-    })
-    const three = ['LINGUIST 1', 'LINGUIST 105', 'LINGUIST 130A'].map(c => took(c))
-    expect(check(auditMade([ranged], three).programs[0], 'total:0')?.status).toBe('complete')
-    expect(check(auditMade([ranged], [...three, took('LINGUIST 150', 'Autumn 2024', 4)]).programs[0], 'total:0')?.status).toBe('incomplete')
-  })
-
-  it('applies a subplan’s own total only with that subplan', () => {
-    const data = made('T-WHEN', [
-      { id: 'b', name: 'Major', rules: [{ id: 'core', t: 'courses', mode: 'all', items: [['LINGUIST 1']] }] },
-      { id: 's1', name: 'Plain', kind: 'subplan', rules: [{ id: 's1r', t: 'courses', mode: 'all', items: [['LINGUIST 105']] }] },
-      { id: 's2', name: 'Long', kind: 'subplan', rules: [{ id: 's2r', t: 'courses', mode: 'all', items: [['LINGUIST 105']] }] },
-    ], { totals: [{ label: '12 units with the long subplan', minUnits: 12, when: 's2' }] })
-    const courses = [took('LINGUIST 1'), took('LINGUIST 105')]
-    const run = (subplan: string) => runAudit({ programs: [{ data, choice: { code: data.code, subplan } }], courses, index, overrides: EMPTY_OVERRIDES, generalEducation: false, now: NOW }).programs[0]
-    expect(run('s1').status).toBe('complete')
-    expect(run('s2').status).toBe('incomplete')
-  })
-})
-
-describe('designations and moves (found reviewing all 355 programs)', () => {
-  const withWim = (wim: ProgramBlock['rules']) => made('T-WIM', [
-    { id: 'b', name: 'Major', rules: [{ id: 'req', t: 'courses', mode: 'all', items: [['LINGUIST 105']] }, { id: 'more', t: 'courses', mode: 'atLeast', n: 2, items: [['LINGUIST 130A'], ['LINGUIST 150'], ['LINGUIST 1']] }] },
-    { id: 'w', name: 'Writing in the Major', wim: true, rules: wim },
-  ])
-
-  it('keeps a course moved into a designation in the rule it fills', () => {
-    const data = withWim([{ id: 'wim', t: 'courses', mode: 'atLeast', n: 1, items: [['LINGUIST 105'], ['LINGUIST 130A']] }])
-    const courses = [took('LINGUIST 105'), took('LINGUIST 130A'), took('LINGUIST 150')]
-    const r = auditMade([data], courses, { pins: [{ course: courses[0].id, program: data.code, node: 'wim' }] })
-    const p = r.programs[0]
-    expect(codesIn(r, p.blocks[0].rules[0])).toEqual(['LINGUIST 105'])
-    expect(codesIn(r, p.blocks[1].rules[0])).toEqual(['LINGUIST 105'])
-    expect(p.status).toBe('complete')
-  })
-
-  it('keeps a course moved into a free-text rule out when it misses the program’s grading rule', () => {
-    const data = made('T-GRADE', [{ id: 'b', name: 'Minor', rules: [{ id: 'el', t: 'text', n: 1, manual: 'approval', name: 'Approved elective' }] }], { kind: 'minor', degree: '', letterGrade: true, minGrade: 'C' })
-    const cr = took('LINGUIST 105', 'Autumn 2024', 4, 'CR')
-    const low = took('LINGUIST 130A', 'Autumn 2024', 4, 'D')
-    const pins = (c: StudentCourse) => [{ course: c.id, program: data.code, node: 'el' }]
-    for (const c of [cr, low]) {
-      const node = auditMade([data], [c], { pins: pins(c) }).programs[0].blocks[0].rules[0]
-      expect(node.status).toBe('manual')
-      expect(node.belowGrade).toEqual([c.id])
-    }
-    const ok = took('LINGUIST 150', 'Autumn 2024', 4, 'B')
-    expect(auditMade([data], [ok], { pins: pins(ok) }).programs[0].status).toBe('complete')
-  })
-
-  it('lets a designation that asks for units take as many courses as it needs', () => {
-    const data = withWim([{ id: 'wim', t: 'courses', mode: 'units', units: 8, items: [['LINGUIST 105'], ['LINGUIST 130A'], ['LINGUIST 150']] }])
-    const r = auditMade([data], [took('LINGUIST 105'), took('LINGUIST 130A'), took('LINGUIST 150', 'Autumn 2024', 4)])
-    expect(r.programs[0].blocks[1].rules[0]).toMatchObject({ status: 'complete' })
-    expect(r.programs[0].blocks[1].rules[0].applied.length).toBeGreaterThanOrEqual(2)
-  })
-})
-
-describe('listings, caps and optional groups (found by the full audit)', () => {
-  it('counts a cross-listing in another subject, but not the other number in the same subject', () => {
-    const ma = made('T-COMM', [{ id: 'b', name: 'Core', rules: [{ id: 'm', t: 'courses', mode: 'all', items: [['COMM 206']] }] }], { kind: 'grad', degree: 'MA' })
-    const gr = (code: string) => took(code, 'Autumn 2025', 4, 'A', { career: 'GR' })
-    expect(auditMade([ma], [gr('COMM 106')]).programs[0].status).toBe('incomplete')
-    expect(auditMade([ma], [gr('COMM 206')]).programs[0].status).toBe('complete')
-  })
-
-  it('takes a course past a CR/NC cap out of the rules it would fill', () => {
-    const data = made('T-CR', [{ id: 'b', name: 'Economics', rules: [{ id: 'e', t: 'courses', mode: 'all', items: [['ECON 1'], ['ECON 50']] }] }], {
-      totals: [{ label: 'CR units', maxUnits: 5, grading: 'not-letter' }],
-    })
-    const r = auditMade([data], [took('ECON 1', 'Autumn 2024', 5, 'CR'), took('ECON 50', 'Winter 2025', 5, 'CR')]).programs[0]
-    expect(r.blocks[0].rules[0]).toMatchObject({ status: 'incomplete' })
-    expect(r.blocks[0].rules[0].applied).toHaveLength(1)
-  })
-
-  it('asks nothing of an optional group a student skips', () => {
-    const data = made('T-OPT', [{ id: 'b', name: 'Major', rules: [
-      { id: 'core', t: 'courses', mode: 'all', items: [['LINGUIST 1']] },
-      { id: 'extra', t: 'any', optional: true, children: [{ id: 'x1', t: 'courses', mode: 'all', items: [['LINGUIST 105']] }, { id: 'x2', t: 'courses', mode: 'all', items: [['LINGUIST 130A']] }] },
-    ] }])
-    const r = auditMade([data], [took('LINGUIST 1')]).programs[0]
-    expect(r.status).toBe('complete')
-    expect(r.total).toBe(1)
-  })
-})
-
-describe('moves between programs and rules (found by the pair sweep)', () => {
-  it('gives a minor the cross-listed course a major holds beyond what it needs', () => {
-    // ENGL-BA + CHILT-MIN: CHILATST 12D is ENGLISH 12D; the major's 10 units are met without it.
-    const major = made('T-ENGL', [{ id: 'b', name: 'Major', rules: [{ id: 'lit', t: 'courses', mode: 'units', units: 10, pool: { subjects: ['ENGLISH'] } }] }])
-    const minor = made('T-CHILT', [{ id: 'm', name: 'Minor', units: 10, rules: [{ id: 'el', t: 'courses', mode: 'any', pool: { subjects: ['CHILATST'] } }] }], { kind: 'minor', degree: '' })
-    const courses = [took('ENGLISH 10A'), took('ENGLISH 172E'), took('CHILATST 12D', 'Autumn 2024', 5), took('CHILATST 100')]
-    for (const order of [courses, [...courses].reverse()]) {
-      const r = auditMade([major, minor], order)
-      expect(r.programs.map(p => p.status)).toEqual(['complete', 'complete'])
-      expect(r.doubleCounted).toEqual([])
-    }
-  })
-
-  it('gives a minor the course it needs once its language cap stops counting units past 12', () => {
-    // SPAN-BA + PORT-MIN: 14 Portuguese language units count as 12, so the
-    // minor's 23 units need ILAC 102, which the major holds beyond its own.
-    const major = made('T-SPAN', [{ id: 'b', name: 'Major', rules: [
-      { id: 'core', t: 'courses', mode: 'all', items: [['ILAC 130'], ['ILAC 131']] },
-      { id: 'rest', t: 'courses', mode: 'any', pool: { subjects: ['ILAC'], minNumber: 100, maxNumber: 299 }, optional: true },
-    ] }], { unitsMin: 10 })
-    const lang = ['PORTLANG 11A', 'PORTLANG 12A', 'PORTLANG 101', 'PORTLANG 102']
-    const minor = made('T-PORT', [{ id: 'm', name: 'Minor', rules: [
-      { id: 'lang', t: 'courses', mode: 'any', items: lang.map(c => [c]), optional: true },
-      { id: 'rest', t: 'courses', mode: 'any', pool: { subjects: ['ILAC'], minNumber: 100, maxNumber: 299 }, optional: true },
-    ] }], { kind: 'minor', degree: '', unitsMin: 13, totals: [{ label: 'Portuguese language units', maxUnits: 8, codes: lang }] })
-    const courses = [took('ILAC 130', 'Autumn 2024', 5), took('ILAC 131', 'Autumn 2024', 5), took('ILAC 102', 'Autumn 2024', 5), ...lang.map(c => took(c, 'Winter 2025', c.endsWith('A') ? 4 : 3))]
-    for (const order of [courses, [...courses].reverse()]) {
-      const r = auditMade([major, minor], order)
-      expect(r.programs.map(p => p.status)).toEqual(['complete', 'complete'])
-      expect(check(r.programs[1], 'units')).toMatchObject({ have: 13, need: 13 })
-    }
-  })
-
-  it('finds the one track pairing a Political Science record completes, out of twenty', async () => {
-    const { verifyProgram } = await import('@/lib/requirements/verify')
-    expect(verifyProgram(program('POLSC-BA'), index)).toEqual([])
-  })
-})

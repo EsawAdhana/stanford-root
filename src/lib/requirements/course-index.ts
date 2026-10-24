@@ -22,8 +22,6 @@ export interface CourseIndex {
   search(query: string, limit?: number): CourseInfo[]
   /** Every subject code ("CS", "MS&E"), which tells a course row from a heading. */
   subjects: Set<string>
-  /** Every course, in catalog order. */
-  all: CourseInfo[]
   size: number
 }
 
@@ -58,7 +56,6 @@ export function buildCourseIndex(json: { rows: Row[] }): CourseIndex {
   return {
     size: list.length,
     subjects,
-    all: list,
     get: (code) => byCode.get(normalizeCode(code)),
     equivalents(code) {
       const normal = normalizeCode(code)

@@ -57,6 +57,3 @@ humanbehavior-install-report.md
 .claude/
 .lavish/
 .next-claude/
-
-# Raw Coursedog responses cached by scripts/build-requirements.mjs
-.cache/
