@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { useMemo } from 'react'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import type { AppliedCourse } from '@/lib/requirements/audit'
+import { courseInPool, type AppliedCourse } from '@/lib/requirements/audit'
 import { rootCourseId } from '@/lib/requirements/course-index'
 import { useDegreeStore } from '@/lib/requirements/degree-store'
 import type { ProgramData, RuleNode } from '@/lib/requirements/types'
@@ -115,7 +115,7 @@ function MenuButton({ onClick, children }: { onClick: () => void; children: Reac
 function listedElsewhere(data: ProgramData, included: Set<string>, nodeId: string, codes: Set<string>, ways: string[]) {
   const out: { id: string; label: string }[] = []
   const walk = (n: RuleNode, path: string[]) => {
-    const listed = n.items?.some(item => item.some(code => codes.has(code))) || (n.match?.way && ways.includes(n.match.way))
+    const listed = n.items?.some(item => item.some(code => codes.has(code))) || (n.match?.way && ways.includes(n.match.way)) || (n.pool && courseInPool(n.pool, codes))
     if (n.t === 'courses' && n.id !== nodeId && listed) {
       out.push({ id: n.id, label: n.name ? n.name : path[path.length - 1] || 'Requirement' })
     }

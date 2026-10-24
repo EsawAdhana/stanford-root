@@ -118,9 +118,28 @@ export const useDegreeStore = create<DegreeState>()(
       setGeneralEducation: (on) => set({ generalEducation: on }),
       clearAll: () => set({ ...initial }),
     }),
-    { name: 'root-degree-plan', version: 1 },
+    {
+      name: 'root-degree-plan',
+      version: 2,
+      migrate: (persisted, version) => migrateDegreePlan(persisted, version) as DegreeState,
+    },
   ),
 )
+
+/**
+ * v1 keyed subplans, optional sections and moves by ids numbered in build
+ * order ("b6", "r12"), which v2 replaced with the Bulletin's own stable ids.
+ * Old ids point at nothing, so they go; programs and courses stay.
+ */
+export function migrateDegreePlan(persisted: unknown, version: number) {
+  const state = (persisted ?? {}) as { programs?: ProgramChoice[]; overrides?: AuditOverrides }
+  if (version >= 2) return state
+  return {
+    ...state,
+    programs: (state.programs ?? []).map(p => ({ code: p.code, secondary: p.secondary, exploring: p.exploring })),
+    overrides: EMPTY_OVERRIDES,
+  }
+}
 
 /**
  * Drop moves and exclusions for course attempts that no longer exist. Schedule

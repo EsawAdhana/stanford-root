@@ -148,6 +148,8 @@ export const UNDERGRAD_UNITS = {
   dual: 225,
   /** Pass/fail grading (CR/NC, S/NC), activity courses included. */
   passFailCap: 36,
+  /** Test and transfer credit together. */
+  externalCap: 45,
 } as const
 
 /** University minimum for a master's degree at Stanford. */

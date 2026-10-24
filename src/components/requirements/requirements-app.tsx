@@ -264,10 +264,17 @@ function Units({ result }: { result: AuditResult }) {
   if (!result.undergradUnits && !result.gradUnits) return null
   return (
     <section className="grid gap-3 sm:grid-cols-2">
-      {result.undergradUnits && <UnitBar title="Units toward your bachelor's" units={result.undergradUnits} note={result.undergradUnits.overCap ? `${result.undergradUnits.overCap} pass/fail units over the 36-unit cap don't count.` : undefined} />}
+      {result.undergradUnits && <UnitBar title="Units toward your bachelor's" units={result.undergradUnits} note={capNote(result.undergradUnits)} />}
       {result.gradUnits && <UnitBar title="Graduate units (master's minimum)" units={result.gradUnits} note="Only courses on your graduate record count here." />}
     </section>
   )
+}
+
+function capNote(u: UnitSummary): string | undefined {
+  const notes: string[] = []
+  if (u.overCap) notes.push(`${u.overCap} pass/fail units over the 36-unit cap don't count.`)
+  if (u.externalOverCap) notes.push(`${u.externalOverCap} test and transfer units over the 45-unit cap don't count.`)
+  return notes.length ? notes.join(' ') : undefined
 }
 
 function UnitBar({ title, units, note }: { title: string; units: UnitSummary; note?: string }) {

@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { forEachApplied, type AuditCourse } from '@/lib/requirements/audit'
+import { courseInPool, forEachApplied, type AuditCourse } from '@/lib/requirements/audit'
 import { countsTowardDegree } from '@/lib/requirements/student-courses'
 import { useDegreeStore } from '@/lib/requirements/degree-store'
 import type { RuleNode } from '@/lib/requirements/types'
@@ -104,5 +104,5 @@ function isListed(node: RuleNode, c: AuditCourse): boolean {
     if (node.match.tag) return info.tags.includes(node.match.tag)
     return false
   }
-  return Boolean(node.items?.some(item => item.some(code => c.codes.has(code))))
+  return Boolean(node.items?.some(item => item.some(code => c.codes.has(code)))) || Boolean(node.pool && courseInPool(node.pool, c.codes, c.info, c.course.code))
 }
