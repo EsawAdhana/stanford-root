@@ -3,6 +3,7 @@ import { readFile } from 'fs/promises'
 import { SITE_URL } from '@/lib/site'
 import { serverCatalogPath } from '@/lib/catalog-paths'
 import { getCanonicalCourseIdsFromDump } from '@/lib/catalog-dump'
+import { REQUIREMENTS_PUBLIC } from '@/lib/requirements/visibility'
 
 // Rebuild the sitemap at most once a day rather than per request.
 export const revalidate = 86400
@@ -40,7 +41,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/`, lastModified: now, changeFrequency: 'daily', priority: 1 },
     { url: `${SITE_URL}/departments`, lastModified: now, changeFrequency: 'weekly', priority: 0.8 },
     { url: `${SITE_URL}/schedule`, lastModified: now, changeFrequency: 'monthly', priority: 0.4 },
-    { url: `${SITE_URL}/requirements`, lastModified: now, changeFrequency: 'monthly', priority: 0.5 },
+    ...(REQUIREMENTS_PUBLIC ? [{ url: `${SITE_URL}/requirements`, lastModified: now, changeFrequency: 'monthly' as const, priority: 0.5 }] : []),
     { url: `${SITE_URL}/about`, lastModified: now, changeFrequency: 'yearly', priority: 0.3 },
     { url: `${SITE_URL}/privacy`, lastModified: now, changeFrequency: 'yearly', priority: 0.2 },
     { url: `${SITE_URL}/terms`, lastModified: now, changeFrequency: 'yearly', priority: 0.2 },

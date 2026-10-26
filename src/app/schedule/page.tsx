@@ -36,6 +36,7 @@ import { track } from '@/lib/analytics';
 import { toast } from 'sonner';
 import { useEnsureCatalog } from '@/hooks/use-catalog';
 import { compareTerms } from '@/lib/terms'
+import { REQUIREMENTS_PUBLIC } from '@/lib/requirements/visibility'
 
 const IGNORED_OVERLOADS_KEY = 'stanford-root:ignored-overloads'
 
@@ -489,12 +490,14 @@ END:VEVENT
           <div className="flex items-center gap-3 ml-auto">
             <ThemeToggle />
             {/* From sm up: on a phone the header has no room for it. */}
-            <Button asChild variant="ghost" size="sm" className="hidden gap-2 text-muted-foreground hover:text-foreground sm:inline-flex">
-              <Link href="/requirements" aria-label="Requirements">
-                <ListChecks className="h-4 w-4" />
-                <span className="hidden sm:inline">Requirements</span>
-              </Link>
-            </Button>
+            {REQUIREMENTS_PUBLIC && (
+              <Button asChild variant="ghost" size="sm" className="hidden gap-2 text-muted-foreground hover:text-foreground sm:inline-flex">
+                <Link href="/requirements" aria-label="Requirements">
+                  <ListChecks className="h-4 w-4" />
+                  <span className="hidden sm:inline">Requirements</span>
+                </Link>
+              </Button>
+            )}
             <Popover>
               <PopoverTrigger asChild>
                 <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground hover:text-foreground">

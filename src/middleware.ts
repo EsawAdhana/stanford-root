@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { isBlockedCrawler } from '@/lib/blocked-crawlers'
+import { REQUIREMENTS_PUBLIC } from '@/lib/requirements/visibility'
 
 /**
  * Two jobs: deny the scrapers in `lib/blocked-crawlers`, and catch an OAuth code
@@ -23,6 +24,12 @@ export function middleware(request: NextRequest) {
       status: 403,
       headers: { 'cache-control': 'no-store' },
     })
+  }
+
+  // The degree requirements page is not public yet (lib/requirements/visibility).
+  // Answered here, before the layout streams, so the status is a real 404.
+  if (!REQUIREMENTS_PUBLIC && (url.pathname === '/requirements' || url.pathname.startsWith('/requirements/'))) {
+    return NextResponse.rewrite(new URL('/requirements-not-found', url.origin), { status: 404 })
   }
 
   // Supabase sometimes redirects to Site URL root (?code=...) instead of

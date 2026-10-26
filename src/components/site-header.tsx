@@ -11,6 +11,7 @@ import { ThemeToggle } from '@/components/theme-toggle';
 import Link from 'next/link';
 import { CalendarDays, ListChecks, LogOut } from 'lucide-react';
 import { usePathname, useSearchParams } from 'next/navigation';
+import { REQUIREMENTS_PUBLIC } from '@/lib/requirements/visibility';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
 export function SiteHeader() {
@@ -66,7 +67,7 @@ export function SiteHeader() {
             <div className="flex items-center justify-end gap-1.5 sm:gap-2 shrink-0 pr-2 sm:pr-4 md:pr-6">
                 <ThemeToggle />
 
-                {!isFaq && (
+                {!isFaq && REQUIREMENTS_PUBLIC && (
                     <Button
                         asChild
                         variant="ghost"
