@@ -351,6 +351,10 @@ async function _pullSchedule(userId: string): Promise<void> {
     if (signedOutSince()) return
 
     const snapshotSig = cartSignature()
+    // The cart this tab loaded with is a cache until a pull reconciles it. Record
+    // it as the baseline so a later pull can tell an edit made since (real work)
+    // from the cache itself, even when this pull fails.
+    if (_lastSyncedSignature === null) _lastSyncedSignature = snapshotSig
 
     const { data, error } = await supabase
       .from('user_schedules')
@@ -366,7 +370,10 @@ async function _pullSchedule(userId: string): Promise<void> {
 
     // If the user changed the cart while we were fetching (add/remove OR an edit to
     // an existing item), their intent wins — push local instead of overwriting it.
-    if (snapshotSig !== cartSignature()) {
+    // Only for a tab that has pulled before: a first pull's cart has never been
+    // reconciled with the row, so pushing it would replace the saved schedule with
+    // whatever this browser happened to hold. That falls through to the merge.
+    if (snapshotSig !== cartSignature() && _lastPulledUserId === userId) {
       await pushSchedule(userId)
       return
     }
@@ -487,8 +494,25 @@ function recordSynced(signature: string, ids: string[]) {
   _lastSyncedIds = new Set(ids)
 }
 
+/**
+ * Whether this tab may write its cart over the saved row. Not before a pull has
+ * landed here: until then the cart is whatever this browser last held, which is
+ * empty on a browser that never had the schedule. A tab hidden while its first
+ * pull waited on the catalog pushed exactly that, and replaced a student's 16
+ * saved courses with nothing (2026-09-30).
+ */
+function canPush(userId: string): boolean {
+  return !_pushSuspended && _lastPulledUserId === userId
+}
+
 export function debouncedPush(userId: string) {
   if (_pullActive || _pushSuspended) return
+  if (!canPush(userId)) {
+    // An edit before any pull landed (the first one failed). Pull instead: the
+    // pull merges this edit with the row and pushes the result.
+    void pullSchedule(userId)
+    return
+  }
   if (debounceTimer) clearTimeout(debounceTimer)
   const currentCount = useCartStore.getState().items.length
 
@@ -530,6 +554,7 @@ export async function flushAndPush(userId: string): Promise<void> {
  * user did is dropped.
  */
 export async function flushPendingPush(userId: string): Promise<void> {
+  if (!canPush(userId)) return
   if (!debounceTimer && cartSignature() === _lastSyncedSignature) return
   await flushAndPush(userId)
 }
