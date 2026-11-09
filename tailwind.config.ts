@@ -25,6 +25,11 @@ const config: Config = {
   			// From sm up, the week grid scrolls sideways below this instead of squeezing.
   			calendar: '700px'
   		},
+  		maxWidth: {
+  			// The schedule page's header and content widths, for pages that share its layout.
+  			shell: '100rem',
+  			content: '95rem'
+  		},
   		colors: {
   			'cardinal-red': {
   				DEFAULT: '#8C1515',

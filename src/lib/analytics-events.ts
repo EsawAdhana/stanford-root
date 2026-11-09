@@ -18,6 +18,7 @@ export const ANALYTICS_EVENTS = [
   // session on 2026-08-25); the component already emits it.
   'schedule_source_notice_shown',
   'finals_week_viewed',
+  'schedule_share_copied',
   'plan_created',
   'plan_switched',
   'plan_deleted',

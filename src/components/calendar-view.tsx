@@ -21,6 +21,7 @@ import { ALL_DAYS, visibleDays, getCalendarColorClasses, layoutDayEvents, type C
 import { useFindShortcut } from '@/hooks/use-find-shortcut';
 import { TimeGrid, blockStyle, gridRange } from '@/components/time-grid';
 import { ExamClashBanner, ExamSlotLine, FinalsGrid, HeavyExamDayNotice, clashPartners, useTermExams } from '@/components/finals-week';
+import type { CartItem } from '@/lib/cart-store';
 
 type CalendarEvent = {
   id: string
@@ -44,8 +45,9 @@ type LaidOutEvent = CalendarEvent & {
 
 type CalendarViewProps = {
   currentTerm: string
-  onPrevTerm: () => void
-  onNextTerm: () => void
+  /** Omit both to drop the term arrows, as a shared link does. */
+  onPrevTerm?: () => void
+  onNextTerm?: () => void
   /** False at the edge of the terms we have data for; the arrow disables. */
   canPrevTerm?: boolean
   canNextTerm?: boolean
@@ -56,6 +58,12 @@ type CalendarViewProps = {
   onIgnoreOverload: () => void
   expectedHoursPerWeek?: number | null
   expectedHoursLoading?: boolean
+  /** Courses to draw instead of the user's own schedule (a shared link). */
+  items?: CartItem[]
+  /** No search, no removing, no meeting toggles, no warnings: someone else's schedule. */
+  readOnly?: boolean
+  /** A line under the term name. */
+  subtitle?: string
   /** Rendered above the calendar card, such as the plan tabs. */
   aboveCalendar?: React.ReactNode
   /** Replaces the units and hours cards, such as the plan comparison. */
@@ -64,8 +72,9 @@ type CalendarViewProps = {
 
 type ScheduleView = 'classes' | 'finals'
 
-export function CalendarView({ currentTerm, onPrevTerm, onNextTerm, canPrevTerm = true, canNextTerm = true, totalUnitsMin, totalUnitsMax, isOverload, isIgnored, onIgnoreOverload, expectedHoursPerWeek, expectedHoursLoading, aboveCalendar, metrics }: CalendarViewProps) {
-  const items = useCartStore(s => s.items)
+export function CalendarView({ currentTerm, onPrevTerm, onNextTerm, canPrevTerm = true, canNextTerm = true, totalUnitsMin, totalUnitsMax, isOverload, isIgnored, onIgnoreOverload, expectedHoursPerWeek, expectedHoursLoading, items: itemsOverride, readOnly = false, subtitle, aboveCalendar, metrics }: CalendarViewProps) {
+  const cartItems = useCartStore(s => s.items)
+  const items = itemsOverride ?? cartItems
   const addItem = useCartStore(s => s.addItem)
   const removeItem = useCartStore(s => s.removeItem)
   const toggleOptionalMeeting = useCartStore(s => s.toggleOptionalMeeting)
@@ -219,7 +228,7 @@ export function CalendarView({ currentTerm, onPrevTerm, onNextTerm, canPrevTerm 
       <div className="flex flex-col relative">
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-6 items-start">
           <div className="flex flex-col gap-2 w-full min-w-0">
-            {exams && (
+            {!readOnly && exams && (
               <ExamClashBanner
                 term={currentTerm}
                 clashes={exams.load.clashes}
@@ -229,11 +238,14 @@ export function CalendarView({ currentTerm, onPrevTerm, onNextTerm, canPrevTerm 
             {aboveCalendar}
             <div className="rounded-xl border bg-card overflow-hidden flex flex-col shrink-0">
               <div className="grid grid-cols-[40px_1fr_40px] items-center border-b bg-card/80 backdrop-blur supports-[backdrop-filter]:bg-card/60 px-2 py-2">
-                <Button variant="ghost" size="icon" onClick={onPrevTerm} disabled={!canPrevTerm} aria-label="Previous term">
-                  <ChevronLeft className="h-4 w-4" />
-                </Button>
+                {onPrevTerm ? (
+                  <Button variant="ghost" size="icon" onClick={onPrevTerm} disabled={!canPrevTerm} aria-label="Previous term">
+                    <ChevronLeft className="h-4 w-4" />
+                  </Button>
+                ) : <span />}
                 <div className="text-center">
                   <div className="font-semibold text-base">{currentTerm}</div>
+                  {subtitle && <div className="text-xs text-muted-foreground mt-0.5">{subtitle}</div>}
                   {exams && (
                     <Tabs
                       value={showFinals ? 'finals' : 'classes'}
@@ -247,9 +259,11 @@ export function CalendarView({ currentTerm, onPrevTerm, onNextTerm, canPrevTerm 
                     </Tabs>
                   )}
                 </div>
-                <Button variant="ghost" size="icon" onClick={onNextTerm} disabled={!canNextTerm} aria-label="Next term">
-                  <ChevronRight className="h-4 w-4" />
-                </Button>
+                {onNextTerm ? (
+                  <Button variant="ghost" size="icon" onClick={onNextTerm} disabled={!canNextTerm} aria-label="Next term">
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
+                ) : <span />}
               </div>
               {showFinals && exams ? (
                 <FinalsGrid term={currentTerm} exams={exams} onOpenCourse={openCourse} />
@@ -269,25 +283,27 @@ export function CalendarView({ currentTerm, onPrevTerm, onNextTerm, canPrevTerm 
                       )}
                       style={blockStyle(ev, startMinutes)}
                     >
-                      <TooltipProvider delayDuration={500}>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <button
-                              type="button"
-                              className="absolute right-1 top-1 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity rounded p-1 hover:bg-black/5 dark:hover:bg-white/10 z-20"
-                              onClick={(e) => {
-                                e.stopPropagation()
-                                toggleOptionalMeeting(ev.courseId, ev.day, ev.startTime, ev.endTime)
-                              }}
-                            >
-                              {ev.isOptional ? <Eye className="h-3 w-3 sm:h-3.5 sm:w-3.5" /> : <EyeOff className="h-3 w-3 sm:h-3.5 sm:w-3.5" />}
-                            </button>
-                          </TooltipTrigger>
-                          <TooltipContent side="top">
-                            {ev.isOptional ? 'Ignored for conflict checks — click to include this meeting again' : 'Click to ignore this meeting in conflict checks (it stays dimmed on your schedule)'}
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
+                      {!readOnly && (
+                        <TooltipProvider delayDuration={500}>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <button
+                                type="button"
+                                className="absolute right-1 top-1 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity rounded p-1 hover:bg-black/5 dark:hover:bg-white/10 z-20"
+                                onClick={(e) => {
+                                  e.stopPropagation()
+                                  toggleOptionalMeeting(ev.courseId, ev.day, ev.startTime, ev.endTime)
+                                }}
+                              >
+                                {ev.isOptional ? <Eye className="h-3 w-3 sm:h-3.5 sm:w-3.5" /> : <EyeOff className="h-3 w-3 sm:h-3.5 sm:w-3.5" />}
+                              </button>
+                            </TooltipTrigger>
+                            <TooltipContent side="top">
+                              {ev.isOptional ? 'Ignored for conflict checks — click to include this meeting again' : 'Click to ignore this meeting in conflict checks (it stays dimmed on your schedule)'}
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      )}
                       <div className="pl-0.5">
                         <div className="text-[10px] sm:text-[11px] font-semibold leading-tight truncate">
                           {ev.courseCode}
@@ -306,6 +322,7 @@ export function CalendarView({ currentTerm, onPrevTerm, onNextTerm, canPrevTerm 
           <div className="flex flex-col gap-3 w-full">
 
             {/* Local Search Input for Calendar */}
+            {!readOnly && (
             <div className="relative shrink-0">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <Search className="h-4 w-4 text-muted-foreground/60" />
@@ -382,8 +399,9 @@ export function CalendarView({ currentTerm, onPrevTerm, onNextTerm, canPrevTerm 
                 </div>
               )}
             </div>
+            )}
 
-            {isOverload && !isIgnored && (
+            {!readOnly && isOverload && !isIgnored && (
               <div className="flex items-start gap-2 rounded-xl border border-destructive/50 bg-destructive/5 p-3 text-destructive shrink-0">
                 <AlertTriangle className="h-4 w-4 mt-0.5 shrink-0" />
                 <div className="flex-1 min-w-0">
@@ -429,14 +447,16 @@ export function CalendarView({ currentTerm, onPrevTerm, onNextTerm, canPrevTerm 
               </div>
             </div>
             )}
-            {showFinals && exams && <HeavyExamDayNotice heavyDays={exams.load.heavyDays} />}
+            {!readOnly && showFinals && exams && <HeavyExamDayNotice heavyDays={exams.load.heavyDays} />}
             {currentTermCourses.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-12 text-center text-muted-foreground border-2 border-dashed rounded-xl bg-muted/20">
                 <Calendar className="h-10 w-10 mb-3 opacity-20" />
                 <p className="font-medium text-sm">No classes yet</p>
-                <p className="text-xs mt-1 max-w-[200px]">
-                  Search for courses to add them to your {currentTerm} schedule.
-                </p>
+                {!readOnly && (
+                  <p className="text-xs mt-1 max-w-[200px]">
+                    Search for courses to add them to your {currentTerm} schedule.
+                  </p>
+                )}
               </div>
             ) : (
               <div className="space-y-2">
@@ -457,14 +477,16 @@ export function CalendarView({ currentTerm, onPrevTerm, onNextTerm, canPrevTerm 
                           <div className="font-medium truncate">{course.subject} {course.code}</div>
                           <div className="text-xs text-muted-foreground truncate">{decodeHtmlEntities(course.title)}</div>
                         </div>
-                        <Button
-                          variant="ghost" size="icon"
-                          aria-label={`Remove ${course.subject} ${course.code} from schedule`}
-                          className="h-7 w-7 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity"
-                          onClick={(e) => { e.stopPropagation(); removeItem(course.id); }}
-                        >
-                          <Trash2 size={14} />
-                        </Button>
+                        {!readOnly && (
+                          <Button
+                            variant="ghost" size="icon"
+                            aria-label={`Remove ${course.subject} ${course.code} from schedule`}
+                            className="h-7 w-7 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity"
+                            onClick={(e) => { e.stopPropagation(); removeItem(course.id); }}
+                          >
+                            <Trash2 size={14} />
+                          </Button>
+                        )}
                       </div>
                       <div className="mt-2 text-xs text-muted-foreground space-y-1">
                         {showFinals && exams ? (

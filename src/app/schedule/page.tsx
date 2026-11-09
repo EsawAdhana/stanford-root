@@ -17,6 +17,7 @@ import { useCourseStore } from '@/lib/store';
 import { useAuthStore } from '@/lib/auth-store';
 import { useEvaluationStore } from '@/lib/evaluation-store';
 import { expectedWeeklyHours, termUnitRange } from '@/lib/schedule-totals';
+import { ShareSchedule, ShareScheduleItem } from '@/components/share-schedule';
 import { PlanComparison, PlanTabs } from '@/components/plan-tabs';
 import { Logo } from '@/components/logo';
 import { ThemeToggle } from '@/components/theme-toggle';
@@ -434,6 +435,7 @@ END:VEVENT
           </div>
           <div className="flex items-center gap-3 ml-auto">
             <ThemeToggle />
+            <ShareSchedule term={currentTerm} courses={currentTermCourses} />
             <Popover>
               <PopoverTrigger asChild>
                 <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground hover:text-foreground">
@@ -471,6 +473,9 @@ END:VEVENT
                       Upload an .ics file to add classes from another calendar (or OnCourse).
                     </span>
                   </button>
+
+                  <div className="h-px bg-border/50 my-1 sm:hidden" />
+                  <ShareScheduleItem term={currentTerm} courses={currentTermCourses} />
                 </div>
               </PopoverContent>
             </Popover>
