@@ -16,7 +16,7 @@ import { useCartStore } from '@/lib/cart-store';
 import { useCourseStore } from '@/lib/store';
 import { useAuthStore } from '@/lib/auth-store';
 import { useEvaluationStore } from '@/lib/evaluation-store';
-import { aggregateMetrics } from '@/components/course-evaluations';
+import { expectedWeeklyHours, termUnitRange } from '@/lib/schedule-totals';
 import { Logo } from '@/components/logo';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { SchedulePageShell } from '@/components/schedule-page-shell';
@@ -25,7 +25,7 @@ import { ScheduleSourceNotice } from '@/components/schedule-source-notice';
 import { parseMeetingTimes, timeToMinutes, parseDays, isScheduledForTerm } from '@/lib/schedule-utils';
 import { getDefaultTerm, getApproxTermStart } from '@/lib/terms';
 import { useAvailableTerms } from '@/hooks/use-selected-terms';
-import { cn, parseUnitsOptions } from '@/lib/utils';
+import { cn } from '@/lib/utils';
 import {
   Popover,
   PopoverContent,
@@ -146,45 +146,10 @@ function ScheduleContent() {
     })
   }, [items, currentTerm, courseMap])
 
-  const { totalUnitsMin, totalUnitsMax } = useMemo(() => {
-    let totalUnitsMin = 0
-    let totalUnitsMax = 0
-
-    currentTermCourses.forEach(c => {
-      if (c.selectedUnits !== undefined && !isNaN(c.selectedUnits)) {
-        totalUnitsMin += c.selectedUnits
-        totalUnitsMax += c.selectedUnits
-        return
-      }
-
-      // Units belong to the course, not to each picked section: ExploreCourses
-      // leaves DIS rows blank, so read them off the first picked section that
-      // has them rather than summing across LEC + DIS.
-      if (c.selectedSectionIds?.length && c.sections) {
-        // Only the entry's own term: class numbers are reused across terms.
-        const term = c.selectedTerm ?? currentTerm
-        const picked = c.sections.filter(s => s.term === term && c.selectedSectionIds!.includes(s.classId))
-        const withUnits = picked
-          .map(s => parseUnitsOptions(s.units))
-          .find(opts => opts.length > 0 && Math.max(0, ...opts) > 0)
-        if (withUnits) {
-          totalUnitsMin += withUnits[0]
-          totalUnitsMax += withUnits[withUnits.length - 1]
-          return
-        }
-      }
-
-      if (c.units) {
-        const opts = parseUnitsOptions(c.units)
-        if (opts.length > 0) {
-          totalUnitsMin += opts[0]
-          totalUnitsMax += opts[opts.length - 1]
-        }
-      }
-    })
-
-    return { totalUnitsMin, totalUnitsMax }
-  }, [currentTermCourses])
+  const { min: totalUnitsMin, max: totalUnitsMax } = useMemo(
+    () => termUnitRange(currentTermCourses, currentTerm),
+    [currentTermCourses, currentTerm]
+  )
 
   const isOverload = totalUnitsMax > 20
   const isIgnored = ignoredOverloads[currentTerm] === totalUnitsMax
@@ -202,28 +167,7 @@ function ScheduleContent() {
   const EXPECTED_HOURS_TTL = 1000 * 60 * 30 // 30 min
 
   const { expectedHoursPerWeek, expectedHoursLoading, computedHours } = useMemo(() => {
-    let total = 0
-    let withData = 0
-    let loading = false
-    for (const c of currentTermCourses) {
-      if (loadingCourses[c.id]) loading = true
-      const evals = getEvaluations(c.id)
-      const metrics = aggregateMetrics(evals)
-      if (metrics.hours !== undefined && !Number.isNaN(metrics.hours)) {
-        total += metrics.hours
-        withData++
-      } else if (!loadingCourses[c.id]) {
-        // Fallback: estimate hours as units * 3 when no eval data
-        const effectiveUnits = c.selectedUnits
-          ?? (() => {
-            const opts = parseUnitsOptions(c.units ?? '')
-            return opts.length > 0 ? opts[Math.floor(opts.length / 2)] : 0
-          })()
-        total += effectiveUnits * 3
-        withData++
-      }
-    }
-    const computed = withData > 0 ? total : null
+    const { total: computed, loading } = expectedWeeklyHours(currentTermCourses, getEvaluations, loadingCourses)
 
     // Read cached value when still loading, to avoid a flash (read-only — write is in an effect below)
     let displayValue = computed
