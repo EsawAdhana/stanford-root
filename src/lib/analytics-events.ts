@@ -18,6 +18,9 @@ export const ANALYTICS_EVENTS = [
   // session on 2026-08-25); the component already emits it.
   'schedule_source_notice_shown',
   'finals_week_viewed',
+  'plan_created',
+  'plan_switched',
+  'plan_deleted',
 ] as const
 
 export type AnalyticsEvent = typeof ANALYTICS_EVENTS[number]

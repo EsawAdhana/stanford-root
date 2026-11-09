@@ -5,6 +5,7 @@ import { cartHydrated } from './cart-hydration'
 import { trackOnce } from './analytics'
 import { useUnresolvedSchedule } from './unresolved-schedule'
 import { dedupeCrossListedItems } from './schedule-utils'
+import { labelIndex, nextPlanLabel, plansDocument, plansSignature, readPlans, toSavedItem, type PlansByTerm } from './schedule-plans'
 
 // Minimal payload stored server-side — no full Course catalog data
 export type ScheduleItem = {
@@ -39,6 +40,11 @@ function toScheduleItems(): ScheduleItem[] {
     if (!inCart.has(unresolved.id)) items.push(unresolved)
   }
   return items
+}
+
+/** This device's whole saved schedule: the cart, and the plans not on screen. */
+function currentDoc(): ScheduleDoc {
+  return { schedule: toScheduleItems(), plans: useCartStore.getState().plans ?? {} }
 }
 
 /**
@@ -280,13 +286,193 @@ export function mergeSchedules(base: ScheduleItem[] | null, mine: ScheduleItem[]
   return out
 }
 
+// ---------------------------------------------------------------------------
+// Merging two copies of a schedule with plans (Plan A / Plan B)
+// ---------------------------------------------------------------------------
+
+/**
+ * A whole saved schedule: `schedule` is what the row's `schedule` column holds
+ * (for a term with plans, its active plan), and `plans` the plans not on screen
+ * (the `plans` column, see schedule-plans.ts).
+ */
+export type ScheduleDoc = { schedule: ScheduleItem[]; plans: PlansByTerm }
+
+/** What one side says about one plan: its classes, that it has no such plan, or nothing (it never had plans). */
+type PlanOpinion = ScheduleItem[] | 'absent' | 'same'
+
+type PlanSide = { active: string; labels: string[]; get: (label: string) => PlanOpinion }
+
+type TermView =
+  | { kind: 'plans'; active: string; lists: Map<string, ScheduleItem[]> }
+  | { kind: 'single'; list: ScheduleItem[] }
+
+function viewTerm(doc: ScheduleDoc, term: string): TermView {
+  const onScreen = doc.schedule.filter(i => i.selectedTerm === term)
+  const p = doc.plans[term]
+  if (!p) return { kind: 'single', list: onScreen }
+  const lists = new Map<string, ScheduleItem[]>()
+  for (const label of p.order) lists.set(label, label === p.active ? onScreen : (p.parked[label] ?? []))
+  return { kind: 'plans', active: p.active, lists }
+}
+
+/** The plan of `base` whose classes `list` shares the most of, for a side that deleted its way down to one plan. */
+function closestPlan(list: ScheduleItem[], base: Extract<TermView, { kind: 'plans' }>): string {
+  const ids = new Set(list.map(i => i.id))
+  let best = base.active
+  let bestShared = -1
+  for (const [label, items] of base.lists) {
+    const shared = items.filter(i => ids.has(i.id)).length
+    if (shared > bestShared || (shared === bestShared && label === base.active)) {
+      best = label
+      bestShared = shared
+    }
+  }
+  return best
+}
+
+/**
+ * One side's plans for a term, as labelled lists. A side with a single
+ * schedule for the term is read one of two ways:
+ *  - It had plans at the base and deleted down to one: its list is the plan it
+ *    kept, and every other plan was deleted there.
+ *  - It never had plans: its list is the plan the other side has open, and it
+ *    has no opinion about the rest. Plans are made as copies of the schedule,
+ *    so an edit made on a device that has not seen them yet lands in the plan
+ *    that will be on screen.
+ */
+function planSide(view: TermView, base: TermView | null, other: TermView): PlanSide {
+  if (view.kind === 'plans') {
+    return { active: view.active, labels: [...view.lists.keys()], get: label => view.lists.get(label) ?? 'absent' }
+  }
+  if (base?.kind === 'plans') {
+    const kept = closestPlan(view.list, base)
+    return { active: kept, labels: [kept], get: label => (label === kept ? view.list : 'absent') }
+  }
+  const label = other.kind === 'plans' ? other.active : 'A'
+  return { active: label, labels: [label], get: l => (l === label ? view.list : 'same') }
+}
+
+function sameList(a: ScheduleItem[], b: ScheduleItem[]): boolean {
+  if (a.length !== b.length) return false
+  const keys = new Set(a.map(itemKey))
+  return b.every(item => keys.has(itemKey(item)))
+}
+
+/**
+ * Three-way merge of one term's plans. Each plan is merged on its own with
+ * `mergeSchedules`, keyed by its label:
+ *  - A plan both sides still have merges its classes by the usual rule.
+ *  - A plan deleted on either side since base is deleted.
+ *  - A plan added on one side is kept. The same new label added on both sides
+ *    with different classes keeps both: this device's copy takes the next free
+ *    label, so neither plan's classes are mixed into the other.
+ *  - The open plan is whichever side changed it since base, this device's
+ *    when both did. If that plan was deleted, its neighbour opens, as on delete.
+ */
+function mergeTermPlans(base: TermView | null, mine: TermView, theirs: TermView) {
+  const b: (label: string) => ScheduleItem[] | 'absent' =
+    base === null ? () => 'absent'
+      : base.kind === 'single' ? () => base.list // every plan began as a copy of this schedule
+        : label => base.lists.get(label) ?? 'absent'
+  const m = planSide(mine, base, theirs)
+  const t = planSide(theirs, base, mine)
+
+  const lists = new Map<string, ScheduleItem[]>()
+  let mineActive = m.active
+  const allLabels = [...new Set([...t.labels, ...m.labels])]
+  const used = new Set(allLabels)
+  for (const label of allLabels) {
+    const was = b(label)
+    const mv = m.get(label)
+    const tv = t.get(label)
+    const my = mv === 'same' ? was : mv
+    const their = tv === 'same' ? was : tv
+    if (was === 'absent') {
+      if (my === 'absent' && their === 'absent') continue
+      if (my === 'absent') lists.set(label, their as ScheduleItem[])
+      else if (their === 'absent') lists.set(label, my)
+      else if (base === null) lists.set(label, mergeSchedules(null, my, their))
+      else if (sameList(my, their)) lists.set(label, their)
+      else {
+        lists.set(label, their)
+        const fresh = nextPlanLabel([...used])
+        used.add(fresh)
+        lists.set(fresh, my)
+        if (mineActive === label) mineActive = fresh
+      }
+      continue
+    }
+    if (my === 'absent' || their === 'absent') continue // deleted on one side
+    lists.set(label, mergeSchedules(was, my, their))
+  }
+
+  const baseActive = base?.kind === 'plans' ? base.active : undefined
+  let active = baseActive !== undefined && m.active === baseActive ? t.active : mineActive
+  const order = [...lists.keys()].sort((x, y) => labelIndex(x) - labelIndex(y))
+  if (!lists.has(active)) {
+    const everything = [...used].sort((x, y) => labelIndex(x) - labelIndex(y))
+    const at = everything.indexOf(active)
+    const before = everything.slice(0, Math.max(at, 0)).reverse().find(l => lists.has(l))
+    active = before ?? order[0]
+  }
+  return { order, active, lists }
+}
+
+/**
+ * The three-way merge of whole saved schedules, plans included. Terms without
+ * plans on any side merge exactly as `mergeSchedules` merges a schedule. Terms
+ * with plans merge plan by plan (see `mergeTermPlans`), and the open plan's
+ * classes go back into `schedule`. `base` null means this device never agreed
+ * with the row, and then nothing counts as removed.
+ *
+ * Classes keep the row's order, so a merge that changes nothing returns the
+ * row as it is and writes nothing.
+ */
+export function mergeScheduleDocs(base: ScheduleDoc | null, mine: ScheduleDoc, theirs: ScheduleDoc): ScheduleDoc {
+  const planTerms = new Set([...Object.keys(theirs.plans), ...Object.keys(mine.plans), ...Object.keys(base?.plans ?? {})])
+  const loose = (doc: ScheduleDoc) => doc.schedule.filter(i => i.selectedTerm === undefined || !planTerms.has(i.selectedTerm))
+
+  const produced: ScheduleItem[] = mergeSchedules(base ? loose(base) : null, loose(mine), loose(theirs))
+  const plans: PlansByTerm = {}
+  for (const term of planTerms) {
+    const merged = mergeTermPlans(base ? viewTerm(base, term) : null, viewTerm(mine, term), viewTerm(theirs, term))
+    produced.push(...(merged.lists.get(merged.active) ?? []))
+    if (merged.order.length < 2) continue // one plan left is just the schedule again
+    const parked: PlansByTerm[string]['parked'] = {}
+    for (const label of merged.order) {
+      if (label !== merged.active) parked[label] = (merged.lists.get(label) ?? []).map(i => toSavedItem({ ...i, selectedTerm: term }))
+    }
+    plans[term] = { order: merged.order, active: merged.active, parked }
+  }
+
+  // The cart holds one entry per course. Two terms can each bring the same
+  // course; this device's entry wins, as it does within a term.
+  const mineKeys = new Map(mine.schedule.map(i => [i.id, itemKey(i)]))
+  const chosen = new Map<string, ScheduleItem>()
+  for (const item of produced) {
+    const held = chosen.get(item.id)
+    if (!held || (itemKey(held) !== mineKeys.get(item.id) && itemKey(item) === mineKeys.get(item.id))) chosen.set(item.id, item)
+  }
+  const rowOrder = new Map(theirs.schedule.map((i, n) => [i.id, n]))
+  const schedule = [...chosen.values()]
+    .map((item, n) => ({ item, n }))
+    .sort((x, y) => (rowOrder.get(x.item.id) ?? Infinity) - (rowOrder.get(y.item.id) ?? Infinity) || x.n - y.n)
+    .map(({ item }) => item)
+  return { schedule, plans }
+}
+
+/** Same classes in the same order, and the same plans. */
+function sameDoc(a: ScheduleDoc, b: ScheduleDoc): boolean {
+  return sameSchedule(a.schedule, b.schedule) && plansSignature(a.plans) === plansSignature(b.plans)
+}
+
 /**
  * The merge against the row as read. No row at all is not an empty schedule:
  * it is ambiguous (a fresh project, a policy hiccup, a manual delete) and this
  * device's list may be the only copy left, so it is kept whole.
  */
-function mergeWithRow(base: ScheduleItem[] | null, mine: ScheduleItem[], theirs: ScheduleItem[] | null): ScheduleItem[] {
-  return theirs === null ? mine : mergeSchedules(base, mine, theirs)
+function mergeWithRow(base: ScheduleDoc | null, mine: ScheduleDoc, theirs: ScheduleDoc | null): ScheduleDoc {
+  return theirs === null ? mine : mergeScheduleDocs(base, mine, theirs)
 }
 
 /**
@@ -294,37 +480,58 @@ function mergeWithRow(base: ScheduleItem[] | null, mine: ScheduleItem[], theirs:
  * does not list them. They are parked, not removed: the student never saw them
  * here, so could not have removed them. After a reload they are no longer in
  * memory, so without this the merge would read them as removed on this device.
+ * One a plan switch here put away in a parked plan stays there.
  * Call only with the catalog loaded.
  */
-function withParked(items: ScheduleItem[], base: ScheduleItem[] | null): ScheduleItem[] {
-  if (!base) return items
-  const inCart = new Set(items.map(i => i.id))
+function withParked(doc: ScheduleDoc, base: ScheduleDoc | null): ScheduleDoc {
+  if (!base) return doc
+  const inCart = new Set(doc.schedule.map(i => i.id))
   const listed = new Set(useCourseStore.getState().courses.map(c => c.id))
-  return [...items, ...base.filter(b => !inCart.has(b.id) && !listed.has(b.id))]
+  const parkedHere = (item: ScheduleItem) => {
+    const p = item.selectedTerm !== undefined ? doc.plans[item.selectedTerm] : undefined
+    return !!p && Object.values(p.parked).some(list => list.some(i => i.id === item.id))
+  }
+  const missing = base.schedule.filter(b => !inCart.has(b.id) && !listed.has(b.id) && !parkedHere(b))
+  return missing.length ? { ...doc, schedule: [...doc.schedule, ...missing] } : doc
 }
 
 // ---------------------------------------------------------------------------
 // Reading and writing the row
 // ---------------------------------------------------------------------------
 
-/** The row's schedule, null when the account has no row yet. */
-type RowRead = { ok: true; schedule: ScheduleItem[] | null } | { ok: false }
+/**
+ * The row's two schedule columns exactly as stored. `plans` stays raw (null
+ * when the row has none) because a conditional save compares against it as
+ * stored; `docOf` reads it for the merge.
+ */
+type StoredRow = { schedule: ScheduleItem[]; plans: unknown }
+
+/** The row, null when the account has no row yet. */
+type RowRead = { ok: true; row: StoredRow | null } | { ok: false }
+
+function docOf(row: StoredRow): ScheduleDoc {
+  return { schedule: row.schedule, plans: readPlans(row.plans) }
+}
 
 async function readRow(userId: string): Promise<RowRead> {
   const { data, error } = await supabase
     .from('user_schedules')
-    .select('schedule')
+    .select('schedule, plans')
     .eq('user_id', userId)
     .single()
   if (error && error.code !== 'PGRST116') {
     console.error('Failed to fetch schedule from Supabase:', error)
     return { ok: false }
   }
-  if (!data) return { ok: true, schedule: null }
-  return { ok: true, schedule: (Array.isArray(data.schedule) ? data.schedule : []) as ScheduleItem[] }
+  if (!data) return { ok: true, row: null }
+  const raw = data as { schedule?: unknown; plans?: unknown }
+  return {
+    ok: true,
+    row: { schedule: (Array.isArray(raw.schedule) ? raw.schedule : []) as ScheduleItem[], plans: raw.plans ?? null },
+  }
 }
 
-type WriteResult = 'written' | 'conflict' | 'failed'
+type WriteResult = { result: 'written'; stored: StoredRow } | { result: 'conflict' } | { result: 'failed' }
 
 /**
  * Longest URL-encoded schedule a conditional save compares against. Measured
@@ -342,45 +549,65 @@ const MAX_COMPARE_URL_CHARS = 12_000
  * device saw no row: the write is an insert, and a row created meanwhile is a
  * conflict too. Same pattern as the MCP's writeSchedule in src/lib/mcp/data.ts,
  * and the same row-level security policies (own-row select, insert, update).
+ *
+ * The compare covers both `schedule` and `plans`. A plan switch on one device
+ * changes both, and an edit to a parked plan changes only `plans`, so checking
+ * `schedule` alone would let one device's save erase another device's plan
+ * edits. `ignored_exam_clashes` is never written here: an update leaves columns
+ * it does not name alone, and that column has its own conditional save (see
+ * ignored-clashes.ts). A row that never had plans gets no `plans` in the write,
+ * so its save is exactly what it was before plans existed.
  */
-async function writeIfUnchanged(userId: string, next: ScheduleItem[], expected: ScheduleItem[] | null): Promise<WriteResult> {
+async function writeIfUnchanged(userId: string, next: ScheduleDoc, expected: StoredRow | null): Promise<WriteResult> {
+  const nextPlans = plansDocument(next.plans)
+  const writesPlans = nextPlans !== null || (expected?.plans ?? null) !== null
+  const columns = writesPlans ? { schedule: next.schedule, plans: nextPlans } : { schedule: next.schedule }
+  const stored: StoredRow = { schedule: next.schedule, plans: writesPlans ? nextPlans : (expected?.plans ?? null) }
+
   if (expected === null) {
     const { error } = await supabase
       .from('user_schedules')
-      .insert({ user_id: userId, schedule: next })
+      .insert({ user_id: userId, ...columns })
       .select('user_id')
-    if (error?.code === '23505') return 'conflict'
+    if (error?.code === '23505') return { result: 'conflict' }
     if (error) {
       console.error('Failed to save schedule:', error)
-      return 'failed'
+      return { result: 'failed' }
     }
-    return 'written'
+    return { result: 'written', stored }
   }
-  const expectedJson = JSON.stringify(expected)
-  if (encodeURIComponent(expectedJson).length > MAX_COMPARE_URL_CHARS) {
+  const scheduleJson = JSON.stringify(expected.schedule)
+  const plansJson = expected.plans === null ? null : JSON.stringify(expected.plans)
+  const scheduleChars = encodeURIComponent(scheduleJson).length
+  const plansChars = plansJson === null ? 0 : encodeURIComponent(plansJson).length
+  if (scheduleChars > MAX_COMPARE_URL_CHARS) {
     // The expected value travels in the URL, and past the gateway's limit the
     // request fails outright. A schedule that large saves the way every save
     // did before compare-and-set rather than never saving at all.
     const { error: upsertError } = await supabase
       .from('user_schedules')
-      .upsert({ user_id: userId, schedule: next }, { onConflict: 'user_id' })
+      .upsert({ user_id: userId, ...columns }, { onConflict: 'user_id' })
     if (upsertError) {
       console.error('Failed to save schedule:', upsertError)
-      return 'failed'
+      return { result: 'failed' }
     }
-    return 'written'
+    return { result: 'written', stored }
   }
-  const { data, error } = await supabase
+  let query = supabase
     .from('user_schedules')
-    .update({ schedule: next })
+    .update(columns)
     .eq('user_id', userId)
-    .eq('schedule', expectedJson)
-    .select('user_id')
+    .eq('schedule', scheduleJson)
+  // Plans too large to send as well are left uncompared rather than unsaved:
+  // the schedule compare still catches every plan switch, which changes it.
+  if (plansJson === null) query = query.is('plans', null)
+  else if (scheduleChars + plansChars <= MAX_COMPARE_URL_CHARS) query = query.eq('plans', plansJson)
+  const { data, error } = await query.select('user_id')
   if (error) {
     console.error('Failed to save schedule:', error)
-    return 'failed'
+    return { result: 'failed' }
   }
-  return data?.length ? 'written' : 'conflict'
+  return data?.length ? { result: 'written', stored } : { result: 'conflict' }
 }
 
 // ---------------------------------------------------------------------------
@@ -388,16 +615,18 @@ async function writeIfUnchanged(userId: string, next: ScheduleItem[], expected: 
 // ---------------------------------------------------------------------------
 
 /**
- * The row's schedule exactly as this tab last read or wrote it, which is both
- * the merge base and the value a save expects to find. Undefined until this
- * tab has agreed with the row, null when the agreement was "no row yet".
+ * The row's `schedule` and `plans` exactly as this tab last read or wrote
+ * them, which is both the merge base and the value a save expects to find.
+ * Undefined until this tab has agreed with the row, null when the agreement
+ * was "no row yet".
  */
-let _synced: ScheduleItem[] | null | undefined = undefined
+let _synced: StoredRow | null | undefined = undefined
 
 /**
- * The cart this tab loaded with, captured at its first pull. On a browser that
- * synced this user before, the persisted cart is a cache of the row as it was
- * then, so it stands in as the base until this tab agrees with the row.
+ * The cart this tab loaded with, plans included, captured at its first pull.
+ * On a browser that synced this user before, the persisted cart is a cache of
+ * the row as it was then, so it stands in as the base until this tab agrees
+ * with the row.
  *
  * The agreement itself is deliberately not persisted. The persisted cart is
  * written by whichever tab of this browser changed it last, so a stored
@@ -405,12 +634,14 @@ let _synced: ScheduleItem[] | null | undefined = undefined
  * and the merge would then read the difference as courses removed here.
  * Using the cart as its own base can never invent a removal.
  */
-let _loadedCart: ScheduleItem[] | undefined = undefined
+let _loadedCart: ScheduleDoc | undefined = undefined
+
+const EMPTY_DOC: ScheduleDoc = { schedule: [], plans: {} }
 
 /** The merge base for this user, or null when this device has never agreed with their row. */
-function mergeBase(userId: string): ScheduleItem[] | null {
-  if (_synced !== undefined) return _synced ?? []
-  if (readSyncedDevice() === userId) return _loadedCart ?? []
+function mergeBase(userId: string): ScheduleDoc | null {
+  if (_synced !== undefined) return _synced ? docOf(_synced) : EMPTY_DOC
+  if (readSyncedDevice() === userId) return _loadedCart ?? EMPTY_DOC
   return null
 }
 
@@ -419,27 +650,31 @@ function mergeBase(userId: string): ScheduleItem[] | null {
  * the cart's signature at that moment, or null when the cart has moved on
  * since and still owes a save.
  */
-function recordAgreement(stored: ScheduleItem[] | null, signature: string | null) {
+function recordAgreement(stored: StoredRow | null, signature: string | null) {
   _synced = stored
   _lastSyncedSignature = signature
 }
 
-/** Replaces the cart with `items`, rebuilt from the catalog. Entries it cannot resolve are parked, not dropped. */
-function applyToCart(items: ScheduleItem[]) {
-  useCartStore.setState({ items: hydrateItems(items) })
-  if (items.length > 0) {
-    const syncedIds = new Set(items.map(s => s.id))
+/**
+ * Replaces the cart and its plans with `doc`, the classes rebuilt from the
+ * catalog, in one set so nothing ever sees half of a plan switch. Entries the
+ * catalog cannot resolve are parked, not dropped.
+ */
+function applyToCart(doc: ScheduleDoc) {
+  useCartStore.setState({ items: hydrateItems(doc.schedule), plans: doc.plans })
+  if (doc.schedule.length > 0) {
+    const syncedIds = new Set(doc.schedule.map(s => s.id))
     useCourseStore.getState().fetchCourseDetails([...syncedIds])
     reHydrateOnEnrichment(syncedIds)
   }
 }
 
 /**
- * Saves the cart, only over the row this tab last agreed on. If the row has
- * changed since (another device, the MCP, a tab running an older release), the
- * save becomes a pull, which merges both sides and writes the result.
- * Errors are swallowed: local state stays visible. Resolves whether the cart
- * now matches the row.
+ * Saves the cart and its plans, only over the row this tab last agreed on. If
+ * the row has changed since (another device, the MCP, a tab running an older
+ * release), the save becomes a pull, which merges both sides and writes the
+ * result. Errors are swallowed: local state stays visible. Resolves whether
+ * the cart now matches the row.
  */
 async function pushSchedule(userId: string, opts: { mergeOnConflict: boolean } = { mergeOnConflict: true }): Promise<boolean> {
   const epoch = _epoch
@@ -449,15 +684,15 @@ async function pushSchedule(userId: string, opts: { mergeOnConflict: boolean } =
   if (_synced === undefined) return false
   const expected = _synced
   try {
-    const schedule = toScheduleItems()
+    const doc = currentDoc()
     const signature = cartSignature()
-    const result = await writeIfUnchanged(userId, schedule, expected)
+    const write = await writeIfUnchanged(userId, doc, expected)
     // A push that lands after sign-out must not mark the next user's cart synced.
     if (epoch !== _epoch) return false
-    if (result === 'failed') return false
-    if (result === 'written') {
+    if (write.result === 'failed') return false
+    if (write.result === 'written') {
       // A pull may have recorded a newer agreement while this write was in flight.
-      if (_synced === expected) recordAgreement(schedule, signature)
+      if (_synced === expected) recordAgreement(write.stored, signature)
       return true
     }
     if (!opts.mergeOnConflict) return false
@@ -571,12 +806,17 @@ export function suspendPush() {
 }
 
 /** Stable signature of the full schedule (id + term + section + units + optional meetings),
- * so a mid-pull edit to an existing item — not just adds/removes — is detected. */
+ * so a mid-pull edit to an existing item, not just an add or removal, is detected.
+ * Parked plans are part of the saved row, so a plan change counts as an edit too;
+ * with no plans the signature is what it always was. */
 function cartSignature(): string {
-  return useCartStore.getState().items
+  const { items, plans } = useCartStore.getState()
+  const itemsSignature = items
     .map(i => `${i.id}|${i.selectedTerm ?? ''}|${(i.selectedSectionIds ?? []).join('~')}|${i.selectedUnits ?? ''}|${i.color ?? ''}|${(i.optionalMeetings ?? []).join('~')}`)
     .sort()
     .join(';')
+  const planSignature = plansSignature(plans)
+  return planSignature ? `${itemsSignature}#${planSignature}` : itemsSignature
 }
 
 /**
@@ -606,36 +846,38 @@ async function _pullSchedule(userId: string): Promise<void> {
     if (signedOutSince()) return
 
     // The cart this tab loaded with, before anything here changed it.
-    if (_loadedCart === undefined) _loadedCart = toScheduleItems()
+    if (_loadedCart === undefined) _loadedCart = currentDoc()
     const base = mergeBase(userId)
 
     let read = await readRow(userId)
     for (let attempt = 1; ; attempt++) {
       if (signedOutSince()) return
       if (!read.ok) return
-      const theirs = read.schedule
+      const theirsRow = read.row
+      const theirs = theirsRow ? docOf(theirsRow) : null
 
       // The merge needs the catalog, to show its result and to tell a course
       // parked here from one removed here. Without it nothing is written or
-      // changed, and the next focus or edit tries again.
-      if ((theirs?.length ?? 0) > 0 || (base?.length ?? 0) > 0 || toScheduleItems().length > 0) {
+      // changed, and the next focus or edit tries again. Parked plans need no
+      // catalog: they are never drawn until switched to.
+      if ((theirs?.schedule.length ?? 0) > 0 || (base?.schedule.length ?? 0) > 0 || toScheduleItems().length > 0) {
         if (!(await waitForCourses())) return abandonPullWithoutCatalog()
         if (signedOutSince()) return
       }
       // Read the cart after the row and the catalog, so an edit made while
       // either was loading is part of the merge.
-      const mine = withParked(toScheduleItems(), base)
+      const mine = withParked(currentDoc(), base)
       const merged = mergeWithRow(base, mine, theirs)
       const mineSignature = cartSignature()
 
-      let stored = theirs
-      if (!sameSchedule(merged, theirs ?? [])) {
-        const result = await writeIfUnchanged(userId, merged, theirs)
+      let stored = theirsRow
+      if (!sameDoc(merged, theirs ?? EMPTY_DOC)) {
+        const write = await writeIfUnchanged(userId, merged, theirsRow)
         if (signedOutSince()) return
         // Not landed: the cart keeps this device's edits and the next focus
         // or edit merges again from the same base.
-        if (result === 'failed') return
-        if (result === 'conflict') {
+        if (write.result === 'failed') return
+        if (write.result === 'conflict') {
           if (attempt >= MAX_SAVE_ATTEMPTS) {
             console.error('pullSchedule: the saved schedule kept changing, will retry on the next edit or focus')
             return
@@ -643,13 +885,13 @@ async function _pullSchedule(userId: string): Promise<void> {
           read = await readRow(userId)
           continue
         }
-        stored = merged
+        stored = write.stored
       }
 
       // An edit made while the write was in flight is this device's newest
       // intent: merge it over what was just saved, then save it next.
       const editedMeanwhile = cartSignature() !== mineSignature
-      const shown = editedMeanwhile ? mergeSchedules(mine, withParked(toScheduleItems(), base), merged) : merged
+      const shown = editedMeanwhile ? mergeScheduleDocs(mine, withParked(currentDoc(), base), merged) : merged
       applyToCart(shown)
       recordAgreement(stored, editedMeanwhile ? null : cartSignature())
       owesSave = editedMeanwhile

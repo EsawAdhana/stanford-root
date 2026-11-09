@@ -56,11 +56,15 @@ type CalendarViewProps = {
   onIgnoreOverload: () => void
   expectedHoursPerWeek?: number | null
   expectedHoursLoading?: boolean
+  /** Rendered above the calendar card, such as the plan tabs. */
+  aboveCalendar?: React.ReactNode
+  /** Replaces the units and hours cards, such as the plan comparison. */
+  metrics?: React.ReactNode
 }
 
 type ScheduleView = 'classes' | 'finals'
 
-export function CalendarView({ currentTerm, onPrevTerm, onNextTerm, canPrevTerm = true, canNextTerm = true, totalUnitsMin, totalUnitsMax, isOverload, isIgnored, onIgnoreOverload, expectedHoursPerWeek, expectedHoursLoading }: CalendarViewProps) {
+export function CalendarView({ currentTerm, onPrevTerm, onNextTerm, canPrevTerm = true, canNextTerm = true, totalUnitsMin, totalUnitsMax, isOverload, isIgnored, onIgnoreOverload, expectedHoursPerWeek, expectedHoursLoading, aboveCalendar, metrics }: CalendarViewProps) {
   const items = useCartStore(s => s.items)
   const addItem = useCartStore(s => s.addItem)
   const removeItem = useCartStore(s => s.removeItem)
@@ -222,6 +226,7 @@ export function CalendarView({ currentTerm, onPrevTerm, onNextTerm, canPrevTerm 
                 onShowFinals={showFinals ? undefined : openFinals}
               />
             )}
+            {aboveCalendar}
             <div className="rounded-xl border bg-card overflow-hidden flex flex-col shrink-0">
               <div className="grid grid-cols-[40px_1fr_40px] items-center border-b bg-card/80 backdrop-blur supports-[backdrop-filter]:bg-card/60 px-2 py-2">
                 <Button variant="ghost" size="icon" onClick={onPrevTerm} disabled={!canPrevTerm} aria-label="Previous term">
@@ -399,6 +404,7 @@ export function CalendarView({ currentTerm, onPrevTerm, onNextTerm, canPrevTerm 
             )}
 
             {/* Metrics Layout */}
+            {metrics ?? (
             <div className="grid grid-cols-2 gap-3 shrink-0">
               <div className={cn(
                 "p-3 rounded-xl border bg-card flex flex-col items-center justify-center transition-colors",
@@ -422,6 +428,7 @@ export function CalendarView({ currentTerm, onPrevTerm, onNextTerm, canPrevTerm 
                 <span className="text-[10px] uppercase font-semibold tracking-wider text-muted-foreground">Hrs / Wk</span>
               </div>
             </div>
+            )}
             {showFinals && exams && <HeavyExamDayNotice heavyDays={exams.load.heavyDays} />}
             {currentTermCourses.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-12 text-center text-muted-foreground border-2 border-dashed rounded-xl bg-muted/20">

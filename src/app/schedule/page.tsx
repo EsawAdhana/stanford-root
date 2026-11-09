@@ -17,6 +17,7 @@ import { useCourseStore } from '@/lib/store';
 import { useAuthStore } from '@/lib/auth-store';
 import { useEvaluationStore } from '@/lib/evaluation-store';
 import { expectedWeeklyHours, termUnitRange } from '@/lib/schedule-totals';
+import { PlanComparison, PlanTabs } from '@/components/plan-tabs';
 import { Logo } from '@/components/logo';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { SchedulePageShell } from '@/components/schedule-page-shell';
@@ -41,6 +42,7 @@ const IGNORED_OVERLOADS_KEY = 'stanford-root:ignored-overloads'
 
 function ScheduleContent() {
   const items = useCartStore(s => s.items)
+  const plans = useCartStore(s => s.plans)
   const courses = useCourseStore(s => s.courses)
   const hasLoaded = useCourseStore(s => s.hasLoaded)
   const user = useAuthStore(s => s.user)
@@ -552,6 +554,8 @@ END:VEVENT
             })}
             expectedHoursPerWeek={expectedHoursPerWeek}
             expectedHoursLoading={expectedHoursLoading}
+            aboveCalendar={<PlanTabs term={currentTerm} />}
+            metrics={plans[currentTerm] ? <PlanComparison term={currentTerm} activeCourses={currentTermCourses} /> : undefined}
           />
         </div>
       </main>

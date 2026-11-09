@@ -5,6 +5,7 @@ import { dedupeCrossListedItems, makeMeetingKey, mergeSectionSelection } from '@
 import { getCrossListGroupIds } from '@/lib/cross-list.mjs'
 import { useCourseStore } from '@/lib/store'
 import { setCartHydrated } from '@/lib/cart-hydration'
+import { nextPlanLabel, readPlans, termSnapshot, type PlansByTerm, type SavedItem } from '@/lib/schedule-plans'
 
 export type CartItem = Course & {
   selectedTerm?: string
@@ -12,7 +13,16 @@ export type CartItem = Course & {
 }
 
 type CartStore = {
+  /** The schedule on screen: for a term with plans, its active plan. */
   items: CartItem[]
+  /** The plans not on screen, per term (see schedule-plans). Changes with `items` in one set, so a push never sees half a switch. */
+  plans: PlansByTerm
+  /** Starts the next plan for a term as a copy of the current one and switches to it. Returns its label. */
+  createPlan: (term: string) => string
+  /** Puts a parked plan on screen. Returns classes it took from another term's schedule. */
+  switchPlan: (term: string, label: string) => CartItem[]
+  /** Drops a plan and its classes. Deleting the active plan switches to its neighbour first. */
+  deletePlan: (term: string, label: string) => void
   addItem: (course: Course, term?: string, sectionId?: number, selectedUnits?: number) => void
   removeSection: (courseId: string, sectionId: number) => void
   setSelectedUnits: (courseId: string, units: number | undefined) => void
@@ -23,10 +33,89 @@ type CartStore = {
   clearCart: () => void
 }
 
+/** Full course data for saved entries. An entry the catalog no longer has cannot be drawn, so it drops out. */
+function hydrateSaved(saved: SavedItem[]): CartItem[] {
+  const byId = new Map(useCourseStore.getState().courses.map(c => [c.id, c]))
+  return saved.flatMap(s => {
+    const course = byId.get(s.id)
+    if (!course) return []
+    return [{
+      ...course,
+      selectedTerm: s.selectedTerm,
+      selectedSectionIds: s.selectedSectionIds,
+      selectedUnits: s.selectedUnits,
+      color: s.color,
+      optionalMeetings: s.optionalMeetings,
+    }]
+  })
+}
+
+/**
+ * `items` with one term's entries replaced by a plan's. A class in that plan
+ * that sits on another term's schedule moves to this term, as adding it would:
+ * the cart holds one entry per course.
+ */
+function withTermItems(items: CartItem[], term: string, incoming: CartItem[]) {
+  const incomingIds = new Set(incoming.map(i => i.id))
+  const others = items.filter(i => i.selectedTerm !== term)
+  return {
+    items: [...others.filter(i => !incomingIds.has(i.id)), ...incoming],
+    moved: others.filter(i => incomingIds.has(i.id)),
+  }
+}
+
 export const useCartStore = create<CartStore>()(
   persist(
     (set, get) => ({
       items: [],
+      plans: {},
+      createPlan: (term) => {
+        const { items, plans } = get()
+        const current = plans[term] ?? { order: ['A'], active: 'A', parked: {} }
+        const label = nextPlanLabel(current.order)
+        set({
+          plans: {
+            ...plans,
+            [term]: {
+              order: [...current.order, label],
+              active: label,
+              parked: { ...current.parked, [current.active]: termSnapshot(items, term) },
+            },
+          },
+        })
+        return label
+      },
+      switchPlan: (term, label) => {
+        const { items, plans } = get()
+        const current = plans[term]
+        if (!current || label === current.active || !current.order.includes(label)) return []
+        const { items: nextItems, moved } = withTermItems(items, term, hydrateSaved(current.parked[label] ?? []))
+        const parked = { ...current.parked, [current.active]: termSnapshot(items, term) }
+        delete parked[label]
+        set({ items: nextItems, plans: { ...plans, [term]: { ...current, active: label, parked } } })
+        return moved
+      },
+      deletePlan: (term, label) => {
+        const { items, plans } = get()
+        const current = plans[term]
+        if (!current || !current.order.includes(label) || current.order.length < 2) return
+        const order = current.order.filter(l => l !== label)
+        const parked = { ...current.parked }
+        delete parked[label]
+        let nextItems = items
+        let active = current.active
+        if (label === current.active) {
+          const index = current.order.indexOf(label)
+          active = current.order[index - 1] ?? current.order[index + 1]
+          nextItems = withTermItems(items, term, hydrateSaved(current.parked[active] ?? [])).items
+          delete parked[active]
+        }
+        const nextPlans = { ...plans }
+        // One plan left is just the schedule again.
+        if (order.length < 2) delete nextPlans[term]
+        else nextPlans[term] = { order, active, parked }
+        set({ items: nextItems, plans: nextPlans })
+      },
       addItem: (course, term, sectionId, selectedUnits) => {
         const currentItems = get().items
         const existingIndex = currentItems.findIndex(c => c.id === course.id)
@@ -170,7 +259,8 @@ export const useCartStore = create<CartStore>()(
 
         set({ items: newItems })
       },
-      clearCart: () => set({ items: [] })
+      // Sign-out: another person's plans must not stay behind on a shared machine.
+      clearCart: () => set({ items: [], plans: {} })
     }),
     {
       name: 'navigator-cart',
@@ -200,7 +290,13 @@ export const useCartStore = create<CartStore>()(
           color: i.color,
           optionalMeetings: i.optionalMeetings,
         })) as CartItem[],
+        plans: state.plans,
       }),
+      // Plans read back from storage get the same shape check as plans read from the saved row.
+      merge: (persisted, current) => {
+        const saved = (persisted ?? {}) as Partial<CartStore>
+        return { ...current, ...saved, plans: readPlans(saved.plans) }
+      },
       onRehydrateStorage: () => (_state, _err) => {
         setCartHydrated()
       }
