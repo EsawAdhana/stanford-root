@@ -11,13 +11,16 @@ import { cn, unitsLabel, decodeHtmlEntities, getCrossListPrimaryMap } from '@/li
 import { ChevronLeft, ChevronRight, Trash2, EyeOff, Eye, Calendar, Search, AlertTriangle, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useRouter } from 'next/navigation';
 import { startNavProgress } from '@/components/nav-progress';
 import { searchCourses } from '@/lib/search-utils';
 import { compareCourseCodes } from '@/lib/utils';
-import { DAYS, ALL_DAYS, visibleDays, HOUR_HEIGHT, DEFAULT_START_MINUTES, DEFAULT_END_MINUTES, getCalendarColorClasses, layoutDayEvents, type CalendarDay } from '@/lib/calendar-utils';
+import { ALL_DAYS, visibleDays, getCalendarColorClasses, layoutDayEvents, type CalendarDay } from '@/lib/calendar-utils';
 import { useFindShortcut } from '@/hooks/use-find-shortcut';
+import { TimeGrid, blockStyle, gridRange } from '@/components/time-grid';
+import { ExamClashBanner, ExamSlotLine, FinalsGrid, HeavyExamDayNotice, clashPartners, useTermExams } from '@/components/finals-week';
 
 type CalendarEvent = {
   id: string
@@ -55,9 +58,7 @@ type CalendarViewProps = {
   expectedHoursLoading?: boolean
 }
 
-function clamp(value: number, min: number, max: number) {
-  return Math.min(max, Math.max(min, value))
-}
+type ScheduleView = 'classes' | 'finals'
 
 export function CalendarView({ currentTerm, onPrevTerm, onNextTerm, canPrevTerm = true, canNextTerm = true, totalUnitsMin, totalUnitsMax, isOverload, isIgnored, onIgnoreOverload, expectedHoursPerWeek, expectedHoursLoading }: CalendarViewProps) {
   const items = useCartStore(s => s.items)
@@ -66,7 +67,9 @@ export function CalendarView({ currentTerm, onPrevTerm, onNextTerm, canPrevTerm 
   const toggleOptionalMeeting = useCartStore(s => s.toggleOptionalMeeting)
   const courses = useCourseStore(state => state.courses)
   const isLoading = useCourseStore(state => state.isLoading)
+  const enrichedCourseIds = useCourseStore(state => state.enrichedCourseIds)
   const router = useRouter()
+  const openCourse = (courseId: string) => { startNavProgress(); router.push(`/${encodeURIComponent(courseId)}`); }
 
   const [searchQuery, setSearchQuery] = useState('')
   const [isSearchFocused, setIsSearchFocused] = useState(false)
@@ -180,29 +183,8 @@ export function CalendarView({ currentTerm, onPrevTerm, onNextTerm, canPrevTerm 
     return events
   }, [currentTermCourses, currentTerm])
 
-  const suggestedRange = useMemo(() => {
-    if (calendarEvents.length === 0) {
-      return { startMinutes: DEFAULT_START_MINUTES, endMinutes: DEFAULT_END_MINUTES }
-    }
-    const minStart = calendarEvents.reduce((m, e) => Math.min(m, e.start), Infinity)
-    const maxEnd = calendarEvents.reduce((m, e) => Math.max(m, e.end), 0)
-
-    // Expand the calendar if classes fall outside 8am-8pm, but never shrink smaller than it
-    let startMinutes = Math.min(DEFAULT_START_MINUTES, Math.floor(minStart / 60) * 60)
-    let endMinutes = Math.max(DEFAULT_END_MINUTES, Math.ceil(maxEnd / 60) * 60)
-    startMinutes = clamp(startMinutes, 0, 23 * 60)
-    endMinutes = clamp(endMinutes, startMinutes + 60, 24 * 60)
-    return { startMinutes, endMinutes }
-  }, [calendarEvents])
-
-  const startMinutes = suggestedRange.startMinutes
-  const endMinutes = suggestedRange.endMinutes
-  const hours = useMemo(() => {
-    return Array.from(
-      { length: (endMinutes - startMinutes) / 60 + 1 },
-      (_, i) => (startMinutes / 60) + i
-    )
-  }, [startMinutes, endMinutes])
+  // Expand the calendar if classes fall outside 8am-8pm, but never shrink smaller than it
+  const { startMinutes, endMinutes } = useMemo(() => gridRange(calendarEvents), [calendarEvents])
 
   const eventsByDay = useMemo(() => {
     const byDay = {} as Record<CalendarEvent['day'], LaidOutEvent[]>
@@ -217,13 +199,29 @@ export function CalendarView({ currentTerm, onPrevTerm, onNextTerm, canPrevTerm 
     () => visibleDays(calendarEvents.map(e => e.day)),
     [calendarEvents]
   )
-  const gridTemplateColumns = `var(--cal-rail) repeat(${columns.length}, minmax(0, 1fr))`
+
+  // Finals week is one toggle away for any term whose exam schedule is published.
+  const exams = useTermExams(currentTermCourses, currentTerm)
+  const [view, setView] = useState<ScheduleView>('classes')
+  const showFinals = view === 'finals' && exams !== null
+  const clashWith = useMemo(() => clashPartners(exams?.load.clashes ?? []), [exams])
+  const openFinals = () => {
+    setView('finals')
+    track('finals_week_viewed', { term: currentTerm, clashes: exams?.load.clashes.length ?? 0 })
+  }
 
   return (
     <TooltipProvider delayDuration={150}>
       <div className="flex flex-col relative">
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-6 items-start">
           <div className="flex flex-col gap-2 w-full min-w-0">
+            {exams && (
+              <ExamClashBanner
+                term={currentTerm}
+                clashes={exams.load.clashes}
+                onShowFinals={showFinals ? undefined : openFinals}
+              />
+            )}
             <div className="rounded-xl border bg-card overflow-hidden flex flex-col shrink-0">
               <div className="grid grid-cols-[40px_1fr_40px] items-center border-b bg-card/80 backdrop-blur supports-[backdrop-filter]:bg-card/60 px-2 py-2">
                 <Button variant="ghost" size="icon" onClick={onPrevTerm} disabled={!canPrevTerm} aria-label="Previous term">
@@ -231,118 +229,72 @@ export function CalendarView({ currentTerm, onPrevTerm, onNextTerm, canPrevTerm 
                 </Button>
                 <div className="text-center">
                   <div className="font-semibold text-base">{currentTerm}</div>
+                  {exams && (
+                    <Tabs
+                      value={showFinals ? 'finals' : 'classes'}
+                      onValueChange={value => (value === 'finals' ? openFinals() : setView('classes'))}
+                      className="mt-1.5"
+                    >
+                      <TabsList className="h-8">
+                        <TabsTrigger value="classes" className="px-3 py-1 text-xs">Classes</TabsTrigger>
+                        <TabsTrigger value="finals" className="px-3 py-1 text-xs">Finals week</TabsTrigger>
+                      </TabsList>
+                    </Tabs>
+                  )}
                 </div>
                 <Button variant="ghost" size="icon" onClick={onNextTerm} disabled={!canNextTerm} aria-label="Next term">
                   <ChevronRight className="h-4 w-4" />
                 </Button>
               </div>
-              <div className="w-full overflow-x-auto scrollbar-hide shrink-0">
-                <div className="min-w-0 sm:min-w-[700px]">
-                  <div className="grid [--cal-rail:48px] sm:[--cal-rail:72px] border-b bg-card/80 backdrop-blur supports-[backdrop-filter]:bg-card/60 sticky top-0 z-30" style={{ gridTemplateColumns }}>
-                    <div className="p-1 px-2 sm:p-3 text-xs font-semibold text-muted-foreground border-r" />
-                    {columns.map(d => (
-                      <div key={d.key} className="p-1.5 sm:p-3 text-[10px] sm:text-xs font-semibold text-muted-foreground border-r last:border-r-0 text-center truncate px-0.5">
-                        {d.label}
-                      </div>
-                    ))}
-                  </div>
-                  <div
-                    className="grid [--cal-rail:48px] sm:[--cal-rail:72px] relative"
-                    style={{ gridTemplateColumns, height: `${((endMinutes - startMinutes) / 60) * HOUR_HEIGHT}px` }}
-                  >
-
-                    {/* Time rail - left column, labels right-justified in box */}
-                    <div className="relative border-r bg-background/50">
-                      {hours.map((h, idx) => (
-                        <div
-                          key={h}
-                          className="absolute left-0 right-0"
-                          style={{ top: `${idx * HOUR_HEIGHT}px` }}
-                        >
-                          {idx !== hours.length - 1 && (
-                            <div className={cn(
-                              'absolute right-0 top-0 pr-1 sm:pr-2 text-right text-[9px] sm:text-[10px] text-muted-foreground bg-background/50 whitespace-nowrap',
-                              'translate-y-0 mt-1'
-                            )}>
-                              {`${((h + 11) % 12) + 1}${h >= 12 ? 'p' : 'a'}`}
-                            </div>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-
-                    {/* Day columns */}
-                    {columns.map(({ key }) => (
-                      <div key={key} className="relative border-r last:border-r-0 bg-background/30">
-                        {eventsByDay[key].map(ev => {
-                          const colWidth = 100 / ev.colCount
-                          const leftPct = ev.colIndex * colWidth
-                          const gutter = 2
-                          const colorClasses = getCalendarColorClasses(ev.courseId, ev.color)
-
-                          return (
-                            <div
-                              key={ev.id}
-                              onClick={() => { startNavProgress(); router.push(`/${encodeURIComponent(ev.courseId)}`); }}
-                              className={cn(
-                                'group absolute rounded-md border px-1 sm:px-2 py-0.5 sm:py-1 text-left shadow-sm hover:shadow transition-shadow overflow-hidden cursor-pointer z-20',
-                                colorClasses,
-                                ev.isOptional && 'opacity-55 border-dashed grayscale'
-                              )}
-                              style={{
-                                top: `${((ev.start - startMinutes) / 60) * HOUR_HEIGHT}px`,
-                                height: `${((ev.end - ev.start) / 60) * HOUR_HEIGHT}px`,
-                                left: `calc(${leftPct}% + ${gutter}px)`,
-                                width: `calc(${colWidth}% - ${gutter * 2}px)`,
-                                minHeight: '18px'
+              {showFinals && exams ? (
+                <FinalsGrid term={currentTerm} exams={exams} onOpenCourse={openCourse} />
+              ) : (
+                <TimeGrid
+                  columns={columns}
+                  startMinutes={startMinutes}
+                  endMinutes={endMinutes}
+                  renderColumn={key => eventsByDay[key as CalendarDay].map(ev => (
+                    <div
+                      key={ev.id}
+                      onClick={() => openCourse(ev.courseId)}
+                      className={cn(
+                        'group absolute rounded-md border px-1 sm:px-2 py-0.5 sm:py-1 text-left shadow-sm hover:shadow transition-shadow overflow-hidden cursor-pointer z-20',
+                        getCalendarColorClasses(ev.courseId, ev.color),
+                        ev.isOptional && 'opacity-55 border-dashed grayscale'
+                      )}
+                      style={blockStyle(ev, startMinutes)}
+                    >
+                      <TooltipProvider delayDuration={500}>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <button
+                              type="button"
+                              className="absolute right-1 top-1 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity rounded p-1 hover:bg-black/5 dark:hover:bg-white/10 z-20"
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                toggleOptionalMeeting(ev.courseId, ev.day, ev.startTime, ev.endTime)
                               }}
                             >
-                              <TooltipProvider delayDuration={500}>
-                                <Tooltip>
-                                  <TooltipTrigger asChild>
-                                    <button
-                                      type="button"
-                                      className="absolute right-1 top-1 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity rounded p-1 hover:bg-black/5 dark:hover:bg-white/10 z-20"
-                                      onClick={(e) => {
-                                        e.stopPropagation()
-                                        toggleOptionalMeeting(ev.courseId, ev.day, ev.startTime, ev.endTime)
-                                      }}
-                                    >
-                                      {ev.isOptional ? <Eye className="h-3 w-3 sm:h-3.5 sm:w-3.5" /> : <EyeOff className="h-3 w-3 sm:h-3.5 sm:w-3.5" />}
-                                    </button>
-                                  </TooltipTrigger>
-                                  <TooltipContent side="top">
-                                    {ev.isOptional ? 'Ignored for conflict checks — click to include this meeting again' : 'Click to ignore this meeting in conflict checks (it stays dimmed on your schedule)'}
-                                  </TooltipContent>
-                                </Tooltip>
-                              </TooltipProvider>
-                              <div className="pl-0.5">
-                                <div className="text-[10px] sm:text-[11px] font-semibold leading-tight truncate">
-                                  {ev.courseCode}
-                                </div>
-                                <div className="text-[9px] sm:text-[10px] opacity-80 truncate hidden sm:block">
-                                  {ev.location || 'TBA'}
-                                </div>
-                              </div>
-                            </div>
-                          )
-                        })}
+                              {ev.isOptional ? <Eye className="h-3 w-3 sm:h-3.5 sm:w-3.5" /> : <EyeOff className="h-3 w-3 sm:h-3.5 sm:w-3.5" />}
+                            </button>
+                          </TooltipTrigger>
+                          <TooltipContent side="top">
+                            {ev.isOptional ? 'Ignored for conflict checks — click to include this meeting again' : 'Click to ignore this meeting in conflict checks (it stays dimmed on your schedule)'}
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                      <div className="pl-0.5">
+                        <div className="text-[10px] sm:text-[11px] font-semibold leading-tight truncate">
+                          {ev.courseCode}
+                        </div>
+                        <div className="text-[9px] sm:text-[10px] opacity-80 truncate hidden sm:block">
+                          {ev.location || 'TBA'}
+                        </div>
                       </div>
-                    ))}
-
-                    {/* Horizontal Lines Layer - Rendered last to be on top of column backgrounds but below events (events are z-20) */}
-                    <div className="absolute inset-0 pointer-events-none">
-                      {hours.map((_, idx) => (
-                        <div
-                          key={idx}
-                          className="absolute left-0 right-0 border-t border-border/40"
-                          style={{ top: `${idx * HOUR_HEIGHT}px` }}
-                        />
-                      ))}
                     </div>
-                  </div>
-                </div>
-              </div>
+                  ))}
+                />
+              )}
             </div>
           </div>
 
@@ -470,6 +422,7 @@ export function CalendarView({ currentTerm, onPrevTerm, onNextTerm, canPrevTerm 
                 <span className="text-[10px] uppercase font-semibold tracking-wider text-muted-foreground">Hrs / Wk</span>
               </div>
             </div>
+            {showFinals && exams && <HeavyExamDayNotice heavyDays={exams.load.heavyDays} />}
             {currentTermCourses.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-12 text-center text-muted-foreground border-2 border-dashed rounded-xl bg-muted/20">
                 <Calendar className="h-10 w-10 mb-3 opacity-20" />
@@ -483,11 +436,14 @@ export function CalendarView({ currentTerm, onPrevTerm, onNextTerm, canPrevTerm 
                 {currentTermCourses.map(course => {
                   const meetings = parseMeetingTimes(course, currentTerm);
                   const lines = meetings.map(formatMeetingLine).filter(Boolean) as string[];
+                  // Sections arrive after the light catalog. Until then a course has
+                  // no meetings to read, which is not the same as having none.
+                  const sectionsPending = !course.sections?.length && !enrichedCourseIds.has(course.id);
                   return (
                     <div
                       key={course.id}
                       className="p-3 border rounded-lg bg-card hover:bg-accent/50 transition-colors group cursor-pointer"
-                      onClick={() => { startNavProgress(); router.push(`/${encodeURIComponent(course.id)}`); }}
+                      onClick={() => openCourse(course.id)}
                     >
                       <div className="flex items-start justify-between gap-3">
                         <div className="flex-1 min-w-0">
@@ -504,12 +460,28 @@ export function CalendarView({ currentTerm, onPrevTerm, onNextTerm, canPrevTerm 
                         </Button>
                       </div>
                       <div className="mt-2 text-xs text-muted-foreground space-y-1">
-                        {lines.length === 0 ? <div className="italic">Time TBA · not shown on calendar</div> : lines.map((line, i) => <div key={i}>{line}</div>)}
+                        {showFinals && exams ? (
+                          <ExamSlotLine slot={exams.byCourse.get(course.id)} pending={sectionsPending} clashWith={clashWith.get(course.id)} />
+                        ) : lines.length === 0 ? <div className="italic">Time TBA · not shown on calendar</div> : lines.map((line, i) => <div key={i}>{line}</div>)}
                       </div>
                     </div>
                   );
                 })}
               </div>
+            )}
+            {showFinals && (
+              <p className="text-xs text-muted-foreground px-1">
+                Exam slots follow the Registrar&apos;s{' '}
+                <a
+                  href="https://studentservices.stanford.edu/my-academics/evaluations-exams-grades/final-exam-schedule"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline underline-offset-2 hover:text-foreground"
+                >
+                  final exam schedule
+                </a>
+                . A class that ends in a project still holds its slot.
+              </p>
             )}
           </div>
         </div>

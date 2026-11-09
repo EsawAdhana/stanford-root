@@ -239,6 +239,21 @@ export function pickSectionsForTerm(course: Course, term?: string): Section[] {
   return [standInSection(sectionsForTerm)]
 }
 
+/**
+ * The most primary of the sections a student attends: the lecture of a
+ * LEC + DIS pick. The Registrar schedules a final by the lecture's time, not
+ * the discussion's.
+ */
+export function primarySection(sections: Section[]): Section | undefined {
+  if (sections.length === 0) return undefined
+  return sections.reduce((best, s) => (componentRank(s) < componentRank(best) ? s : best))
+}
+
+/** Lower is more primary: LEC 0, SEM 1, ... DIS 6. */
+export function componentRank(section: Section): number {
+  return COMPONENT_RANK[section.component] ?? UNKNOWN_COMPONENT_RANK
+}
+
 /** The parts of a cart entry that decide where it lands on the calendar. */
 type ScheduleEntry = {
   selectedTerm?: string

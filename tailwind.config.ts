@@ -13,6 +13,18 @@ const config: Config = {
   		fontFamily: {
   			display: ['var(--font-display)', 'ui-serif', 'Georgia', 'serif']
   		},
+  		// The calendar's small print, which it used to set inline as text-[11px],
+  		// text-[10px] and text-[9px]. T-shirt names keep tailwind-merge treating them
+  		// as sizes: a name like text-cal-sm is read as a color and dropped next to one.
+  		fontSize: {
+  			'2xs': '11px',
+  			'3xs': '10px',
+  			'4xs': '9px'
+  		},
+  		minWidth: {
+  			// From sm up, the week grid scrolls sideways below this instead of squeezing.
+  			calendar: '700px'
+  		},
   		colors: {
   			'cardinal-red': {
   				DEFAULT: '#8C1515',
