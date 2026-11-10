@@ -54,30 +54,45 @@ function recordUnresolved(scheduleItems: ScheduleItem[], resolvedIds: Set<string
   )
 }
 
-/** Waits for the course catalog to be loaded, then resolves. Resolves after a
- * timeout regardless, so callers can't hang if `hasLoaded` never flips. */
-function waitForCourses(timeoutMs = 10000): Promise<void> {
+/** Whether the catalog holds courses a saved schedule can be matched against. */
+function catalogReady(): boolean {
+  const { hasLoaded, courses } = useCourseStore.getState()
+  return hasLoaded && courses.length > 0
+}
+
+/**
+ * Waits for the course catalog, then resolves true when it holds courses to
+ * hydrate against. Resolves false when the load failed or the timeout passed,
+ * so callers can't hang. Callers must not hydrate on false: matching a saved
+ * schedule against an empty catalog resolves nothing, and the pull used to set
+ * the visible cart to [] that way whenever the catalog failed or took over 10s.
+ */
+function waitForCourses(timeoutMs = 10000): Promise<boolean> {
   return new Promise((resolve) => {
-    if (useCourseStore.getState().hasLoaded) {
-      resolve()
+    if (catalogReady()) {
+      resolve(true)
       return
     }
-    // Nothing else may have started the catalog load — a signed-in user sitting
-    // on the landing page has no catalog screen mounted — and sync needs it to
-    // re-attach Course objects to the saved schedule.
-    void useCourseStore.getState().fetchCourses()
     let settled = false
     const finish = () => {
       if (settled) return
       settled = true
       clearTimeout(timer)
       unsub()
-      resolve()
+      resolve(catalogReady())
     }
     const timer = setTimeout(finish, timeoutMs)
+    // Listening before the load starts, so no settle can be missed.
     const unsub = useCourseStore.subscribe((state) => {
-      if (state.hasLoaded) finish()
+      // A load that settled, either way. `hasLoaded` alone is already true
+      // while a retry after a failed load is still running.
+      if (state.hasLoaded && !state.isLoading) finish()
     })
+    // Nothing else may have started the catalog load — a signed-in user sitting
+    // on the landing page has no catalog screen mounted — and sync needs it to
+    // re-attach Course objects to the saved schedule. After a failed load this
+    // is also the retry.
+    void useCourseStore.getState().fetchCourses()
   })
 }
 
@@ -154,7 +169,9 @@ export async function hydrateLocalCart(): Promise<void> {
   _localHydrated = true
   await cartHydrated
   if (useCartStore.getState().items.length === 0) return
-  await waitForCourses()
+  // Without a catalog the cart keeps its metadata-only items; the next pull
+  // hydrates them.
+  if (!(await waitForCourses())) return
   const courseMap = new Map(useCourseStore.getState().courses.map(c => [c.id, c]))
   const items = useCartStore.getState().items
   useCartStore.setState({
@@ -284,6 +301,14 @@ function cartSignature(): string {
     .join(';')
 }
 
+/**
+ * Leaves the cart exactly as it was when the catalog cannot be loaded. The
+ * pull does not count as landed, so the next focus or edit pulls again.
+ */
+function abandonPullWithoutCatalog(): void {
+  console.error('pullSchedule: course catalog unavailable, keeping the local cart')
+}
+
 async function _pullSchedule(userId: string): Promise<void> {
   _pullActive = true
   let success = false
@@ -337,7 +362,7 @@ async function _pullSchedule(userId: string): Promise<void> {
     // delete) and local may be the only copy left, so that falls through — as
     // does a local edit that never made it to the server.
     if (data && deviceHasSynced && !hasUnsyncedEdits) {
-      await waitForCourses()
+      if (!(await waitForCourses())) return abandonPullWithoutCatalog()
       const hydrated = hydrateItems(serverItems)
       // Set even when empty: emptying the schedule elsewhere has to stick.
       // Entries the catalog could not resolve are held by `hydrateItems` and
@@ -355,7 +380,7 @@ async function _pullSchedule(userId: string): Promise<void> {
       const localIds = new Set(localItems.map(i => i.id))
       const serverOnly = serverItems.filter(s => !localIds.has(s.id))
       if (serverOnly.length > 0) {
-        await waitForCourses()
+        if (!(await waitForCourses())) return abandonPullWithoutCatalog()
         const hydratedServerOnly = hydrateItems(serverOnly)
         if (hydratedServerOnly.length > 0) {
           useCartStore.setState((state) => ({
@@ -372,7 +397,7 @@ async function _pullSchedule(userId: string): Promise<void> {
       await pushSchedule(userId)
     } else if (serverItems.length > 0) {
       // Local cart empty — server wins (true cross-device pull)
-      await waitForCourses()
+      if (!(await waitForCourses())) return abandonPullWithoutCatalog()
       const hydrated = hydrateItems(serverItems)
       if (hydrated.length > 0) {
         useCartStore.setState({ items: hydrated })
