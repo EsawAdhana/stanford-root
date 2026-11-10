@@ -822,9 +822,11 @@ export function EvaluationOverview({ evaluations: rawEvaluations, quality, quali
   // organization, hours -- each showing its own response breakdown, so nothing needs
   // opening. A quarter has no overall rating, no percentile and no class breakdown (the
   // whole-history numbers are withheld upstream), which is what leaves room for four.
+  // From lg to xl the panels stack, because the course page's sidebar leaves this column
+  // ~500px there and two panels side by side lost their bars.
   if (termFiltered) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-4 items-start">
         {(['quality', 'learning', 'organization'] as QuestionCategory[]).map(cat => {
           if (metrics[cat] === undefined) return null
           const score = metrics[cat]!
@@ -876,10 +878,11 @@ export function EvaluationOverview({ evaluations: rawEvaluations, quality, quali
         })}
       </PanelSection>
 
-      {/* Paired when both exist, and hours takes the full width when it is alone -- a
-          lone half-width histogram left a gap beside it. */}
+      {/* Paired when both exist (stacked from lg to xl, like the single-quarter panels),
+          and hours takes the full width when it is alone -- a lone half-width histogram
+          left a gap beside it. */}
       {hasEnrollment && classYears ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-4 items-start">
           <PanelSection label="Enrollment by year" value={`${classYears.total} students`}>
             <div className="px-4 py-3">
               <ClassYearChart breakdown={classYears} />
@@ -943,9 +946,15 @@ function ScoreRow({ label, score, percentile, rankScope, valueLabel, questions, 
 }) {
   const expandable = Boolean(onToggle && questions && questions.length > 0)
 
+  // The columns narrow wherever this panel does, so the label fits whole (the desktop
+  // widths left it 41px on a 375px phone). The bar narrows below sm, the badge column
+  // and gaps below xl, and the 288px rank sentence shows at md and from xl up. The
+  // course page turns two-column at lg, which leaves this panel ~500px at 1024px wide,
+  // and the desktop widths there pushed the whole page sideways. A label that still
+  // doesn't fit wraps instead of being cut.
   const row = (
     <>
-      <span className={cn('flex-1 text-left text-foreground text-sm truncate', emphasis ? 'font-semibold' : 'font-medium')}>
+      <span className={cn('flex-1 text-left text-foreground text-sm', emphasis ? 'font-semibold' : 'font-medium')}>
         {label}
       </span>
       {/* One fixed column for the sentence, so every row's bar and value line up and the
@@ -953,20 +962,20 @@ function ScoreRow({ label, score, percentile, rankScope, valueLabel, questions, 
       {/* Dropped entirely, not left blank: a term filter withholds every percentile, and
           the reserved column left each row as a label and a number with a void between. */}
       {showRank && (
-      <span className="hidden sm:block text-[11px] text-muted-foreground w-72 text-right shrink-0 whitespace-nowrap">
+      <span className="hidden md:block lg:hidden xl:block text-[11px] text-muted-foreground w-72 text-right shrink-0 whitespace-nowrap">
         {percentile != null && (
           <RankSentence percentile={percentile} scope={rankScope} shareClass="text-[13px]" />
         )}
       </span>
       )}
       {score != null ? (
-        <div className="w-24 h-1.5 bg-secondary/60 rounded-full overflow-hidden shrink-0">
+        <div className="w-14 sm:w-24 h-1.5 bg-secondary/60 rounded-full overflow-hidden shrink-0">
           <div className={cn('h-full rounded-full', barFill(score))} style={{ width: `${(score / 5) * 100}%` }} />
         </div>
       ) : (
-        <div className="w-24 shrink-0" aria-hidden />
+        <div className="w-14 sm:w-24 shrink-0" aria-hidden />
       )}
-      <span className="w-24 shrink-0 flex justify-end">
+      <span className="w-12 xl:w-24 shrink-0 flex justify-end">
         {valueLabel
           ? <span className="text-sm font-bold text-foreground tabular-nums">{valueLabel}</span>
           : score != null && <ScoreBadge score={score} size={emphasis ? 'md' : 'sm'} />}
@@ -989,12 +998,12 @@ function ScoreRow({ label, score, percentile, rankScope, valueLabel, questions, 
           type="button"
           onClick={onToggle}
           aria-expanded={isOpen}
-          className="w-full flex items-center gap-4 px-4 py-2.5 hover:bg-secondary/20 transition-colors"
+          className="w-full flex items-center gap-3 xl:gap-4 px-4 py-2.5 hover:bg-secondary/20 transition-colors"
         >
           {row}
         </button>
       ) : (
-        <div className={cn('w-full flex items-center gap-4 px-4', emphasis ? 'py-3' : 'py-2.5')}>{row}</div>
+        <div className={cn('w-full flex items-center gap-3 xl:gap-4 px-4', emphasis ? 'py-3' : 'py-2.5')}>{row}</div>
       )}
     </div>
   )
