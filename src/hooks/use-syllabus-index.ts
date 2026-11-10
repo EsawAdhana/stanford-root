@@ -11,14 +11,24 @@ let indexPromise: Promise<SyllabusIndex | null> | null = null;
  * than to a broken link, which is the same thing the index would say for most
  * courses anyway.
  */
-function loadIndex(): Promise<SyllabusIndex | null> {
+export function loadIndex(): Promise<SyllabusIndex | null> {
     if (!indexPromise) {
         indexPromise = fetch('/syllabi/index.json')
-            .then(res => (res.ok ? res.json() : null))
-            .then((data: SyllabusIndex | null) =>
-                data && data.courses ? data : null
-            )
-            .catch(() => null);
+            .then(res => {
+                if (!res.ok) throw new Error(`syllabi index ${res.status}`);
+                return res.json();
+            })
+            .then((data: SyllabusIndex | null) => {
+                if (!data || !data.courses) throw new Error('syllabi index malformed');
+                return data;
+            })
+            .catch(() => {
+                // Null for now, but not remembered: the next course page
+                // fetches again instead of disabling every syllabus button
+                // for the rest of the session.
+                indexPromise = null;
+                return null;
+            });
     }
     return indexPromise;
 }

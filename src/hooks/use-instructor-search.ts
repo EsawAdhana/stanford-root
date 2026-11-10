@@ -10,15 +10,26 @@ import {
     type InstructorEntry,
 } from '@/lib/instructors';
 
-let dumpPromise: Promise<InstructorDump> | null = null;
+let dumpPromise: Promise<InstructorDump | null> | null = null;
 
-/** Loaded on first use rather than with the catalog — most sessions never search a name. */
-function loadDump(): Promise<InstructorDump> {
+/**
+ * Loaded on first use rather than with the catalog — most sessions never search a name.
+ * Null when the download failed, which is not remembered, so the next call tries again.
+ */
+export function loadDump(): Promise<InstructorDump | null> {
     if (!dumpPromise) {
         dumpPromise = fetch('/catalog/instructors.json')
-            .then(res => res.json())
+            .then(res => {
+                if (!res.ok) throw new Error(`instructors.json ${res.status}`);
+                return res.json();
+            })
             .then(parseInstructorDump)
-            .catch(() => ({ names: [], courseLinks: {} }));
+            .catch(() => {
+                // Not remembered: the next search fetches again instead of
+                // finding no one for the rest of the session.
+                dumpPromise = null;
+                return null;
+            });
     }
     return dumpPromise;
 }
@@ -31,11 +42,14 @@ export function useInstructorSearch(query: string): InstructorEntry[] {
     useEffect(() => {
         if (!shouldLoad || directory) return;
         let cancelled = false;
-        loadDump()
-            .then(dump => buildInstructorDirectory(dump.names))
-            .then(loaded => { if (!cancelled) setDirectory(loaded); });
+        // Keyed on the query too: after a failed download, the next keystroke
+        // retries (a download already in flight is shared, not repeated).
+        loadDump().then(dump => {
+            if (cancelled || !dump) return;
+            setDirectory(buildInstructorDirectory(dump.names));
+        });
         return () => { cancelled = true; };
-    }, [shouldLoad, directory]);
+    }, [shouldLoad, directory, trimmed]);
 
     return useMemo(
         () => (directory ? findInstructorsByExactName(directory, trimmed) : []),
@@ -54,7 +68,7 @@ export function useCourseInstructorLinks(courseId?: string): Record<string, stri
         }
         let cancelled = false;
         loadDump().then(dump => {
-            if (!cancelled) setLinks(dump.courseLinks[courseId] ?? {});
+            if (!cancelled) setLinks(dump?.courseLinks[courseId] ?? {});
         });
         return () => { cancelled = true; };
     }, [courseId]);
