@@ -297,7 +297,7 @@ export function CourseDetailContent({ course }: CourseDetailContentProps) {
             abbreviateGer(a).localeCompare(abbreviateGer(b))
         )
     }, [course.sections, course.subject, course.code])
-    const gerLabel = gers.length > 0 ? gers.map(abbreviateGer).join(', ') : '—'
+    const gerCodes = gers.map(abbreviateGer)
 
     const [previewSection, setPreviewSection] = useState<Section | null>(null);
     // Shared by the Charts and Comments tabs so picking a term in one keeps it in the other.
@@ -363,7 +363,9 @@ export function CourseDetailContent({ course }: CourseDetailContentProps) {
                 </div>
                 <h2 className="text-3xl md:text-4xl font-extrabold leading-tight text-foreground tracking-tight pl-3 md:pl-4">{decodeHtmlEntities(course.title)}</h2>
 
-                {/* Quick Info - 2x2 grid on mobile (UNITS|GRADING, LEVEL|GER), single row on md+ */}
+                {/* Quick Info - 2x2 grid on mobile (UNITS|GRADING, LEVEL|GER), single row on md+.
+                    In the row, GRADING and GER may shrink down to their longest word, so a long
+                    grading option wraps instead of pushing GER off the right edge at 768px. */}
                 <div className="grid grid-cols-2 md:inline-flex md:flex-nowrap rounded-xl border border-border/40 bg-secondary/10 w-fit min-w-0">
                     <div className="order-1 flex flex-col md:flex-row md:items-center gap-0.5 md:gap-2 p-3 border-r border-b md:border-b-0 border-border/40 shrink-0">
                         <span className="text-[15px] font-bold text-muted-foreground uppercase tracking-tight shrink-0">UNITS:</span>
@@ -375,7 +377,7 @@ export function CourseDetailContent({ course }: CourseDetailContentProps) {
                             })()}
                         </span>
                     </div>
-                    <div className="order-2 flex flex-col md:flex-row md:items-center gap-0.5 md:gap-2 p-3 border-b border-r-0 md:border-b-0 md:border-r md:border-border/40 shrink-0 min-w-0">
+                    <div className="order-2 flex flex-col md:flex-row md:items-center gap-0.5 md:gap-2 p-3 border-b border-r-0 md:border-b-0 md:border-r md:border-border/40 min-w-0 md:min-w-min">
                         <span className="text-[15px] font-bold text-muted-foreground uppercase tracking-tight shrink-0">GRADING:</span>
                         <span className="text-[18px] font-bold text-foreground break-words">{course.grading || 'Letter (ABC/NC)'}</span>
                     </div>
@@ -383,9 +385,20 @@ export function CourseDetailContent({ course }: CourseDetailContentProps) {
                         <span className="text-[15px] font-bold text-muted-foreground uppercase tracking-tight shrink-0">LEVEL:</span>
                         <span className="text-[18px] font-bold text-foreground">{formatLevel(activeSection?.classLevel || course.code)}</span>
                     </div>
-                    <div className="order-4 flex flex-col md:flex-row md:items-center gap-0.5 md:gap-2 p-3 min-w-0 shrink-0">
+                    <div className="order-4 flex flex-col md:flex-row md:items-center gap-0.5 md:gap-2 p-3 min-w-0 md:min-w-min">
                         <span className="text-[15px] font-bold text-muted-foreground uppercase tracking-tight shrink-0">GER:</span>
-                        <span className="text-[18px] font-bold text-foreground break-words">{gerLabel}</span>
+                        {/* Each code stays on one line ("WAY-FR" would otherwise split at its
+                            hyphen), so a long list wraps only between codes. */}
+                        <span className="text-[18px] font-bold text-foreground break-words">
+                            {gerCodes.length > 0
+                                ? gerCodes.map((code, i) => (
+                                    <React.Fragment key={code}>
+                                        {i > 0 && ', '}
+                                        <span className="whitespace-nowrap">{code}</span>
+                                    </React.Fragment>
+                                ))
+                                : '—'}
+                        </span>
                     </div>
                 </div>
             </div>
