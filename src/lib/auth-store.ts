@@ -198,6 +198,15 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     }, REDIRECT_WATCHDOG_MS)
 
     const next = returnPath ?? `${window.location.pathname}${window.location.search}`
+    // Supabase keeps this URL only if it has the Site URL's hostname
+    // (stanfordroot.com) or matches an entry in Auth → URL Configuration →
+    // Redirect URLs. Anything else is quietly swapped for the Site URL, and the
+    // student lands on the homepage instead of the page they signed in from.
+    // The apex redirects everyone to www, so the list needs these two:
+    //   https://www.stanfordroot.com/**
+    //   http://localhost:3000/**
+    // An exact entry like http://localhost:3000/auth/callback is not enough,
+    // because it stops matching once ?next= is on the end.
     const redirectTo = `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}`
 
     try {
@@ -221,7 +230,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         set({ isSigningIn: false })
         const isLocalhost = window.location.hostname === 'localhost'
         const hint = isLocalhost
-          ? ' Add http://localhost:3000/auth/callback to Supabase Auth → Redirect URLs.'
+          ? ' Add http://localhost:3000/** to Supabase Auth → Redirect URLs.'
           : undefined
         showAuthError('oauth_failed', hint ? `${error.message}${hint}` : error.message)
         return
