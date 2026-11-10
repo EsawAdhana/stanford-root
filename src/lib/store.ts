@@ -143,8 +143,14 @@ export const useCourseStore = create<CourseStore>((set, get) => ({
     if (fetchCoursesInFlight) return fetchCoursesInFlight
 
     fetchCoursesInFlight = (async () => {
-    const { isLoading, hasLoaded } = get()
+    const { isLoading, hasLoaded, hasEnriched, isEnriching, catalogError, courses } = get()
     if (isLoading) return
+
+    // Light courses are on screen but the full catalog failed: phase 1 set
+    // `isEnriching` and only a phase 2 failure clears it without `hasEnriched`.
+    // Without this the early return below kept the session on light data, with
+    // no sections, times or descriptions, until a reload.
+    const retryEnrich = hasLoaded && !catalogError && !hasEnriched && !isEnriching && courses.length > 0
 
     // Show cached data immediately (fresh or stale). A fresh cache (< TTL)
     // skips the network entirely; a stale one revalidates in the background.
@@ -160,6 +166,8 @@ export const useCourseStore = create<CourseStore>((set, get) => ({
       })
       if (Date.now() - entry.ts <= CACHE_TTL) return
       // Stale: fall through to fetch fresh in background
+    } else if (retryEnrich) {
+      set({ isEnriching: true })
     } else if (hasLoaded && !get().catalogError) {
       return
     } else {
@@ -170,7 +178,8 @@ export const useCourseStore = create<CourseStore>((set, get) => ({
       // ── Phase 1: light data (card-level only) — small + fast, renders the list ──
       // Skip when stale full data is already on screen, so a background revalidate
       // doesn't momentarily downgrade visible courses (sections/descriptions) to light.
-      if (!entry) {
+      // Skip it on an enrichment retry too: the light data is already there.
+      if (!entry && !retryEnrich) {
         const lightRows: any[] = await fetchCatalogJson('/api/courses')
         const lightCourses = lightRows.map(rowToCourse)
 
