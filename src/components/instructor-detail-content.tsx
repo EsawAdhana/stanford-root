@@ -26,7 +26,7 @@ interface InstructorDetailContentProps {
 }
 
 /** Matches the page-level tabs on the course detail page. */
-const TAB_TRIGGER_CLASS = 'rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-0 py-3 text-[18px] font-bold text-muted-foreground data-[state=active]:text-foreground transition-all hover:text-foreground/80'
+const TAB_TRIGGER_CLASS = 'rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-0 py-3 text-[18px] max-sm:text-base font-bold text-muted-foreground data-[state=active]:text-foreground transition-all hover:text-foreground/80'
 
 interface CourseStat {
   courseId: string
@@ -320,15 +320,18 @@ export function InstructorDetailContent({ slug, name, upcoming }: InstructorDeta
               )}
 
               <Tabs defaultValue="overview" className="w-full">
-                <TabsList className="w-full justify-start bg-transparent border-b border-border/40 rounded-none h-auto p-0 gap-8 mb-4">
+                {/* 16px labels and gaps and 14px counts below sm, like the course page, so the row
+                    fits a 375px phone. Narrower than that it scrolls inside itself, as the course
+                    page's term tabs do, instead of pushing the page sideways. */}
+                <TabsList className="w-full justify-start bg-transparent border-b border-border/40 rounded-none h-auto p-0 gap-4 sm:gap-8 mb-4 min-w-0 overflow-x-auto overflow-y-hidden scrollbar-hide">
                   <TabsTrigger value="overview" className={TAB_TRIGGER_CLASS}>Overview</TabsTrigger>
                   <TabsTrigger value="courses" className={TAB_TRIGGER_CLASS}>
                     Courses
-                    <span className="ml-1.5 text-[15px] font-bold text-muted-foreground tabular-nums">{courseStats.length}</span>
+                    <span className="ml-1.5 text-[15px] max-sm:text-sm font-bold text-muted-foreground tabular-nums">{courseStats.length}</span>
                   </TabsTrigger>
                   <TabsTrigger value="comments" className={TAB_TRIGGER_CLASS}>
                     Comments
-                    <span className="ml-1.5 text-[15px] font-bold text-muted-foreground tabular-nums">{comments.length}</span>
+                    <span className="ml-1.5 text-[15px] max-sm:text-sm font-bold text-muted-foreground tabular-nums">{comments.length}</span>
                   </TabsTrigger>
                 </TabsList>
 
