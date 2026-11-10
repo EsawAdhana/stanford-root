@@ -193,9 +193,11 @@ export async function hydrateLocalCart(): Promise<void> {
 
 /**
  * Upserts current cart to Supabase as plaintext JSONB.
- * Errors are swallowed — local state remains visible to user.
+ * Errors are swallowed — local state remains visible to user. Resolves whether
+ * the row was written.
  */
-async function pushSchedule(userId: string): Promise<void> {
+async function pushSchedule(userId: string): Promise<boolean> {
+  const epoch = _epoch
   try {
     const schedule = toScheduleItems()
     const signature = cartSignature()
@@ -204,11 +206,14 @@ async function pushSchedule(userId: string): Promise<void> {
       .upsert({ user_id: userId, schedule }, { onConflict: 'user_id' })
     if (error) {
       console.error('Failed to push schedule:', error)
-    } else {
-      _lastSyncedSignature = signature
+      return false
     }
+    // A push that lands after sign-out must not mark the next user's cart synced.
+    if (epoch === _epoch) recordSynced(signature, schedule.map(i => i.id))
+    return true
   } catch (err) {
     console.error('pushSchedule error:', err)
+    return false
   }
 }
 
@@ -247,7 +252,15 @@ function clearSyncedDevice() {
 }
 
 let pullInFlight: Promise<void> | null = null
+let pullInFlightUserId: string | null = null
 let _pullActive = false
+/**
+ * Bumped by `resetSyncState()`. A pull or push started before a sign-out
+ * compares against it after each await and stops, so it cannot write the
+ * signed-out user's schedule into the cart (or mark this device synced for
+ * them) after sign-out cleared it.
+ */
+let _epoch = 0
 let _lastPulledUserId: string | null = null
 
 /**
@@ -268,18 +281,29 @@ let _lastPulledUserId: string | null = null
  */
 export async function pullSchedule(userId: string, opts?: { force?: boolean }): Promise<void> {
   if (!opts?.force && _lastPulledUserId === userId) return
-  if (pullInFlight) return pullInFlight
-  pullInFlight = _pullSchedule(userId).finally(() => { pullInFlight = null })
+  if (pullInFlight) {
+    if (pullInFlightUserId === userId) return pullInFlight
+    // A pull for someone else (signed out since) is still settling. Wait for
+    // it rather than handing this user its result.
+    return pullInFlight.then(() => pullSchedule(userId, opts))
+  }
+  pullInFlightUserId = userId
+  pullInFlight = _pullSchedule(userId).finally(() => {
+    pullInFlight = null
+    pullInFlightUserId = null
+  })
   return pullInFlight
 }
 
 /** Reset sync state (call on sign-out so the next sign-in pulls fresh). */
 export function resetSyncState() {
+  _epoch++
   _lastPulledUserId = null
   lastItemCount = -1
   _localHydrated = false
   _pushSuspended = false
   _lastSyncedSignature = null
+  _lastSyncedIds = null
   clearSyncedDevice()
 }
 
@@ -312,6 +336,8 @@ function abandonPullWithoutCatalog(): void {
 async function _pullSchedule(userId: string): Promise<void> {
   _pullActive = true
   let success = false
+  const epoch = _epoch
+  const signedOutSince = () => epoch !== _epoch
   try {
     // Flush (not cancel) any pending local changes so the server has them
     // before we read. This prevents the pull from overwriting un-pushed adds.
@@ -322,6 +348,7 @@ async function _pullSchedule(userId: string): Promise<void> {
     }
 
     await cartHydrated
+    if (signedOutSince()) return
 
     const snapshotSig = cartSignature()
 
@@ -330,6 +357,7 @@ async function _pullSchedule(userId: string): Promise<void> {
       .select('schedule')
       .eq('user_id', userId)
       .single()
+    if (signedOutSince()) return
 
     if (error && error.code !== 'PGRST116') {
       console.error('Failed to fetch schedule from Supabase:', error)
@@ -363,6 +391,7 @@ async function _pullSchedule(userId: string): Promise<void> {
     // does a local edit that never made it to the server.
     if (data && deviceHasSynced && !hasUnsyncedEdits) {
       if (!(await waitForCourses())) return abandonPullWithoutCatalog()
+      if (signedOutSince()) return
       const hydrated = hydrateItems(serverItems)
       // Set even when empty: emptying the schedule elsewhere has to stick.
       // Entries the catalog could not resolve are held by `hydrateItems` and
@@ -378,9 +407,14 @@ async function _pullSchedule(userId: string): Promise<void> {
       // so nothing the user built is lost. Union by course id; local wins on
       // conflicts. Then push the merged result to the server.
       const localIds = new Set(localItems.map(i => i.id))
-      const serverOnly = serverItems.filter(s => !localIds.has(s.id))
+      // Courses this device held at its last sync and no longer holds were
+      // removed here, in an edit whose push failed or has not landed yet. The
+      // row still lists them, and the union would put them back.
+      const removedHere = new Set([...(_lastSyncedIds ?? [])].filter(id => !localIds.has(id)))
+      const serverOnly = serverItems.filter(s => !localIds.has(s.id) && !removedHere.has(s.id))
       if (serverOnly.length > 0) {
         if (!(await waitForCourses())) return abandonPullWithoutCatalog()
+        if (signedOutSince()) return
         const hydratedServerOnly = hydrateItems(serverOnly)
         if (hydratedServerOnly.length > 0) {
           useCartStore.setState((state) => ({
@@ -394,10 +428,14 @@ async function _pullSchedule(userId: string): Promise<void> {
           reHydrateOnEnrichment(syncedIds)
         }
       }
-      await pushSchedule(userId)
+      // The merge exists only here until it is written. If the write fails the
+      // pull has not landed: marking it synced would let the next pull's row
+      // win outright and undo the local edits this branch is protecting.
+      if (!(await pushSchedule(userId))) return
     } else if (serverItems.length > 0) {
       // Local cart empty — server wins (true cross-device pull)
       if (!(await waitForCourses())) return abandonPullWithoutCatalog()
+      if (signedOutSince()) return
       const hydrated = hydrateItems(serverItems)
       if (hydrated.length > 0) {
         useCartStore.setState({ items: hydrated })
@@ -425,10 +463,10 @@ async function _pullSchedule(userId: string): Promise<void> {
     console.error('pullSchedule error:', err)
   } finally {
     _pullActive = false
-    if (success) {
+    if (success && !signedOutSince()) {
       _lastPulledUserId = userId
       markSyncedDevice(userId)
-      _lastSyncedSignature = cartSignature()
+      recordSynced(cartSignature(), toScheduleItems().map(i => i.id))
     }
   }
 }
@@ -440,6 +478,14 @@ let _pushSuspended = false
  * push, or a pull it adopted). Lets us skip a push that would only re-assert a
  * stale cache — the write that used to resurrect a course removed elsewhere. */
 let _lastSyncedSignature: string | null = null
+/** Course ids in that same agreement. A course in it that the cart has since
+ * lost was removed on this device, which the merge must not undo. */
+let _lastSyncedIds: Set<string> | null = null
+
+function recordSynced(signature: string, ids: string[]) {
+  _lastSyncedSignature = signature
+  _lastSyncedIds = new Set(ids)
+}
 
 export function debouncedPush(userId: string) {
   if (_pullActive || _pushSuspended) return
