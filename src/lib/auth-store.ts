@@ -265,8 +265,14 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     cancelDebouncedPush()
     useCartStore.getState().clearCart()
     useEvaluationStore.getState().clearAll()
-    await supabase.auth.signOut()
-    resetSyncState()
-    set({ user: null, session: null })
+    try {
+      await supabase.auth.signOut()
+    } finally {
+      // Even when the request throws. The cart is already cleared, and skipping
+      // this left pushes suspended for the rest of the tab's life, so nothing
+      // saved after signing back in without a reload.
+      resetSyncState()
+      set({ user: null, session: null })
+    }
   }
 }))
