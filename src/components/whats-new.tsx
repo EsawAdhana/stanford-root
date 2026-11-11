@@ -115,8 +115,8 @@ export function WhatsNew() {
         <ul className="flex flex-col gap-4 px-6 overflow-y-auto">
           {ITEMS.map(item => (
             <li key={item.title} className="flex gap-4 items-start">
-              <div className="relative h-[72px] w-[112px] shrink-0 overflow-hidden rounded-md border bg-muted">
-                <Image src={item.image} alt={item.alt} fill sizes="112px" className="object-cover object-left-top" />
+              <div className="relative h-[82px] w-[128px] shrink-0 overflow-hidden rounded-md border bg-muted">
+                <Image src={item.image} alt={item.alt} fill sizes="128px" className="object-cover object-left-top" />
               </div>
               <div className="min-w-0">
                 <p className="text-sm font-semibold text-foreground">{item.title}</p>
