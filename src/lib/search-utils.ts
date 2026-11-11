@@ -38,6 +38,24 @@ export function normalizeSearchQuery(query: string): string {
 }
 
 /**
+ * For a query shaped like one course code ("cs106a", "CS 106", "cs-106a"), how
+ * closely each course's code matches it: 0 for the course itself, 1 for codes
+ * that start with the query, 2 for everything else the search found (titles,
+ * cross-listings). The list sorts by this first, so "cs106a" leads with CS 106A
+ * instead of CS 100ACE. Null for any other query, which keeps the chosen sort.
+ */
+export function codeMatchRank(query: string): ((course: Course) => number) | null {
+    const compact = normalizeSearchQuery(query).toLowerCase().replace(/\s+/g, '');
+    if (!/^[a-z&]+\d+[a-z]*$/.test(compact)) return null;
+    return course => {
+        const code = `${course.subject}${course.code}`.toLowerCase().replace(/\s+/g, '');
+        if (code === compact) return 0;
+        if (code.startsWith(compact)) return 1;
+        return 2;
+    };
+}
+
+/**
  * Filters a list of courses based on a search query.
  * This function encapsulates the core text-matching logic used across the application.
  *
