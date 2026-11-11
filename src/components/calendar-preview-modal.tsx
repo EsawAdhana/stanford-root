@@ -1,13 +1,13 @@
 'use client';
 
 import React, { useMemo, useState, useEffect, useRef } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { useCartStore } from '@/lib/cart-store';
 import { useCourseStore, getCoursesById } from '@/lib/store';
 import { parseMeetingTimes, parseTimeRange, timeToMinutes, isMeetingOptional, stripSeconds, parseDays, isScheduledForTerm } from '@/lib/schedule-utils';
 import { cn, decodeHtmlEntities, parseUnitsOptions } from '@/lib/utils';
-import { AlertTriangle, CalendarPlus, Calendar, Clock, MapPin } from 'lucide-react';
+import { AlertTriangle, CalendarPlus, Calendar, Clock, MapPin, X } from 'lucide-react';
 import type { Course, Section } from '@/types/course';
 import { DAYS, HOUR_HEIGHT, DEFAULT_START_MINUTES, DEFAULT_END_MINUTES, getCalendarColorClasses, layoutDayEvents, ALL_DAYS, visibleDays, type CalendarDay } from '@/lib/calendar-utils';
 
@@ -236,9 +236,17 @@ export function CalendarPreviewModal({
             {/* Capped to the dynamic viewport height: the header and the Cancel/Add
                 footer stay put and only the calendar scrolls, so a short phone
                 never pushes the title or the Add button off screen. */}
-            <DialogContent aria-modal="true" className="flex flex-col max-h-[calc(100dvh-1rem)] w-[calc(100vw-1rem)] sm:w-full max-w-4xl p-0 gap-0 overflow-hidden rounded-2xl [&>button:last-child]:hidden">
+            <DialogContent aria-modal="true" className="flex flex-col max-h-[calc(100dvh-1rem)] w-[calc(100vw-1rem)] sm:w-full max-w-4xl p-0 gap-0 overflow-hidden rounded-2xl" hideClose>
+                {/* The shared dialog's close button is a bare 16px icon; this one
+                    is a 36px target that sits clear of the title. */}
+                <DialogClose asChild>
+                    <Button variant="ghost" size="icon" className="absolute right-2 top-2 sm:right-3 sm:top-3 z-10 h-9 w-9 text-muted-foreground hover:text-foreground">
+                        <X className="h-4 w-4" />
+                        <span className="sr-only">Close</span>
+                    </Button>
+                </DialogClose>
                 <DialogHeader className="shrink-0 px-4 sm:px-6 pt-4 sm:pt-5 pb-3 border-b border-border/40">
-                    <DialogTitle className="text-base font-semibold flex items-center gap-2">
+                    <DialogTitle className="text-base font-semibold flex items-center gap-2 pr-9">
                         <CalendarPlus size={16} className="text-primary shrink-0" />
                         Preview: {course.subject} {course.code} — {term}
                     </DialogTitle>
