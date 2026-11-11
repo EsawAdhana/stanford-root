@@ -41,24 +41,28 @@ const SLIDES = [
     title: 'Plan A and Plan B',
     body: 'Keep a backup schedule for a quarter and switch between them. The table on the right compares units and hours a week for each plan.',
     image: '/whats-new/plans.png',
+    imageDark: '/whats-new/plans-dark.png',
     alt: 'Plan A and Plan B side by side in the schedule page totals table',
   },
   {
     title: 'Finals week',
     body: 'Flip the calendar to Finals week to see when each exam is, and which ones land at the same time.',
     image: '/whats-new/finals.png',
+    imageDark: '/whats-new/finals-dark.png',
     alt: 'The Finals week view showing three exams across Monday to Wednesday',
   },
   {
     title: 'Share your schedule',
     body: "Send friends a read-only link of the classes you plan on taking.",
     image: '/whats-new/share.png',
+    imageDark: '/whats-new/share-dark.png',
     alt: 'A shared schedule opened from a link',
   },
   {
     title: 'Stanford Root in Claude',
     body: "MCP lets AI assistants like Claude and Codex use other apps. Connect Stanford Root and ask things like \"find me a 1 or 2 unit class people enjoy\": it searches courses, reads evaluations and adds classes to your Stanford Root schedule.",
     image: '/whats-new/mcp.png',
+    imageDark: '/whats-new/mcp-dark.png',
     alt: 'Example questions to ask Stanford Root from Claude',
   },
 ] as const;
@@ -172,13 +176,24 @@ export function WhatsNew() {
             shadow, so it reads as a picture of the app without a hard border. */}
         <div className="shrink-0 bg-muted/70 px-6 pt-6">
           <div className="relative aspect-[16/10] w-full overflow-hidden rounded-t-lg bg-background shadow-[0_2px_12px_rgba(0,0,0,0.08)]">
+            {/* A light and a dark capture of the app; the theme's class on
+                html decides which one shows. */}
             <Image
               key={slide.image}
               src={slide.image}
               alt={slide.alt}
               fill
               sizes="(max-width: 640px) 100vw, 464px"
-              className="object-cover object-left-top"
+              className="object-cover object-left-top dark:hidden"
+              priority={index === 0}
+            />
+            <Image
+              key={slide.imageDark}
+              src={slide.imageDark}
+              alt={slide.alt}
+              fill
+              sizes="(max-width: 640px) 100vw, 464px"
+              className="hidden object-cover object-left-top dark:block"
               priority={index === 0}
             />
           </div>
