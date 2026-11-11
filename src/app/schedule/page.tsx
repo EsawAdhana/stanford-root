@@ -426,8 +426,11 @@ END:VEVENT
         <div className="h-full w-full max-w-[100rem] mx-auto px-4 md:px-6 flex items-center justify-between">
           <div className="flex items-center">
             <Link href={backHref} className="flex items-center gap-2 px-2 py-1 -ml-2 rounded-lg hover:bg-secondary/50 transition-colors group">
-              <Logo className="h-8 w-8 md:h-10 md:w-10" />
-              <h1 className="font-display text-2xl md:text-3xl tracking-tight text-foreground select-none">
+              <Logo className="h-8 w-8 md:h-10 md:w-10 shrink-0" />
+              {/* One line or not at all: beside Transfer and Log in the wordmark
+                  needs about 406px, so narrower phones get the mark alone (the
+                  heading stays for screen readers). */}
+              <h1 className="font-display text-2xl md:text-3xl tracking-tight text-foreground select-none whitespace-nowrap max-[419px]:sr-only">
                 Stanford Root
               </h1>
             </Link>
