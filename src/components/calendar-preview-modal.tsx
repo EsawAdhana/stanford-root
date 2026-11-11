@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useId, useMemo, useState, useEffect, useRef } from 'react';
+import React, { useCallback, useId, useMemo, useState, useEffect, useRef } from 'react';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { useCartStore } from '@/lib/cart-store';
@@ -231,7 +231,26 @@ export function CalendarPreviewModal({
 
     const gridHeight = ((endMinutes - startMinutes) / 60) * HOUR_HEIGHT;
 
-    const scrollRef = useRef<HTMLDivElement>(null);
+    const dayHeaderRef = useRef<HTMLDivElement>(null);
+
+    // On a short phone the calendar shows only a few hours, so an afternoon
+    // class would open out of sight. Scroll the class's first meeting into view
+    // when it is not already, leaving half an hour of context above it.
+    const firstPreview = useMemo(
+        () => previewEvents.reduce<CalendarEvent | null>((m, e) => (!m || e.start < m.start ? e : m), null),
+        [previewEvents]
+    );
+    // A callback ref, because Radix mounts the portal a render after this
+    // component, so an effect here would still see no element.
+    const scrollRef = useCallback((el: HTMLDivElement | null) => {
+        if (!el || !firstPreview) return;
+        const topPx = ((firstPreview.start - startMinutes) / 60) * HOUR_HEIGHT;
+        const bottomPx = ((firstPreview.end - startMinutes) / 60) * HOUR_HEIGHT;
+        const headerPx = dayHeaderRef.current?.offsetHeight ?? 0;
+        if (headerPx + bottomPx > el.clientHeight) {
+            el.scrollTop = Math.max(0, topPx - HOUR_HEIGHT / 2);
+        }
+    }, [firstPreview, startMinutes]);
     // The scheduled blocks are colored per course, so the legend borrows the
     // color of one that is actually drawn instead of a fixed light blue.
     const scheduledSwatch = useMemo(() => {
@@ -320,7 +339,7 @@ export function CalendarPreviewModal({
                     <div className="px-2 sm:px-4 pb-2">
                         <div>
                             {/* Day header, pinned while the hours scroll under it */}
-                            <div className={cn("grid sticky top-0 z-30 bg-background pt-3 border-b border-border/40 mb-0", gridColumns)}>
+                            <div ref={dayHeaderRef} className={cn("grid sticky top-0 z-30 bg-background pt-3 border-b border-border/40 mb-0", gridColumns)}>
                                 <div className="p-1" />
                                 {columns.map(d => (
                                     <div key={d.key} className="py-1.5 text-[10px] font-semibold text-muted-foreground text-center uppercase tracking-wide">
