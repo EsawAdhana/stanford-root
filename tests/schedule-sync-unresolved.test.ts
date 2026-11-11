@@ -11,17 +11,29 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 type SchedulePayload = { user_id: string; schedule: { id: string }[] }
 type ScheduleRow = { data: { schedule: { id: string; selectedTerm?: string }[] } | null; error: null }
 
-const upsert = vi.fn(async (_payload: SchedulePayload) => ({ error: null }))
+/** The stored row: whatever the last read returned or the last write stored. */
+let row: SchedulePayload['schedule'] | null = []
+const upsert = vi.fn(async (payload: SchedulePayload) => {
+  row = payload.schedule
+  return { error: null }
+})
 const selectSingle = vi.fn(async (): Promise<ScheduleRow> => ({ data: { schedule: [] }, error: null }))
 
-vi.mock('@/lib/supabase', () => ({
-  supabase: {
-    from: () => ({
-      upsert,
-      select: () => ({ eq: () => ({ single: selectSingle }) }),
+// Saves are compare-and-set against `row`; `upsert` is still the spy every write goes through.
+vi.mock('@/lib/supabase', async () => {
+  const { fakeSupabase } = await import('./helpers/user-schedules-table')
+  return {
+    supabase: fakeSupabase({
+      peek: () => row,
+      write: upsert,
+      read: async () => {
+        const result = await selectSingle()
+        row = result.data?.schedule ?? null
+        return result
+      },
     }),
-  },
-}))
+  }
+})
 
 vi.mock('@/lib/analytics', () => ({ track: vi.fn(), trackOnce: vi.fn() }))
 vi.mock('@/lib/cart-hydration', () => ({ cartHydrated: Promise.resolve(), setCartHydrated: vi.fn() }))

@@ -38,14 +38,11 @@ const read = vi.fn(async (userId: string) => {
   return row ? { data: { schedule: row.map(i => ({ ...i })) }, error: null } : { data: null, error: { code: 'PGRST116' } }
 })
 
-vi.mock('@/lib/supabase', () => ({
-  supabase: {
-    from: () => ({
-      upsert,
-      select: () => ({ eq: (_col: string, userId: string) => ({ single: () => read(userId) }) }),
-    }),
-  },
-}))
+// Saves are compare-and-set against `rows`; `upsert` is still the spy every write goes through.
+vi.mock('@/lib/supabase', async () => {
+  const { fakeSupabase } = await import('./helpers/user-schedules-table')
+  return { supabase: fakeSupabase({ peek: (userId: string) => rows.get(userId) ?? null, write: upsert, read }) }
+})
 vi.mock('@/lib/analytics', () => ({ track: vi.fn(), trackOnce: vi.fn() }))
 vi.mock('@/lib/cart-hydration', () => ({ cartHydrated: Promise.resolve(), setCartHydrated: vi.fn() }))
 
@@ -147,7 +144,9 @@ describe('a removal made on this device', () => {
     cart = cart.filter(i => i.id !== 'CS103')
     failPushes = 1
     sync.debouncedPush('u1')
-    await settle()
+    // The first edit is debounced, so send it now: the failure is meant for
+    // this push, before the row changes, not for the pull's merged save.
+    await sync.flushPendingPush('u1')
     rows.set('u1', [{ id: 'CS106A' }, { id: 'CS103' }, { id: 'MATH51' }]) // added elsewhere
 
     await sync.pullSchedule('u1', { force: true })

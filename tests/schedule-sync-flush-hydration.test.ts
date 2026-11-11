@@ -24,14 +24,11 @@ const selectSingle = vi.fn(async (): Promise<unknown> =>
     : { data: { schedule: serverSchedule.map(i => ({ ...i })) }, error: null }
 )
 
-vi.mock('@/lib/supabase', () => ({
-  supabase: {
-    from: () => ({
-      upsert,
-      select: () => ({ eq: () => ({ single: selectSingle }) }),
-    }),
-  },
-}))
+// Saves are compare-and-set against the row above; `upsert` is still the spy every write goes through.
+vi.mock('@/lib/supabase', async () => {
+  const { fakeSupabase } = await import('./helpers/user-schedules-table')
+  return { supabase: fakeSupabase({ peek: () => serverSchedule, write: upsert, read: () => selectSingle() }) }
+})
 
 vi.mock('@/lib/analytics', () => ({ track: vi.fn(), trackOnce: vi.fn() }))
 
