@@ -461,14 +461,15 @@ export function CalendarPreviewModal({
                 <DialogFooter className="shrink-0 px-4 sm:px-6 py-3 sm:py-4 border-t border-border/40 flex flex-row items-center justify-between sm:justify-between gap-3">
                     <Button
                         size="sm"
+                        variant="outline"
                         onClick={onClose}
-                        className="bg-destructive hover:bg-destructive/90 text-destructive-foreground font-bold shadow-sm"
+                        className="h-10 sm:h-9"
                     >
                         Cancel
                     </Button>
                     <Button
                         size="sm"
-                        className="gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold shadow-sm"
+                        className="h-10 sm:h-9 gap-1.5"
                         disabled={blockedReason !== null}
                         aria-describedby={blockedReason ? blockedReasonId : undefined}
                         onClick={() => { onConfirm(hasVariableUnits ? selectedUnits : undefined); onClose(); }}
