@@ -75,9 +75,11 @@ and the token only after they say yes in a later message, even if they asked for
 the change.
 export_calendar makes an .ics file of a quarter.
 
-Quarters are spelled "${TERMS[0]}"; valid now: ${TERMS.join(', ')}. Omitted
-quarter in add_to_schedule means the current one, and a course not offered then
-fails with the quarters it is offered in: ask the user, don't pick.
+Quarters are spelled "${TERMS[0]}"; valid now: ${TERMS.join(', ')}. Pass the
+quarter the user named to add_to_schedule. Without one it only saves when there
+is no choice to make (the course is already saved, or is offered in one of those
+quarters); otherwise it fails with term_required and the quarters to choose
+from: ask the user, don't pick.
 
 Errors are JSON: {"error": {"code", "message", "retryable", "hint", "details"}}.
 Retry only if retryable is true.`
@@ -403,7 +405,7 @@ export function registerTools(server: McpServer) {
     annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: true },
     inputSchema: z.object({
       course_id: CourseId,
-      term: Term.optional().describe('Quarter to plan it for. Omit for the current quarter.'),
+      term: Term.optional().describe('Quarter to plan it for, as the user named it. Omit only when they did not say: a saved course keeps its quarter, a course offered in one quarter uses it, and anything else fails with term_required so you can ask.'),
       section_ids: z.array(z.number().int()).max(6).optional().describe('section_id values from get_course for this course and quarter. Each replaces the pick of the same component (a new DIS replaces the old DIS, the LEC stays).'),
       units: z.number().min(0).max(20).optional().describe('Units to take it for, for variable-unit courses.'),
     }).strict(),
@@ -412,8 +414,19 @@ export function registerTools(server: McpServer) {
     const cat = await getCatalog()
     const c = findCourse(cat, args.course_id)
     if (!c) throw notFound(cat, args.course_id)
-    const term = args.term ?? defaultTerm()
     const offered = [...(c.terms ?? [])].sort((a, b) => termKey(a) - termKey(b))
+    let term = args.term
+    if (!term) {
+      // No quarter named: save only when there is nothing to choose between.
+      const savedIn = ((await readSchedule(caller)) ?? []).find(i => i.id === c.id)?.selectedTerm
+      const plannable = offered.filter(t => TERMS.includes(t))
+      if (savedIn && offered.includes(savedIn)) term = savedIn
+      else if (plannable.length === 1) term = plannable[0]
+      else if (!plannable.length) throw notOffered(c, 'any quarter that can be planned now', offered)
+      else throw new ToolFailure('term_required', `${c.subject} ${c.code} is offered in ${plannable.join(', ')}, and no quarter was given.`, {
+        retryable: false, hint: 'Ask the user which of details.offered_terms they want, then pass it as term. Do not pick one for them.', details: { offered_terms: plannable },
+      })
+    }
     if (!offered.includes(term)) throw notOffered(c, term, offered)
     const secs = sectionsIn(c, term)
     const unknown = (args.section_ids ?? []).filter(id => !secs.some(s => s.classId === id))

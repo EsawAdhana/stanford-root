@@ -34,6 +34,8 @@ const COURSES: Course[] = [
     sec(1201, W, 'DIS', 'Friday', '1:30 PM - 2:20 PM', { capacity: 20, enrolled: 20 }),
   ], { description: 'Climate policy, oceans and the atmosphere.' }),
   course('CS106B', 'CS', '106B', 'Programming Abstractions', [A], [sec(500, A, 'LEC', 'Monday, Wednesday, Friday', '11:30 AM - 12:20 PM')]),
+  // Offered twice, so adding it without a quarter is a choice the user has to make.
+  course('ENGLISH9', 'ENGLISH', '9', 'Masterpieces', [A, W], [sec(700, A, 'LEC', 'Tuesday', '9:00 AM - 9:50 AM'), sec(701, W, 'LEC', 'Tuesday', '9:00 AM - 9:50 AM')]),
   // WAY-FR and not CS, but Mon/Wed/Fri: only the days filter keeps it out of "Tue/Thu only".
   course('MATH51', 'MATH', '51', 'Linear Algebra', [W], [sec(1100, W, 'LEC', 'Monday, Wednesday, Friday', '10:30 AM - 11:20 AM', { gers: ['WAY-FR'] })]),
 ]
@@ -158,7 +160,7 @@ describe('hosted MCP server', () => {
   it('reports unknown courses, unoffered quarters and foreign sections as data', async () => {
     const client = await connect()
     expect((await call(client, 'get_course', { course_id: 'CS16' })).error).toMatchObject({ code: 'course_not_found', retryable: false })
-    expect((await call(client, 'add_to_schedule', { course_id: 'CS161' })).error).toMatchObject({ code: 'not_offered', details: { offered_terms: [W] } })
+    expect((await call(client, 'add_to_schedule', { course_id: 'CS161', term: A })).error).toMatchObject({ code: 'not_offered', details: { offered_terms: [W] } })
     expect((await call(client, 'add_to_schedule', { course_id: 'CS161', term: W, section_ids: [500] })).error?.code).toBe('invalid_section')
     expect(writes).toBe(0)
   })
@@ -228,6 +230,31 @@ describe('hosted MCP server', () => {
     expect((await call(client, 'send_feedback', { text: 'Something else', dry_run: false, confirm_token: preview.ok.confirm_token })).error?.code).toBe('preview_required')
     await call(client, 'send_feedback', { text: 'Add dark mode', dry_run: false, confirm_token: preview.ok.confirm_token })
     expect(feedback).toEqual(['Add dark mode'])
+  })
+})
+
+describe('adding without a quarter', () => {
+  it('asks instead of guessing when the course is offered in more than one quarter', async () => {
+    const client = await connect()
+    const asked = await call(client, 'add_to_schedule', { course_id: 'ENGLISH9' })
+    expect(asked.error).toMatchObject({ code: 'term_required', retryable: false, details: { offered_terms: [A, W] } })
+    expect(schedule).toEqual([])
+    expect(writes).toBe(0)
+  })
+
+  it('uses the only quarter a course is offered in, and says it chose', async () => {
+    const client = await connect()
+    const added = await call(client, 'add_to_schedule', { course_id: 'CS161' })
+    expect(added.ok).toMatchObject({ action: 'added', term_was_defaulted: true, entry: { term: W } })
+  })
+
+  it('keeps a saved course in its quarter when only its section changes', async () => {
+    const client = await connect()
+    await call(client, 'add_to_schedule', { course_id: 'ENGLISH9', term: W })
+    const changed = await call(client, 'add_to_schedule', { course_id: 'ENGLISH9', section_ids: [701] })
+    expect(changed.ok).toMatchObject({ action: 'updated', entry: { term: W } })
+    // The Autumn section is not a section of the quarter it is saved in.
+    expect((await call(client, 'add_to_schedule', { course_id: 'ENGLISH9', section_ids: [700] })).error?.code).toBe('invalid_section')
   })
 })
 
