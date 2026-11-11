@@ -18,6 +18,7 @@
  *   node --env-file=.env.local scripts/scrape-sections.mjs --with-explorecourses  # also find new classes and merge EC-only courses
  *   node --env-file=.env.local scripts/scrape-sections.mjs --compare-sources      # diff Navigator vs EC, no writes
  *   node --env-file=.env.local scripts/scrape-sections.mjs --out catalog.json      # write rows to a file, not Supabase
+ *   node --env-file=.env.local scripts/scrape-sections.mjs --full-rewrite          # upsert every row, not only the ones that differ from the last dump (repairs)
  *   node --env-file=.env.local scripts/scrape-sections.mjs --academic-year 20262027
  *   node --env-file=.env.local scripts/scrape-sections.mjs --resume               # only rows on a different year
  *   node --env-file=.env.local scripts/scrape-sections.mjs --course CS106B        # single course
@@ -41,6 +42,7 @@ import {
     strmForTerm,
     withRestingSections,
 } from './navigator-catalog.mjs'
+import { canonicalizeCourse, rowsToWrite, staleIdsToClear } from './catalog-rows.mjs'
 import { existsSync, readFileSync, realpathSync, writeFileSync } from 'fs'
 import { dirname, join } from 'path'
 import { fileURLToPath } from 'url'
@@ -90,7 +92,7 @@ const NQTR_MAP = buildNqtrMap()
 // Chronological term sort: by calendar year, then season-within-year
 // (Winter < Spring < Summer < Autumn). Keeps `terms[0]` sensible downstream.
 const SEASON_ORDER = { Winter: 0, Spring: 1, Summer: 2, Autumn: 3, Fall: 3 }
-function termSortKey(term) {
+export function termSortKey(term) {
     const parts = (term || '').trim().split(/\s+/)
     const season = parts[0] || ''
     const year = parseInt(parts[parts.length - 1], 10) || 0
@@ -111,6 +113,7 @@ function parseArgs() {
         withExploreCourses: false,
         compareSources: false,
         out: null,
+        fullRewrite: false,
         priorYears: false,
         rebuildPrior: false,
         academicYear: defaultAcademicYear(),
@@ -121,6 +124,7 @@ function parseArgs() {
         if (args[i] === '--with-explorecourses') opts.withExploreCourses = true
         if (args[i] === '--compare-sources') opts.compareSources = true
         if (args[i] === '--out' && args[i + 1]) opts.out = args[i + 1]
+        if (args[i] === '--full-rewrite') opts.fullRewrite = true
         if (args[i] === '--prior-years') opts.priorYears = true
         if (args[i] === '--rebuild-prior') { opts.priorYears = true; opts.rebuildPrior = true }
         if (args[i] === '--course' && args[i + 1]) opts.course = args[i + 1].trim().toUpperCase()
@@ -1056,6 +1060,7 @@ async function main() {
             ? await fetchSections(subject, code, opts.academicYear)
             : await fetchNavigatorCourse(subject, code, opts.academicYear)
         if (!course) throw new Error(`Course ${opts.course} not found for ${opts.academicYear}`)
+        canonicalizeCourse(course, { termKey: termSortKey })
         console.log(JSON.stringify(course, null, opts.dryRun ? 2 : 0))
         if (!opts.dryRun) {
             await upsertCatalog(supabase, [course])
@@ -1097,6 +1102,9 @@ async function main() {
         courses = gaps.courses
         console.log(`Merged ${gaps.addedCourses} ExploreCourses-only courses, ${gaps.addedSections} sections, ${gaps.addedMeetings} meeting patterns, ${gaps.addedGers} GER sets and ${gaps.addedCrossLists} cross-list titles`)
     }
+    // Navigator reads finish in a different order every run; without this an
+    // unchanged course looks changed and is rewritten.
+    for (const course of courses) canonicalizeCourse(course, { termKey: termSortKey })
 
     if (opts.out) {
         writeFileSync(opts.out, JSON.stringify(courses))
@@ -1111,6 +1119,11 @@ async function main() {
     const incomingIds = new Set(courses.map(course => course.course_id))
     const newCourses = courses.filter(course => !existingIds.has(course.course_id))
     const staleIds = existingRows.filter(row => !incomingIds.has(row.course_id)).map(row => row.course_id)
+    // The last committed dump is the table as the last successful run left it.
+    // An empty or unreadable dump says nothing about the table, so write it all.
+    const lastDump = opts.fullRewrite ? [] : loadPreviousDump()
+    const previous = lastDump.length ? lastDump : null
+    const staleToClear = previous ? staleIdsToClear(existingRows, incomingIds, previous) : staleIds
     const scheduled = courses.filter(course => course.sections.length > 0).length
     const terms = sortTerms(Array.from(new Set(courses.flatMap(course => course.terms))))
 
@@ -1127,16 +1140,19 @@ async function main() {
         dryRun: opts.dryRun,
     }, null, 2))
 
-    if (opts.dryRun) return
-
     const rowsToUpsert = opts.resume
         ? courses.filter(course => JSON.stringify(course.terms) !== JSON.stringify(existingById.get(course.course_id)?.terms || []))
-        : courses
+        : previous ? rowsToWrite(courses, previous) : courses
     if (opts.resume) console.log(`Resume mode: ${rowsToUpsert.length}/${courses.length} course rows still need the new year.`)
+    else if (previous) console.log(`${rowsToUpsert.length}/${courses.length} course rows differ from the last dump; ${staleToClear.length}/${staleIds.length} stale rows still hold a schedule. Pass --full-rewrite to write them all.`)
+    else console.log(`Full rewrite: writing all ${courses.length} course rows and clearing all ${staleIds.length} stale ones.`)
+
+    if (opts.dryRun) return
+
     if (opts.resume) await updateCatalog(supabase, rowsToUpsert)
     else await upsertCatalog(supabase, rowsToUpsert)
-    await clearStaleCourses(supabase, staleIds)
-    console.log(`Done. Refreshed ${courses.length} courses; cleared ${staleIds.length} stale schedules.`)
+    await clearStaleCourses(supabase, staleToClear)
+    console.log(`Done. ${courses.length} courses scraped, ${rowsToUpsert.length} written; cleared ${staleToClear.length} stale schedules.`)
 }
 
 // Only when run, so tests can import the helpers above without starting a scrape.
