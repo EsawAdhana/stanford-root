@@ -49,7 +49,7 @@ const ITEMS = [
   },
   {
     title: 'Share your schedule',
-    body: 'Send friends a read-only link. It shows your classes, not your name.',
+    body: 'Send friends a read-only link of the classes you\'re taking next quarter.',
     image: '/whats-new/share.png',
     alt: 'A shared schedule opened from a link',
   },
