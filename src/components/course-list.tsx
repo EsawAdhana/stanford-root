@@ -13,6 +13,7 @@ import { SearchX, ArrowUp, AlertCircle, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ActiveFilterChips } from './active-filter-chips';
 import { useResetFilters } from '@/hooks/use-reset-filters';
+import { ANY_TERM, joinTerms } from '@/lib/other-terms';
 import {
   Select,
   SelectContent,
@@ -26,7 +27,7 @@ const SCROLL_STORAGE_KEY = 'course-list-scroll';
 
 export function CourseList() {
     useEnsureCatalog();
-  const { courses, hiddenByToggles, isLoading, getSortDisplayValue, getRatingForCourse, sortBy, setSortBy, sortOrder, setSortOrder } = useFilteredCourses();
+  const { courses, hiddenByToggles, otherTerms, selectedTerms, setSelectedTerms, isLoading, getSortDisplayValue, getRatingForCourse, sortBy, setSortBy, sortOrder, setSortOrder } = useFilteredCourses();
   const catalogError = useCourseStore(s => s.catalogError);
   const fetchCourses = useCourseStore(s => s.fetchCourses);
   const vListRef = useRef<VListHandle>(null);
@@ -246,6 +247,24 @@ export function CourseList() {
               <p className="text-sm font-medium">
                 {hasSearchQuery ? 'No courses match your search.' : 'No courses match your filters.'}
               </p>
+              {/* The quarter filter is on by default, so "cs229" in Autumn found
+                  nothing although CS 229 runs in Winter. Say so, and keep the query. */}
+              {otherTerms && (
+                <div className="flex flex-col items-center gap-1.5">
+                  <p className="text-xs text-muted-foreground/60 text-center">
+                    {otherTerms.kind === 'one'
+                      ? `${otherTerms.label} isn't offered in ${joinTerms(selectedTerms.filter(t => t !== ANY_TERM), 'or')}.${otherTerms.offeredTerms.length > 0 ? ` It's offered in ${joinTerms(otherTerms.offeredTerms, 'and')}.` : ''}`
+                      : `Hiding ${otherTerms.count.toLocaleString('en-US')} classes not offered in ${joinTerms(selectedTerms.filter(t => t !== ANY_TERM), 'or')}.`}
+                  </p>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => setSelectedTerms(otherTerms.kind === 'one' ? otherTerms.target : [ANY_TERM])}
+                  >
+                    {otherTerms.kind === 'one' ? `Show ${otherTerms.label}` : 'Show all quarters'}
+                  </Button>
+                </div>
+              )}
               {/* A toggle with no chip is invisible; name it and offer the one
                   click that undoes it, rather than "try adjusting your filters". */}
               {hiddenByToggles.length > 0 ? (
@@ -261,7 +280,7 @@ export function CourseList() {
                     </div>
                   ))}
                 </div>
-              ) : (
+              ) : !otherTerms && (
                 <p className="text-xs text-muted-foreground/60">
                   {hasSearchQuery ? 'Try a different search or clearing your filters.' : 'Try adjusting your filters.'}
                 </p>
