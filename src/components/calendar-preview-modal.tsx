@@ -211,25 +211,13 @@ export function CalendarPreviewModal({
     const gridHeight = ((endMinutes - startMinutes) / 60) * HOUR_HEIGHT;
 
     const scrollRef = useRef<HTMLDivElement>(null);
-    useEffect(() => {
-        const el = scrollRef.current;
-        if (!el || !isOpen) return;
-        const handleWheel = (e: WheelEvent) => {
-            const { scrollTop, scrollHeight, clientHeight } = el;
-            const atTop = scrollTop <= 0;
-            const atBottom = scrollTop + clientHeight >= scrollHeight - 1;
-            if ((atTop && e.deltaY < 0) || (atBottom && e.deltaY > 0)) {
-                e.preventDefault();
-                window.scrollBy({ top: e.deltaY, behavior: 'auto' });
-            }
-        };
-        el.addEventListener('wheel', handleWheel, { passive: false });
-        return () => el.removeEventListener('wheel', handleWheel);
-    }, [isOpen]);
 
+    // Modal, so Radix puts up the overlay and locks the page behind it. It was
+    // non-modal with a wheel handler that handed scrolling to the page, which
+    // left the course page scrolled somewhere else once the preview closed.
     return (
-        <Dialog open={isOpen} onOpenChange={open => { if (!open) onClose(); }} modal={false}>
-            <DialogContent className="max-w-4xl w-full p-0 gap-0 overflow-hidden rounded-2xl [&>button:last-child]:hidden">
+        <Dialog open={isOpen} onOpenChange={open => { if (!open) onClose(); }}>
+            <DialogContent aria-modal="true" className="max-w-4xl w-full p-0 gap-0 overflow-hidden rounded-2xl [&>button:last-child]:hidden">
                 <DialogHeader className="px-6 pt-5 pb-3 border-b border-border/40">
                     <DialogTitle className="text-base font-semibold flex items-center gap-2">
                         <CalendarPlus size={16} className="text-primary shrink-0" />
@@ -281,7 +269,7 @@ export function CalendarPreviewModal({
                     </div>
                 )}
 
-                {/* Scrollable body — at scroll boundary, wheel scrolls the page */}
+                {/* Scrollable body */}
                 <div
                     ref={scrollRef}
                     className="overflow-y-auto max-h-[60vh]"
