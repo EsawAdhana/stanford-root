@@ -237,7 +237,9 @@ export function WhatsNew() {
           </div>
           <div className="flex items-center gap-2">
             {index > 0 && (
-              <Button variant="ghost" onClick={() => go(index - 1)}>Back</Button>
+              // On the narrowest phones the last slide has no room for three
+              // buttons; the dots and arrow keys still go back.
+              <Button variant="ghost" className={last ? 'max-xs:hidden' : undefined} onClick={() => go(index - 1)}>Back</Button>
             )}
             {last ? (
               <>

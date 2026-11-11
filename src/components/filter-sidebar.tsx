@@ -17,6 +17,7 @@ import { Search, Plus, X, ChevronDown, ChevronRight, Check, Minus } from 'lucide
 import {
     Dialog,
     DialogContent,
+    DialogDescription,
     DialogHeader,
     DialogTitle,
     DialogTrigger,
@@ -494,6 +495,7 @@ export function FilterSidebar() {
                             <DialogHeader className="px-6 py-4 border-b">
                                 <DialogTitle className="sr-only">Select Departments</DialogTitle>
                                 <div className="text-lg font-semibold">Select Departments</div>
+                                <DialogDescription className="sr-only">Pick the departments to filter courses by.</DialogDescription>
                             </DialogHeader>
                             <div className="p-4 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 space-y-3">
                                 <div className="relative">

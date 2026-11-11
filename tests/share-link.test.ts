@@ -130,6 +130,15 @@ describe('the notice for what a link holds but the page does not show', () => {
     expect(shareLinkNotice({ unfound: 2, overLimit: 0 }, [{ code: 'CS 106A', missing: 1, noneLeft: true }]))
       .toBe("2 classes in this link couldn't be found in the catalog, so they aren't shown. 1 section in this link no longer exists, so CS 106A shows its default section instead.")
     expect(shareLinkNotice({ unfound: 0, overLimit: 0 }, [])).toBe('')
+    expect(shareLinkNotice({ unfound: 0, overLimit: 0 }, [
+      { code: 'CS 106A', missing: 1, noneLeft: true },
+      { code: 'CS 107', missing: 2, noneLeft: false },
+      { code: 'MATH 51', missing: 1, noneLeft: false },
+    ])).toBe('4 sections in this link no longer exist, so CS 106A shows its default section instead, and CS 107 and MATH 51 are shown without the missing ones.')
+    expect(shareLinkNotice({ unfound: 0, overLimit: 0 }, [
+      { code: 'CS 106A', missing: 1, noneLeft: true },
+      { code: 'CS 107', missing: 1, noneLeft: true },
+    ])).toBe('2 sections in this link no longer exist, so CS 106A and CS 107 show their default section instead.')
   })
 })
 

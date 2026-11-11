@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, ResolvingMetadata } from 'next'
 import { Suspense } from 'react'
 import Link from 'next/link'
 import { SiteHeader } from '@/components/site-header'
@@ -6,11 +6,14 @@ import { CopyField } from '@/components/copy-field'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { MCP_URL } from '@/lib/site'
 import { STARTERS } from '@/lib/mcp/prompts'
+import { pageMetadata } from '@/lib/page-metadata'
 
-export const metadata: Metadata = {
-  title: 'MCP — Stanford Root',
-  description: 'Use Stanford Root from Claude, Codex, or any MCP client: search courses, read evaluations, and plan your saved schedule.',
-  alternates: { canonical: '/connect' },
+export async function generateMetadata(_: unknown, parent: ResolvingMetadata): Promise<Metadata> {
+  return pageMetadata(parent, {
+    title: 'MCP — Stanford Root',
+    description: 'Use Stanford Root from Claude, Codex, or any MCP client: search courses, read evaluations, and plan your saved schedule.',
+    path: '/connect',
+  })
 }
 
 const CLIENTS = [
@@ -50,7 +53,7 @@ export default function ConnectPage() {
             <Tabs defaultValue="claude" className="w-full">
               <TabsList>
                 {CLIENTS.map(c => (
-                  <TabsTrigger key={c.id} value={c.id}>
+                  <TabsTrigger key={c.id} value={c.id} className="max-xs:px-2 max-xs:text-xs">
                     {c.name}
                   </TabsTrigger>
                 ))}

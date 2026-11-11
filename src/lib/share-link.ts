@@ -113,13 +113,28 @@ export function shareLinkNotice(
   if (overLimit > 0) {
     lines.push(`A shared schedule shows up to ${MAX_SHARED_COURSES} classes, so the last ${overLimit === 1 ? 'class' : `${overLimit} classes`} in this link ${overLimit === 1 ? "isn't" : "aren't"} shown.`)
   }
-  for (const m of missing) {
+  if (missing.length === 1) {
+    const [m] = missing
     const sections = m.missing === 1 ? '1 section in this link no longer exists' : `${m.missing} sections in this link no longer exist`
     lines.push(m.noneLeft
       ? `${sections}, so ${m.code} shows its default section instead.`
       : `${sections}, so ${m.code} is shown without ${m.missing === 1 ? 'it' : 'them'}.`)
+  } else if (missing.length > 1) {
+    // One sentence for all of them, so several courses do not repeat the same opener.
+    const total = missing.reduce((sum, m) => sum + m.missing, 0)
+    const fallback = missing.filter(m => m.noneLeft).map(m => m.code)
+    const trimmed = missing.filter(m => !m.noneLeft).map(m => m.code)
+    const clauses: string[] = []
+    if (fallback.length > 0) clauses.push(`${listCodes(fallback)} ${fallback.length === 1 ? 'shows its' : 'show their'} default section instead`)
+    if (trimmed.length > 0) clauses.push(`${listCodes(trimmed)} ${trimmed.length === 1 ? 'is' : 'are'} shown without the missing ones`)
+    lines.push(`${total} sections in this link no longer exist, so ${clauses.join(', and ')}.`)
   }
   return lines.join(' ')
+}
+
+/** "CS 106A", "CS 106A and CS 107", "CS 106A, CS 107 and CS 109". */
+function listCodes(codes: string[]): string {
+  return codes.length <= 1 ? codes.join('') : `${codes.slice(0, -1).join(', ')} and ${codes[codes.length - 1]}`
 }
 
 /** "CS224N" -> "CS 224N", for link previews that have no catalog to look a course up in. */

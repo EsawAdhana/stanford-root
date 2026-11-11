@@ -306,7 +306,8 @@ export function CalendarView({ currentTerm, onPrevTerm, onNextTerm, canPrevTerm 
                                   // Phones show it without hover, so on a block too narrow for the
                                   // class code and the button it would cover the code. There it is
                                   // left out, except to undo an ignore, which sits in the bottom
-                                  // corner instead. Desktop keeps it top right on hover.
+                                  // corner instead. Desktop keeps it top right on hover, and the
+                                  // code line makes room for it (below).
                                   ev.isOptional
                                     ? 'bottom-0.5 [@container(min-width:96px)]:bottom-auto [@container(min-width:96px)]:top-1 md:bottom-auto md:top-1'
                                     : 'top-1 hidden [@container(min-width:96px)]:block md:block',
@@ -326,7 +327,9 @@ export function CalendarView({ currentTerm, onPrevTerm, onNextTerm, canPrevTerm 
                         </TooltipProvider>
                       )}
                       <div className="pl-0.5">
-                        <div className="text-[10px] sm:text-[11px] font-semibold leading-tight truncate">
+                        {/* On hover the ignore button shows in the top corner; the code
+                            shortens to end before it rather than running underneath. */}
+                        <div className={cn('text-[10px] sm:text-[11px] font-semibold leading-tight truncate', !readOnly && 'md:group-hover:pr-5')}>
                           {ev.courseCode}
                         </div>
                         <div className="text-[9px] sm:text-[10px] opacity-80 truncate hidden sm:block">
