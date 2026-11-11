@@ -56,7 +56,7 @@ const SLIDES = [
   },
   {
     title: 'Stanford Root in Claude',
-    body: "MCP lets AI assistants like Claude and Codex use other apps. Connect Stanford Root and ask things like \"find me a 1 or 2 unit class people enjoy\": it searches courses, reads evaluations and adds classes to your schedule. It plans, but never enrolls you.",
+    body: "MCP lets AI assistants like Claude and Codex use other apps. Connect Stanford Root and ask things like \"find me a 1 or 2 unit class people enjoy\": it searches courses, reads evaluations and adds classes to your Stanford Root schedule.",
     image: '/whats-new/mcp.png',
     alt: 'Example questions to ask Stanford Root from Claude',
   },
@@ -117,7 +117,7 @@ export function WhatsNew() {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent
         hideClose
-        className="max-w-lg gap-0 p-0 overflow-hidden max-h-[92dvh] flex flex-col"
+        className="max-w-lg gap-0 p-0 overflow-hidden max-h-[92dvh] flex flex-col border-0 sm:rounded-xl"
         // Keep focus on the dialog itself so a button does not open already ringed.
         onOpenAutoFocus={e => e.preventDefault()}
         onKeyDown={e => {
@@ -126,47 +126,49 @@ export function WhatsNew() {
         }}
       >
         {/* Its own close button: the default one sat directly on the screenshot. */}
-        <DialogClose className="absolute right-3 top-3 z-10 flex h-8 w-8 items-center justify-center rounded-full border bg-background/90 text-muted-foreground shadow-sm transition-colors hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+        <DialogClose className="absolute right-3 top-3 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-background/90 text-muted-foreground shadow-md transition-colors hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-ring">
           <X className="h-4 w-4" />
           <span className="sr-only">Close</span>
         </DialogClose>
-        <div className="relative aspect-[16/10] w-full shrink-0 border-b bg-muted">
-          <Image
-            key={slide.image}
-            src={slide.image}
-            alt={slide.alt}
-            fill
-            sizes="(max-width: 640px) 100vw, 512px"
-            className="object-cover object-left-top"
-            priority={index === 0}
-          />
+        {/* The screenshot sits on a grey panel with rounded top corners and a
+            shadow, so it reads as a picture of the app without a hard border. */}
+        <div className="shrink-0 bg-muted/70 px-6 pt-6">
+          <div className="relative aspect-[16/10] w-full overflow-hidden rounded-t-lg bg-background shadow-[0_2px_12px_rgba(0,0,0,0.08)]">
+            <Image
+              key={slide.image}
+              src={slide.image}
+              alt={slide.alt}
+              fill
+              sizes="(max-width: 640px) 100vw, 464px"
+              className="object-cover object-left-top"
+              priority={index === 0}
+            />
+          </div>
         </div>
 
-        <div className="flex flex-col gap-1.5 px-6 pt-5 pb-2 overflow-y-auto">
-          <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-            What&apos;s new &middot; {index + 1} of {SLIDES.length}
-          </p>
-          {/* Every slide's text sits in the same grid cell, only the current one
-              visible, so the card keeps the height of the longest slide and the
-              buttons do not jump when moving between slides. */}
-          <div className="grid">
-            {SLIDES.map((s, i) => (
-              <div
-                key={s.title}
-                className={`col-start-1 row-start-1 flex flex-col gap-1.5 ${i === index ? '' : 'invisible'}`}
-                aria-hidden={i !== index}
-              >
-                {/* Identical markup on every slide, so each one measures the same. */}
-                <p className="text-xl font-semibold leading-none tracking-tight text-foreground">{s.title}</p>
-                <p className="text-sm text-muted-foreground leading-relaxed">{s.body}</p>
-              </div>
-            ))}
-          </div>
+        {/* Every slide's text sits in the same grid cell, only the current one
+            visible, so the card keeps the height of the longest slide and the
+            buttons do not jump. Shorter slides are centred in that space. */}
+        <div className="grid items-center px-6 pt-6 overflow-y-auto">
+          {SLIDES.map((s, i) => (
+            <div
+              key={s.title}
+              className={`col-start-1 row-start-1 flex flex-col gap-1.5 ${i === index ? '' : 'invisible'}`}
+              aria-hidden={i !== index}
+            >
+              {/* Identical markup on every slide, so each one measures the same. */}
+              <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                What&apos;s new &middot; {i + 1} of {SLIDES.length}
+              </p>
+              <p className="text-xl font-semibold leading-none tracking-tight text-foreground">{s.title}</p>
+              <p className="text-sm text-muted-foreground leading-relaxed">{s.body}</p>
+            </div>
+          ))}
           <DialogTitle className="sr-only">{slide.title}</DialogTitle>
           <DialogDescription className="sr-only">{slide.body}</DialogDescription>
         </div>
 
-        <div className="flex h-[4.5rem] shrink-0 items-center justify-between gap-3 px-6 pb-2">
+        <div className="flex shrink-0 items-center justify-between gap-3 px-6 pt-5 pb-6">
           <div className="flex items-center gap-1.5" role="tablist" aria-label="Slides">
             {SLIDES.map((s, i) => (
               <button
