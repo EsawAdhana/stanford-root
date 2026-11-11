@@ -21,7 +21,7 @@ vi.mock('@/lib/auth-store', () => ({
 vi.mock('@/components/search-bar', () => ({ SearchBar: () => null }))
 vi.mock('@/components/mobile-filter-menu', () => ({ MobileFilterMenu: () => null }))
 vi.mock('@/components/stanford-login-button', () => ({ StanfordLoginButton: () => null }))
-vi.mock('@/components/theme-toggle', () => ({ ThemeToggle: () => null }))
+vi.mock('@/components/theme-toggle', () => ({ ThemeToggle: () => 'THEME_TOGGLE' }))
 
 const { SiteHeader } = await import('@/components/site-header')
 
@@ -38,5 +38,17 @@ describe('SiteHeader', () => {
     const html = renderToStaticMarkup(createElement(SiteHeader))
     expect(html).toContain('href="/schedule"')
     expect(html).toContain('aria-label="Schedule"')
+  })
+
+  // The phone catalog header holds the filter button and the search box too, so
+  // the theme toggle steps aside below `sm` there and only there. The layout
+  // itself is checked by screenshot at 320 and 390px; this pins the rule.
+  it('hides the theme toggle on phones on the catalog only', () => {
+    currentPath = '/'
+    expect(renderToStaticMarkup(createElement(SiteHeader))).toContain('<div class="hidden sm:flex">THEME_TOGGLE</div>')
+    for (const path of ['/faq', '/CS106B', '/schedule']) {
+      currentPath = path
+      expect(renderToStaticMarkup(createElement(SiteHeader))).toContain('<div class="flex">THEME_TOGGLE</div>')
+    }
   })
 })
