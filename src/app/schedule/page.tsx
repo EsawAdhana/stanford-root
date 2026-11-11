@@ -33,7 +33,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
-import { parseICS } from '@/lib/ics-parser';
+import { importSummary, parseICS } from '@/lib/ics-parser';
 import { track } from '@/lib/analytics';
 import { toast } from 'sonner';
 import { useEnsureCatalog } from '@/hooks/use-catalog';
@@ -313,11 +313,7 @@ function ScheduleContent() {
 
       track('ics_imported', { count, enriched: enrichedCount })
 
-      if (enrichedCount > 0) {
-        toast.success(`Imported ${count} courses (${enrichedCount} matched to catalog).`)
-      } else {
-        toast.success(`Imported ${count} courses.`)
-      }
+      toast.success(importSummary(enrichedCount, count - enrichedCount))
 
     } catch (err) {
       console.error('Failed to parse ICS', err)

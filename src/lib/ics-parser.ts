@@ -71,6 +71,17 @@ function formatTime(date: Date): string {
     return `${hours}:${minStr} ${ampm}`
 }
 
+/**
+ * The import's toast. Events matched to a catalog class are classes; the rest
+ * (office hours, a club meeting, a class the catalog lacks) are other events.
+ */
+export function importSummary(classes: number, others: number): string {
+    const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`
+    if (classes === 0) return `Imported ${plural(others, 'event', 'events')}.`
+    if (others === 0) return `Imported ${plural(classes, 'class', 'classes')}.`
+    return `Imported ${plural(classes, 'class', 'classes')} and ${plural(others, 'other event', 'other events')}.`
+}
+
 export function parseICS(icsContent: string): Course[] {
     // RFC 5545 line unfolding: a CRLF/LF/CR followed by a space or tab is a
     // continuation of the previous line, not a new one.
@@ -183,9 +194,11 @@ export function parseICS(icsContent: string): Course[] {
         // Construct the Course object
         // Summary is often "CS 106A: Programming Methodology" or just "CS 106A"
         // We'll try to split if there's a colon, or just use it as is.
-        let subject = 'ICS'
-        let code = 'IMPORT'
-        let title = summary
+        // Not a class code ("Office hours", "Gym"): the event's own name is what
+        // the calendar card shows, since cards read subject + code.
+        let subject = summary
+        let code = ''
+        const title = summary
 
         // Heuristic: specific parsing for "Subject Code" format if possible
         // e.g. "CS 106A" -> Subject="CS", Code="106A"
