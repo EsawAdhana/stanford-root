@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { notFound, redirect } from 'next/navigation';
-import { cache } from 'react';
+import { cache, Suspense } from 'react';
 import { getInstructorCoursesFromDump, getInstructorDirectory } from '@/lib/catalog-dump';
 import { resolveInstructorSlug, type InstructorResolution } from '@/lib/instructors';
 import { SITE_URL } from '@/lib/site';
@@ -74,7 +74,12 @@ export default async function InstructorPage({
 
     return (
         <div className="min-h-screen bg-background flex flex-col">
-            <SiteHeader />
+            {/* SiteHeader reads search params. Without its own boundary that opts the
+                whole page out of server rendering, so the name and class links below
+                would be missing from the HTML. Same pattern as department-view.tsx. */}
+            <Suspense fallback={<div className="h-14 sm:h-16 border-b border-border/50 bg-background/90" />}>
+                <SiteHeader />
+            </Suspense>
             <main className="flex-1 bg-background">
                 <InstructorDetailContent
                     slug={resolved.entry.slug}
