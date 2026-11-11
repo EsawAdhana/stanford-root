@@ -176,21 +176,20 @@ describe('the audit probes no longer lose data', () => {
     expect(ids()).toEqual(['CS106A', 'CS107', 'CS109'])
   })
 
-  it('P3 an emptied row does not empty a device that still holds several courses', async () => {
+  it('P3 removals made on another device stick on a device that was closed', async () => {
     row = [{ id: 'CS106A' }, { id: 'CS103' }]
     const storage = makeStorage()
     const phone = await openTab(storage)
     await phone.pullSchedule(USER)
     const persisted = persist()
 
-    // Some other client writes [] (the 2026-09-30 wipe, or any future bug).
+    // The student removes both courses on another device while this one is closed.
     row = []
 
     const phoneAgain = await openTab(storage, persisted)
     await phoneAgain.pullSchedule(USER)
-    expect(ids()).toEqual(['CS103', 'CS106A'])
-    // And it puts them back, so the next device to load finds them.
-    expect(serverIds()).toEqual(['CS103', 'CS106A'])
+    expect(ids()).toEqual([])
+    expect(serverIds()).toEqual([])
   })
 
   it('P3 the same holds for a tab that stays open and re-reads on focus', async () => {
@@ -199,8 +198,8 @@ describe('the audit probes no longer lose data', () => {
     await laptop.pullSchedule(USER)
     row = []
     await laptop.pullSchedule(USER, { force: true })
-    expect(ids()).toEqual(['CS103', 'CS106A', 'CS107'])
-    expect(serverIds()).toEqual(['CS103', 'CS106A', 'CS107'])
+    expect(ids()).toEqual([])
+    expect(serverIds()).toEqual([])
   })
 
   it('P4 a saved course the catalog no longer lists survives a later merge', async () => {
@@ -424,9 +423,9 @@ describe('mergeSchedules', () => {
     expect(idsOf(merge(base, [A], [A, { id: 'B', selectedUnits: 4 }]))).toEqual(['A'])
   })
 
-  it('lets an empty row clear one course but not several', () => {
+  it('lets an empty row clear every course the device last agreed on', () => {
     expect(idsOf(merge([A], [A], []))).toEqual([])
-    expect(idsOf(merge([A, B], [A, B], []))).toEqual(['A', 'B'])
+    expect(idsOf(merge([A, B], [A, B], []))).toEqual([])
     // Courses this device added since are kept either way.
     expect(idsOf(merge([A], [A, D], []))).toEqual(['D'])
   })

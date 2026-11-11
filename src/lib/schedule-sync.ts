@@ -195,18 +195,6 @@ export async function hydrateLocalCart(): Promise<void> {
 // Merging two copies of a schedule
 // ---------------------------------------------------------------------------
 
-/**
- * How many courses an empty saved row may take off a device in one step.
- *
- * There is no "clear all" button, so a student empties a schedule one removal
- * at a time, and a device that kept up sees the last one go: one course to
- * none. A row that went from several courses to [] in one step is what the
- * 2026-09-30 and 2026-11-10 wipes looked like. A device still holding more
- * than this many of the courses it last agreed on keeps them and writes them
- * back instead of adopting the empty row.
- */
-export const MAX_COURSES_AN_EMPTY_ROW_MAY_CLEAR = 1
-
 /** Conditional writes tried before a save gives up until the next edit or focus. */
 export const MAX_SAVE_ATTEMPTS = 3
 
@@ -257,8 +245,9 @@ function byId(items: ScheduleItem[]): Map<string, ScheduleItem> {
  *  - A course both sides still hold takes whichever side changed it since
  *    base. If both changed it, or there is no base, this device's version wins.
  *  - With no base nothing counts as removed, so the result is the union.
- *  - An empty row does not take more than MAX_COURSES_AN_EMPTY_ROW_MAY_CLEAR
- *    courses off this device: past that, this device's list is kept whole.
+ *  - An empty row is treated like any other: courses removed elsewhere are
+ *    removed here too. The owner chose this on 2026-11-11 so removals made on
+ *    a phone stick on the laptop; a wipe is recovered from schedule history.
  *  - Courses the catalog no longer lists are ordinary entries here, so they
  *    are kept like any other.
  *
@@ -269,11 +258,6 @@ export function mergeSchedules(base: ScheduleItem[] | null, mine: ScheduleItem[]
   const baseById = base ? byId(base) : null
   const mineById = byId(mine)
   const theirsById = byId(theirs)
-
-  if (theirs.length === 0 && baseById) {
-    const takenOff = [...mineById.keys()].filter(id => baseById.has(id)).length
-    if (takenOff > MAX_COURSES_AN_EMPTY_ROW_MAY_CLEAR) return [...mineById.values()]
-  }
 
   const out: ScheduleItem[] = []
   for (const their of theirsById.values()) {
