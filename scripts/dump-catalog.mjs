@@ -3,6 +3,7 @@
  *
  * Usage:
  *   node --env-file=.env.local scripts/dump-catalog.mjs
+ *   node --env-file=.env.local scripts/dump-catalog.mjs --scraped rows.json    # what the nightly job runs
  *   node --env-file=.env.local scripts/dump-catalog.mjs --courses rows.json --out-dir ./local-catalog
  *
  * Writes data/catalog/{light,full}.json and public/catalog/instructors.json,
@@ -18,13 +19,20 @@
  * whole catalog) and light rows are derived from it. Concurrency is
  * deliberately absent: parallel section reads exhausted the free-tier
  * instance's memory on 2026-08-10 and took the data API down with it.
+ *
+ * --scraped takes the columns scrape-sections.mjs writes from the rows that
+ * run just wrote (its --save-rows file) and reads only the rest (ratings, title,
+ * cross-listings) from the table. Re-reading every row's sections, about 40 MB
+ * of jsonb, right after writing them was the bulk of the nightly read, and the
+ * dump comes out byte for byte the same (tests/dump-catalog-scraped.test.ts).
  */
 
 import { createClient } from '@supabase/supabase-js'
-import { existsSync, mkdirSync, writeFileSync, readFileSync } from 'fs'
+import { existsSync, mkdirSync, writeFileSync, readFileSync, realpathSync } from 'fs'
 import { dirname, join } from 'path'
 import { fileURLToPath } from 'url'
 import { buildCrossListGroups, normalizeCourseId } from '../src/lib/cross-list.mjs'
+import { SCRAPED_FIELDS } from './catalog-rows.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 // full.json / light.json are server-only; instructors.json is browser-fetched.
@@ -40,9 +48,10 @@ const DEFAULT_PUBLIC_OUT_DIR = join(__dirname, '..', 'public', 'catalog')
  */
 function parseArgs() {
   const args = process.argv.slice(2)
-  const opts = { courses: null, outDir: null }
+  const opts = { courses: null, scraped: null, outDir: null }
   for (let i = 0; i < args.length; i++) {
     if (args[i] === '--courses' && args[i + 1]) opts.courses = args[i + 1]
+    if (args[i] === '--scraped' && args[i + 1]) opts.scraped = args[i + 1]
     if (args[i] === '--out-dir' && args[i + 1]) opts.outDir = args[i + 1]
   }
   return opts
@@ -55,6 +64,11 @@ const INSTRUCTOR_OVERRIDES = JSON.parse(
 
 const FULL_COLUMNS =
   'course_id, subject, code, title, description, units, grading, instructors, terms, sections, hours, quality, quality_pct, quality_n, rank_scope, rating_breakdown, cross_list_with, difficulty'
+// What --scraped still reads from the table: every column the scrape does not
+// write, plus title for rows the scrape no longer returns (cross-list grouping
+// in markNewCourses reads every row's title).
+const SCRAPED_MODE_COLUMNS =
+  'course_id, title, hours, quality, quality_pct, quality_n, rank_scope, rating_breakdown, cross_list_with, difficulty'
 const LIGHT_KEYS = [
   'course_id', 'subject', 'code', 'title', 'units',
   'instructors', 'terms', 'grading', 'hours', 'quality', 'quality_pct', 'quality_n',
@@ -105,7 +119,7 @@ function isGradeable(row) {
   return Boolean(g) && g !== 'TBD'
 }
 
-async function fetchAll(supabase) {
+async function fetchAll(supabase, columns = FULL_COLUMNS) {
   const rows = []
   let cursor = null
   let page = 0
@@ -116,7 +130,7 @@ async function fetchAll(supabase) {
     for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
       let q = supabase
         .from('courses')
-        .select(FULL_COLUMNS)
+        .select(columns)
         .order('course_id', { ascending: true })
         .limit(PAGE)
       if (cursor) q = q.gt('course_id', cursor)
@@ -214,13 +228,41 @@ function expandCourseInstructors(row) {
 }
 
 /**
+ * The three evaluation columns the dump uses, for every report, in one pass.
+ * Keyset pages on the primary key: the two passes this replaced each paged by
+ * OFFSET over course_id, so every page re-walked all the rows before it, and
+ * the table was read twice. Comments and questions are never selected.
+ */
+export async function fetchEvaluationIndex(supabase) {
+  const rows = []
+  let cursor = null
+  while (true) {
+    let q = supabase
+      .from('evaluations')
+      .select('id, course_id, instructor, term')
+      .order('id', { ascending: true })
+      .limit(1000)
+    if (cursor != null) q = q.gt('id', cursor)
+    const { data, error } = await q
+    if (error) throw new Error(`evaluations page after id ${cursor} failed: ${error.message}`)
+    if (!data?.length) break
+    rows.push(...data)
+    cursor = data[data.length - 1].id
+    if (data.length < 1000) break
+  }
+  return rows
+}
+
+const byCodeUnit = (a, b) => (a < b ? -1 : a > b ? 1 : 0)
+
+/**
  * Every raw instructor spelling we know of, plus a course-scoped map that
  * turns catalog initials into a full-name slug when evaluation history for
  * that course_id points at exactly one person ("Clark, S." on CS 229 →
  * clark-susan). Catalog rows only cover upcoming terms and abbreviate first
  * names; evaluations supply both the history and the full names.
  */
-async function fetchInstructorDump(supabase, courseRows) {
+export function buildInstructorDump(evaluations, courseRows) {
   const names = new Set()
   for (const row of courseRows) {
     for (const name of row.instructors || []) if (name) names.add(name)
@@ -229,39 +271,31 @@ async function fetchInstructorDump(supabase, courseRows) {
   // courseId → initialSlug → Set of named slugs seen in evaluations
   const byCourse = new Map()
 
-  let from = 0
-  while (true) {
-    const { data, error } = await supabase
-      .from('evaluations')
-      .select('course_id, instructor')
-      .order('course_id', { ascending: true })
-      .range(from, from + 999)
-    if (error) throw new Error(`instructors page at ${from} failed: ${error.message}`)
-    for (const row of data) {
-      if (!row.instructor) continue
-      names.add(row.instructor)
-      if (!row.course_id || !hasFullFirstName(parseInstructorName(row.instructor).first)) continue
-      const initial = instructorInitialSlug(row.instructor)
-      const slug = instructorSlug(row.instructor)
-      if (!initial || !slug) continue
-      let byInitial = byCourse.get(row.course_id)
-      if (!byInitial) {
-        byInitial = new Map()
-        byCourse.set(row.course_id, byInitial)
-      }
-      let set = byInitial.get(initial)
-      if (!set) {
-        set = new Set()
-        byInitial.set(initial, set)
-      }
-      set.add(slug)
+  for (const row of evaluations) {
+    if (!row.instructor) continue
+    names.add(row.instructor)
+    if (!row.course_id || !hasFullFirstName(parseInstructorName(row.instructor).first)) continue
+    const initial = instructorInitialSlug(row.instructor)
+    const slug = instructorSlug(row.instructor)
+    if (!initial || !slug) continue
+    let byInitial = byCourse.get(row.course_id)
+    if (!byInitial) {
+      byInitial = new Map()
+      byCourse.set(row.course_id, byInitial)
     }
-    if (data.length < 1000) break
-    from += 1000
+    let set = byInitial.get(initial)
+    if (!set) {
+      set = new Set()
+      byInitial.set(initial, set)
+    }
+    set.add(slug)
   }
 
+  // Course ids in code-unit order, the order the old course_id-ordered read
+  // produced them in (every id in the 2026-11-10 instructors.json is in it).
   const courseLinks = {}
-  for (const [courseId, byInitial] of byCourse) {
+  for (const courseId of [...byCourse.keys()].sort(byCodeUnit)) {
+    const byInitial = byCourse.get(courseId)
     const links = {}
     for (const [initial, slugs] of byInitial) {
       if (slugs.size === 1) links[initial] = [...slugs][0]
@@ -292,24 +326,13 @@ function readPriorOfferings() {
 const SEASON_YEAR_OFFSET = { Autumn: 0, Fall: 0, Winter: -1, Spring: -1, Summer: -1 }
 
 /** course_ids with an evaluation from academic year `minYearStart` or later. */
-async function fetchRecentlyTaught(supabase, minYearStart) {
+function recentlyTaught(evaluations, minYearStart) {
   const taught = new Set()
-  let from = 0
-  while (true) {
-    const { data, error } = await supabase
-      .from('evaluations')
-      .select('course_id, term')
-      .order('course_id', { ascending: true })
-      .range(from, from + 999)
-    if (error) throw new Error(`evaluation terms page at ${from} failed: ${error.message}`)
-    for (const row of data) {
-      if (!row.course_id) continue
-      const match = /^(Autumn|Fall|Winter|Spring|Summer)\s+(\d{4})/.exec(row.term || '')
-      if (!match) continue
-      if (parseInt(match[2], 10) + SEASON_YEAR_OFFSET[match[1]] >= minYearStart) taught.add(row.course_id)
-    }
-    if (data.length < 1000) break
-    from += 1000
+  for (const row of evaluations) {
+    if (!row.course_id) continue
+    const match = /^(Autumn|Fall|Winter|Spring|Summer)\s+(\d{4})/.exec(row.term || '')
+    if (!match) continue
+    if (parseInt(match[2], 10) + SEASON_YEAR_OFFSET[match[1]] >= minYearStart) taught.add(row.course_id)
   }
   return taught
 }
@@ -342,13 +365,13 @@ function extractCrossListedIds(title) {
  * low-enrollment sections) never collect evaluations, but anything that DID
  * collect one in the window was clearly taught and is not new.
  */
-async function markNewCourses(supabase, rows, catalog) {
+function markNewCourses(evaluations, rows, catalog) {
   const prior = readPriorOfferings()
   if (!prior) {
     console.warn(`  ⚠ ${PRIOR_OFFERINGS_PATH} missing or short of ${MIN_PRIOR_YEARS} years — no isNew flags. Run: scrape-sections.mjs --prior-years`)
     return
   }
-  const taught = await fetchRecentlyTaught(supabase, prior.earliestYearStart)
+  const taught = recentlyTaught(evaluations, prior.earliestYearStart)
 
   // Titles declare siblings pairwise and inconsistently, so reading only this row's
   // title misses a class whose OTHER codes name it: MATSCI 402A's own title says nothing
@@ -397,6 +420,86 @@ async function markNewCourses(supabase, rows, catalog) {
   console.log(`  ${isNew} new courses, ${existing} known-existing (unscheduled in ${prior.years.join(', ')} and no evaluations since ${prior.earliestYearStart})`)
 }
 
+/**
+ * Postgres returns a jsonb object's keys shortest first, then bytewise, not in
+ * the order they were written. The dump has always been read back from jsonb,
+ * so rows taken from the scrape's own file are put in that order to come out
+ * byte for byte the same.
+ */
+export function jsonbKeyOrder(value) {
+  if (Array.isArray(value)) return value.map(jsonbKeyOrder)
+  if (value && typeof value === 'object') {
+    const keys = Object.keys(value)
+      .filter((key) => value[key] !== undefined)
+      .sort((a, b) => Buffer.byteLength(a) - Buffer.byteLength(b) || Buffer.compare(Buffer.from(a), Buffer.from(b)))
+    return Object.fromEntries(keys.map((key) => [key, jsonbKeyOrder(value[key])]))
+  }
+  return value
+}
+
+const JSONB_COLUMNS = new Set(['sections'])
+
+/**
+ * The table's rows, rebuilt from the rows the scrape just wrote plus the
+ * columns only the table has. Every row the scrape returned is in the table
+ * (it upserts them or finds them unchanged); a row it did not return has had
+ * its schedule cleared, so it carries no sections, and is kept only for its
+ * title and cross-listings.
+ */
+export function rowsFromScrape(scraped, tableRows) {
+  const scrapedById = new Map(scraped.map((row) => [row.course_id, row]))
+  const columns = FULL_COLUMNS.split(',').map((column) => column.trim())
+  const seen = new Set()
+  const rows = tableRows.map((tableRow) => {
+    const fresh = scrapedById.get(tableRow.course_id)
+    if (!fresh) return { ...tableRow, sections: [], terms: [] }
+    seen.add(tableRow.course_id)
+    return Object.fromEntries(columns.map((column) => {
+      if (!SCRAPED_FIELDS.includes(column)) return [column, tableRow[column] ?? null]
+      const value = fresh[column] ?? null
+      return [column, JSONB_COLUMNS.has(column) ? jsonbKeyOrder(value) : value]
+    }))
+  })
+  const missing = scraped.filter((row) => !seen.has(row.course_id)).map((row) => row.course_id)
+  if (missing.length) {
+    throw new Error(`${missing.length} scraped rows are not in the courses table (${missing.slice(0, 5).join(', ')}); run without --scraped`)
+  }
+  return rows
+}
+
+/**
+ * The three dumps as strings, from the table or from a scrape's rows plus the table.
+ * @param {{ from: (table: string) => any }} supabase
+ * @param {{ courses?: object[] | null, scraped?: object[] | null }} [opts]
+ */
+export async function buildCatalogDump(supabase, { courses = null, scraped = null } = {}) {
+  const source = courses
+    ? courses
+    : scraped
+      ? rowsFromScrape(scraped, await fetchAll(supabase, SCRAPED_MODE_COLUMNS))
+      : await fetchAll(supabase)
+  const allRaw = source.filter(isGradeable).map(expandCourseInstructors)
+  // Browse/API dump is offerings only — zero-section shells stay in Supabase for
+  // eval history joins but should not ship in the static catalog.
+  const dropped = allRaw.filter((c) => !(c.sections || []).length).length
+  const all = allRaw.filter((c) => (c.sections || []).length > 0)
+  if (dropped) console.log(`  dropped ${dropped} zero-section rows from dump`)
+
+  const evaluations = await fetchEvaluationIndex(supabase)
+  markNewCourses(evaluations, all, source)
+  dropNonPositiveMetrics(all)
+
+  const light = all.map((row) => Object.fromEntries(LIGHT_KEYS.map((k) => [k, row[k]])))
+  const instructors = buildInstructorDump(evaluations, all)
+  return {
+    all,
+    instructors,
+    fullJson: JSON.stringify(all),
+    lightJson: JSON.stringify(light),
+    instructorsJson: JSON.stringify(instructors),
+  }
+}
+
 async function main() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY
@@ -412,30 +515,22 @@ async function main() {
   mkdirSync(serverOutDir, { recursive: true })
   mkdirSync(publicOutDir, { recursive: true })
 
-  console.log(opts.courses ? `Dumping catalog from ${opts.courses}…` : 'Dumping catalog…')
+  const from = opts.courses ?? opts.scraped
+  console.log(from ? `Dumping catalog from ${from}…` : 'Dumping catalog…')
   const t0 = Date.now()
-  const source = opts.courses
-    ? JSON.parse(readFileSync(opts.courses, 'utf8'))
-    : await fetchAll(supabase)
-  const allRaw = source.filter(isGradeable).map(expandCourseInstructors)
-  // Browse/API dump is offerings only — zero-section shells stay in Supabase for
-  // eval history joins but should not ship in the static catalog.
-  const dropped = allRaw.filter((c) => !(c.sections || []).length).length
-  const all = allRaw.filter((c) => (c.sections || []).length > 0)
-  if (dropped) console.log(`  dropped ${dropped} zero-section rows from dump`)
+  const { all, instructors, fullJson, lightJson, instructorsJson } = await buildCatalogDump(supabase, {
+    courses: opts.courses ? JSON.parse(readFileSync(opts.courses, 'utf8')) : null,
+    scraped: opts.scraped ? JSON.parse(readFileSync(opts.scraped, 'utf8')) : null,
+  })
 
-  await markNewCourses(supabase, all, source)
-  dropNonPositiveMetrics(all)
+  if (!all.length) {
+    console.error('Refusing to keep an empty dump - aborting so a bad run cannot ship.')
+    process.exit(1)
+  }
 
-  const fullJson = JSON.stringify(all)
   writeFileSync(join(serverOutDir, 'full.json'), fullJson)
-
-  const light = all.map((row) => Object.fromEntries(LIGHT_KEYS.map((k) => [k, row[k]])))
-  const lightJson = JSON.stringify(light)
   writeFileSync(join(serverOutDir, 'light.json'), lightJson)
-
-  const instructors = await fetchInstructorDump(supabase, all)
-  writeFileSync(join(publicOutDir, 'instructors.json'), JSON.stringify(instructors))
+  writeFileSync(join(publicOutDir, 'instructors.json'), instructorsJson)
   const linkCount = Object.values(instructors.courseLinks).reduce((n, m) => n + Object.keys(m).length, 0)
   console.log(`  ${instructors.names.length} instructor names, ${linkCount} course-scoped links`)
 
@@ -446,14 +541,12 @@ async function main() {
     `light ${(Buffer.byteLength(lightJson) / 1e6).toFixed(1)} MB`,
   )
   console.log(`  scheduled ${scheduled.length} (all dumped rows have sections)`)
-
-  if (!all.length) {
-    console.error('Refusing to keep an empty dump - aborting so a bad run cannot ship.')
-    process.exit(1)
-  }
 }
 
-main().catch((err) => {
-  console.error(err)
-  process.exit(1)
-})
+// Only when run, so tests can import the helpers without starting a dump.
+if (process.argv[1] && realpathSync(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  main().catch((err) => {
+    console.error(err)
+    process.exit(1)
+  })
+}

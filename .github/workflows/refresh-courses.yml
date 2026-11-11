@@ -30,7 +30,9 @@ jobs:
       # the dump with empty sections and vanish from the schedule. Since
       # Navigator's search closed to outside callers (2026-10-03), it is also
       # how a run finds classes the last committed dump did not have.
-      - run: node scripts/scrape-sections.mjs --with-explorecourses
+      # --save-rows keeps the rows this run wrote, so the dump below need not
+      # read every row's sections back out of the table (Disk IO, 2026-11-11).
+      - run: node scripts/scrape-sections.mjs --with-explorecourses --save-rows "$RUNNER_TEMP/scraped-rows.json"
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
@@ -42,7 +44,7 @@ jobs:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
       - name: Rebuild catalog dumps
-        run: node scripts/dump-catalog.mjs
+        run: node scripts/dump-catalog.mjs --scraped "$RUNNER_TEMP/scraped-rows.json"
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}

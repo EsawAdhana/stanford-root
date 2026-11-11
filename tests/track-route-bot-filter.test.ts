@@ -46,7 +46,7 @@ const { POST } = await import('@/app/api/track/route')
 
 const post = (userAgent: string | null, body: unknown = { event: 'page_viewed', path: '/CS106B' }) =>
   POST(
-    new Request('http://localhost/api/track', {
+    new Request('https://www.stanfordroot.com/api/track', {
       method: 'POST',
       headers: userAgent === null ? {} : { 'user-agent': userAgent },
       body: JSON.stringify(body),

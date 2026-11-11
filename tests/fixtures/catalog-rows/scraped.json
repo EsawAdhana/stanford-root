@@ -1,0 +1,16 @@
+[
+  {"course_id":"CS106B","subject":"CS","code":"106B","title":"Programming Abstractions","description":"Recursion.","units":"3-5","grading":"Letter","instructors":["Szumlanski, Sean","Bailey, Cynthia"],"sections":[
+    {"sectionNumber":"2","component":"DIS","classId":1834,"term":"Autumn 2026","units":"","status":"Open","enrolled":10,"capacity":15,"waitlist":0,"meetings":[{"days":"Friday","time":"3:30 PM","instructors":[],"location":"Room"}]},
+    {"sectionNumber":"1","component":"LEC","classId":1878,"term":"Winter 2027","units":"3-5","status":"Open","enrolled":0,"capacity":300,"waitlist":0,"meetings":[{"days":"Friday","time":"1:30 PM","instructors":["Szumlanski, Sean"],"location":"Hewlett 200"}]},
+    {"sectionNumber":"1","component":"LEC","classId":1801,"term":"Autumn 2026","units":"3-5","status":"Open","enrolled":250,"capacity":300,"waitlist":0,"meetings":[{"days":"Monday","time":"1:30 PM","instructors":["Bailey, Cynthia"],"location":"Hewlett 200"}]}
+  ],"terms":["Autumn 2026","Winter 2027"]},
+  {"course_id":"MATH51","subject":"MATH","code":"51","title":"Linear Algebra","description":"Vectors.","units":"5","grading":"Letter","instructors":["Vakil, Ravi"],"sections":[
+    {"sectionNumber":"1","component":"LEC","classId":2001,"term":"Autumn 2026","units":"5","status":"Open","enrolled":181,"capacity":200,"waitlist":0,"meetings":[{"days":"Tuesday","time":"10:30 AM","instructors":["Vakil, Ravi"],"location":"Room 1"}]}
+  ],"terms":["Autumn 2026"]},
+  {"course_id":"AMSTUD167A","subject":"AMSTUD","code":"167A","title":"Comics","description":"","units":"3","grading":"Letter","instructors":[],"sections":[
+    {"sectionNumber":"1","component":"SEM","classId":3001,"term":"Winter 2027","units":"3","status":"Open","enrolled":0,"capacity":20,"waitlist":0,"meetings":[{"days":"Monday","time":"9:00 AM","instructors":["Bukatman, Scott"],"location":"Room 2"}]}
+  ],"terms":["Winter 2027"]},
+  {"course_id":"PHYS41","subject":"PHYS","code":"41","title":"Mechanics","description":"Forces.","units":"4","grading":"Letter","instructors":["Newton, Isaac"],"sections":[
+    {"sectionNumber":"1","component":"LEC","classId":5001,"term":"Winter 2027","units":"4","status":"Open","enrolled":0,"capacity":100,"waitlist":0,"meetings":[{"days":"Monday","time":"11:00 AM","instructors":["Newton, Isaac"],"location":"Room 3"}]}
+  ],"terms":["Winter 2027"]}
+]

@@ -53,22 +53,91 @@ export function bucketOf(row: ScoreRow): CommentSentiment {
 export const hashComment = (text: string) =>
   createHash('sha256').update(text.trim()).digest('hex')
 
+const SCORE_COLUMNS = 'comment_hash, instructor_praise, instructor_blame, course_praise, course_blame'
+
 /**
- * PostgREST puts `in` lists in the query string, so the cap is URL length, not
- * row count. At 64 hex chars plus a separator per hash, 500 builds a ~32KB URL
- * and the request comes back 400 Bad Request -- which looks like "no sentiment
- * exists" rather than like a failure. 75 keeps the URL near 5KB.
+ * Hashes per call to comment_sentiment_for, which takes them in the POST body
+ * (supabase/migrations/20261111_comment_sentiment_lookup.sql), so no URL ever
+ * carries them. Supabase logs every request URL, and the old GET lookups below
+ * were about 69% of the project's log volume on 2026-11-08. The cap is the
+ * API's row limit, 1,000 by default: a set-returning function is cut off there
+ * just like a table read, silently, so a bigger call would drop scores. Each
+ * hash matches at most one row, so 1,000 hashes cannot pass it. CS 106B's
+ * 1,591 comments are 2 calls instead of 22.
  */
-const CHUNK = 75
+export const RPC_CHUNK = 1000
+
+/**
+ * The old lookup, kept for while the function does not exist: PostgREST puts
+ * `in` lists in the query string, so the cap is URL length, not row count. At
+ * 64 hex chars plus a separator per hash, 500 builds a ~32KB URL and the
+ * request comes back 400 Bad Request -- which looks like "no sentiment exists"
+ * rather than like a failure. 75 keeps the URL near 5KB.
+ */
+export const GET_CHUNK = 75
 
 /**
  * Chunks go out together; a cold CS 106B is 1,591 hashes, so serial would crawl.
- * Measured on that course: 22 requests take 806ms at 6 in flight and 544ms at
- * 12, against a 752ms base evaluations query. Widening the chunk instead would
- * cut the request count but push the URL back toward the length that made
- * PostgREST 400 in the first place, so the concurrency is the safer dial.
+ * Measured on that course with GET chunks: 22 requests take 806ms at 6 in
+ * flight and 544ms at 12, against a 752ms base evaluations query.
  */
 const LOOKUP_CONCURRENCY = 12
+
+type LookupResult = {
+  data: unknown
+  error: { message: string; code?: string } | null
+  status?: number
+}
+type Lookup = (chunk: string[]) => PromiseLike<LookupResult>
+
+/**
+ * Set once this server instance has found the function missing, so until the
+ * migration is applied each lookup does not spend a failed call first.
+ */
+let rpcMissing = false
+
+/** For tests: forget that the function was missing. */
+export function resetSentimentLookup() {
+  rpcMissing = false
+}
+
+/** PostgREST's answer when the function is not in its schema cache. */
+const isMissingFunction = (result: LookupResult) =>
+  result.error?.code === 'PGRST202' || result.status === 404
+
+function chunked(hashes: string[], size: number): string[][] {
+  const chunks: string[][] = []
+  for (let i = 0; i < hashes.length; i += size) chunks.push(hashes.slice(i, i + size))
+  return chunks
+}
+
+/** Adds a lookup's rows to `out`; false when the lookup failed. */
+function collect(result: LookupResult, out: Map<string, CommentSentiment>): boolean {
+  // Sentiment is an enhancement, not the payload -- a failure here should
+  // leave the comments readable rather than fail the whole request.
+  if (result.error) {
+    console.error('comment_sentiment lookup failed:', result.error.message)
+    return false
+  }
+  for (const row of (result.data || []) as ScoreRow[]) {
+    out.set(row.comment_hash, bucketOf(row))
+  }
+  return true
+}
+
+/** Runs `lookup` over every chunk, a few at a time. False when any call failed. */
+async function runChunks(chunks: string[][], lookup: Lookup, out: Map<string, CommentSentiment>): Promise<boolean> {
+  let next = 0
+  let failed = false
+  await Promise.all(
+    Array.from({ length: Math.min(LOOKUP_CONCURRENCY, chunks.length) }, async () => {
+      while (next < chunks.length && !failed) {
+        if (!collect(await lookup(chunks[next++]), out)) failed = true
+      }
+    }),
+  )
+  return !failed
+}
 
 /**
  * Looks up every distinct comment in one pass and returns hash -> bucket.
@@ -85,33 +154,26 @@ export async function fetchSentimentByHash(
   // Only ever called from Stanford-gated code paths, and comment_sentiment has no
   // anon policy, so this has to be the service-role client.
   const supabase = getServiceClient()
-  const chunks: string[][] = []
-  for (let i = 0; i < hashes.length; i += CHUNK) chunks.push(hashes.slice(i, i + CHUNK))
 
-  let next = 0
-  let failed = false
-  await Promise.all(
-    Array.from({ length: Math.min(LOOKUP_CONCURRENCY, chunks.length) }, async () => {
-      while (next < chunks.length && !failed) {
-        const { data, error } = await supabase
-          .from('comment_sentiment')
-          .select('comment_hash, instructor_praise, instructor_blame, course_praise, course_blame')
-          .in('comment_hash', chunks[next++])
+  if (!rpcMissing) {
+    const rpc: Lookup = chunk => supabase.rpc('comment_sentiment_for', { hashes: chunk })
+    const [firstChunk, ...rest] = chunked(hashes, RPC_CHUNK)
+    // The first call goes alone, so a missing function costs one request, not twelve.
+    const first = await rpc(firstChunk)
+    if (isMissingFunction(first)) {
+      rpcMissing = true
+    } else {
+      const ok = collect(first, out) && (await runChunks(rest, rpc, out))
+      return ok ? out : new Map()
+    }
+  }
 
-        // Sentiment is an enhancement, not the payload -- a failure here should
-        // leave the comments readable rather than fail the whole request.
-        if (error) {
-          console.error('comment_sentiment lookup failed:', error.message)
-          failed = true
-          return
-        }
-        for (const row of (data || []) as ScoreRow[]) {
-          out.set(row.comment_hash, bucketOf(row))
-        }
-      }
-    }),
+  const ok = await runChunks(
+    chunked(hashes, GET_CHUNK),
+    chunk => supabase.from('comment_sentiment').select(SCORE_COLUMNS).in('comment_hash', chunk),
+    out,
   )
-  return failed ? new Map() : out
+  return ok ? out : new Map()
 }
 
 /**
