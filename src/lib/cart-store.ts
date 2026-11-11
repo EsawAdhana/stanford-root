@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
+import { toast } from 'sonner'
 import type { Course } from '@/types/course'
 import { dedupeCrossListedItems, makeMeetingKey, mergeSectionSelection } from '@/lib/schedule-utils'
 import { getCrossListGroupIds } from '@/lib/cross-list.mjs'
@@ -260,6 +261,11 @@ export const useCartStore = create<CartStore>()(
           : -1
 
         if (existingIndex >= 0) {
+          // A class sits on one term at a time, so adding it to another term takes
+          // it off the first. Say so: otherwise the first term just looks emptied.
+          if (existing?.selectedTerm && resolvedTerm && existing.selectedTerm !== resolvedTerm) {
+            toast(`${course.subject} ${course.code} moved from ${existing.selectedTerm} to ${resolvedTerm}.`)
+          }
           const newItems = [...currentItems]
           newItems[existingIndex] = { ...newItems[existingIndex], ...courseWithTerm }
           set({ items: siblingIndex >= 0 ? newItems.filter((_, i) => i !== siblingIndex) : newItems })
