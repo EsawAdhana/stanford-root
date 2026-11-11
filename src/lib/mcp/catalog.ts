@@ -4,6 +4,7 @@ import { getCrossListPrimaryMap, normalizeCourseId, parseUnitsOptions, resolveTo
 import { displayedStatus, hasSeat } from '@/lib/seats'
 import { pickSectionsForTerm } from '@/lib/schedule-utils'
 import { TextIndex } from './text'
+import { SITE_URL } from '@/lib/site'
 import { label, slotsOf } from './meetings'
 
 /**
@@ -141,6 +142,7 @@ export function summarize(c: Course, cat: Catalog, term: string | null, snippetT
     course_id: c.id,
     code: code(c),
     title: c.title,
+    url: `${SITE_URL}/${encodeURIComponent(c.id)}`,
     units: c.units,
     terms,
     instructors: (c.instructors ?? []).slice(0, 3),

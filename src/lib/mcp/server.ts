@@ -16,6 +16,7 @@ import { type Entry, applyAdd, conflicts, entriesFor, entryOf, entryOut, exportI
 import { aggregate } from './evals'
 import { type Caller, ScheduleConflict, classYears, evaluations, instructorEvaluations, liveSeats, readSchedule, sendFeedback, writeSchedule } from './data'
 import { getInstructorDirectory } from '@/lib/catalog-dump'
+import { SITE_URL } from '@/lib/site'
 
 /** The quarters a student can plan: the current one and the three after it (same as the Python server). */
 export function schedulableTerms(now = new Date()): string[] {
@@ -75,9 +76,14 @@ and the token only after they say yes in a later message, even if they asked for
 the change.
 export_calendar makes an .ics file of a quarter.
 
-Quarters are spelled "${TERMS[0]}"; valid now: ${TERMS.join(', ')}. Omitted
-quarter in add_to_schedule means the current one, and a course not offered then
-fails with the quarters it is offered in: ask the user, don't pick.
+Quarters are spelled "${TERMS[0]}"; valid now: ${TERMS.join(', ')}. Pass the
+quarter the user named to add_to_schedule. Without one it only saves when there
+is no choice to make (the course is already saved, or is offered in one of those
+quarters); otherwise it fails with term_required and the quarters to choose
+from: ask the user, don't pick.
+
+Results carry a url on stanfordroot.com (a course page, an instructor page, the
+schedule). Give the user the link when you mention one.
 
 Errors are JSON: {"error": {"code", "message", "retryable", "hint", "details"}}.
 Retry only if retryable is true.`
@@ -243,7 +249,7 @@ export function registerTools(server: McpServer) {
     const starts = all.map(s => s.startDate).filter(Boolean).sort()
     const ends = all.map(s => s.endDate).filter(Boolean).sort()
     return {
-      course_id: c.id, code: code(c), title: c.title, description: (c.description ?? '').slice(0, 2000), units: c.units, grading: c.grading,
+      course_id: c.id, code: code(c), title: c.title, url: `${SITE_URL}/${encodeURIComponent(c.id)}`, description: (c.description ?? '').slice(0, 2000), units: c.units, grading: c.grading,
       level: formatLevel(c.code), gers: gersOf(c), instructors: c.instructors ?? [], offered_terms: offered,
       rating: rating(c.quality), rating_percentile: c.qualityPct ?? null, percentile_among: c.rankScope ?? null, rated_by: c.qualityN ?? null,
       learning_rating: rating(c.ratingBreakdown?.learning?.score), organization_rating: rating(c.ratingBreakdown?.organization?.score),
@@ -365,7 +371,7 @@ export function registerTools(server: McpServer) {
       for (const text of e.comments) if (recent.length < args.comments && text?.trim()) recent.push(`[${e.courseCode || e.courseId}, ${e.term}] ${text.trim().slice(0, 400)}`)
     }
     return {
-      name: chosen, slug: instructorSlug(chosen),
+      name: chosen, slug: instructorSlug(chosen), url: `${SITE_URL}/instructors/${instructorSlug(chosen)}`,
       courses: [...taught.values()].sort((a, b) => code(a).localeCompare(code(b))).map(c => ({ course_id: c.id, code: code(c), title: c.title, terms: c.terms ?? [], rating: rating(c.quality) })),
       evaluated_reports: evals ? evals.evaluations.length : null, recent_comments: recent,
       other_matches: scored.map(([, n]) => n).filter(n => n !== chosen).slice(0, 5),
@@ -394,7 +400,7 @@ export function registerTools(server: McpServer) {
       const total = unitTotal(entries)
       return { term: t, entries: entries.map(entryOut), total_units: unitsLabel(total) ?? '0', over_20_units: total[1] > 20, overlaps: required, overlaps_if_attending_optional: withOptional }
     }).filter(t => args.term || t.entries.length)
-    return { signed_in_as: caller.email, terms, total_saved: items.length }
+    return { signed_in_as: caller.email, url: `${SITE_URL}/schedule`, terms, total_saved: items.length }
   }))
 
   server.registerTool('add_to_schedule', {
@@ -403,7 +409,7 @@ export function registerTools(server: McpServer) {
     annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: true },
     inputSchema: z.object({
       course_id: CourseId,
-      term: Term.optional().describe('Quarter to plan it for. Omit for the current quarter.'),
+      term: Term.optional().describe('Quarter to plan it for, as the user named it. Omit only when they did not say: a saved course keeps its quarter, a course offered in one quarter uses it, and anything else fails with term_required so you can ask.'),
       section_ids: z.array(z.number().int()).max(6).optional().describe('section_id values from get_course for this course and quarter. Each replaces the pick of the same component (a new DIS replaces the old DIS, the LEC stays).'),
       units: z.number().min(0).max(20).optional().describe('Units to take it for, for variable-unit courses.'),
     }).strict(),
@@ -412,8 +418,19 @@ export function registerTools(server: McpServer) {
     const cat = await getCatalog()
     const c = findCourse(cat, args.course_id)
     if (!c) throw notFound(cat, args.course_id)
-    const term = args.term ?? defaultTerm()
     const offered = [...(c.terms ?? [])].sort((a, b) => termKey(a) - termKey(b))
+    let term = args.term
+    if (!term) {
+      // No quarter named: save only when there is nothing to choose between.
+      const savedIn = ((await readSchedule(caller)) ?? []).find(i => i.id === c.id)?.selectedTerm
+      const plannable = offered.filter(t => TERMS.includes(t))
+      if (savedIn && offered.includes(savedIn)) term = savedIn
+      else if (plannable.length === 1) term = plannable[0]
+      else if (!plannable.length) throw notOffered(c, 'any quarter that can be planned now', offered)
+      else throw new ToolFailure('term_required', `${c.subject} ${c.code} is offered in ${plannable.join(', ')}, and no quarter was given.`, {
+        retryable: false, hint: 'Ask the user which of details.offered_terms they want, then pass it as term. Do not pick one for them.', details: { offered_terms: plannable },
+      })
+    }
     if (!offered.includes(term)) throw notOffered(c, term, offered)
     const secs = sectionsIn(c, term)
     const unknown = (args.section_ids ?? []).filter(id => !secs.some(s => s.classId === id))
@@ -436,7 +453,7 @@ export function registerTools(server: McpServer) {
     const item = saved.find(i => i.id === c.id)!
     if (options.length > 1 && typeof item.selectedUnits !== 'number') warnings.push(`Variable units (${unitsLabel([Math.min(...options), Math.max(...options)])}); pass units to choose.`)
     return {
-      action: result.action, entry: entryOut(mine), term_was_defaulted: !args.term, replaced_cross_listing: result.replaced,
+      action: result.action, entry: entryOut(mine), term_was_defaulted: !args.term, schedule_url: `${SITE_URL}/schedule`, replaced_cross_listing: result.replaced,
       overlaps: conflicts(cat, entries).filter(o => o.course_ids.includes(c.id)), term_units: unitsLabel(unitTotal(entries)) ?? '0', warnings, total_saved: saved.length,
     }
   }))

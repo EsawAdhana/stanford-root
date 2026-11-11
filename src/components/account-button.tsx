@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
 import { LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -51,6 +52,12 @@ export function AccountButton() {
         <div className="px-2 py-1.5 text-xs font-medium text-muted-foreground border-b border-border/40 mb-1">
           {user.email}
         </div>
+        <Link
+          href="/connected-apps"
+          className="w-full flex items-center px-2 py-1.5 text-sm text-foreground hover:bg-accent rounded-sm transition-colors"
+        >
+          Connected apps
+        </Link>
         <button
           onClick={signOut}
           className="w-full flex items-center gap-2 px-2 py-1.5 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-sm transition-colors"

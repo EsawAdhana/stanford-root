@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { SearchBar } from '@/components/search-bar';
 import { MobileFilterMenu } from '@/components/mobile-filter-menu';
 import { Logo } from '@/components/logo';
@@ -13,6 +13,8 @@ import { CalendarDays, LogOut } from 'lucide-react';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
+const MCP_SEEN_KEY = 'mcp-connect-seen';
+
 export function SiteHeader() {
     const pathname = usePathname();
     const searchParams = useSearchParams();
@@ -22,6 +24,19 @@ export function SiteHeader() {
     const user = useAuthStore(s => s.user);
     const isLoading = useAuthStore(s => s.isLoading);
     const signOut = useAuthStore(s => s.signOut);
+
+    // The MCP link reads "New" with a red dot until this browser has opened /connect once,
+    // then "MCP". Unknown until storage is read, so the label waits instead of flipping.
+    const isConnect = pathname === '/connect';
+    const [mcpIsNew, setMcpIsNew] = useState<boolean | null>(null);
+    useEffect(() => {
+        try {
+            if (isConnect) localStorage.setItem(MCP_SEEN_KEY, '1');
+            setMcpIsNew(localStorage.getItem(MCP_SEEN_KEY) !== '1');
+        } catch {
+            setMcpIsNew(false);
+        }
+    }, [isConnect]);
 
     const scheduleHref = useMemo(() => {
         const params = new URLSearchParams(searchParams.toString());
@@ -72,16 +87,29 @@ export function SiteHeader() {
                     <ThemeToggle />
                 </div>
 
-                <Button
-                    asChild
-                    variant="ghost"
-                    className="relative rounded-lg h-9 w-9 px-0 md:w-auto md:px-4 text-sm font-medium gap-2 text-muted-foreground hover:text-foreground hover:bg-secondary/80 transition-all"
-                >
-                    <Link href={scheduleHref} aria-label="Schedule">
-                        <CalendarDays className="h-5 w-5 md:h-4 md:w-4" />
-                        <span className="hidden md:inline">Schedule</span>
-                    </Link>
-                </Button>
+                {!isConnect && (
+                    <Button
+                        asChild
+                        variant="ghost"
+                        className="relative hidden lg:inline-flex rounded-lg h-9 w-16 px-0 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-secondary/80 transition-all"
+                    >
+                        <Link href="/connect" aria-label={mcpIsNew ? 'New: Stanford Root MCP' : 'Stanford Root MCP'}>
+                            <span className={mcpIsNew === null ? 'invisible' : undefined}>{mcpIsNew ? 'New' : 'MCP'}</span>
+                            {mcpIsNew && <span aria-hidden className="absolute top-1.5 right-2.5 h-2 w-2 rounded-full bg-primary" />}
+                        </Link>
+                    </Button>
+                )}
+
+                    <Button
+                        asChild
+                        variant="ghost"
+                        className="relative rounded-lg h-9 w-9 px-0 md:w-auto md:px-4 text-sm font-medium gap-2 text-muted-foreground hover:text-foreground hover:bg-secondary/80 transition-all"
+                    >
+                        <Link href={scheduleHref} aria-label="Schedule">
+                            <CalendarDays className="h-5 w-5 md:h-4 md:w-4" />
+                            <span className="hidden md:inline">Schedule</span>
+                        </Link>
+                    </Button>
 
                 {!user && !isLoading && (
                     <StanfordLoginButton
@@ -117,6 +145,12 @@ export function SiteHeader() {
                                 <div className="px-2 py-1.5 text-xs font-medium text-muted-foreground border-b border-border/40 mb-1">
                                     {user.email}
                                 </div>
+                                <Link
+                                    href="/connected-apps"
+                                    className="w-full flex items-center px-2 py-1.5 text-sm text-foreground hover:bg-accent rounded-sm transition-colors"
+                                >
+                                    Connected apps
+                                </Link>
                                 <button
                                     onClick={signOut}
                                     className="w-full flex items-center gap-2 px-2 py-1.5 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-sm transition-colors"

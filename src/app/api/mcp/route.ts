@@ -1,5 +1,6 @@
 import { createMcpHandler, withMcpAuth } from 'mcp-handler'
 import { INSTRUCTIONS, registerTools } from '@/lib/mcp/server'
+import { registerPrompts } from '@/lib/mcp/prompts'
 import { verifyToken } from '@/lib/mcp/auth'
 
 /**
@@ -9,7 +10,7 @@ import { verifyToken } from '@/lib/mcp/auth'
  * the user signs in and approves on /oauth/consent, and every call carries
  * their token. Same tools and contract as the stdio server in the class repo.
  */
-const mcp = createMcpHandler(server => registerTools(server), {
+const mcp = createMcpHandler(server => { registerTools(server); registerPrompts(server) }, {
   serverInfo: { name: 'stanford-root', version: '1.0.0' },
   instructions: INSTRUCTIONS,
 })
