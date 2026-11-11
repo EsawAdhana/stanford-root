@@ -138,6 +138,7 @@ export function WhatsNew() {
     };
   }, [pathname]);
 
+  const contentRef = useRef<HTMLDivElement>(null);
   const [index, setIndex] = useState(0);
   const slide = SLIDES[index];
   const last = index === SLIDES.length - 1;
@@ -148,9 +149,15 @@ export function WhatsNew() {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent
         hideClose
-        className="max-w-lg gap-0 p-0 overflow-hidden max-h-[92dvh] flex flex-col border-0 sm:rounded-xl"
-        // Keep focus on the dialog itself so a button does not open already ringed.
-        onOpenAutoFocus={e => e.preventDefault()}
+        ref={contentRef}
+        className="max-w-lg gap-0 p-0 overflow-hidden max-h-[92dvh] flex flex-col border-0 sm:rounded-xl focus:outline-none"
+        // Focus the dialog itself rather than its first button, so no button
+        // opens already ringed, while the arrow keys work at once and Tab
+        // stays inside the card instead of walking the page behind it.
+        onOpenAutoFocus={e => {
+          e.preventDefault();
+          contentRef.current?.focus({ preventScroll: true });
+        }}
         onKeyDown={e => {
           if (e.key === 'ArrowRight') go(index + 1);
           if (e.key === 'ArrowLeft') go(index - 1);
