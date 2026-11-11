@@ -407,23 +407,23 @@ export function CourseDetailContent({ course }: CourseDetailContentProps) {
                 {/* Left Column: Tab Content */}
                 <div className="space-y-2">
                     <Tabs defaultValue="overview" className="w-full">
-                        {/* 16px labels and gaps below sm, so the three tabs fit a 320px screen */}
-                        <TabsList className="w-full justify-start bg-transparent border-b border-border/40 rounded-none h-auto p-0 pl-3 md:pl-4 gap-4 sm:gap-8 mb-4">
+                        {/* 16px labels and gaps below 380px, so the three tabs fit a 320px screen; from 380px up they fit at full size */}
+                        <TabsList className="w-full justify-start bg-transparent border-b border-border/40 rounded-none h-auto p-0 pl-3 md:pl-4 gap-4 min-[380px]:gap-8 mb-4">
                             <TabsTrigger
                                 value="overview"
-                                className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-0 py-3 text-[18px] max-sm:text-base font-bold text-muted-foreground data-[state=active]:text-foreground transition-all hover:text-foreground/80"
+                                className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-0 py-3 text-[18px] max-[379px]:text-base font-bold text-muted-foreground data-[state=active]:text-foreground transition-all hover:text-foreground/80"
                             >
                                 Overview
                             </TabsTrigger>
                             <TabsTrigger
                                 value="charts"
-                                className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-0 py-3 text-[18px] max-sm:text-base font-bold text-muted-foreground data-[state=active]:text-foreground transition-all hover:text-foreground/80"
+                                className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-0 py-3 text-[18px] max-[379px]:text-base font-bold text-muted-foreground data-[state=active]:text-foreground transition-all hover:text-foreground/80"
                             >
                                 Charts
                             </TabsTrigger>
                             <TabsTrigger
                                 value="comments"
-                                className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-0 py-3 text-[18px] max-sm:text-base font-bold text-muted-foreground data-[state=active]:text-foreground transition-all hover:text-foreground/80"
+                                className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-0 py-3 text-[18px] max-[379px]:text-base font-bold text-muted-foreground data-[state=active]:text-foreground transition-all hover:text-foreground/80"
                             >
                                 Comments
                             </TabsTrigger>
