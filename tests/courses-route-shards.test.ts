@@ -103,6 +103,8 @@ describe('shard sizing against the real dump', () => {
   // a size we know the edge cache accepts rather than a guess at the ceiling.
   const KNOWN_CACHEABLE_BYTES = 0.65 * 1024 * 1024
 
+  // Parsing and gzipping the 40MB dump takes seconds, past the 5s default when the
+  // machine is busy, so this test gets its own budget.
   it('keeps every shard of the real catalog under a size the edge cache is known to hold', () => {
     const rows = JSON.parse(readFileSync('data/catalog/full.json', 'utf8')) as unknown[]
     const sizes = Array.from({ length: CATALOG_SHARD_COUNT }, (_, i) => {
@@ -114,7 +116,7 @@ describe('shard sizing against the real dump', () => {
       worst,
       `largest shard is ${(worst / 1048576).toFixed(2)}MB gzipped. Raise CATALOG_SHARD_COUNT.`
     ).toBeLessThan(KNOWN_CACHEABLE_BYTES)
-  })
+  }, 30_000)
 
   it('is not sharding so finely that the requests stop being worth it', () => {
     // The other direction: 8 requests per session is fine against a 10M/mo included
