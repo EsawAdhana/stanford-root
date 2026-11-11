@@ -29,6 +29,15 @@ export function queryNamesInstructor(query: string, instructor: string): boolean
 }
 
 /**
+ * "CS-106A" and "cs.106a" mean "CS 106A": a hyphen, dot, underscore or slash
+ * between a subject and its number reads as a space. Only at that join, so
+ * "data-driven" and "e.g." stay as typed.
+ */
+export function normalizeSearchQuery(query: string): string {
+    return query.replace(/^(\s*[A-Za-z&]+)\s*[-.\u2010-\u2014_/]+\s*(?=\d)/, '$1 ');
+}
+
+/**
  * Filters a list of courses based on a search query.
  * This function encapsulates the core text-matching logic used across the application.
  *
@@ -38,6 +47,7 @@ export function queryNamesInstructor(query: string, instructor: string): boolean
  */
 export function searchCourses(courses: Course[], query: string): Course[] {
     if (!query) return courses;
+    query = normalizeSearchQuery(query);
 
     let result = courses;
     const lowerQuery = query.toLowerCase().trim();

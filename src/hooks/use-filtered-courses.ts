@@ -4,7 +4,7 @@ import { useCartStore } from '@/lib/cart-store';
 import { useQueryState, parseAsArrayOf, parseAsString, parseAsBoolean, parseAsInteger } from 'nuqs';
 import { aggregateCrossListMetrics, compareCourseCodes, getCrossListPrimaryMap, normalizeCourseId, resolveToCanonicalPrimary, parseUnitsOptions } from '@/lib/utils';
 import type { Course } from '@/types/course';
-import { searchCourses } from '@/lib/search-utils';
+import { searchCourses, normalizeSearchQuery } from '@/lib/search-utils';
 import { filterCourses, needsSections } from '@/lib/course-filter';
 import { useSelectedTerms } from '@/hooks/use-selected-terms';
 import { findInOtherTerms, type OtherTermsMatch } from '@/lib/other-terms';
@@ -23,7 +23,7 @@ export function applyQuery(result: Course[], query: string, primaryMap: Map<stri
     // Only from the filtered list: taking it from the full catalog let "EE 186" bring back CS 140M with
     // Hide closed & waitlisted on, while "CS 140M" itself found nothing. Filters already match any listing
     // of the class, so a primary missing here was hidden on purpose, and the empty state names the toggle.
-    const queryNorm = normalizeCourseId(query.trim().replace(/\s+/g, ''));
+    const queryNorm = normalizeCourseId(normalizeSearchQuery(query).trim().replace(/\s+/g, ''));
     if (queryNorm && primaryMap.has(queryNorm)) {
         const canonicalNorm = resolveToCanonicalPrimary(queryNorm, primaryMap);
         const primary = beforeSearch.find(c => normalizeCourseId(c.id) === canonicalNorm);
