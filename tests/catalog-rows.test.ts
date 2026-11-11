@@ -72,7 +72,7 @@ describe('which scraped rows the refresh writes', () => {
 describe('a fixed order for sections and instructors', () => {
     it('orders sections by term, then section number, component and class number', () => {
         const [cs] = canon(fixture('scraped.json'))
-        expect(cs.sections.map(s => `${s.term} ${s.component} ${s.sectionNumber}`)).toEqual([
+        expect(cs.sections.map((s: any) => `${s.term} ${s.component} ${s.sectionNumber}`)).toEqual([
             'Autumn 2026 LEC 1', 'Autumn 2026 DIS 2', 'Winter 2027 LEC 1',
         ])
         expect(cs.instructors).toEqual(['Bailey, Cynthia', 'Szumlanski, Sean'])

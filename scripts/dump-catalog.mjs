@@ -467,7 +467,11 @@ export function rowsFromScrape(scraped, tableRows) {
   return rows
 }
 
-/** The three dumps as strings, from the table or from a scrape's rows plus the table. */
+/**
+ * The three dumps as strings, from the table or from a scrape's rows plus the table.
+ * @param {{ from: (table: string) => any }} supabase
+ * @param {{ courses?: object[] | null, scraped?: object[] | null }} [opts]
+ */
 export async function buildCatalogDump(supabase, { courses = null, scraped = null } = {}) {
   const source = courses
     ? courses

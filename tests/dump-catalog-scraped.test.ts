@@ -44,7 +44,7 @@ function mockClient(tables: Record<string, Row[]>) {
 
 /** The courses table as Postgres holds it: jsonb keys reordered, plus rows the scrape has dropped. */
 function table() {
-    const live = fixture('previous-dump.json').map(({ isNew, ...row }) => ({ ...row, sections: jsonbKeyOrder(row.sections) }))
+    const live: Row[] = fixture('previous-dump.json').map(({ isNew, ...row }) => ({ ...row, sections: jsonbKeyOrder(row.sections) }))
     // Abbreviated in the table and the scrape alike; the dump expands it from the overrides.
     live[1].instructors = ['Heller, H']
     live[1].sections[0].meetings[0].instructors = ['Heller, H']
