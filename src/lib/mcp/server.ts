@@ -16,6 +16,7 @@ import { type Entry, applyAdd, conflicts, entriesFor, entryOf, entryOut, exportI
 import { aggregate } from './evals'
 import { type Caller, ScheduleConflict, classYears, evaluations, instructorEvaluations, liveSeats, readSchedule, sendFeedback, writeSchedule } from './data'
 import { getInstructorDirectory } from '@/lib/catalog-dump'
+import { SITE_URL } from '@/lib/site'
 
 /** The quarters a student can plan: the current one and the three after it (same as the Python server). */
 export function schedulableTerms(now = new Date()): string[] {
@@ -80,6 +81,9 @@ quarter the user named to add_to_schedule. Without one it only saves when there
 is no choice to make (the course is already saved, or is offered in one of those
 quarters); otherwise it fails with term_required and the quarters to choose
 from: ask the user, don't pick.
+
+Results carry a url on stanfordroot.com (a course page, an instructor page, the
+schedule). Give the user the link when you mention one.
 
 Errors are JSON: {"error": {"code", "message", "retryable", "hint", "details"}}.
 Retry only if retryable is true.`
@@ -245,7 +249,7 @@ export function registerTools(server: McpServer) {
     const starts = all.map(s => s.startDate).filter(Boolean).sort()
     const ends = all.map(s => s.endDate).filter(Boolean).sort()
     return {
-      course_id: c.id, code: code(c), title: c.title, description: (c.description ?? '').slice(0, 2000), units: c.units, grading: c.grading,
+      course_id: c.id, code: code(c), title: c.title, url: `${SITE_URL}/${encodeURIComponent(c.id)}`, description: (c.description ?? '').slice(0, 2000), units: c.units, grading: c.grading,
       level: formatLevel(c.code), gers: gersOf(c), instructors: c.instructors ?? [], offered_terms: offered,
       rating: rating(c.quality), rating_percentile: c.qualityPct ?? null, percentile_among: c.rankScope ?? null, rated_by: c.qualityN ?? null,
       learning_rating: rating(c.ratingBreakdown?.learning?.score), organization_rating: rating(c.ratingBreakdown?.organization?.score),
@@ -367,7 +371,7 @@ export function registerTools(server: McpServer) {
       for (const text of e.comments) if (recent.length < args.comments && text?.trim()) recent.push(`[${e.courseCode || e.courseId}, ${e.term}] ${text.trim().slice(0, 400)}`)
     }
     return {
-      name: chosen, slug: instructorSlug(chosen),
+      name: chosen, slug: instructorSlug(chosen), url: `${SITE_URL}/instructors/${instructorSlug(chosen)}`,
       courses: [...taught.values()].sort((a, b) => code(a).localeCompare(code(b))).map(c => ({ course_id: c.id, code: code(c), title: c.title, terms: c.terms ?? [], rating: rating(c.quality) })),
       evaluated_reports: evals ? evals.evaluations.length : null, recent_comments: recent,
       other_matches: scored.map(([, n]) => n).filter(n => n !== chosen).slice(0, 5),
@@ -396,7 +400,7 @@ export function registerTools(server: McpServer) {
       const total = unitTotal(entries)
       return { term: t, entries: entries.map(entryOut), total_units: unitsLabel(total) ?? '0', over_20_units: total[1] > 20, overlaps: required, overlaps_if_attending_optional: withOptional }
     }).filter(t => args.term || t.entries.length)
-    return { signed_in_as: caller.email, terms, total_saved: items.length }
+    return { signed_in_as: caller.email, url: `${SITE_URL}/schedule`, terms, total_saved: items.length }
   }))
 
   server.registerTool('add_to_schedule', {
@@ -449,7 +453,7 @@ export function registerTools(server: McpServer) {
     const item = saved.find(i => i.id === c.id)!
     if (options.length > 1 && typeof item.selectedUnits !== 'number') warnings.push(`Variable units (${unitsLabel([Math.min(...options), Math.max(...options)])}); pass units to choose.`)
     return {
-      action: result.action, entry: entryOut(mine), term_was_defaulted: !args.term, replaced_cross_listing: result.replaced,
+      action: result.action, entry: entryOut(mine), term_was_defaulted: !args.term, schedule_url: `${SITE_URL}/schedule`, replaced_cross_listing: result.replaced,
       overlaps: conflicts(cat, entries).filter(o => o.course_ids.includes(c.id)), term_units: unitsLabel(unitTotal(entries)) ?? '0', warnings, total_saved: saved.length,
     }
   }))

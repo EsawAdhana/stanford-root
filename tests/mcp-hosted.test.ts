@@ -258,6 +258,17 @@ describe('adding without a quarter', () => {
   })
 })
 
+describe('links and starters', () => {
+  it('puts a stanfordroot.com link on courses, instructors and the schedule', async () => {
+    const client = await connect()
+    const found = await call(client, 'search_courses', { query: 'algorithms' })
+    expect(found.ok.matches[0].url).toBe('https://www.stanfordroot.com/CS161')
+    expect((await call(client, 'get_course', { course_id: 'CS161' })).ok.url).toBe('https://www.stanfordroot.com/CS161')
+    expect((await call(client, 'get_my_schedule', {})).ok.url).toBe('https://www.stanfordroot.com/schedule')
+    expect((await call(client, 'get_instructor', { name: 'Doe' })).ok.url).toBe('https://www.stanfordroot.com/instructors/doe-jane')
+  })
+})
+
 describe('protected resource metadata', () => {
   it('names Supabase as the authorization server', async () => {
     const { GET } = await import('@/app/.well-known/oauth-protected-resource/api/mcp/route')
