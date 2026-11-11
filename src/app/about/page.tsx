@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { Suspense } from 'react'
 import { Metadata } from 'next'
 import { SiteHeader } from '@/components/site-header'
-import { SITE_URL } from '@/lib/site'
+import { GOOGLE_CONSENT_PRIVACY_URL, GOOGLE_CONSENT_TERMS_URL } from '@/lib/site'
 
 export const metadata: Metadata = {
   title: 'About Stanford Root',
@@ -67,9 +67,9 @@ export default function AboutPage() {
             </p>
             <p className="mt-2">
               The{' '}
-              {/* Absolute canonical URL on purpose: Google checks that the privacy link on the
+              {/* Absolute apex URL on purpose: Google checks that the privacy link on the
                   home page is the same string as the one in the consent screen config. */}
-              <a href={`${SITE_URL}/privacy`} className="text-primary hover:underline">
+              <a href={GOOGLE_CONSENT_PRIVACY_URL} className="text-primary hover:underline">
                 privacy policy
               </a>{' '}
               spells out what we store, who processes it, how long it is kept, and how to have it deleted.
@@ -103,7 +103,7 @@ export default function AboutPage() {
             </p>
             <p className="mt-2">
               See also the{' '}
-              <a href={`${SITE_URL}/terms`} className="text-primary hover:underline">
+              <a href={GOOGLE_CONSENT_TERMS_URL} className="text-primary hover:underline">
                 terms of service
               </a>
               .
