@@ -145,3 +145,30 @@ export function addExcludedKeyword(words: string[], input: string): string[] | n
     if (words.some(w => w.toLowerCase() === lower)) return null;
     return [...words, word];
 }
+
+/**
+ * The department picker's search. Departments are listed by subject code (the
+ * catalog carries no department names), so "cs" finds CS, CSB and CSRE, but
+ * not ECOS.
+ */
+export function filterDepartments<T extends { code: string; name?: string }>(depts: T[], query: string): T[] {
+    const lower = query.toLowerCase().trim();
+    if (!lower) return depts;
+    return depts.filter(d => {
+        if (d.code.toLowerCase().startsWith(lower)) return true;
+        const nameLower = (d.name || '').toLowerCase();
+        if (nameLower.startsWith(lower)) return true;
+        return nameLower.split(/[\s-]+/).some(w => w.startsWith(lower));
+    });
+}
+
+/**
+ * What the department picker says when its search finds nothing. A blank list
+ * with no words read as broken; "computer science" finds nothing because the
+ * picker only knows codes, so say that.
+ */
+export function departmentSearchEmptyText(query: string): string | null {
+    const q = query.trim();
+    if (!q) return null;
+    return `No departments match \u201c${q}\u201d. Search by subject code, like CS or MATH.`;
+}
