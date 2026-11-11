@@ -42,6 +42,7 @@ export default function ConnectPage() {
         </p>
 
         <CopyField value={MCP_URL} label="the MCP address" />
+        <p className="mt-2 text-xs text-muted-foreground">Paste it exactly as shown, with the www.</p>
 
         <div className="space-y-10 mt-10 text-sm text-foreground/80 leading-relaxed">
           <section>
