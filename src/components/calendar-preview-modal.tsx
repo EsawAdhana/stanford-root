@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useId, useMemo, useState, useEffect, useRef } from 'react';
-import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { useCartStore } from '@/lib/cart-store';
 import { useCourseStore, getCoursesById } from '@/lib/store';
@@ -263,34 +263,37 @@ export function CalendarPreviewModal({
                         <CalendarPlus size={16} className="text-primary shrink-0" />
                         Preview: {course.subject} {course.code} — {term}
                     </DialogTitle>
-                    <div className="text-xs text-muted-foreground mt-1 flex flex-col gap-1.5">
-                        {section.meetings?.[0] ? (
-                            <>
-                                <div className="flex items-center gap-1.5 capitalize">
-                                    <Calendar size={14} strokeWidth={2.5} className="text-foreground shrink-0" />
-                                    <span>{(() => {
-                                        const days = (section.meetings[0].days || '').toLowerCase().split(/[,\s]+/);
-                                        return days.map(d => d.charAt(0).toUpperCase() + d.slice(1)).join(', ');
-                                    })()}</span>
-                                </div>
+                    {/* The meeting days, time and room double as the dialog's description. */}
+                    <DialogDescription asChild className="text-xs">
+                        <div className="text-xs text-muted-foreground mt-1 flex flex-col gap-1.5">
+                            {section.meetings?.[0] ? (
+                                <>
+                                    <div className="flex items-center gap-1.5 capitalize">
+                                        <Calendar size={14} strokeWidth={2.5} className="text-foreground shrink-0" />
+                                        <span>{(() => {
+                                            const days = (section.meetings[0].days || '').toLowerCase().split(/[,\s]+/);
+                                            return days.map(d => d.charAt(0).toUpperCase() + d.slice(1)).join(', ');
+                                        })()}</span>
+                                    </div>
+                                    <div className="flex items-center gap-1.5">
+                                        <Clock size={14} strokeWidth={2.5} className="text-foreground shrink-0" />
+                                        <span>{section.meetings[0].time ? stripSeconds(section.meetings[0].time) : 'TBA'}</span>
+                                    </div>
+                                    {section.meetings[0].location && section.meetings[0].location !== 'TBA' && (
+                                        <div className="flex items-center gap-1.5">
+                                            <MapPin size={14} strokeWidth={2.5} className="text-foreground shrink-0" />
+                                            <span className="truncate">{section.meetings[0].location}</span>
+                                        </div>
+                                    )}
+                                </>
+                            ) : (
                                 <div className="flex items-center gap-1.5">
                                     <Clock size={14} strokeWidth={2.5} className="text-foreground shrink-0" />
-                                    <span>{section.meetings[0].time ? stripSeconds(section.meetings[0].time) : 'TBA'}</span>
+                                    <span>Time TBA</span>
                                 </div>
-                                {section.meetings[0].location && section.meetings[0].location !== 'TBA' && (
-                                    <div className="flex items-center gap-1.5">
-                                        <MapPin size={14} strokeWidth={2.5} className="text-foreground shrink-0" />
-                                        <span className="truncate">{section.meetings[0].location}</span>
-                                    </div>
-                                )}
-                            </>
-                        ) : (
-                            <div className="flex items-center gap-1.5">
-                                <Clock size={14} strokeWidth={2.5} className="text-foreground shrink-0" />
-                                <span>Time TBA</span>
-                            </div>
-                        )}
-                    </div>
+                            )}
+                        </div>
+                    </DialogDescription>
                 </DialogHeader>
 
                 {/* Conflict warning */}
