@@ -27,7 +27,7 @@ import {
 } from '@/lib/instructors'
 import { serverCatalogPath, publicCatalogPath } from '@/lib/catalog-paths'
 
-type DumpRow = Record<string, unknown> & { course_id?: string; id?: string; subject?: string }
+export type DumpRow = Record<string, unknown> & { course_id?: string; id?: string; subject?: string }
 
 let fullById: Map<string, Course> | null = null
 let fullLoad: Promise<Map<string, Course>> | null = null
@@ -159,39 +159,98 @@ export async function getInstructorCoursesFromDump(entry: {
 }): Promise<DumpInstructorCourse[]> {
   try {
     const dir = await getInstructorDirectory()
-    const soleForInitial = (dir.namedByInitialSlug.get(entry.initialSlug)?.length ?? 0) === 1
-    const rows = await loadLightRows()
-    const out: DumpInstructorCourse[] = []
-    for (const row of rows) {
-      const instructors = (row.instructors as string[] | undefined) || []
-      if (instructors.length === 0 || !isGradeable(row.grading)) continue
-      const id = String(row.course_id || row.id || '')
-      if (!id) continue
-
-      const matches = instructors.some(raw => {
-        if (instructorSlug(raw) === entry.slug) return true
-        // Leftover "Last, F." rows: only attach when nobody else shares the initial.
-        if (!hasFullFirstName(parseInstructorName(raw).first)) {
-          return soleForInitial && instructorInitialSlug(raw) === entry.initialSlug
-        }
-        return false
-      })
-      if (!matches) continue
-
-      out.push({
-        id,
-        subject: String(row.subject || ''),
-        code: String(row.code || ''),
-        title: String(row.title || ''),
-        terms: ((row.terms as string[] | undefined) || []).slice(),
-        quality: row.quality != null && row.quality !== '' ? Number(row.quality) : null,
-        hours: row.hours != null && row.hours !== '' ? Number(row.hours) : null,
-      })
-    }
-    return collapseCrossListings(out, rows)
+    const index = await loadInstructorCourseIndex()
+    return lookupInstructorCourses(index, dir, entry)
   } catch {
     return []
   }
+}
+
+type CrossListPrimaryMap = ReturnType<typeof getCrossListPrimaryMap>
+
+/**
+ * Which light-dump rows each instructor spelling appears on.
+ *
+ * Every instructor page used to walk all ~9,000 rows and slug every one of their
+ * ~34,000 instructor strings, about 60 ms a page, and the build renders ~7,500 of
+ * those pages: that scan was most of the 14.7 minutes Vercel spent generating
+ * static pages. Building this once per process turns each page into two map
+ * lookups. Row indices stay in dump order so results come out in the order the
+ * scan produced them.
+ */
+export type InstructorCourseIndex = {
+  rows: DumpRow[]
+  /** instructorSlug(raw) to row indices, ascending. */
+  bySlug: Map<string, number[]>
+  /** instructorInitialSlug(raw) to row indices, for abbreviated "Last, F." spellings only. */
+  abbreviatedByInitial: Map<string, number[]>
+  /** Built on first use, since only instructors with two or more listings need it. */
+  primaryMap: CrossListPrimaryMap | null
+}
+
+export function buildInstructorCourseIndex(rows: DumpRow[]): InstructorCourseIndex {
+  const bySlug = new Map<string, number[]>()
+  const abbreviatedByInitial = new Map<string, number[]>()
+  const add = (map: Map<string, number[]>, key: string, i: number) => {
+    const list = map.get(key)
+    if (!list) map.set(key, [i])
+    else if (list[list.length - 1] !== i) list.push(i)
+  }
+  rows.forEach((row, i) => {
+    const instructors = (row.instructors as string[] | undefined) || []
+    if (instructors.length === 0 || !isGradeable(row.grading)) return
+    if (!String(row.course_id || row.id || '')) return
+    for (const raw of instructors) {
+      add(bySlug, instructorSlug(raw), i)
+      if (!hasFullFirstName(parseInstructorName(raw).first)) {
+        add(abbreviatedByInitial, instructorInitialSlug(raw), i)
+      }
+    }
+  })
+  return { rows, bySlug, abbreviatedByInitial, primaryMap: null }
+}
+
+/** The lookup behind getInstructorCoursesFromDump, separate so tests can feed it rows. */
+export function lookupInstructorCourses(
+  index: InstructorCourseIndex,
+  dir: InstructorDirectory,
+  entry: { slug: string; initialSlug: string },
+): DumpInstructorCourse[] {
+  const hits = new Set<number>(index.bySlug.get(entry.slug) ?? [])
+  // Leftover "Last, F." rows: only attach when nobody else shares the initial.
+  const soleForInitial = (dir.namedByInitialSlug.get(entry.initialSlug)?.length ?? 0) === 1
+  if (soleForInitial) {
+    for (const i of index.abbreviatedByInitial.get(entry.initialSlug) ?? []) hits.add(i)
+  }
+  const out: DumpInstructorCourse[] = []
+  for (const i of [...hits].sort((a, b) => a - b)) {
+    const row = index.rows[i]
+    out.push({
+      id: String(row.course_id || row.id || ''),
+      subject: String(row.subject || ''),
+      code: String(row.code || ''),
+      title: String(row.title || ''),
+      terms: ((row.terms as string[] | undefined) || []).slice(),
+      quality: row.quality != null && row.quality !== '' ? Number(row.quality) : null,
+      hours: row.hours != null && row.hours !== '' ? Number(row.hours) : null,
+    })
+  }
+  if (out.length < 2) return out
+  if (!index.primaryMap) {
+    index.primaryMap = getCrossListPrimaryMap(
+      index.rows.map(r => ({ id: String(r.course_id || r.id || ''), title: String(r.title ?? '') }))
+    )
+  }
+  return collapseCrossListings(out, index.primaryMap)
+}
+
+let instructorCourseIndex: InstructorCourseIndex | null = null
+
+/** One index per process, rebuilt if the loaded rows are ever a different array. */
+async function loadInstructorCourseIndex(): Promise<InstructorCourseIndex> {
+  const rows = await loadLightRows()
+  if (instructorCourseIndex?.rows !== rows) instructorCourseIndex = buildInstructorCourseIndex(rows)
+  return instructorCourseIndex
 }
 
 /**
@@ -204,12 +263,9 @@ export async function getInstructorCoursesFromDump(entry: {
  */
 function collapseCrossListings(
   found: DumpInstructorCourse[],
-  rows: DumpRow[],
+  primaryMap: CrossListPrimaryMap,
 ): DumpInstructorCourse[] {
   if (found.length < 2) return found
-  const primaryMap = getCrossListPrimaryMap(
-    rows.map(r => ({ id: String(r.course_id || r.id || ''), title: String(r.title ?? '') }))
-  )
   const kept = new Map<string, DumpInstructorCourse>()
   for (const course of found) {
     const canonical = resolveToCanonicalPrimary(normalizeCourseId(course.id), primaryMap)
