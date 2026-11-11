@@ -132,3 +132,16 @@ export function searchCourses(courses: Course[], query: string): Course[] {
 
     return result;
 }
+
+/**
+ * The exclude list after the student types a keyword and presses Enter, or null
+ * when there is nothing to add. Exclusion ignores case, so "intro" and "INTRO"
+ * are one keyword and one chip, not two.
+ */
+export function addExcludedKeyword(words: string[], input: string): string[] | null {
+    const word = input.trim();
+    if (!word) return null;
+    const lower = word.toLowerCase();
+    if (words.some(w => w.toLowerCase() === lower)) return null;
+    return [...words, word];
+}

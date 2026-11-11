@@ -5,7 +5,7 @@ import { useCourseStore } from '@/lib/store';
 import { useCartStore } from '@/lib/cart-store';
 import { useQueryState, parseAsArrayOf, parseAsString, parseAsBoolean, parseAsInteger } from 'nuqs';
 import { cn, getSchoolFromSubject, abbreviateGer, unitsLabel, formatComponent, isAllowedGer, formatLevel, parseUnitsOptions, getCrossListPrimaryMap } from '@/lib/utils';
-import { searchCourses } from '@/lib/search-utils';
+import { searchCourses, addExcludedKeyword } from '@/lib/search-utils';
 import { filterCoursesForFacets, COUNTED_FACET_KEYS, type CourseFilterCriteria } from '@/lib/course-filter';
 import { formatMinutes } from '@/lib/schedule-utils';
 import { compareTerms } from '@/lib/terms';
@@ -315,10 +315,8 @@ export function FilterSidebar() {
 
     const handleAddExclude = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter' && excludeInput.trim()) {
-            const newWord = excludeInput.trim();
-            if (!excludedWords.includes(newWord)) {
-                setExcludedWords([...excludedWords, newWord]);
-            }
+            const next = addExcludedKeyword(excludedWords, excludeInput);
+            if (next) setExcludedWords(next);
             setExcludeInput('');
         }
     };
