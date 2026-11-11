@@ -7,36 +7,36 @@ import { useEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { track } from '@/lib/analytics';
 import { useFindShortcut } from '@/hooks/use-find-shortcut';
+import { createSearchBoxSync } from '@/lib/search-box-sync';
 
 export function SearchBar() {
   const pathname = usePathname();
   const [query, setQuery] = useQueryState('q', { defaultValue: '', shallow: true })
   const [localValue, setLocalValue] = useState(query);
   const inputRef = useRef<HTMLInputElement>(null);
-  const debounceRef = useRef<number | null>(null)
   const lastTrackedRef = useRef('')
+  const setQueryRef = useRef(setQuery)
+  useEffect(() => { setQueryRef.current = setQuery }, [setQuery])
+
+  // The box is the source of truth while it is in use; ?q= only replaces its
+  // text when something else changed it (Back, Clear all). See search-box-sync.
+  const [sync] = useState(() => createSearchBoxSync({
+    initial: query,
+    commit: q => setQueryRef.current(q),
+    onValue: setLocalValue,
+  }))
 
   useEffect(() => {
-    setLocalValue(query);
-  }, [query]);
+    sync.urlChanged(query);
+  }, [sync, query]);
 
-  useEffect(() => {
-    if (debounceRef.current) window.clearTimeout(debounceRef.current)
-    debounceRef.current = window.setTimeout(() => {
-      setQuery(localValue.trim() ? localValue : null)
-    }, 250)
+  useEffect(() => () => sync.dispose(), [sync])
 
-    return () => {
-      if (debounceRef.current) window.clearTimeout(debounceRef.current)
-    }
-  }, [localValue, setQuery])
-
-  // Track only on commit (Enter/blur), not per debounced keystroke — otherwise
+  // Track only on commit (Enter/blur), not per debounced keystroke, otherwise
   // typing a sentence fires a beacon per word.
   const commitQuery = () => {
-    if (debounceRef.current) window.clearTimeout(debounceRef.current)
-    const trimmed = localValue.trim()
-    setQuery(trimmed ? localValue : null)
+    sync.flush()
+    const trimmed = sync.value.trim()
     if (trimmed && trimmed !== lastTrackedRef.current) {
       lastTrackedRef.current = trimmed
       track('search_performed', { length: trimmed.length })
@@ -65,6 +65,7 @@ export function SearchBar() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setLocalValue(e.target.value);
+    sync.type(e.target.value);
   };
 
   return (
