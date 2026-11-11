@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { pickSectionsForTerm, parseMeetingTimes, stripSeconds, standInSectionChanged, parseDays, scheduledCrossListMember } from '@/lib/schedule-utils'
+import { pickSectionsForTerm, parseMeetingTimes, stripSeconds, parseDays, scheduledCrossListMember } from '@/lib/schedule-utils'
 import { getCrossListPrimaryMap } from '@/lib/utils'
 import type { Course, Section } from '@/types/course'
 
@@ -121,39 +121,6 @@ describe('pickSectionsForTerm — explicit picks win', () => {
       section({ classId: 2, component: 'LEC', term: TERM, meetings: [meeting('Friday', '1:30:00 PM – 2:20:00 PM')] }),
     ])
     expect(pickSectionsForTerm(c, TERM).map(s => s.classId)).toEqual([2])
-  })
-})
-
-describe('standInSectionChanged — who gets the one-off notice', () => {
-  const lectureLast = [
-    section({ classId: 1, component: 'DIS', sectionNumber: '10', meetings: [meeting('Wednesday', '5:30:00 PM – 6:20:00 PM')] }),
-    section({ classId: 3, component: 'LEC', sectionNumber: '01', meetings: [meeting('Monday', '11:30:00 AM – 12:20:00 PM')] }),
-  ]
-
-  it('flags an unpicked course whose stand-in moved off the old index-0 section', () => {
-    expect(standInSectionChanged(course(lectureLast), TERM)).toBe(true)
-  })
-
-  it('stays quiet when the lecture was already first', () => {
-    const lectureFirst = [lectureLast[1], lectureLast[0]]
-    expect(standInSectionChanged(course(lectureFirst), TERM)).toBe(false)
-  })
-
-  it('stays quiet when the user picked a section themselves', () => {
-    expect(standInSectionChanged({ ...course(lectureLast), selectedSectionIds: [1] }, TERM)).toBe(false)
-  })
-
-  it('stays quiet for a single-section course', () => {
-    const one = [section({ classId: 9, component: 'LEC', meetings: [meeting('Friday', '9:30:00 AM – 10:20:00 AM')] })]
-    expect(standInSectionChanged(course(one), TERM)).toBe(false)
-  })
-
-  it('ignores sections outside the saved term', () => {
-    const c = course([
-      section({ classId: 1, component: 'DIS', term: 'Winter 2027', meetings: [meeting('Wednesday', '5:30:00 PM – 6:20:00 PM')] }),
-      section({ classId: 2, component: 'LEC', term: TERM, meetings: [meeting('Monday', '11:30:00 AM – 12:20:00 PM')] }),
-    ])
-    expect(standInSectionChanged(c, TERM)).toBe(false)
   })
 })
 

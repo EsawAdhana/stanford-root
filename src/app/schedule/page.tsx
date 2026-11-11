@@ -22,7 +22,6 @@ import { PlanStats, PlanTabs } from '@/components/plan-tabs';
 import { Logo } from '@/components/logo';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { SchedulePageShell } from '@/components/schedule-page-shell';
-import { ScheduleTimesNotice } from '@/components/schedule-times-notice';
 import { ScheduleSourceNotice } from '@/components/schedule-source-notice';
 import { parseMeetingTimes, timeToMinutes, parseDays, isScheduledForTerm } from '@/lib/schedule-utils';
 import { getDefaultTerm, getApproxTermStart } from '@/lib/terms';
@@ -422,7 +421,6 @@ END:VEVENT
   return (
     <div className="flex flex-col h-screen bg-background">
       <ScheduleSourceNotice />
-      <ScheduleTimesNotice />
       {/* Header */}
       <header className="flex-none h-16 md:h-16 h-auto md:py-0 py-2 border-b bg-card">
         <div className="h-full w-full max-w-[100rem] mx-auto px-4 md:px-6 flex items-center justify-between">

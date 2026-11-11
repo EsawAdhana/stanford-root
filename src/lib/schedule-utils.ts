@@ -297,23 +297,6 @@ export function scheduledSectionIds(
 }
 
 /**
- * True when the stand-in section for an unpicked course differs from the one
- * the old index-0 fallback showed — i.e. this course's time visibly moved on
- * saved calendars when the primary-component fix shipped. Drives the one-off
- * notice on the schedule page, so only people whose calendar actually changed
- * are told about it.
- */
-export function standInSectionChanged(course: Course, term?: string): boolean {
-  if (course.selectedSectionIds?.length) return false
-
-  const sections = course.sections || []
-  const sectionsForTerm = term ? sections.filter(s => s.term === term) : sections
-  if (sectionsForTerm.length < 2) return false
-
-  return standInSection(sectionsForTerm).classId !== sectionsForTerm[0].classId
-}
-
-/**
  * Adds a section to a selection, dropping any existing pick that shares its
  * component and term.
  *
