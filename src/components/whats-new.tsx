@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { X } from 'lucide-react';
@@ -17,15 +17,16 @@ import { useCartStore } from '@/lib/cart-store';
 import { useAuthStore } from '@/lib/auth-store';
 import { cartHydrated } from '@/lib/cart-hydration';
 import { track } from '@/lib/analytics';
-import { isSharedSchedulePath } from '@/lib/whats-new';
+import { isReturningVisitor, isSharedSchedulePath, onceForPageLoad } from '@/lib/whats-new';
 
 /**
  * A one-time carousel announcing the November 2026 schedule features and the
  * Stanford Root MCP (its last slide links to /connect).
  *
  * Shown once per browser, and only to people who have used the schedule
- * before (a saved class in this browser, or signed in). A first-time visitor
- * arriving on a course page from a search engine has nothing to compare
+ * before (a saved class in this browser when the page loaded, or signed in).
+ * A first-time visitor, including one who adds a class during this visit,
+ * has nothing to compare
  * against, so a "what's new" card would only be in their way.
  *
  * Bump SEEN_KEY for the next announcement; the old key is simply ignored.
@@ -62,6 +63,38 @@ const SLIDES = [
   },
 ] as const;
 
+/** Longest wait for the first session check before treating the visitor as signed out. */
+const AUTH_WAIT_MS = 5000;
+
+function firstSessionCheck(): Promise<boolean> {
+  return new Promise(resolve => {
+    const done = () => {
+      unsubscribe();
+      clearTimeout(timer);
+      resolve(useAuthStore.getState().user !== null);
+    };
+    const timer = setTimeout(done, AUTH_WAIT_MS);
+    const unsubscribe = useAuthStore.subscribe(s => { if (!s.isLoading) done(); });
+    if (!useAuthStore.getState().isLoading) done();
+  });
+}
+
+/**
+ * Whether this page load belongs to a returning student, decided once from
+ * the cart as it was read back from storage and the first session check.
+ * Adding a first class later in the visit must not make the card appear.
+ */
+const returningAtLoad = onceForPageLoad(async () => {
+  await cartHydrated;
+  const savedClasses = useCartStore.getState().items.length;
+  const signedIn = await firstSessionCheck();
+  return isReturningVisitor({ savedClasses, signedIn });
+});
+
+// Take the cart snapshot as soon as this module loads, which is during the
+// first render of the app, before the visitor can add anything.
+if (typeof window !== 'undefined') void returningAtLoad();
+
 function alreadySeen(): boolean {
   try {
     return window.localStorage.getItem(SEEN_KEY) !== null;
@@ -90,12 +123,10 @@ export function WhatsNew() {
 
     let cancelled = false;
     let timer: ReturnType<typeof setTimeout> | undefined;
-    cartHydrated.then(() => {
-      if (cancelled) return;
+    returningAtLoad().then(returning => {
+      if (cancelled || !returning) return;
       timer = setTimeout(() => {
         if (cancelled || alreadySeen()) return;
-        const returning = useCartStore.getState().items.length > 0 || useAuthStore.getState().user !== null;
-        if (!returning) return;
         markSeen();
         setOpen(true);
         track('whats_new_shown', { path: pathname ?? '' });
