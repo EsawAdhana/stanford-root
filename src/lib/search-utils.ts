@@ -1,6 +1,33 @@
 import type { Course } from '@/types/course';
 import { getAlternateCourseCodesFromTitle, normalizeCourseId } from '@/lib/utils';
 
+const nameTokens = (s: string) =>
+    s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').split(/[\s,.]+/).filter(Boolean);
+
+/**
+ * Whether a multi-word query names this instructor, in either order and with or
+ * without the comma: "Mehran Sahami", "sahami mehran" and "Sahami, Mehran" all
+ * name "Sahami, Mehran". Catalog entries often carry only an initial
+ * ("Sahami, M."), so a query word also matches an initial it starts with, but
+ * at least one word has to match a whole name, or "mehran sahami" would match
+ * every "Smith, M. S.".
+ */
+export function queryNamesInstructor(query: string, instructor: string): boolean {
+    const words = nameTokens(query);
+    if (words.length < 2) return false;
+    const parts = nameTokens(instructor);
+    const used = new Set<number>();
+    let wholeNames = 0;
+    for (const word of words) {
+        let at = parts.findIndex((p, i) => !used.has(i) && p === word);
+        if (at >= 0) wholeNames++;
+        else at = parts.findIndex((p, i) => !used.has(i) && p.length === 1 && word.startsWith(p));
+        if (at < 0) return false;
+        used.add(at);
+    }
+    return wholeNames > 0;
+}
+
 /**
  * Filters a list of courses based on a search query.
  * This function encapsulates the core text-matching logic used across the application.
@@ -70,7 +97,7 @@ export function searchCourses(courses: Course[], query: string): Course[] {
                 const alts = getAlternateCourseCodesFromTitle(c.title || '');
                 if (alts.some(alt => alt === queryNorm)) return true;
             }
-            if (c.instructors && c.instructors.some(i => i.toLowerCase().includes(lowerQuery))) return true;
+            if (c.instructors && c.instructors.some(i => i.toLowerCase().includes(lowerQuery) || queryNamesInstructor(lowerQuery, i))) return true;
             return false;
         });
     }
