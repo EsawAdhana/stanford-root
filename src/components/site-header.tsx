@@ -26,15 +26,16 @@ export function SiteHeader() {
     const isLoading = useAuthStore(s => s.isLoading);
     const signOut = useAuthStore(s => s.signOut);
 
-    // The "New" tag on the MCP link stays until this browser has opened /connect once.
+    // The MCP link reads "New" with a red dot until this browser has opened /connect once,
+    // then "MCP". Unknown until storage is read, so the label waits instead of flipping.
     const isConnect = pathname === '/connect';
-    const [mcpIsNew, setMcpIsNew] = useState(false);
+    const [mcpIsNew, setMcpIsNew] = useState<boolean | null>(null);
     useEffect(() => {
         try {
             if (isConnect) localStorage.setItem(MCP_SEEN_KEY, '1');
             setMcpIsNew(localStorage.getItem(MCP_SEEN_KEY) !== '1');
         } catch {
-            // Storage can be blocked; the link still works without the tag.
+            setMcpIsNew(false);
         }
     }, [isConnect]);
 
@@ -84,15 +85,11 @@ export function SiteHeader() {
                     <Button
                         asChild
                         variant="ghost"
-                        className="relative hidden lg:inline-flex rounded-lg h-9 px-4 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-secondary/80 transition-all"
+                        className="relative hidden lg:inline-flex rounded-lg h-9 w-16 px-0 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-secondary/80 transition-all"
                     >
-                        <Link href="/connect">
-                            MCP
-                            {mcpIsNew && (
-                                <span className="absolute -top-1 -right-1 rounded-full bg-primary px-1.5 py-px text-[10px] font-semibold leading-4 text-primary-foreground">
-                                    New
-                                </span>
-                            )}
+                        <Link href="/connect" aria-label={mcpIsNew ? 'New: Stanford Root MCP' : 'Stanford Root MCP'}>
+                            <span className={mcpIsNew === null ? 'invisible' : undefined}>{mcpIsNew ? 'New' : 'MCP'}</span>
+                            {mcpIsNew && <span aria-hidden className="absolute top-1.5 right-2.5 h-2 w-2 rounded-full bg-primary" />}
                         </Link>
                     </Button>
                 )}
