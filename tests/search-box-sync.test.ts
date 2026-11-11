@@ -124,4 +124,53 @@ describe('search box and ?q=', () => {
     h.sync.flush()
     expect(h.url.writes).toEqual(['a', null])
   })
+
+  // Any ?q= write while a link click is navigating cancels the navigation (Next
+  // treats the replaceState as a newer action), so a course card clicked right
+  // after typing only blurred the box. Reproduced in a production build: type
+  // "writing", click the second card, and the page stays on the catalog.
+  describe('blurring the box by pressing a link', () => {
+    it('writes nothing when ?q= already holds the text', () => {
+      const h = harness({ renderMs: 20, rereadMs: 400 })
+      for (const ch of 'writing') h.type(ch)
+      vi.advanceTimersByTime(1000)
+      expect(h.url.writes).toEqual(['writing'])
+      h.sync.holdForLink()
+      h.sync.flush()
+      h.sync.releaseLink(true)
+      vi.advanceTimersByTime(5000)
+      expect(h.url.writes).toEqual(['writing'])
+    })
+
+    it('holds a pending search while the click resolves, and drops it if the link navigates', () => {
+      const h = harness({ renderMs: 20, rereadMs: 400 })
+      for (const ch of 'writing') h.type(ch)
+      vi.advanceTimersByTime(100)
+      h.sync.holdForLink()
+      vi.advanceTimersByTime(1000)
+      expect(h.url.writes).toEqual([])
+      h.sync.releaseLink(true)
+      vi.advanceTimersByTime(5000)
+      expect(h.url.writes).toEqual([])
+    })
+
+    it('commits the held search when the press did not navigate', () => {
+      const h = harness({ renderMs: 20, rereadMs: 400 })
+      for (const ch of 'writing') h.type(ch)
+      vi.advanceTimersByTime(100)
+      h.sync.holdForLink()
+      h.sync.releaseLink(false)
+      expect(h.url.writes).toEqual(['writing'])
+    })
+
+    it('typing again after a hold debounces as usual', () => {
+      const h = harness({ renderMs: 20, rereadMs: 400 })
+      h.type('w')
+      h.sync.holdForLink()
+      h.type('r')
+      h.sync.releaseLink(true)
+      vi.advanceTimersByTime(SEARCH_DEBOUNCE_MS)
+      expect(h.url.writes).toEqual(['wr'])
+    })
+  })
 })

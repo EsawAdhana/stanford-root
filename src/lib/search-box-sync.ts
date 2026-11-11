@@ -30,8 +30,22 @@ export type SearchBoxSync = {
   type(value: string): void
   /** ?q= changed. Replaces the box's text only when the change didn't come from the box. */
   urlChanged(query: string): void
-  /** Commit now (Enter). */
+  /**
+   * Commit now (Enter, or the box lost focus). Writes nothing when ?q= already
+   * holds the text: any ?q= write while a link click is navigating cancels the
+   * navigation, so a card clicked right after a search needed a second click.
+   */
   flush(): void
+  /**
+   * The box lost focus to a press on a link. Hold the pending commit until the
+   * click resolves, since writing ?q= now would cancel the navigation.
+   */
+  holdForLink(): void
+  /**
+   * The press that blurred the box is over. If it started a navigation, the
+   * pending text is dropped (the catalog is going away); otherwise it commits.
+   */
+  releaseLink(navigating: boolean): void
   /** Cancel any pending commit (unmount). */
   dispose(): void
 }
@@ -55,6 +69,7 @@ export function createSearchBoxSync({ initial, commit, onValue, delayMs = SEARCH
   // Values the box wrote recently, with when, so their echoes can be recognised.
   let recentWrites: { query: string; at: number }[] = []
   let timer: ReturnType<typeof setTimeout> | null = null
+  let held = false
 
   const cancel = () => {
     if (timer != null) clearTimeout(timer)
@@ -63,6 +78,7 @@ export function createSearchBoxSync({ initial, commit, onValue, delayMs = SEARCH
 
   const write = () => {
     cancel()
+    held = false
     const next = urlForm(value)
     if (next === committed) return
     committed = next
@@ -76,6 +92,7 @@ export function createSearchBoxSync({ initial, commit, onValue, delayMs = SEARCH
     get value() { return value },
     type(next) {
       value = next
+      held = false
       cancel()
       timer = setTimeout(write, delayMs)
     },
@@ -84,12 +101,23 @@ export function createSearchBoxSync({ initial, commit, onValue, delayMs = SEARCH
       const now = Date.now()
       if (recentWrites.some(w => w.query === query && now - w.at < ECHO_WINDOW_MS)) return
       cancel()
+      held = false
       recentWrites = []
       committed = query
       value = query
       onValue(query)
     },
     flush: write,
+    holdForLink() {
+      if (timer == null) return
+      cancel()
+      held = true
+    },
+    releaseLink(navigating) {
+      if (!held) return
+      held = false
+      if (!navigating) write()
+    },
     dispose: cancel,
   }
 }

@@ -63,6 +63,49 @@ export function SearchBar() {
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, []);
 
+  // Pressing a link blurs the box before the click lands. Writing ?q= in that
+  // gap cancelled the link's navigation (the card needed a second click), so a
+  // blur caused by a link press holds the pending search until the click
+  // resolves: dropped if the link navigated, committed if it didn't.
+  const linkPressAtRef = useRef(0)
+  useEffect(() => {
+    const onPointerDown = (e: PointerEvent) => {
+      const onLink = e.button === 0 && e.target instanceof Element && e.target.closest('a[href]') != null
+      linkPressAtRef.current = onLink ? Date.now() : 0
+    }
+    document.addEventListener('pointerdown', onPointerDown, true)
+    return () => document.removeEventListener('pointerdown', onPointerDown, true)
+  }, [])
+
+  const handleBlur = () => {
+    const pressedLink = Date.now() - linkPressAtRef.current < 1000
+    linkPressAtRef.current = 0
+    if (!pressedLink) {
+      commitQuery()
+      return
+    }
+    sync.holdForLink()
+    let settled = false
+    const settle = (navigating: boolean) => {
+      if (settled) return
+      settled = true
+      window.removeEventListener('click', onClick)
+      window.removeEventListener('pointerup', onPointerUp, true)
+      if (navigating) sync.releaseLink(true)
+      else commitQuery()
+    }
+    // Window listeners run after React's, so defaultPrevented here means
+    // Next's Link took the click and is navigating.
+    const onClick = (e: MouseEvent) => settle(e.defaultPrevented)
+    // No click at all (the pointer slid off the link): commit as a plain blur.
+    const onPointerUp = () => { window.setTimeout(() => settle(false), 300) }
+    window.addEventListener('click', onClick)
+    window.addEventListener('pointerup', onPointerUp, true)
+    // A press held past this is not a quick click; committing before its click
+    // is safe, since a navigation that starts later still wins.
+    window.setTimeout(() => settle(false), 1500)
+  }
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setLocalValue(e.target.value);
     sync.type(e.target.value);
@@ -83,7 +126,7 @@ export function SearchBar() {
           if (e.key !== 'Enter') return
           commitQuery()
         }}
-        onBlur={commitQuery}
+        onBlur={handleBlur}
       />
       <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5 pointer-events-none">
         <kbd className="hidden sm:inline-flex items-center gap-0.5 rounded-md border border-border/40 bg-background/60 px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground/40 shadow-[0_1px_0_0_hsl(var(--border)/0.3)]">
