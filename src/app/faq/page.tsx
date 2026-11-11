@@ -1,11 +1,14 @@
-import type { Metadata } from 'next'
+import type { Metadata, ResolvingMetadata } from 'next'
 import { Suspense } from 'react'
 import { SiteHeader } from '@/components/site-header'
+import { pageMetadata } from '@/lib/page-metadata'
 
-export const metadata: Metadata = {
-  title: 'FAQ — Stanford Root',
-  description: 'Where course data comes from, why evaluations need Stanford sign-in, and how feedback works.',
-  alternates: { canonical: '/faq' },
+export async function generateMetadata(_: unknown, parent: ResolvingMetadata): Promise<Metadata> {
+  return pageMetadata(parent, {
+    title: 'FAQ — Stanford Root',
+    description: 'Where course data comes from, why evaluations need Stanford sign-in, and how feedback works.',
+    path: '/faq',
+  })
 }
 
 export default function FaqPage() {

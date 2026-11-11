@@ -4,14 +4,13 @@ import { SiteHeader } from '@/components/site-header';
 import { Button } from '@/components/ui/button';
 import { Suspense } from 'react';
 
-// notFound() resolves softly here: this page is served with a 200, which the
-// live site already does for an unknown /courses or /instructors path. That
-// mattered less when junk had to sit under a known prefix. Course and
-// department pages now live at the root, so every mistyped path in the
-// namespace lands here, and without this Google would be free to index all of
-// them as real pages.
+// Next.js adds its own `<meta name="robots" content="noindex">` to this page,
+// so it sets no robots of its own: a second, different robots tag is noise.
+// Unknown course, department and instructor paths now get a real 404 status
+// (dynamicParams = false on those routes), which is what keeps them out of
+// Google's index.
 export const metadata: Metadata = {
-  robots: { index: false, follow: false },
+  title: 'Page Not Found — Stanford Root',
 };
 
 export default function NotFound() {

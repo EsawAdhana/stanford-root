@@ -1,12 +1,16 @@
 import Link from 'next/link'
 import { Suspense } from 'react'
-import type { Metadata } from 'next'
+import type { Metadata, ResolvingMetadata } from 'next'
 import { SiteHeader } from '@/components/site-header'
+import { pageMetadata } from '@/lib/page-metadata'
 
-export const metadata: Metadata = {
-  title: 'Terms of Service — Stanford Root',
-  alternates: { canonical: '/terms' },
-};
+export async function generateMetadata(_: unknown, parent: ResolvingMetadata): Promise<Metadata> {
+  return pageMetadata(parent, {
+    title: 'Terms of Service — Stanford Root',
+    description: 'The terms for using Stanford Root, the free course search and schedule planner for Stanford students.',
+    path: '/terms',
+  })
+}
 
 export default function TermsPage() {
   return (

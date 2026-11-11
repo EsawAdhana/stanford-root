@@ -16,7 +16,6 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 export function SiteHeader() {
     const pathname = usePathname();
     const searchParams = useSearchParams();
-    const isFaq = pathname.toLowerCase() === '/faq';
     const isCatalog = pathname === '/';
     // Scoped selectors so the header (mounted on every page) doesn't re-render
     // on unrelated auth-store changes (e.g. isSigningIn toggles).
@@ -41,9 +40,9 @@ export function SiteHeader() {
     }, [pathname, searchParams]);
 
     return (
-        <header className="flex-none h-14 sm:h-16 md:h-16 border-b border-border/50 flex items-center gap-2 md:gap-4 bg-background/90 backdrop-blur-xl sticky top-0 z-30 transition-all duration-300 justify-between px-2 sm:px-0">
+        <header className="flex-none h-14 sm:h-16 md:h-16 border-b border-border/50 flex items-center gap-1.5 sm:gap-2 md:gap-4 bg-background/90 backdrop-blur-xl sticky top-0 z-30 transition-all duration-300 justify-between px-2 sm:px-0">
             {/* Left: Logo + Filters (sheet) */}
-            <div className="flex items-center gap-2 md:gap-4 shrink-0 md:w-[270px] pl-2 sm:pl-4 md:pl-0 md:justify-center">
+            <div className="flex items-center gap-1 sm:gap-2 md:gap-4 shrink-0 md:w-[270px] pl-2 sm:pl-4 md:pl-0 md:justify-center">
                 {isCatalog && <MobileFilterMenu />}
 
                 <Link href={homeHref} className="flex items-center gap-2.5 md:min-w-[120px] group py-1 px-1 sm:px-2 -ml-1 sm:-ml-2 rounded-lg hover:bg-secondary/50 transition-colors">
@@ -55,7 +54,7 @@ export function SiteHeader() {
             </div>
 
             {isCatalog && (
-                <div className="flex-1 flex flex-col justify-center md:justify-start px-1 sm:px-2 md:px-0 min-w-0">
+                <div className="flex-1 flex flex-col justify-center md:justify-start sm:px-2 md:px-0 min-w-0">
                     <div className="w-full">
                         <SearchBar />
                     </div>
@@ -63,28 +62,33 @@ export function SiteHeader() {
             )}
 
             {/* Right: Actions */}
-            <div className="flex items-center justify-end gap-1.5 sm:gap-2 shrink-0 pr-2 sm:pr-4 md:pr-6">
-                <ThemeToggle />
+            <div className="flex items-center justify-end gap-1 sm:gap-2 shrink-0 sm:pr-4 md:pr-6">
+                {/* On a phone the catalog header also holds the filter button and
+                    the search box, and with the toggle too the box shrank to about
+                    60px, read "Sear", and slid under the toggle at 320px. The theme
+                    follows the system by default and the toggle is still in the
+                    header of every other page. */}
+                <div className={isCatalog ? 'hidden sm:flex' : 'flex'}>
+                    <ThemeToggle />
+                </div>
 
-                {!isFaq && (
-                    <Button
-                        asChild
-                        variant="ghost"
-                        className="relative rounded-lg h-9 w-9 px-0 md:w-auto md:px-4 text-sm font-medium gap-2 text-muted-foreground hover:text-foreground hover:bg-secondary/80 transition-all"
-                    >
-                        <Link href={scheduleHref} aria-label="Schedule">
-                            <CalendarDays className="h-5 w-5 md:h-4 md:w-4" />
-                            <span className="hidden md:inline">Schedule</span>
-                        </Link>
-                    </Button>
-                )}
+                <Button
+                    asChild
+                    variant="ghost"
+                    className="relative rounded-lg h-9 w-9 px-0 md:w-auto md:px-4 text-sm font-medium gap-2 text-muted-foreground hover:text-foreground hover:bg-secondary/80 transition-all"
+                >
+                    <Link href={scheduleHref} aria-label="Schedule">
+                        <CalendarDays className="h-5 w-5 md:h-4 md:w-4" />
+                        <span className="hidden md:inline">Schedule</span>
+                    </Link>
+                </Button>
 
                 {!user && !isLoading && (
                     <StanfordLoginButton
                         source="header"
                         size="default"
                         signingInLabel="Signing in…"
-                        className="ml-1 rounded-lg h-9 px-4 text-sm font-medium gap-2"
+                        className="ml-0.5 sm:ml-1 rounded-lg h-9 px-3 sm:px-4 text-sm font-medium gap-2"
                     >
                         Log in
                     </StanfordLoginButton>

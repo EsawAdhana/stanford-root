@@ -1,14 +1,17 @@
 import Link from 'next/link'
 import { Suspense } from 'react'
-import { Metadata } from 'next'
+import type { Metadata, ResolvingMetadata } from 'next'
 import { SiteHeader } from '@/components/site-header'
 import { GOOGLE_CONSENT_PRIVACY_URL, GOOGLE_CONSENT_TERMS_URL } from '@/lib/site'
+import { pageMetadata } from '@/lib/page-metadata'
 
-export const metadata: Metadata = {
-  title: 'About Stanford Root',
-  description:
-    'Stanford Root is a free course search and schedule planner for Stanford students: the full course catalog, real student course evaluations, and a conflict-free weekly schedule.',
-  alternates: { canonical: '/about' },
+export async function generateMetadata(_: unknown, parent: ResolvingMetadata): Promise<Metadata> {
+  return pageMetadata(parent, {
+    title: 'About Stanford Root',
+    description:
+      'Stanford Root is a free course search and schedule planner for Stanford students: the full course catalog, real student course evaluations, and a conflict-free weekly schedule.',
+    path: '/about',
+  })
 }
 
 /**

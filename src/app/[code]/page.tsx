@@ -21,6 +21,16 @@ import { DepartmentView } from './department-view';
 export const revalidate = 86400;
 
 /**
+ * Only the codes generateStaticParams lists are pages; anything else is a real
+ * 404. With on-demand rendering, an unknown path like /ZZZ999 or
+ * /this-is-not-a-page came back as a 200 carrying the not-found body. The
+ * catalog is a committed file, so the build already knows every valid code.
+ * The loose spellings this page used to redirect (`/cs106b`, `/CS%20106B`,
+ * `/cs`) are redirected by src/middleware.ts before they get here.
+ */
+export const dynamicParams = false;
+
+/**
  * Prerender every course and department page at build time. The catalog is a
  * local JSON file, so this needs no database, and it is what makes these pages
  * CDN-cacheable instead of re-rendered per view.

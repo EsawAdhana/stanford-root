@@ -1,17 +1,20 @@
 import Link from 'next/link'
 import { Suspense } from 'react'
-import type { Metadata } from 'next'
+import type { Metadata, ResolvingMetadata } from 'next'
 import { SiteHeader } from '@/components/site-header'
+import { pageMetadata } from '@/lib/page-metadata'
 import { getDepartments } from '@/lib/departments'
 
 // Do not make deployments depend on production database availability.
 export const dynamic = 'force-dynamic'
 
-export const metadata: Metadata = {
-  title: 'Stanford Departments — Browse Courses by Department — Stanford Root',
-  description:
-    "Browse Stanford's course catalog by department. Every department's full course list with student evaluation ratings and hours per week.",
-  alternates: { canonical: '/departments' },
+export async function generateMetadata(_: unknown, parent: ResolvingMetadata): Promise<Metadata> {
+  return pageMetadata(parent, {
+    title: 'Stanford Departments — Browse Courses by Department — Stanford Root',
+    description:
+      "Browse Stanford's course catalog by department. Every department's full course list with student evaluation ratings and hours per week.",
+    path: '/departments',
+  })
 }
 
 export default async function DepartmentsPage() {
