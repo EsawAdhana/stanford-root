@@ -1,5 +1,63 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { isBlockedCrawler } from '@/lib/blocked-crawlers'
+import { normalizeCourseId } from '@/lib/cross-list.mjs'
+
+/**
+ * Top-level routes that are not course or department codes. None of them looks
+ * like a course code today, because a course code needs a digit, so this list is
+ * a second guard: a future top-level route with a digit in its name is never
+ * rewritten into a course URL as long as it is added here.
+ */
+const RESERVED_ROOT_SEGMENTS = new Set([
+  'about', 'api', 'auth', 'connect', 'connected-apps', 'departments', 'faq',
+  'instructors', 'oauth', 'privacy', 's', 'schedule', 'terms', '_next',
+  'opengraph-image', 'twitter-image', 'icon', 'apple-icon', 'manifest.webmanifest',
+  'robots.txt', 'sitemap.xml', 'favicon.ico',
+])
+
+/**
+ * Subject letters (and `&`, as in MS&E), an optional `-` or `.` between subject
+ * and number, then the number with its letter suffix. Whitespace is dropped
+ * before matching, so `CS 106B` and `cs106b` both fit.
+ */
+const COURSE_CODE_SHAPE = /^([A-Za-z&]+)[.-]?(\d[A-Za-z0-9]*)$/
+
+/**
+ * Where a loosely typed course URL belongs, or null when it is already canonical
+ * or is not a course code at all.
+ *
+ * `/cs106b`, `/CS%20106B` and `/ms&e232` used to reach the `[code]` page, which
+ * answered with a 200 whose body was a meta-refresh redirect and no title, so a
+ * pasted link previewed as a bare URL and loaded twice. On a case-insensitive
+ * disk that stub could also overwrite the cached `/CS106B` page. Answering here
+ * with a real 308 means the page only ever renders canonical ids.
+ *
+ * The canonical id is `normalizeCourseId`, the same function the page's
+ * `resolveCourseIdFromDump` keys the catalog by, and every catalog id is already
+ * its own normal form (tests/course-code-redirect.test.ts checks that against
+ * the dump), so the target is exactly the URL the page would have redirected to.
+ * A code that is not in the catalog lands on its canonical spelling and gets the
+ * usual not-found page there.
+ */
+export function canonicalCoursePath(pathname: string): string | null {
+  const match = /^\/([^/]+)$/.exec(pathname)
+  if (!match) return null
+
+  let segment: string
+  try {
+    segment = decodeURIComponent(match[1])
+  } catch {
+    return null
+  }
+  if (RESERVED_ROOT_SEGMENTS.has(segment.toLowerCase())) return null
+
+  const shape = COURSE_CODE_SHAPE.exec(segment.replace(/\s+/g, ''))
+  if (!shape) return null
+
+  const canonical = normalizeCourseId(shape[1] + shape[2])
+  if (canonical === segment) return null
+  return `/${encodeURIComponent(canonical)}`
+}
 
 /**
  * Two jobs: deny the scrapers in `lib/blocked-crawlers`, and catch an OAuth code
@@ -45,6 +103,11 @@ export function middleware(request: NextRequest) {
     callbackUrl.searchParams.set('next', nextPath || '/')
 
     return NextResponse.redirect(callbackUrl)
+  }
+
+  const coursePath = canonicalCoursePath(url.pathname)
+  if (coursePath) {
+    return NextResponse.redirect(new URL(coursePath + url.search, url.origin), 308)
   }
 
   return NextResponse.next({ request })
