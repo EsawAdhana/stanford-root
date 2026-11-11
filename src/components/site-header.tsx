@@ -16,7 +16,6 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 export function SiteHeader() {
     const pathname = usePathname();
     const searchParams = useSearchParams();
-    const isFaq = pathname.toLowerCase() === '/faq';
     const isCatalog = pathname === '/';
     // Scoped selectors so the header (mounted on every page) doesn't re-render
     // on unrelated auth-store changes (e.g. isSigningIn toggles).
@@ -66,18 +65,16 @@ export function SiteHeader() {
             <div className="flex items-center justify-end gap-1.5 sm:gap-2 shrink-0 pr-2 sm:pr-4 md:pr-6">
                 <ThemeToggle />
 
-                {!isFaq && (
-                    <Button
-                        asChild
-                        variant="ghost"
-                        className="relative rounded-lg h-9 w-9 px-0 md:w-auto md:px-4 text-sm font-medium gap-2 text-muted-foreground hover:text-foreground hover:bg-secondary/80 transition-all"
-                    >
-                        <Link href={scheduleHref} aria-label="Schedule">
-                            <CalendarDays className="h-5 w-5 md:h-4 md:w-4" />
-                            <span className="hidden md:inline">Schedule</span>
-                        </Link>
-                    </Button>
-                )}
+                <Button
+                    asChild
+                    variant="ghost"
+                    className="relative rounded-lg h-9 w-9 px-0 md:w-auto md:px-4 text-sm font-medium gap-2 text-muted-foreground hover:text-foreground hover:bg-secondary/80 transition-all"
+                >
+                    <Link href={scheduleHref} aria-label="Schedule">
+                        <CalendarDays className="h-5 w-5 md:h-4 md:w-4" />
+                        <span className="hidden md:inline">Schedule</span>
+                    </Link>
+                </Button>
 
                 {!user && !isLoading && (
                     <StanfordLoginButton
