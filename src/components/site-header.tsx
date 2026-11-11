@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { SearchBar } from '@/components/search-bar';
 import { MobileFilterMenu } from '@/components/mobile-filter-menu';
 import { Logo } from '@/components/logo';
@@ -13,6 +13,8 @@ import { CalendarDays, LogOut } from 'lucide-react';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
+const MCP_SEEN_KEY = 'mcp-connect-seen';
+
 export function SiteHeader() {
     const pathname = usePathname();
     const searchParams = useSearchParams();
@@ -23,6 +25,18 @@ export function SiteHeader() {
     const user = useAuthStore(s => s.user);
     const isLoading = useAuthStore(s => s.isLoading);
     const signOut = useAuthStore(s => s.signOut);
+
+    // The "New" tag on the MCP link stays until this browser has opened /connect once.
+    const isConnect = pathname === '/connect';
+    const [mcpIsNew, setMcpIsNew] = useState(false);
+    useEffect(() => {
+        try {
+            if (isConnect) localStorage.setItem(MCP_SEEN_KEY, '1');
+            setMcpIsNew(localStorage.getItem(MCP_SEEN_KEY) !== '1');
+        } catch {
+            // Storage can be blocked; the link still works without the tag.
+        }
+    }, [isConnect]);
 
     const scheduleHref = useMemo(() => {
         const params = new URLSearchParams(searchParams.toString());
@@ -65,6 +79,23 @@ export function SiteHeader() {
             {/* Right: Actions */}
             <div className="flex items-center justify-end gap-1.5 sm:gap-2 shrink-0 pr-2 sm:pr-4 md:pr-6">
                 <ThemeToggle />
+
+                {!isConnect && (
+                    <Button
+                        asChild
+                        variant="ghost"
+                        className="relative hidden lg:inline-flex rounded-lg h-9 px-4 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-secondary/80 transition-all"
+                    >
+                        <Link href="/connect">
+                            MCP
+                            {mcpIsNew && (
+                                <span className="absolute -top-1 -right-1 rounded-full bg-primary px-1.5 py-px text-[10px] font-semibold leading-4 text-primary-foreground">
+                                    New
+                                </span>
+                            )}
+                        </Link>
+                    </Button>
+                )}
 
                 {!isFaq && (
                     <Button
