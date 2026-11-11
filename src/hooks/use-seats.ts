@@ -15,6 +15,11 @@ export function useLiveSeats(term: string, classNbrs: number[]) {
   const [seats, setSeats] = useState<Map<number, LiveSeat>>(new Map())
   const [fetchedAt, setFetchedAt] = useState<number | null>(null)
   const lastFetchRef = useRef(0)
+  // Each load takes a number. Only the newest may write: the focus refresh has
+  // no abort signal, and one started before a term switch would otherwise land
+  // after it. Class numbers repeat across terms, so its counts would show on
+  // the new term's sections.
+  const loadIdRef = useRef(0)
 
   const strm = strmForTerm(term)
   // A stable key so the effect does not refire on a new array with the same ids.
@@ -23,10 +28,12 @@ export function useLiveSeats(term: string, classNbrs: number[]) {
   const load = useCallback(async (signal?: AbortSignal) => {
     if (!strm || !idsKey) return
     lastFetchRef.current = Date.now()
+    const loadId = ++loadIdRef.current
     try {
       const res = await fetch(`/api/seats?strm=${strm}&classNbr=${idsKey}`, { signal })
       if (!res.ok) return
       const body: SeatsResponse = await res.json()
+      if (loadId !== loadIdRef.current) return
       const next = new Map<number, LiveSeat>()
       for (const seat of Object.values(body.seats || {})) next.set(seat.classNbr, seat)
       if (next.size === 0) return

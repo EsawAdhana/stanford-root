@@ -108,16 +108,14 @@ export const useEvaluationStore = create<EvaluationStore>((set, get) => ({
         body: JSON.stringify({ courseIds: toFetch })
       })
       if (res.status === 401) {
-        // Evaluations are Stanford-login-only — treat as no data (not an error).
-        set(state => {
-          const updated = { ...state.evaluations }
-          for (const id of toFetch) if (!(id in updated)) updated[id] = []
-          return {
-            evaluations: updated,
-            isBulkLoading: false,
-            loadingCourses: clearLoadingFlags(state.loadingCourses),
-          }
-        })
+        // Evaluations are Stanford-login-only, so show no data (not an error).
+        // Leave the courses unloaded rather than storing [], which would read as
+        // "no evaluations exist", get cached by the next successful fetch, and
+        // stop the course refetching once the student is signed in.
+        set(state => ({
+          isBulkLoading: false,
+          loadingCourses: clearLoadingFlags(state.loadingCourses),
+        }))
         return
       }
       if (!res.ok) throw new Error(`API error: ${res.status}`)
@@ -141,23 +139,24 @@ export const useEvaluationStore = create<EvaluationStore>((set, get) => ({
       set(state => {
         const merged = { ...state.evaluations, ...fetched }
         writeEvalCache(merged)
+        const errors = { ...state.errorCourses }
+        for (const id of Object.keys(fetched)) delete errors[id]
         return {
           evaluations: merged,
+          errorCourses: errors,
           isBulkLoading: false,
           loadingCourses: clearLoadingFlags(state.loadingCourses),
         }
       })
     } catch (err) {
       console.error('Failed to bulk load evaluations:', err)
+      // Mark the failure without storing []. An empty list here would be cached
+      // by the next successful fetch, so after a reload the course would skip
+      // refetching and show "No evaluations on record" instead of retrying.
       set(state => {
-        const updated = { ...state.evaluations }
         const errors = { ...state.errorCourses }
-        for (const id of toFetch) {
-          if (!(id in updated)) updated[id] = []
-          errors[id] = true
-        }
+        for (const id of toFetch) errors[id] = true
         return {
-          evaluations: updated,
           errorCourses: errors,
           isBulkLoading: false,
           loadingCourses: clearLoadingFlags(state.loadingCourses),
