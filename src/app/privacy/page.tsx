@@ -1,12 +1,17 @@
 import Link from 'next/link'
 import { Suspense } from 'react'
-import { Metadata } from 'next'
+import type { Metadata, ResolvingMetadata } from 'next'
 import { SiteHeader } from '@/components/site-header'
+import { pageMetadata } from '@/lib/page-metadata'
 
-export const metadata: Metadata = {
-  title: 'Privacy Policy — Stanford Root',
-  alternates: { canonical: '/privacy' },
-};
+export async function generateMetadata(_: unknown, parent: ResolvingMetadata): Promise<Metadata> {
+  return pageMetadata(parent, {
+    title: 'Privacy Policy — Stanford Root',
+    description:
+      'What data Stanford Root collects, why, who it is shared with, how long it is kept, and how to delete it.',
+    path: '/privacy',
+  })
+}
 
 export default function PrivacyPage() {
   return (
