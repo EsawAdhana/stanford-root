@@ -11,10 +11,25 @@ import { getAllInstructorSlugsFromDump } from '@/lib/catalog-dump'
 
 export const revalidate = 86400;
 
-/** Prerender every instructor page; same reasoning as the course pages. */
+/**
+ * Only the slugs listed below are pages; any other slug is a real 404 instead of
+ * a 200 carrying the not-found body. Same reasoning as the course pages.
+ */
+export const dynamicParams = false;
+
+/**
+ * Prerender every instructor page, plus every initial-only slug that resolves
+ * to exactly one person (`aaker-j` for Jennifer Aaker), because those redirect
+ * and course-evaluations.tsx links to them. Ambiguous initials (two people) are
+ * left out, which keeps them the 404 they already were.
+ */
 export async function generateStaticParams() {
-    const slugs = await getAllInstructorSlugsFromDump();
-    return slugs.map(slug => ({ slug }));
+    const slugs = new Set(await getAllInstructorSlugsFromDump());
+    const directory = await getInstructorDirectory();
+    for (const [initialSlug, candidates] of directory.namedByInitialSlug) {
+        if (candidates.length === 1) slugs.add(initialSlug);
+    }
+    return [...slugs].map(slug => ({ slug }));
 }
 
 const resolve = cache(async (slug: string): Promise<InstructorResolution> => {

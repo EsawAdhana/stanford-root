@@ -3,12 +3,12 @@ import { isBlockedCrawler } from '@/lib/blocked-crawlers'
 import { normalizeCourseId } from '@/lib/cross-list.mjs'
 
 /**
- * Top-level routes that are not course or department codes. None of them looks
- * like a course code today, because a course code needs a digit, so this list is
- * a second guard: a future top-level route with a digit in its name is never
- * rewritten into a course URL as long as it is added here.
+ * Top-level paths that are not course or department codes, so they are never
+ * uppercased into one. tests/course-code-redirect.test.ts fails if a route
+ * folder in src/app or an entry in public/ is missing from this list.
  */
-const RESERVED_ROOT_SEGMENTS = new Set([
+export const RESERVED_ROOT_SEGMENTS = new Set([
+  'brand', 'catalog', 'syllabi', 'whats-new', 'icon.png', 'roots.png', '.well-known',
   'about', 'api', 'auth', 'connect', 'connected-apps', 'departments', 'faq',
   'instructors', 'oauth', 'privacy', 's', 'schedule', 'terms', '_next',
   'opengraph-image', 'twitter-image', 'icon', 'apple-icon', 'manifest.webmanifest',
@@ -22,9 +22,12 @@ const RESERVED_ROOT_SEGMENTS = new Set([
  */
 const COURSE_CODE_SHAPE = /^([A-Za-z&]+)[.-]?(\d[A-Za-z0-9]*)$/
 
+/** Subject letters alone, as in `/cs` or `/ms&e`: every catalog subject has this shape. */
+const DEPARTMENT_SHAPE = /^[A-Za-z&]+$/
+
 /**
- * Where a loosely typed course URL belongs, or null when it is already canonical
- * or is not a course code at all.
+ * Where a loosely typed course or department URL belongs, or null when it is
+ * already canonical or is not a code at all.
  *
  * `/cs106b`, `/CS%20106B` and `/ms&e232` used to reach the `[code]` page, which
  * answered with a 200 whose body was a meta-refresh redirect and no title, so a
@@ -38,6 +41,14 @@ const COURSE_CODE_SHAPE = /^([A-Za-z&]+)[.-]?(\d[A-Za-z0-9]*)$/
  * the dump), so the target is exactly the URL the page would have redirected to.
  * A code that is not in the catalog lands on its canonical spelling and gets the
  * usual not-found page there.
+ *
+ * A department is the same idea: the page used to redirect `/cs` to `/CS` when
+ * the uppercase form is a subject. The `[code]` route now only serves the codes
+ * it prerendered (`dynamicParams = false`), so that redirect has to happen here.
+ * Without the subject list at hand, any letters-only segment that is not a
+ * reserved route goes to its uppercase form. For a real subject that is the page
+ * the page itself would have sent you to; for anything else, `/foo` to `/FOO`,
+ * it is the same not-found page one hop later.
  */
 export function canonicalCoursePath(pathname: string): string | null {
   const match = /^\/([^/]+)$/.exec(pathname)
@@ -50,6 +61,11 @@ export function canonicalCoursePath(pathname: string): string | null {
     return null
   }
   if (RESERVED_ROOT_SEGMENTS.has(segment.toLowerCase())) return null
+
+  if (DEPARTMENT_SHAPE.test(segment)) {
+    const upper = segment.toUpperCase()
+    return upper === segment ? null : `/${encodeURIComponent(upper)}`
+  }
 
   const shape = COURSE_CODE_SHAPE.exec(segment.replace(/\s+/g, ''))
   if (!shape) return null
