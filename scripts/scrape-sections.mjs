@@ -18,6 +18,7 @@
  *   node --env-file=.env.local scripts/scrape-sections.mjs --with-explorecourses  # also find new classes and merge EC-only courses
  *   node --env-file=.env.local scripts/scrape-sections.mjs --compare-sources      # diff Navigator vs EC, no writes
  *   node --env-file=.env.local scripts/scrape-sections.mjs --out catalog.json      # write rows to a file, not Supabase
+ *   node --env-file=.env.local scripts/scrape-sections.mjs --save-rows rows.json   # write to Supabase and also keep the rows in a file (for dump-catalog.mjs --scraped)
  *   node --env-file=.env.local scripts/scrape-sections.mjs --full-rewrite          # upsert every row, not only the ones that differ from the last dump (repairs)
  *   node --env-file=.env.local scripts/scrape-sections.mjs --academic-year 20262027
  *   node --env-file=.env.local scripts/scrape-sections.mjs --resume               # only rows on a different year
@@ -113,6 +114,7 @@ function parseArgs() {
         withExploreCourses: false,
         compareSources: false,
         out: null,
+        saveRows: null,
         fullRewrite: false,
         priorYears: false,
         rebuildPrior: false,
@@ -124,6 +126,7 @@ function parseArgs() {
         if (args[i] === '--with-explorecourses') opts.withExploreCourses = true
         if (args[i] === '--compare-sources') opts.compareSources = true
         if (args[i] === '--out' && args[i + 1]) opts.out = args[i + 1]
+        if (args[i] === '--save-rows' && args[i + 1]) opts.saveRows = args[i + 1]
         if (args[i] === '--full-rewrite') opts.fullRewrite = true
         if (args[i] === '--prior-years') opts.priorYears = true
         if (args[i] === '--rebuild-prior') { opts.priorYears = true; opts.rebuildPrior = true }
@@ -1152,6 +1155,9 @@ async function main() {
     if (opts.resume) await updateCatalog(supabase, rowsToUpsert)
     else await upsertCatalog(supabase, rowsToUpsert)
     await clearStaleCourses(supabase, staleToClear)
+    // Written only after the table matches it, so a dump built from this file
+    // never shows rows the table does not hold.
+    if (opts.saveRows) writeFileSync(opts.saveRows, JSON.stringify(courses))
     console.log(`Done. ${courses.length} courses scraped, ${rowsToUpsert.length} written; cleared ${staleToClear.length} stale schedules.`)
 }
 
