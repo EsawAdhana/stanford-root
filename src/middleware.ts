@@ -76,6 +76,24 @@ export function canonicalCoursePath(pathname: string): string | null {
 }
 
 /**
+ * Where a malformed URL is rewritten to: the not-found page Next.js prerenders
+ * at build, served with a 404. It has to be a static route. Rewriting to a path
+ * the `[code]` route would match still left Next.js decoding the original
+ * single-segment path as that route's param, which threw again.
+ */
+export const MALFORMED_URL_REWRITE = '/_not-found'
+
+/** True when some `%` in the path does not decode, which would make routing throw. */
+export function hasMalformedEncoding(pathname: string): boolean {
+  try {
+    decodeURIComponent(pathname)
+    return false
+  } catch {
+    return true
+  }
+}
+
+/**
  * Two jobs: deny the scrapers in `lib/blocked-crawlers`, and catch an OAuth code
  * that landed somewhere other than the callback.
  *
@@ -119,6 +137,13 @@ export function middleware(request: NextRequest) {
     callbackUrl.searchParams.set('next', nextPath || '/')
 
     return NextResponse.redirect(callbackUrl)
+  }
+
+  // A path with broken percent-encoding (`/%`, `/instructors/%FF`) made the
+  // router throw while decoding params, and the visitor got a bare plain-text
+  // "Internal Server Error". Serve the ordinary not-found page instead.
+  if (hasMalformedEncoding(url.pathname)) {
+    return NextResponse.rewrite(new URL(MALFORMED_URL_REWRITE, url.origin))
   }
 
   const coursePath = canonicalCoursePath(url.pathname)

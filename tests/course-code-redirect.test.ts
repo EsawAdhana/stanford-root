@@ -1,6 +1,11 @@
 import fs from 'node:fs'
 import { describe, expect, it } from 'vitest'
-import { RESERVED_ROOT_SEGMENTS, canonicalCoursePath } from '@/middleware'
+import {
+  MALFORMED_URL_REWRITE,
+  RESERVED_ROOT_SEGMENTS,
+  canonicalCoursePath,
+  hasMalformedEncoding,
+} from '@/middleware'
 import { normalizeCourseId } from '@/lib/utils'
 
 /**
@@ -105,5 +110,23 @@ describe('canonicalCoursePath', () => {
       return lower !== target || spaced !== target
     })
     expect(wrong).toEqual([])
+  })
+})
+
+describe('hasMalformedEncoding', () => {
+  it.each(['/%', '/%FF', '/instructors/%FF', '/%E0%A4%A', '/cs%2', '/a%zz'])(
+    '%s is malformed',
+    path => expect(hasMalformedEncoding(path)).toBe(true),
+  )
+
+  it.each(['/', '/CS106B', '/MS%26E232', '/CS%20106B', '/instructors/jane-doe', '/%E0%A4%A1', '/%25'])(
+    '%s is fine',
+    path => expect(hasMalformedEncoding(path)).toBe(false),
+  )
+
+  it('rewrites to a path no catalog code or route can claim', () => {
+    expect(hasMalformedEncoding(MALFORMED_URL_REWRITE)).toBe(false)
+    expect(canonicalCoursePath(MALFORMED_URL_REWRITE)).toBeNull()
+    expect(catalogIds).not.toContain(MALFORMED_URL_REWRITE.slice(1))
   })
 })
