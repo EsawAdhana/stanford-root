@@ -502,8 +502,18 @@ function recordSynced(signature: string, ids: string[]) {
  * saved courses with nothing (2026-09-30).
  */
 function canPush(userId: string): boolean {
-  return !_pushSuspended && _lastPulledUserId === userId
+  return _cartLoaded && !_pushSuspended && _lastPulledUserId === userId
 }
+
+/**
+ * Whether this tab's cart has been read back from localStorage. Before that the
+ * cart is the store's empty initial state, not anything the student built, so
+ * nothing may write it over the row. A landed pull implies this today, because
+ * the pull awaits `cartHydrated`; checked here too so `flushPendingPush`, which
+ * cannot wait (the tab is closing), never depends on that ordering.
+ */
+let _cartLoaded = false
+void cartHydrated.then(() => { _cartLoaded = true })
 
 export function debouncedPush(userId: string) {
   if (_pullActive || _pushSuspended) return
