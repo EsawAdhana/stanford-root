@@ -21,6 +21,8 @@ export type SharedSchedule = {
   entries: SharedEntry[]
   /** Tokens that did not parse, so the page can say part of the link was unreadable. */
   skipped: number
+  /** Classes past the first MAX_SHARED_COURSES, which are not read. */
+  overLimit: number
 }
 
 /** Generous for any real schedule, and it keeps a crafted link from making the page do unbounded work. */
@@ -52,7 +54,9 @@ export function readShareLink(params: { get(name: string): string | null }): Sha
   const entries: SharedEntry[] = []
   const seen = new Set<string>()
   let skipped = 0
-  for (const token of raw.split(',').slice(0, MAX_SHARED_COURSES)) {
+  const tokens = raw.split(',')
+  const overLimit = tokens.slice(MAX_SHARED_COURSES).filter(t => t.trim()).length
+  for (const token of tokens.slice(0, MAX_SHARED_COURSES)) {
     const match = TOKEN.exec(token.trim())
     if (!match) {
       if (token.trim()) skipped++
@@ -67,7 +71,55 @@ export function readShareLink(params: { get(name: string): string | null }): Sha
       ...(units ? { selectedUnits: Number(units) } : {}),
     })
   }
-  return entries.length > 0 ? { term, entries, skipped } : null
+  return entries.length > 0 ? { term, entries, skipped, overLimit } : null
+}
+
+type CatalogCourse = { id: string; subject: string; code: string; sections?: { term: string; classId: number }[] }
+
+/**
+ * Picked sections the catalog no longer has, per course. A class shows the
+ * picks that remain, or with none left the course's default section, so the
+ * page says which. Only courses whose sections are loaded (`hasSections`) are
+ * judged: before that every pick would look missing.
+ */
+export function missingSections(
+  shared: SharedSchedule,
+  courses: CatalogCourse[],
+  hasSections: (id: string) => boolean,
+): { code: string; missing: number; noneLeft: boolean }[] {
+  const byId = new Map(courses.map(c => [c.id, c]))
+  return shared.entries.flatMap(entry => {
+    const course = byId.get(entry.id)
+    if (!course || !entry.selectedSectionIds?.length || !hasSections(entry.id)) return []
+    const known = new Set((course.sections ?? []).filter(s => s.term === shared.term).map(s => s.classId))
+    const missing = entry.selectedSectionIds.filter(id => !known.has(id)).length
+    if (missing === 0) return []
+    return [{ code: `${course.subject} ${course.code}`, missing, noneLeft: missing === entry.selectedSectionIds.length }]
+  })
+}
+
+/** The notice above a shared schedule: what in the link is not shown as it was shared. Empty when all of it is. */
+export function shareLinkNotice(
+  counts: { unfound: number; overLimit: number },
+  missing: { code: string; missing: number; noneLeft: boolean }[],
+): string {
+  const lines: string[] = []
+  const { unfound, overLimit } = counts
+  if (unfound > 0) {
+    lines.push(unfound === 1
+      ? "1 class in this link couldn't be found in the catalog, so it isn't shown."
+      : `${unfound} classes in this link couldn't be found in the catalog, so they aren't shown.`)
+  }
+  if (overLimit > 0) {
+    lines.push(`A shared schedule shows up to ${MAX_SHARED_COURSES} classes, so the last ${overLimit === 1 ? 'class' : `${overLimit} classes`} in this link ${overLimit === 1 ? "isn't" : "aren't"} shown.`)
+  }
+  for (const m of missing) {
+    const sections = m.missing === 1 ? '1 section in this link no longer exists' : `${m.missing} sections in this link no longer exist`
+    lines.push(m.noneLeft
+      ? `${sections}, so ${m.code} shows its default section instead.`
+      : `${sections}, so ${m.code} is shown without ${m.missing === 1 ? 'it' : 'them'}.`)
+  }
+  return lines.join(' ')
 }
 
 /** "CS224N" -> "CS 224N", for link previews that have no catalog to look a course up in. */

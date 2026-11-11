@@ -11,7 +11,7 @@ import { useEnsureCatalog } from '@/hooks/use-catalog';
 import { useCourseStore } from '@/lib/store';
 import { useAuthStore } from '@/lib/auth-store';
 import { useEvaluationStore } from '@/lib/evaluation-store';
-import { readShareLink } from '@/lib/share-link';
+import { missingSections, readShareLink, shareLinkNotice } from '@/lib/share-link';
 import { expectedWeeklyHours, formatUnitRange, formatWeeklyHours, termUnitRange } from '@/lib/schedule-totals';
 import { StatsTable } from '@/components/schedule-stats';
 import type { CartItem } from '@/lib/cart-store';
@@ -69,7 +69,14 @@ export function SharedScheduleView() {
     [items, getEvaluations, loadingCourses, evaluations]
   )
 
-  const unreadable = shared && hasLoaded ? shared.entries.length - items.length + shared.skipped : 0
+  const enrichedCourseIds = useCourseStore(s => s.enrichedCourseIds)
+  const notice = useMemo(() => {
+    if (!shared || !hasLoaded) return ''
+    return shareLinkNotice(
+      { unfound: shared.entries.length - items.length + shared.skipped, overLimit: shared.overLimit },
+      missingSections(shared, courses, id => enrichedCourseIds.has(id)),
+    )
+  }, [shared, hasLoaded, items, courses, enrichedCourseIds])
 
   return (
     <div className="flex flex-col h-screen bg-background">
@@ -118,12 +125,8 @@ export function SharedScheduleView() {
               isOverload={false}
               isIgnored
               onIgnoreOverload={() => {}}
-              aboveCalendar={unreadable > 0 ? (
-                <p className="text-xs text-muted-foreground">
-                  {unreadable === 1
-                    ? "1 class in this link couldn't be found in the catalog, so it isn't shown."
-                    : `${unreadable} classes in this link couldn't be found in the catalog, so they aren't shown.`}
-                </p>
+              aboveCalendar={notice ? (
+                <p className="text-xs text-muted-foreground">{notice}</p>
               ) : undefined}
               stats={
                 <StatsTable
