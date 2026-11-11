@@ -19,7 +19,7 @@ export function CopyField({ value, label }: { value: string; label: string }) {
 
   return (
     <div className="flex items-center gap-2 rounded-md border border-border bg-secondary/40 pl-3 pr-1.5 py-1.5">
-      <code className="flex-1 min-w-0 overflow-x-auto whitespace-nowrap font-mono text-sm text-foreground select-all">{value}</code>
+      <code className="flex-1 min-w-0 break-all font-mono text-sm text-foreground select-all">{value}</code>
       <Button type="button" variant="outline" size="sm" className="w-20 shrink-0" aria-label={`Copy ${label}`} onClick={() => void copy()}>
         {copied ? 'Copied' : 'Copy'}
       </Button>
