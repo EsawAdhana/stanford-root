@@ -217,8 +217,11 @@ export function CalendarPreviewModal({
     // left the course page scrolled somewhere else once the preview closed.
     return (
         <Dialog open={isOpen} onOpenChange={open => { if (!open) onClose(); }}>
-            <DialogContent aria-modal="true" className="max-w-4xl w-full p-0 gap-0 overflow-hidden rounded-2xl [&>button:last-child]:hidden">
-                <DialogHeader className="px-6 pt-5 pb-3 border-b border-border/40">
+            {/* Capped to the dynamic viewport height: the header and the Cancel/Add
+                footer stay put and only the calendar scrolls, so a short phone
+                never pushes the title or the Add button off screen. */}
+            <DialogContent aria-modal="true" className="flex flex-col max-h-[calc(100dvh-1rem)] w-[calc(100vw-1rem)] sm:w-full max-w-4xl p-0 gap-0 overflow-hidden rounded-2xl [&>button:last-child]:hidden">
+                <DialogHeader className="shrink-0 px-4 sm:px-6 pt-4 sm:pt-5 pb-3 border-b border-border/40">
                     <DialogTitle className="text-base font-semibold flex items-center gap-2">
                         <CalendarPlus size={16} className="text-primary shrink-0" />
                         Preview: {course.subject} {course.code} — {term}
@@ -255,7 +258,7 @@ export function CalendarPreviewModal({
 
                 {/* Conflict warning */}
                 {conflictingCourses.length > 0 && (
-                    <div className="mx-6 mt-3 px-3 py-2 rounded-lg bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 flex items-start gap-2">
+                    <div className="shrink-0 mx-4 sm:mx-6 mt-3 px-3 py-2 rounded-lg bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 flex items-start gap-2">
                         <AlertTriangle size={14} className="text-amber-500 shrink-0 mt-0.5" />
                         <p className="text-xs text-amber-700 dark:text-amber-300 font-medium">
                             Overlaps with{' '}
@@ -272,7 +275,7 @@ export function CalendarPreviewModal({
                 {/* Scrollable body */}
                 <div
                     ref={scrollRef}
-                    className="overflow-y-auto max-h-[60vh]"
+                    className="min-h-0 flex-1 overflow-y-auto max-h-[60vh]"
                 >
                     <div className="overflow-x-auto px-4 pb-2 pt-3">
                         <div className="min-w-[560px]">
@@ -380,7 +383,7 @@ export function CalendarPreviewModal({
                 {/* end scrollable body */}
 
                 {/* Legend */}
-                <div className="flex items-center gap-4 px-6 py-2 text-xs text-muted-foreground border-t border-border/30">
+                <div className="shrink-0 flex items-center gap-4 px-4 sm:px-6 py-2 text-xs text-muted-foreground border-t border-border/30">
                     <div className="flex items-center gap-1.5">
                         <div className="h-3 w-4 rounded-sm bg-primary/10 border-2 border-dashed border-primary/50" />
                         <span>This class (preview)</span>
@@ -393,7 +396,7 @@ export function CalendarPreviewModal({
 
                 {/* Units selector when section has variable units */}
                 {hasVariableUnits && (
-                    <div className="px-6 py-3 border-t border-border/30 flex items-center gap-3">
+                    <div className="shrink-0 px-4 sm:px-6 py-3 border-t border-border/30 flex items-center gap-3">
                         <span className="text-sm font-semibold text-muted-foreground">Units:</span>
                         <div className="flex items-center gap-2">
                             <div className={cn("grid gap-1.5", unitOptions.length <= 3 ? "grid-cols-3" : unitOptions.length === 4 ? "grid-cols-4" : "grid-cols-5")}>
@@ -418,7 +421,7 @@ export function CalendarPreviewModal({
                     </div>
                 )}
 
-                <DialogFooter className="px-6 py-4 border-t border-border/40 flex flex-row items-center justify-between sm:justify-between gap-3">
+                <DialogFooter className="shrink-0 px-4 sm:px-6 py-3 sm:py-4 border-t border-border/40 flex flex-row items-center justify-between sm:justify-between gap-3">
                     <Button
                         size="sm"
                         onClick={onClose}
