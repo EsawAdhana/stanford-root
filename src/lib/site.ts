@@ -18,3 +18,11 @@ export const SITE_URL = (
  */
 export const GOOGLE_CONSENT_PRIVACY_URL = 'https://stanfordroot.com/privacy'
 export const GOOGLE_CONSENT_TERMS_URL = 'https://stanfordroot.com/terms'
+
+/**
+ * The MCP server's address, as students paste it into a client. Spelled out on
+ * the www host rather than built from SITE_URL: the apex answers with a 308,
+ * and a client that signs in against the address it was given then finds the
+ * server naming a different one.
+ */
+export const MCP_URL = 'https://www.stanfordroot.com/api/mcp'
