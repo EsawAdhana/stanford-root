@@ -7,6 +7,7 @@ import type { Course } from '@/types/course';
 import { searchCourses } from '@/lib/search-utils';
 import { filterCourses, needsSections } from '@/lib/course-filter';
 import { useSelectedTerms } from '@/hooks/use-selected-terms';
+import { findInOtherTerms, type OtherTermsMatch } from '@/lib/other-terms';
 
 /**
  * The free-text query step, kept out of filterCourses because the list adds
@@ -52,7 +53,7 @@ export function useFilteredCourses() {
 
     const [query] = useQueryState('q', { defaultValue: '' });
     const [selectedDepts] = useQueryState('depts', parseAsArrayOf(parseAsString).withDefault([]));
-    const [selectedTerms] = useSelectedTerms();
+    const [selectedTerms, setSelectedTerms] = useSelectedTerms();
     const [selectedFormats] = useQueryState('formats', parseAsArrayOf(parseAsString).withDefault([]));
     const [selectedLevels] = useQueryState('levels', parseAsArrayOf(parseAsString).withDefault([]));
     const [selectedGers] = useQueryState('gers', parseAsArrayOf(parseAsString).withDefault([]));
@@ -137,6 +138,20 @@ export function useFilteredCourses() {
         selectedFormats, selectedLevels, selectedGers, selectedSchools, unitMin, unitMax, timeMin, timeMax,
         hideConflicts, hideUnavailable, hideStudyAbroad, newOnly,
         setHideConflicts, setHideUnavailable, setHideStudyAbroad, setNewOnly]);
+
+    // A search that is empty only because of the quarter. Like hiddenByToggles it
+    // runs only on an empty list, and only for a search: the term chip already
+    // explains an empty filter-only view.
+    const otherTerms = useMemo<OtherTermsMatch | null>(() => {
+        if (filteredResult.length > 0 || courses.length === 0 || !query.trim()) return null;
+        return findInOtherTerms(courses, {
+            excludedWords, selectedDepts, selectedTerms, selectedFormats, selectedLevels,
+            selectedGers, selectedSchools, unitMin, unitMax, timeMin, timeMax,
+            hideConflicts, hideUnavailable, hideStudyAbroad, newOnly,
+        }, primaryMap, cartItems, query, applyQuery);
+    }, [filteredResult, courses, primaryMap, cartItems, query, excludedWords, selectedDepts, selectedTerms,
+        selectedFormats, selectedLevels, selectedGers, selectedSchools, unitMin, unitMax, timeMin, timeMax,
+        hideConflicts, hideUnavailable, hideStudyAbroad, newOnly]);
 
     // Precompute hrs/unit, hrs/week and rating per course. Figures are pooled
     // across every code a cross-listed class is listed under (mean, not
@@ -269,5 +284,5 @@ export function useFilteredCourses() {
         setSortOrder(getDefaultOrderForSort(v));
     }, [setSortBy, setSortOrder, getDefaultOrderForSort]);
 
-    return { courses: displayCourses, hiddenByToggles, isLoading: isLoading || waitingForSections, isEnriching, getSortDisplayValue, getRatingForCourse, sortBy, setSortBy: handleSetSortBy, sortOrder: effectiveSortOrder, setSortOrder };
+    return { courses: displayCourses, hiddenByToggles, otherTerms, selectedTerms, setSelectedTerms, isLoading: isLoading || waitingForSections, isEnriching, getSortDisplayValue, getRatingForCourse, sortBy, setSortBy: handleSetSortBy, sortOrder: effectiveSortOrder, setSortOrder };
 }
