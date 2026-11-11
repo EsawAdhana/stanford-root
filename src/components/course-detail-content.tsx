@@ -536,7 +536,10 @@ export function CourseDetailContent({ course }: CourseDetailContentProps) {
                                             <ChevronLeft size={20} strokeWidth={2.5} />
                                         </button>
                                     )}
-                                    <TabsList className="flex-1 flex min-w-0 overflow-x-auto overflow-y-hidden scrollbar-hide md:overflow-hidden bg-transparent border-0 rounded-none h-auto p-0 gap-6 md:gap-1">
+                                    {/* justify-start: the Tabs primitive centres its row, and a centred row wider
+                                        than its box spills past the left edge where it cannot be scrolled to,
+                                        which cut "Autumn 2026" to "umn 2026" on phones. */}
+                                    <TabsList className="flex-1 flex min-w-0 justify-start overflow-x-auto overflow-y-hidden scrollbar-hide md:overflow-hidden bg-transparent border-0 rounded-none h-auto p-0 gap-6 md:gap-1">
                                         {visibleTerms.map(term => (
                                             <TabsTrigger
                                                 key={term}
