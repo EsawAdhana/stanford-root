@@ -1,15 +1,13 @@
 'use client';
 
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { useQueryState } from 'nuqs';
 import type { Course } from '@/types/course';
 import { useCourseStore, hasFullCourseData } from '@/lib/store';
 import { SiteHeader } from '@/components/site-header';
 import { CourseDetailContent } from '@/components/course-detail-content';
 import { useCartStore } from '@/lib/cart-store';
-import { searchCourses } from '@/lib/search-utils';
-import { compareCourseCodes, getCrossListPrimaryMap, normalizeCourseId, resolveToCanonicalPrimary } from '@/lib/utils';
+import { getCrossListPrimaryMap, normalizeCourseId, resolveToCanonicalPrimary } from '@/lib/utils';
 import { Loader2, AlertCircle } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -27,47 +25,12 @@ export function CoursePageClient({ initialCourse }: { initialCourse?: Course | n
             return rawCourseId;
         }
     })();
-    const [query] = useQueryState('q', { defaultValue: '' });
     const courses = useCourseStore(s => s.courses);
     const hasLoaded = useCourseStore(s => s.hasLoaded);
     const hasEnriched = useCourseStore(s => s.hasEnriched);
     const fetchCourseDetail = useCourseStore(s => s.fetchCourseDetail);
     const failedDetailIds = useCourseStore(s => s.failedDetailIds);
     const getItem = useCartStore(s => s.getItem);
-
-    const prevQueryAndId = useRef({ query: (query || '').trim(), courseId });
-
-    // Top search match for the redirect effect only — avoids running the full
-    // filter/sort/metrics pipeline on the detail page. Computed only when there's a query.
-    const firstSearchMatch = useMemo(() => {
-        const q = (query || '').trim();
-        if (!q || courses.length === 0) return undefined;
-        const valid = courses.filter(c => c.grading && c.grading.trim() !== '' && c.grading !== 'TBD');
-        const matches = searchCourses(valid, q);
-        if (matches.length === 0) return undefined;
-        return [...matches].sort((a, b) => {
-            const subjectCompare = (a.subject ?? '').localeCompare(b.subject ?? '');
-            return subjectCompare !== 0 ? subjectCompare : compareCourseCodes(a.code ?? '', b.code ?? '');
-        })[0];
-    }, [query, courses]);
-
-    useEffect(() => {
-        const currentQuery = (query || '').trim();
-        const prev = prevQueryAndId.current;
-        prevQueryAndId.current = { query: currentQuery, courseId };
-
-        if (currentQuery === prev.query) return;
-        if (courseId !== prev.courseId) return;
-
-        if (!currentQuery || !firstSearchMatch) return;
-
-        if (firstSearchMatch.id !== courseId) {
-            const searchParams = new URLSearchParams(typeof window !== 'undefined' ? window.location.search : '');
-            searchParams.set('q', currentQuery);
-            const rest = searchParams.toString();
-            router.push(rest ? `/${encodeURIComponent(firstSearchMatch.id)}?${rest}` : `/${encodeURIComponent(firstSearchMatch.id)}`);
-        }
-    }, [query, courseId, firstSearchMatch, router]);
 
     const course = useMemo(() => {
         let found = courses.find(c => c.id === courseId);

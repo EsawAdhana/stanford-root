@@ -17,6 +17,7 @@ import { compareTerms } from '@/lib/terms';
 import { SITE_URL } from '@/lib/site';
 import { getDepartmentFromDump } from '@/lib/catalog-dump';
 import { CoursePageClient } from './course-page-client';
+import CourseLoading from './loading';
 
 function plainText(html: string): string {
     return decodeHtmlEntities((html || '').replace(/<[^>]*>/g, ' ')).replace(/\s+/g, ' ').trim();
@@ -226,7 +227,14 @@ export function CourseView({ course }: { course: Course }) {
                 // cannot close this tag. No catalog row does today.
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(courseJsonLd(course)).replace(/</g, '\\u003c') }}
             />
-            <CoursePageClient initialCourse={course} />
+            {/* The client view reads search params (through SiteHeader), which opts
+                everything up to the nearest Suspense out of server rendering. This
+                boundary keeps that to the interactive view, so the summary, related
+                links and JSON-LD stay in the HTML. The fallback is the route's own
+                skeleton, so the page never flashes blank. */}
+            <Suspense fallback={<CourseLoading />}>
+                <CoursePageClient initialCourse={course} />
+            </Suspense>
             <CourseSummary course={course} />
             {/* SEO-only; must not block the interactive course view on a slow dept scan. */}
             <Suspense fallback={null}>
