@@ -1,13 +1,13 @@
 'use client';
 
-import React, { useMemo, useState, useEffect, useRef } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import React, { useCallback, useId, useMemo, useState, useEffect, useRef } from 'react';
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { useCartStore } from '@/lib/cart-store';
 import { useCourseStore, getCoursesById } from '@/lib/store';
 import { parseMeetingTimes, parseTimeRange, timeToMinutes, isMeetingOptional, stripSeconds, parseDays, isScheduledForTerm } from '@/lib/schedule-utils';
 import { cn, decodeHtmlEntities, parseUnitsOptions } from '@/lib/utils';
-import { AlertTriangle, CalendarPlus, Calendar, Clock, MapPin } from 'lucide-react';
+import { AlertTriangle, CalendarPlus, Calendar, Clock, MapPin, X } from 'lucide-react';
 import type { Course, Section } from '@/types/course';
 import { DAYS, HOUR_HEIGHT, DEFAULT_START_MINUTES, DEFAULT_END_MINUTES, getCalendarColorClasses, layoutDayEvents, ALL_DAYS, visibleDays, type CalendarDay } from '@/lib/calendar-utils';
 
@@ -46,6 +46,27 @@ interface CalendarPreviewModalProps {
     onConfirm: (selectedUnits?: number) => void;
     /** Pre-selected units from parent (e.g. from section card or cart). */
     initialSelectedUnits?: number;
+}
+
+/**
+ * Grid columns for the time rail plus 5 to 7 days. Every day fits the dialog
+ * width; phones get a narrower rail (desktop keeps 52px). Written out in full
+ * so Tailwind sees each class.
+ */
+const GRID_COLUMNS: Record<number, string> = {
+    5: 'grid-cols-[30px_repeat(5,minmax(0,1fr))] sm:grid-cols-[52px_repeat(5,minmax(0,1fr))]',
+    6: 'grid-cols-[30px_repeat(6,minmax(0,1fr))] sm:grid-cols-[52px_repeat(6,minmax(0,1fr))]',
+    7: 'grid-cols-[30px_repeat(7,minmax(0,1fr))] sm:grid-cols-[52px_repeat(7,minmax(0,1fr))]',
+};
+
+/** Day labels for phones narrower than the xs breakpoint. */
+export const SHORT_DAY_LABELS: Record<CalendarDay, string> = {
+    Mon: 'M', Tue: 'Tu', Wed: 'W', Thu: 'Th', Fri: 'F', Sat: 'Sa', Sun: 'Su',
+};
+
+/** Why Add to Calendar is disabled, shown beside the units row; null when it is enabled. */
+export function addBlockedReason(hasVariableUnits: boolean, selectedUnits: number | undefined): string | null {
+    return hasVariableUnits && selectedUnits === undefined ? 'Pick units to add this class.' : null;
 }
 
 // ─── Component ────────────────────────────────────────────────────────────────
@@ -206,68 +227,97 @@ export function CalendarPreviewModal({
 
     // Saturday/Sunday columns appear only when this term's schedule uses them.
     const columns = useMemo(() => visibleDays(allEvents.map(e => e.day)), [allEvents]);
-    const gridTemplateColumns = `52px repeat(${columns.length}, minmax(0, 1fr))`;
+    const gridColumns = GRID_COLUMNS[columns.length] ?? GRID_COLUMNS[7];
 
     const gridHeight = ((endMinutes - startMinutes) / 60) * HOUR_HEIGHT;
 
-    const scrollRef = useRef<HTMLDivElement>(null);
-    useEffect(() => {
-        const el = scrollRef.current;
-        if (!el || !isOpen) return;
-        const handleWheel = (e: WheelEvent) => {
-            const { scrollTop, scrollHeight, clientHeight } = el;
-            const atTop = scrollTop <= 0;
-            const atBottom = scrollTop + clientHeight >= scrollHeight - 1;
-            if ((atTop && e.deltaY < 0) || (atBottom && e.deltaY > 0)) {
-                e.preventDefault();
-                window.scrollBy({ top: e.deltaY, behavior: 'auto' });
-            }
-        };
-        el.addEventListener('wheel', handleWheel, { passive: false });
-        return () => el.removeEventListener('wheel', handleWheel);
-    }, [isOpen]);
+    const dayHeaderRef = useRef<HTMLDivElement>(null);
 
+    // On a short phone the calendar shows only a few hours, so an afternoon
+    // class would open out of sight. Scroll the class's first meeting into view
+    // when it is not already, leaving half an hour of context above it.
+    const firstPreview = useMemo(
+        () => previewEvents.reduce<CalendarEvent | null>((m, e) => (!m || e.start < m.start ? e : m), null),
+        [previewEvents]
+    );
+    // A callback ref, because Radix mounts the portal a render after this
+    // component, so an effect here would still see no element.
+    const scrollRef = useCallback((el: HTMLDivElement | null) => {
+        if (!el || !firstPreview) return;
+        const topPx = ((firstPreview.start - startMinutes) / 60) * HOUR_HEIGHT;
+        const bottomPx = ((firstPreview.end - startMinutes) / 60) * HOUR_HEIGHT;
+        const headerPx = dayHeaderRef.current?.offsetHeight ?? 0;
+        if (headerPx + bottomPx > el.clientHeight) {
+            el.scrollTop = Math.max(0, topPx - HOUR_HEIGHT / 2);
+        }
+    }, [firstPreview, startMinutes]);
+    // The scheduled blocks are colored per course, so the legend borrows the
+    // color of one that is actually drawn instead of a fixed light blue.
+    const scheduledSwatch = useMemo(() => {
+        const shown = existingEvents.find(e => !e.isOptional) ?? existingEvents[0];
+        return shown ? getCalendarColorClasses(shown.courseId) : null;
+    }, [existingEvents]);
+    const blockedReason = addBlockedReason(hasVariableUnits, selectedUnits);
+    const blockedReasonId = useId();
+
+    // Modal, so Radix puts up the overlay and locks the page behind it. It was
+    // non-modal with a wheel handler that handed scrolling to the page, which
+    // left the course page scrolled somewhere else once the preview closed.
     return (
-        <Dialog open={isOpen} onOpenChange={open => { if (!open) onClose(); }} modal={false}>
-            <DialogContent className="max-w-4xl w-full p-0 gap-0 overflow-hidden rounded-2xl [&>button:last-child]:hidden">
-                <DialogHeader className="px-6 pt-5 pb-3 border-b border-border/40">
-                    <DialogTitle className="text-base font-semibold flex items-center gap-2">
+        <Dialog open={isOpen} onOpenChange={open => { if (!open) onClose(); }}>
+            {/* Capped to the dynamic viewport height: the header and the Cancel/Add
+                footer stay put and only the calendar scrolls, so a short phone
+                never pushes the title or the Add button off screen. */}
+            <DialogContent aria-modal="true" className="flex flex-col max-h-[calc(100dvh-1rem)] w-[calc(100vw-1rem)] sm:w-full max-w-4xl p-0 gap-0 overflow-hidden rounded-2xl" hideClose>
+                {/* The shared dialog's close button is a bare 16px icon; this one
+                    is a 36px target that sits clear of the title. */}
+                <DialogClose asChild>
+                    <Button variant="ghost" size="icon" className="absolute right-2 top-2 sm:right-3 sm:top-3 z-10 h-9 w-9 text-muted-foreground hover:text-foreground">
+                        <X className="h-4 w-4" />
+                        <span className="sr-only">Close</span>
+                    </Button>
+                </DialogClose>
+                <DialogHeader className="shrink-0 px-4 sm:px-6 pt-4 sm:pt-5 pb-3 border-b border-border/40">
+                    <DialogTitle className="text-base font-semibold flex items-center gap-2 pr-9">
                         <CalendarPlus size={16} className="text-primary shrink-0" />
                         Preview: {course.subject} {course.code} — {term}
                     </DialogTitle>
-                    <div className="text-xs text-muted-foreground mt-1 flex flex-col gap-1.5">
-                        {section.meetings?.[0] ? (
-                            <>
-                                <div className="flex items-center gap-1.5 capitalize">
-                                    <Calendar size={14} strokeWidth={2.5} className="text-foreground shrink-0" />
-                                    <span>{(() => {
-                                        const days = (section.meetings[0].days || '').toLowerCase().split(/[,\s]+/);
-                                        return days.map(d => d.charAt(0).toUpperCase() + d.slice(1)).join(', ');
-                                    })()}</span>
-                                </div>
+                    {/* The meeting days, time and room double as the dialog's description. */}
+                    <DialogDescription asChild className="text-xs">
+                        <div className="text-xs text-muted-foreground mt-1 flex flex-col gap-1.5">
+                            {section.meetings?.[0] ? (
+                                <>
+                                    <div className="flex items-center gap-1.5 capitalize">
+                                        <Calendar size={14} strokeWidth={2.5} className="text-foreground shrink-0" />
+                                        <span>{(() => {
+                                            const days = (section.meetings[0].days || '').toLowerCase().split(/[,\s]+/);
+                                            return days.map(d => d.charAt(0).toUpperCase() + d.slice(1)).join(', ');
+                                        })()}</span>
+                                    </div>
+                                    <div className="flex items-center gap-1.5">
+                                        <Clock size={14} strokeWidth={2.5} className="text-foreground shrink-0" />
+                                        <span>{section.meetings[0].time ? stripSeconds(section.meetings[0].time) : 'TBA'}</span>
+                                    </div>
+                                    {section.meetings[0].location && section.meetings[0].location !== 'TBA' && (
+                                        <div className="flex items-center gap-1.5">
+                                            <MapPin size={14} strokeWidth={2.5} className="text-foreground shrink-0" />
+                                            <span className="truncate">{section.meetings[0].location}</span>
+                                        </div>
+                                    )}
+                                </>
+                            ) : (
                                 <div className="flex items-center gap-1.5">
                                     <Clock size={14} strokeWidth={2.5} className="text-foreground shrink-0" />
-                                    <span>{section.meetings[0].time ? stripSeconds(section.meetings[0].time) : 'TBA'}</span>
+                                    <span>Time TBA</span>
                                 </div>
-                                {section.meetings[0].location && section.meetings[0].location !== 'TBA' && (
-                                    <div className="flex items-center gap-1.5">
-                                        <MapPin size={14} strokeWidth={2.5} className="text-foreground shrink-0" />
-                                        <span className="truncate">{section.meetings[0].location}</span>
-                                    </div>
-                                )}
-                            </>
-                        ) : (
-                            <div className="flex items-center gap-1.5">
-                                <Clock size={14} strokeWidth={2.5} className="text-foreground shrink-0" />
-                                <span>Time TBA</span>
-                            </div>
-                        )}
-                    </div>
+                            )}
+                        </div>
+                    </DialogDescription>
                 </DialogHeader>
 
                 {/* Conflict warning */}
                 {conflictingCourses.length > 0 && (
-                    <div className="mx-6 mt-3 px-3 py-2 rounded-lg bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 flex items-start gap-2">
+                    <div className="shrink-0 mx-4 sm:mx-6 mt-3 px-3 py-2 rounded-lg bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 flex items-start gap-2">
                         <AlertTriangle size={14} className="text-amber-500 shrink-0 mt-0.5" />
                         <p className="text-xs text-amber-700 dark:text-amber-300 font-medium">
                             Overlaps with{' '}
@@ -281,27 +331,28 @@ export function CalendarPreviewModal({
                     </div>
                 )}
 
-                {/* Scrollable body — at scroll boundary, wheel scrolls the page */}
+                {/* Scrollable body */}
                 <div
                     ref={scrollRef}
-                    className="overflow-y-auto max-h-[60vh]"
+                    className="min-h-0 flex-1 overflow-y-auto max-h-[60vh]"
                 >
-                    <div className="overflow-x-auto px-4 pb-2 pt-3">
-                        <div className="min-w-[560px]">
-                            {/* Day header */}
-                            <div className="grid border-b border-border/40 mb-0" style={{ gridTemplateColumns }}>
+                    <div className="px-2 sm:px-4 pb-2">
+                        <div>
+                            {/* Day header, pinned while the hours scroll under it */}
+                            <div ref={dayHeaderRef} className={cn("grid sticky top-0 z-30 bg-background pt-3 border-b border-border/40 mb-0", gridColumns)}>
                                 <div className="p-1" />
                                 {columns.map(d => (
                                     <div key={d.key} className="py-1.5 text-[10px] font-semibold text-muted-foreground text-center uppercase tracking-wide">
-                                        {d.label}
+                                        <span className="xs:hidden">{SHORT_DAY_LABELS[d.key]}</span>
+                                        <span className="hidden xs:inline">{d.label}</span>
                                     </div>
                                 ))}
                             </div>
 
                             {/* Grid body */}
                             <div
-                                className="grid relative"
-                                style={{ gridTemplateColumns, height: `${gridHeight}px`, '--start-minutes': startMinutes } as React.CSSProperties}
+                                className={cn("grid relative", gridColumns)}
+                                style={{ height: `${gridHeight}px`, '--start-minutes': startMinutes } as React.CSSProperties}
                             >
                                 {/* Time rail */}
                                 <div className="relative border-r border-border/30 bg-background/50">
@@ -312,7 +363,7 @@ export function CalendarPreviewModal({
                                             style={{ top: `${idx * HOUR_HEIGHT}px` }}
                                         >
                                             {idx !== hours.length - 1 && (
-                                                <div className="absolute right-0 top-0 pr-1 text-right text-[9px] text-muted-foreground whitespace-nowrap mt-1">
+                                                <div className="absolute right-0 top-0 pr-0.5 sm:pr-1 text-right text-[8px] sm:text-[9px] text-muted-foreground whitespace-nowrap mt-1">
                                                     {`${((h + 11) % 12) + 1}${h >= 12 ? 'p' : 'a'}`}
                                                 </div>
                                             )}
@@ -392,56 +443,66 @@ export function CalendarPreviewModal({
                 {/* end scrollable body */}
 
                 {/* Legend */}
-                <div className="flex items-center gap-4 px-6 py-2 text-xs text-muted-foreground border-t border-border/30">
+                <div className="shrink-0 flex flex-wrap items-center gap-x-4 gap-y-1 px-4 sm:px-6 py-2 text-xs text-muted-foreground border-t border-border/30">
                     <div className="flex items-center gap-1.5">
                         <div className="h-3 w-4 rounded-sm bg-primary/10 border-2 border-dashed border-primary/50" />
                         <span>This class (preview)</span>
                     </div>
-                    <div className="flex items-center gap-1.5">
-                        <div className="h-3 w-4 rounded-sm bg-sky-500/15 border border-sky-500/40" />
-                        <span>Already scheduled</span>
-                    </div>
+                    {scheduledSwatch && (
+                        <div className="flex items-center gap-1.5">
+                            <div className={cn('h-3 w-4 rounded-sm border', scheduledSwatch)} />
+                            <span>Already scheduled</span>
+                        </div>
+                    )}
                 </div>
 
                 {/* Units selector when section has variable units */}
                 {hasVariableUnits && (
-                    <div className="px-6 py-3 border-t border-border/30 flex items-center gap-3">
-                        <span className="text-sm font-semibold text-muted-foreground">Units:</span>
-                        <div className="flex items-center gap-2">
-                            <div className={cn("grid gap-1.5", unitOptions.length <= 3 ? "grid-cols-3" : unitOptions.length === 4 ? "grid-cols-4" : "grid-cols-5")}>
-                                {unitOptions.map((u) => (
-                                    <button
-                                        key={u}
-                                        type="button"
-                                        onClick={() => setSelectedUnits(prev => prev === u ? undefined : u)}
-                                        className={cn(
-                                            "flex items-center justify-center w-9 h-8 font-bold rounded-md transition-all text-sm",
-                                            selectedUnits === u
-                                                ? "bg-primary text-primary-foreground shadow-sm"
-                                                : "bg-secondary/60 text-muted-foreground hover:bg-secondary hover:text-foreground"
-                                        )}
-                                    >
-                                        {u}
-                                    </button>
-                                ))}
+                    <div className="shrink-0 px-4 sm:px-6 py-3 border-t border-border/30">
+                        <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+                            <span className="text-sm font-semibold text-muted-foreground">Units:</span>
+                            <div className="flex items-center gap-2">
+                                <div className={cn("grid gap-1.5", unitOptions.length <= 3 ? "grid-cols-3" : unitOptions.length === 4 ? "grid-cols-4" : "grid-cols-5")}>
+                                    {unitOptions.map((u) => (
+                                        <button
+                                            key={u}
+                                            type="button"
+                                            onClick={() => setSelectedUnits(prev => prev === u ? undefined : u)}
+                                            className={cn(
+                                                // 40px on phones and touch screens, the old 36 by 32 elsewhere.
+                                                "flex items-center justify-center w-9 h-8 max-sm:w-10 max-sm:h-10 [@media(pointer:coarse)]:w-10 [@media(pointer:coarse)]:h-10 font-bold rounded-md transition-all text-sm",
+                                                selectedUnits === u
+                                                    ? "bg-primary text-primary-foreground shadow-sm"
+                                                    : "bg-secondary/60 text-muted-foreground hover:bg-secondary hover:text-foreground"
+                                            )}
+                                        >
+                                            {u}
+                                        </button>
+                                    ))}
+                                </div>
+                                <span className="text-xs font-semibold text-muted-foreground uppercase tracking-tight shrink-0">units</span>
                             </div>
-                            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-tight shrink-0">units</span>
                         </div>
+                        {blockedReason && (
+                            <p id={blockedReasonId} className="mt-2 text-xs text-muted-foreground">{blockedReason}</p>
+                        )}
                     </div>
                 )}
 
-                <DialogFooter className="px-6 py-4 border-t border-border/40 flex flex-row items-center justify-between sm:justify-between gap-3">
+                <DialogFooter className="shrink-0 px-4 sm:px-6 py-3 sm:py-4 border-t border-border/40 flex flex-row items-center justify-between sm:justify-between gap-3">
                     <Button
                         size="sm"
+                        variant="outline"
                         onClick={onClose}
-                        className="bg-destructive hover:bg-destructive/90 text-destructive-foreground font-bold shadow-sm"
+                        className="h-10 sm:h-9"
                     >
                         Cancel
                     </Button>
                     <Button
                         size="sm"
-                        className="gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold shadow-sm"
-                        disabled={hasVariableUnits && selectedUnits === undefined}
+                        className="h-10 sm:h-9 gap-1.5"
+                        disabled={blockedReason !== null}
+                        aria-describedby={blockedReason ? blockedReasonId : undefined}
                         onClick={() => { onConfirm(hasVariableUnits ? selectedUnits : undefined); onClose(); }}
                     >
                         <CalendarPlus size={13} />
