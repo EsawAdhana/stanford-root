@@ -1,19 +1,12 @@
 import { NextResponse } from 'next/server'
 import { createSupabaseServerClient } from '@/lib/supabase-server'
-import { authErrorParam, classifyCallback, safeNextPath } from '@/lib/auth-callback'
+import { authErrorParam, classifyCallback, redirectOriginFor, safeNextPath } from '@/lib/auth-callback'
 
 function getRedirectOrigin(request: Request): string {
-  const { origin } = new URL(request.url)
-  const forwardedHost = request.headers.get('x-forwarded-host')
-  const isLocalEnv = process.env.NODE_ENV === 'development'
-
-  if (isLocalEnv) return origin
-  if (forwardedHost) {
-    const host = forwardedHost.split(',')[0].trim()
-    const allowedHost = new URL(process.env.NEXT_PUBLIC_SITE_URL || origin).hostname
-    if (host === allowedHost) return `https://${host}`
-  }
-  return origin
+  return redirectOriginFor(request.url, request.headers.get('x-forwarded-host'), {
+    nodeEnv: process.env.NODE_ENV,
+    siteUrl: process.env.NEXT_PUBLIC_SITE_URL,
+  })
 }
 
 export async function GET(request: Request) {

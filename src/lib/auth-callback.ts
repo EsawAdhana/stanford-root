@@ -47,6 +47,28 @@ export function authErrorParam(verdict: CallbackVerdict): string | null {
   }
 }
 
+/**
+ * The origin the callback redirects back to after sign-in. A forwarded host is
+ * trusted only when it equals the configured site host. That host is read from
+ * NEXT_PUBLIC_SITE_URL itself, not from SITE_URL's default: when the variable
+ * is unset (as on Vercel) the request's own host is the allowed one, so www,
+ * the apex and preview URLs each come back to the host they signed in on.
+ */
+export function redirectOriginFor(
+  requestUrl: string,
+  forwardedHostHeader: string | null,
+  env: { nodeEnv?: string; siteUrl?: string },
+): string {
+  const { origin } = new URL(requestUrl)
+  if (env.nodeEnv === 'development') return origin
+  if (forwardedHostHeader) {
+    const host = forwardedHostHeader.split(',')[0].trim()
+    const allowedHost = new URL(env.siteUrl || origin).hostname
+    if (host === allowedHost) return `https://${host}`
+  }
+  return origin
+}
+
 /** Safe `next` target: a same-origin path, or the catalog at `/`. */
 export function safeNextPath(next: string | null): string {
   const raw = next ?? '/'
