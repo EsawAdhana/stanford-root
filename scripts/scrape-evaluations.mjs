@@ -49,6 +49,10 @@ const TERM_LABELS = {
     W26: 'Winter 2026',
     Sp26: 'Spring 2026',
     Su26: 'Summer 2026',
+    F26: 'Fall 2026',
+    W27: 'Winter 2027',
+    Sp27: 'Spring 2027',
+    Su27: 'Summer 2027',
 }
 const ALL_TERMS = Object.keys(TERM_LABELS)
 
@@ -242,7 +246,11 @@ async function searchTerm(termCode, cookie, useCache = true) {
     }
     const params = new URLSearchParams({ Course: termCode, Instructor: '', Search: 'true' })
     const first = await authenticatedFetch(`${SEARCH_URL}?${params}`, cookie)
-    const reports = parseSearchResults(await first.text())
+    const firstHtml = await first.text()
+    if (/login\.stanford\.edu/.test(first.url) || /<title>\s*Stanford Login/i.test(firstHtml)) {
+        throw new Error('The EvaluationKit session has expired; delete .evaluationkit-profile cookies or rerun to log in again.')
+    }
+    const reports = parseSearchResults(firstHtml)
     // An empty first page is indistinguishable from a term that has not published
     // yet, so it is never cached -- caching it would pin the term at zero reports.
     if (reports.length === 0) return reports
@@ -345,7 +353,10 @@ async function login() {
         viewport: { width: 1280, height: 800 },
     })
     const page = context.pages()[0] || await context.newPage()
-    await page.goto(SEARCH_URL)
+    // Open a real search, not the bare results page: the bare page is public and
+    // never redirects, so an expired session looked logged in and every search
+    // then came back empty (found on 2026-11-11, when Summer 2025 searched to 0).
+    await page.goto(`${SEARCH_URL}?${new URLSearchParams({ Course: 'F25', Instructor: '', Search: 'true' })}`)
     if (new URL(page.url()).hostname !== 'stanford.evaluationkit.com') {
         console.log('Complete Stanford login and two-step verification in the opened browser.')
     }
