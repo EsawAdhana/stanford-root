@@ -440,7 +440,7 @@ export function CalendarPreviewModal({
                 {/* Units selector when section has variable units */}
                 {hasVariableUnits && (
                     <div className="shrink-0 px-4 sm:px-6 py-3 border-t border-border/30">
-                        <div className="flex items-center gap-3">
+                        <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
                             <span className="text-sm font-semibold text-muted-foreground">Units:</span>
                             <div className="flex items-center gap-2">
                                 <div className={cn("grid gap-1.5", unitOptions.length <= 3 ? "grid-cols-3" : unitOptions.length === 4 ? "grid-cols-4" : "grid-cols-5")}>
@@ -450,7 +450,8 @@ export function CalendarPreviewModal({
                                             type="button"
                                             onClick={() => setSelectedUnits(prev => prev === u ? undefined : u)}
                                             className={cn(
-                                                "flex items-center justify-center w-9 h-8 font-bold rounded-md transition-all text-sm",
+                                                // 40px on phones and touch screens, the old 36 by 32 elsewhere.
+                                                "flex items-center justify-center w-9 h-8 max-sm:w-10 max-sm:h-10 [@media(pointer:coarse)]:w-10 [@media(pointer:coarse)]:h-10 font-bold rounded-md transition-all text-sm",
                                                 selectedUnits === u
                                                     ? "bg-primary text-primary-foreground shadow-sm"
                                                     : "bg-secondary/60 text-muted-foreground hover:bg-secondary hover:text-foreground"
