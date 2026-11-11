@@ -9,12 +9,12 @@ const Text = (about: string) => z.string().max(200).describe(about)
 
 export const STARTERS = [
   {
-    name: 'build_my_quarter',
-    title: 'Build my quarter',
-    example: "Build me a 15-unit Winter around what I've saved, with no Friday classes and nothing before 10am.",
-    args: { quarter: Text('The quarter, e.g. "Winter 2027".'), wants: Text('Units, days off, earliest start, requirements to hit.').optional() },
+    name: 'small_fun_class',
+    title: 'Find a small class people enjoy',
+    example: 'Find me a 1 or 2 unit class that people actually enjoy.',
+    args: { quarter: Text('The quarter, e.g. "Winter 2027".').optional(), interests: Text('Anything you are into, or want to avoid.').optional() },
     text: (a: Record<string, string | undefined>) =>
-      `Build my ${a.quarter} schedule around what I already have saved on Stanford Root${a.wants ? `. What I want: ${a.wants}` : ''}. Suggest well-reviewed classes that fit with no overlaps, show the units and hours per week it adds up to, and link each class. Ask me before adding anything.`,
+      `Find me 1 or 2 unit classes${a.quarter ? ` in ${a.quarter}` : ''} that students actually enjoy${a.interests ? `. I'm into: ${a.interests}` : ''}. Keep only ones that fit my saved schedule, best reviewed first, and quote a line from the reviews for each with a link.`,
   },
   {
     name: 'easiest_requirement',
