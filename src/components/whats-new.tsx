@@ -50,7 +50,7 @@ const SLIDES = [
   },
   {
     title: 'Share your schedule',
-    body: "Send friends a read-only link of the classes you're taking next quarter.",
+    body: "Send friends a read-only link of the classes you plan on taking.",
     image: '/whats-new/share.png',
     alt: 'A shared schedule opened from a link',
   },
