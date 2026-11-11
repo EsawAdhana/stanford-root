@@ -23,8 +23,9 @@ import { Logo } from '@/components/logo';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { SchedulePageShell } from '@/components/schedule-page-shell';
 import { ScheduleSourceNotice } from '@/components/schedule-source-notice';
-import { parseMeetingTimes, timeToMinutes, parseDays, isScheduledForTerm } from '@/lib/schedule-utils';
-import { getDefaultTerm, getApproxTermStart } from '@/lib/terms';
+import { timeToMinutes, parseDays, isScheduledForTerm } from '@/lib/schedule-utils';
+import { buildScheduleICS } from '@/lib/ics-export';
+import { getDefaultTerm } from '@/lib/terms';
 import { useAvailableTerms } from '@/hooks/use-selected-terms';
 import { cn } from '@/lib/utils';
 import {
@@ -206,99 +207,7 @@ function ScheduleContent() {
   }, [computedHours, currentTerm, currentTermCourses])
 
   const handleExportICS = () => {
-    // RFC 5545 text escaping for SUMMARY/DESCRIPTION/LOCATION values.
-    const escapeICS = (s: string) =>
-      (s || '')
-        .replace(/\\/g, '\\\\')
-        .replace(/;/g, '\\;')
-        .replace(/,/g, '\\,')
-        .replace(/\r?\n/g, '\\n')
-
-    const exportEvents = currentTermCourses.flatMap(course => {
-      const meetings = parseMeetingTimes(course, currentTerm)
-      return meetings.flatMap(m => {
-        if (!m.startTime || !m.endTime) return []
-        return (m.days || []).map(day => ({
-          courseId: course.id,
-          courseCode: `${course.subject} ${course.code}`,
-          day,
-          location: m.location || '',
-          start: timeToMinutes(m.startTime),
-          end: timeToMinutes(m.endTime)
-        }))
-      })
-    })
-
-    let icsContent = `BEGIN:VCALENDAR
-VERSION:2.0
-PRODID:-//Stanford Root//Course Schedule//EN
-CALSCALE:GREGORIAN
-METHOD:PUBLISH
-X-WR-CALNAME:Stanford Schedule - ${currentTerm}
-X-WR-TIMEZONE:America/Los_Angeles
-BEGIN:VTIMEZONE
-TZID:America/Los_Angeles
-X-LIC-LOCATION:America/Los_Angeles
-BEGIN:DAYLIGHT
-TZOFFSETFROM:-0800
-TZOFFSETTO:-0700
-TZNAME:PDT
-DTSTART:19700308T020000
-RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=2SU
-END:DAYLIGHT
-BEGIN:STANDARD
-TZOFFSETFROM:-0700
-TZOFFSETTO:-0800
-TZNAME:PST
-DTSTART:19701101T020000
-RRULE:FREQ=YEARLY;BYMONTH=11;BYDAY=1SU
-END:STANDARD
-END:VTIMEZONE
-`
-
-    // Approximate first instructional day for the term (year-agnostic; covers
-    // all four quarters and rolls over automatically).
-    const termStartDate = getApproxTermStart(currentTerm)
-
-    exportEvents.forEach(event => {
-      // JS getDay() semantics, so Sunday is 0 — hence the explicit undefined
-      // check below. Guarding on falsiness dropped every Sunday meeting.
-      const dayMap: Record<string, number> = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 }
-      const targetDay = dayMap[event.day]
-      if (targetDay === undefined) return
-
-      const startDate = new Date(termStartDate)
-      const currentDay = startDate.getDay()
-      let daysToAdd = targetDay - currentDay
-      if (daysToAdd < 0) daysToAdd += 7
-      startDate.setDate(startDate.getDate() + daysToAdd)
-
-      const year = startDate.getFullYear()
-      const month = (startDate.getMonth() + 1).toString().padStart(2, '0')
-      const date = startDate.getDate().toString().padStart(2, '0')
-
-      const formatTime = (minutes: number) => {
-        const h = Math.floor(minutes / 60).toString().padStart(2, '0')
-        const m = (minutes % 60).toString().padStart(2, '0')
-        return `${h}${m}00`
-      }
-
-      const dtStart = `${year}${month}${date}T${formatTime(event.start)}`
-      const dtEnd = `${year}${month}${date}T${formatTime(event.end)}`
-
-      icsContent += `BEGIN:VEVENT
-SUMMARY:${escapeICS(event.courseCode)}
-DESCRIPTION:${escapeICS(`${event.courseCode} - ${event.location}`)}
-LOCATION:${escapeICS(event.location)}
-DTSTART;TZID=America/Los_Angeles:${dtStart}
-DTEND;TZID=America/Los_Angeles:${dtEnd}
-RRULE:FREQ=WEEKLY;COUNT=10
-UID:${event.courseId}-${event.day}-${dtStart}@root.stanford.edu
-END:VEVENT
-`
-    })
-
-    icsContent += 'END:VCALENDAR'
+    const icsContent = buildScheduleICS(currentTermCourses, currentTerm)
 
     const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' })
     const link = document.createElement('a')

@@ -111,6 +111,38 @@ export function getApproxTermStart(term: string): Date {
 }
 
 /**
+ * Weekdays in a term with no classes, from the Registrar's 2026-27 academic
+ * calendar (studentservices.stanford.edu, "Stanford Academic Calendar
+ * 2026-2027", read 2026-11-11). The catalog's section dates are only a first
+ * and last day, so an exported calendar needs these to skip Thanksgiving week
+ * and the Monday holidays. `except` lists subjects that still meet that day.
+ * Add each year's dates when its calendar is published; a term missing here
+ * exports with no days skipped.
+ */
+export const NO_CLASS_DAYS: Record<string, { date: string; name: string; except?: string[] }[]> = {
+  'Autumn 2026': [
+    { date: '2026-09-21', name: 'Yom Kippur' },
+    { date: '2026-11-03', name: 'Democracy Day' },
+    { date: '2026-11-23', name: 'Thanksgiving Recess' },
+    { date: '2026-11-24', name: 'Thanksgiving Recess' },
+    { date: '2026-11-25', name: 'Thanksgiving Recess' },
+    { date: '2026-11-26', name: 'Thanksgiving Recess' },
+    { date: '2026-11-27', name: 'Thanksgiving Recess' },
+  ],
+  'Winter 2027': [
+    { date: '2027-01-18', name: 'Martin Luther King, Jr., Day' },
+    { date: '2027-02-15', name: "Presidents' Day", except: ['LAW'] },
+  ],
+  'Spring 2027': [
+    { date: '2027-05-31', name: 'Memorial Day' },
+    { date: '2027-06-03', name: 'Day before finals' },
+  ],
+  'Summer 2027': [
+    { date: '2027-07-05', name: 'Independence Day holiday' },
+  ],
+}
+
+/**
  * Season codes used by Stanford's own syllabus service
  * (syllabus.stanford.edu): Autumn -> F, Winter -> W, Spring -> Sp, Summer -> Su.
  * Autumn is "F" (Fall) there even though the registrar says Autumn everywhere else.
