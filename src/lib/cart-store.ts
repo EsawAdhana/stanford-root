@@ -1,6 +1,5 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import { toast } from 'sonner'
 import type { Course } from '@/types/course'
 import { dedupeCrossListedItems, makeMeetingKey, mergeSectionSelection } from '@/lib/schedule-utils'
 import { getCrossListGroupIds } from '@/lib/cross-list.mjs'
@@ -264,7 +263,10 @@ export const useCartStore = create<CartStore>()(
           // A class sits on one term at a time, so adding it to another term takes
           // it off the first. Say so: otherwise the first term just looks emptied.
           if (existing?.selectedTerm && resolvedTerm && existing.selectedTerm !== resolvedTerm) {
-            toast(`${course.subject} ${course.code} moved from ${existing.selectedTerm} to ${resolvedTerm}.`)
+            // Loaded on demand: sonner touches the document when imported, and this
+            // store is imported where there is none (sync tests, server code).
+            const message = `${course.subject} ${course.code} moved from ${existing.selectedTerm} to ${resolvedTerm}.`
+            void import('sonner').then(({ toast }) => toast(message))
           }
           const newItems = [...currentItems]
           newItems[existingIndex] = { ...newItems[existingIndex], ...courseWithTerm }

@@ -23,26 +23,29 @@ beforeEach(() => {
 })
 
 describe('adding a class to a second term', () => {
-  it('moves it and says so', () => {
+  it('moves it and says so', async () => {
     const { addItem } = useCartStore.getState()
     addItem(course('MATH51'), A)
     addItem(course('MATH51'), W)
+    await vi.waitFor(() => expect(toast).toHaveBeenCalled())
     expect(toast).toHaveBeenCalledTimes(1)
     expect(toast).toHaveBeenCalledWith('MATH 51 moved from Autumn 2026 to Winter 2027.')
     expect(useCartStore.getState().items.map(i => [i.id, i.selectedTerm])).toEqual([['MATH51', W]])
   })
 
-  it('says nothing for a first add or a change within the same term', () => {
+  it('says nothing for a first add or a change within the same term', async () => {
     const { addItem } = useCartStore.getState()
     addItem(course('MATH51'), A)
     addItem(course('MATH51'), A, undefined, 5)
     addItem(course('CS103'), W)
+    await new Promise(r => setTimeout(r, 50))
     expect(toast).not.toHaveBeenCalled()
   })
 
-  it('says nothing for an entry that had no term (an .ics import shown in every term)', () => {
+  it('says nothing for an entry that had no term (an .ics import shown in every term)', async () => {
     useCartStore.setState({ items: [{ ...course('MATH51'), selectedTerm: undefined }] })
     useCartStore.getState().addItem(course('MATH51'), W)
+    await new Promise(r => setTimeout(r, 50))
     expect(toast).not.toHaveBeenCalled()
   })
 })
