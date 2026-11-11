@@ -5,7 +5,7 @@ import { useCourseStore } from '@/lib/store';
 import { useCartStore } from '@/lib/cart-store';
 import { useQueryState, parseAsArrayOf, parseAsString, parseAsBoolean, parseAsInteger } from 'nuqs';
 import { cn, getSchoolFromSubject, abbreviateGer, unitsLabel, formatComponent, isAllowedGer, formatLevel, parseUnitsOptions, getCrossListPrimaryMap } from '@/lib/utils';
-import { searchCourses } from '@/lib/search-utils';
+import { searchCourses, addExcludedKeyword, filterDepartments, departmentSearchEmptyText } from '@/lib/search-utils';
 import { filterCoursesForFacets, COUNTED_FACET_KEYS, type CourseFilterCriteria } from '@/lib/course-filter';
 import { formatMinutes } from '@/lib/schedule-utils';
 import { compareTerms } from '@/lib/terms';
@@ -282,17 +282,7 @@ export function FilterSidebar() {
     }, [searchedFacetLists, selectedTerms, selectedFormats, selectedLevels, selectedGers]);
 
     const filteredDepts = useMemo(() => {
-        if (!deptQuery) return facets.depts;
-        const lower = deptQuery.toLowerCase().trim();
-        return facets.depts.filter(d => {
-            const codeLower = d.code.toLowerCase();
-            // Match department code that starts with query (e.g. "cs" -> CS, CSB, CSRE, but not ECOS)
-            if (codeLower.startsWith(lower)) return true;
-            const nameLower = (d.name || '').toLowerCase();
-            if (nameLower.startsWith(lower)) return true;
-            const words = nameLower.split(/[\s-]+/);
-            return words.some(w => w.startsWith(lower));
-        });
+        return filterDepartments(facets.depts, deptQuery);
     }, [facets.depts, deptQuery]);
 
     const toggleFilter = (
@@ -315,10 +305,8 @@ export function FilterSidebar() {
 
     const handleAddExclude = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter' && excludeInput.trim()) {
-            const newWord = excludeInput.trim();
-            if (!excludedWords.includes(newWord)) {
-                setExcludedWords([...excludedWords, newWord]);
-            }
+            const next = addExcludedKeyword(excludedWords, excludeInput);
+            if (next) setExcludedWords(next);
             setExcludeInput('');
         }
     };
@@ -540,6 +528,11 @@ export function FilterSidebar() {
                                             )}
                                         </div>
                                     ))}
+                                    {filteredDepts.length === 0 && departmentSearchEmptyText(deptQuery) && (
+                                        <p className="px-4 py-6 text-sm text-muted-foreground text-center">
+                                            {departmentSearchEmptyText(deptQuery)}
+                                        </p>
+                                    )}
                                 </div>
                             </SimpleScrollArea>
                             <div className="p-4 border-t bg-muted/20 flex justify-between items-center">

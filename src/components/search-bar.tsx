@@ -7,36 +7,36 @@ import { useEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { track } from '@/lib/analytics';
 import { useFindShortcut } from '@/hooks/use-find-shortcut';
+import { createSearchBoxSync } from '@/lib/search-box-sync';
 
 export function SearchBar() {
   const pathname = usePathname();
   const [query, setQuery] = useQueryState('q', { defaultValue: '', shallow: true })
   const [localValue, setLocalValue] = useState(query);
   const inputRef = useRef<HTMLInputElement>(null);
-  const debounceRef = useRef<number | null>(null)
   const lastTrackedRef = useRef('')
+  const setQueryRef = useRef(setQuery)
+  useEffect(() => { setQueryRef.current = setQuery }, [setQuery])
+
+  // The box is the source of truth while it is in use; ?q= only replaces its
+  // text when something else changed it (Back, Clear all). See search-box-sync.
+  const [sync] = useState(() => createSearchBoxSync({
+    initial: query,
+    commit: q => setQueryRef.current(q),
+    onValue: setLocalValue,
+  }))
 
   useEffect(() => {
-    setLocalValue(query);
-  }, [query]);
+    sync.urlChanged(query);
+  }, [sync, query]);
 
-  useEffect(() => {
-    if (debounceRef.current) window.clearTimeout(debounceRef.current)
-    debounceRef.current = window.setTimeout(() => {
-      setQuery(localValue.trim() ? localValue : null)
-    }, 250)
+  useEffect(() => () => sync.dispose(), [sync])
 
-    return () => {
-      if (debounceRef.current) window.clearTimeout(debounceRef.current)
-    }
-  }, [localValue, setQuery])
-
-  // Track only on commit (Enter/blur), not per debounced keystroke — otherwise
+  // Track only on commit (Enter/blur), not per debounced keystroke, otherwise
   // typing a sentence fires a beacon per word.
   const commitQuery = () => {
-    if (debounceRef.current) window.clearTimeout(debounceRef.current)
-    const trimmed = localValue.trim()
-    setQuery(trimmed ? localValue : null)
+    sync.flush()
+    const trimmed = sync.value.trim()
     if (trimmed && trimmed !== lastTrackedRef.current) {
       lastTrackedRef.current = trimmed
       track('search_performed', { length: trimmed.length })
@@ -63,8 +63,57 @@ export function SearchBar() {
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, []);
 
+  // Pressing a link blurs the box before the click lands. Writing ?q= in that
+  // gap cancelled the link's navigation (the card needed a second click), so a
+  // blur caused by a link press holds the pending search until the click
+  // resolves: dropped if the link navigated, committed if it didn't.
+  const linkPressAtRef = useRef(0)
+  useEffect(() => {
+    const onPointerDown = (e: PointerEvent) => {
+      const onLink = e.button === 0 && e.target instanceof Element && e.target.closest('a[href]') != null
+      linkPressAtRef.current = onLink ? Date.now() : 0
+    }
+    document.addEventListener('pointerdown', onPointerDown, true)
+    return () => document.removeEventListener('pointerdown', onPointerDown, true)
+  }, [])
+
+  const handleBlur = () => {
+    const pressedLink = Date.now() - linkPressAtRef.current < 1000
+    linkPressAtRef.current = 0
+    if (!pressedLink) {
+      commitQuery()
+      return
+    }
+    sync.holdForLink()
+    let settled = false
+    const settle = (navigating: boolean) => {
+      if (settled) return
+      settled = true
+      window.removeEventListener('click', onClick)
+      window.removeEventListener('pointerup', onPointerUp, true)
+      window.removeEventListener('pointercancel', onCancel, true)
+      if (navigating) sync.releaseLink(true)
+      else commitQuery()
+    }
+    // Window listeners run after React's, so defaultPrevented here means
+    // Next's Link took the click and is navigating.
+    const onClick = (e: MouseEvent) =>
+      settle(e.defaultPrevented && e.target instanceof Element && e.target.closest('a[href]') != null)
+    // No click at all (released off the link, or dragged it, which cancels the
+    // pointer): commit as a plain blur.
+    const onPointerUp = () => { window.setTimeout(() => settle(false), 300) }
+    const onCancel = () => settle(false)
+    window.addEventListener('click', onClick)
+    window.addEventListener('pointerup', onPointerUp, true)
+    window.addEventListener('pointercancel', onCancel, true)
+    // A press held past this is not a quick click; committing before its click
+    // is safe, since a navigation that starts later still wins.
+    window.setTimeout(() => settle(false), 1500)
+  }
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setLocalValue(e.target.value);
+    sync.type(e.target.value);
   };
 
   return (
@@ -82,7 +131,7 @@ export function SearchBar() {
           if (e.key !== 'Enter') return
           commitQuery()
         }}
-        onBlur={commitQuery}
+        onBlur={handleBlur}
       />
       <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5 pointer-events-none">
         <kbd className="hidden sm:inline-flex items-center gap-0.5 rounded-md border border-border/40 bg-background/60 px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground/40 shadow-[0_1px_0_0_hsl(var(--border)/0.3)]">

@@ -4,7 +4,7 @@ import { useCartStore } from '@/lib/cart-store';
 import { useQueryState, parseAsArrayOf, parseAsString, parseAsBoolean, parseAsInteger } from 'nuqs';
 import { aggregateCrossListMetrics, compareCourseCodes, getCrossListPrimaryMap, normalizeCourseId, resolveToCanonicalPrimary, parseUnitsOptions } from '@/lib/utils';
 import type { Course } from '@/types/course';
-import { searchCourses } from '@/lib/search-utils';
+import { searchCourses, normalizeSearchQuery, codeMatchRank } from '@/lib/search-utils';
 import { filterCourses, needsSections } from '@/lib/course-filter';
 import { useSelectedTerms } from '@/hooks/use-selected-terms';
 import { findInOtherTerms, type OtherTermsMatch } from '@/lib/other-terms';
@@ -23,13 +23,100 @@ export function applyQuery(result: Course[], query: string, primaryMap: Map<stri
     // Only from the filtered list: taking it from the full catalog let "EE 186" bring back CS 140M with
     // Hide closed & waitlisted on, while "CS 140M" itself found nothing. Filters already match any listing
     // of the class, so a primary missing here was hidden on purpose, and the empty state names the toggle.
-    const queryNorm = normalizeCourseId(query.trim().replace(/\s+/g, ''));
+    const queryNorm = normalizeCourseId(normalizeSearchQuery(query).trim().replace(/\s+/g, ''));
     if (queryNorm && primaryMap.has(queryNorm)) {
         const canonicalNorm = resolveToCanonicalPrimary(queryNorm, primaryMap);
         const primary = beforeSearch.find(c => normalizeCourseId(c.id) === canonicalNorm);
         if (primary && !result.some(c => c.id === primary.id)) result = [...result, primary];
     }
     return result;
+}
+
+/**
+ * The list's order. Extracted so the order a student sees is testable: a
+ * code-shaped query leads with its exact match whatever the chosen sort.
+ */
+export function sortCourses(
+    courses: Course[],
+    sortBy: string,
+    sortOrder: string,
+    metricsByCourseId: Map<string, { hrsPerUnit?: number; hours?: number; quality?: number }>,
+    query: string,
+): Course[] {
+    const effectiveSort = ['units', 'hrsPerWeek', 'hrsPerUnit', 'rating'].includes(sortBy) ? sortBy : 'az';
+    const mult = sortOrder === 'desc' ? -1 : 1;
+    // A code-shaped query puts the exact code first, then codes starting
+    // with it; the chosen sort orders the rest and each group.
+    const rankOf = codeMatchRank(query);
+    const ranks = rankOf ? new Map(courses.map(c => [c.id, rankOf(c)])) : null;
+    return [...courses].sort((a, b) => {
+        if (ranks) {
+            const byRank = ranks.get(a.id)! - ranks.get(b.id)!;
+            if (byRank !== 0) return byRank;
+        }
+        const safeSubject = (x: Course) => (x?.subject ?? '').toString();
+        const safeCode = (x: Course) => (x?.code ?? '').toString();
+        const subjectCompare = safeSubject(a).localeCompare(safeSubject(b));
+        const codeCompare = compareCourseCodes(safeCode(a), safeCode(b));
+        const tiebreak = subjectCompare !== 0 ? subjectCompare : codeCompare;
+
+        if (effectiveSort === 'az') {
+            return mult * (subjectCompare !== 0 ? subjectCompare : codeCompare);
+        }
+        if (effectiveSort === 'units') {
+            const optsA = parseUnitsOptions(a.units);
+            const optsB = parseUnitsOptions(b.units);
+            const hasA = optsA.length > 0;
+            const hasB = optsB.length > 0;
+            if (!hasA && !hasB) return tiebreak;
+            if (!hasA) return 1;  // a (null) goes to bottom
+            if (!hasB) return -1; // b (null) goes to bottom
+            const minA = Math.min(...optsA);
+            const minB = Math.min(...optsB);
+            if (minA !== minB) return mult * (minA - minB);
+            return tiebreak;
+        }
+        if (effectiveSort === 'hrsPerWeek') {
+            const mA = metricsByCourseId.get(a.id);
+            const mB = metricsByCourseId.get(b.id);
+            const hrsA = mA?.hours;
+            const hrsB = mB?.hours;
+            const hasA = hrsA != null;
+            const hasB = hrsB != null;
+            if (!hasA && !hasB) return tiebreak;
+            if (!hasA) return 1;
+            if (!hasB) return -1;
+            if (hrsA !== hrsB) return mult * (hrsA - hrsB);
+            return tiebreak;
+        }
+        if (effectiveSort === 'hrsPerUnit') {
+            const mA = metricsByCourseId.get(a.id);
+            const mB = metricsByCourseId.get(b.id);
+            const diffA = mA?.hrsPerUnit;
+            const diffB = mB?.hrsPerUnit;
+            const hasA = diffA != null;
+            const hasB = diffB != null;
+            if (!hasA && !hasB) return tiebreak;
+            if (!hasA) return 1;
+            if (!hasB) return -1;
+            if (diffA !== diffB) return mult * (diffA - diffB);
+            return tiebreak;
+        }
+        if (effectiveSort === 'rating') {
+            const mA = metricsByCourseId.get(a.id);
+            const mB = metricsByCourseId.get(b.id);
+            const qA = mA?.quality;
+            const qB = mB?.quality;
+            const hasA = qA != null;
+            const hasB = qB != null;
+            if (!hasA && !hasB) return tiebreak;
+            if (!hasA) return 1;
+            if (!hasB) return -1;
+            if (qA !== qB) return mult * (qA - qB);
+            return tiebreak;
+        }
+        return mult * tiebreak;
+    });
 }
 
 /**
@@ -190,73 +277,8 @@ export function useFilteredCourses() {
 
     const displayCourses = useMemo(() => {
         if (filteredResult.length === 0) return [] as Course[];
-        const effectiveSort = ['units', 'hrsPerWeek', 'hrsPerUnit', 'rating'].includes(sortBy) ? sortBy : 'az';
-        const mult = effectiveSortOrder === 'desc' ? -1 : 1;
-        return [...filteredResult].sort((a, b) => {
-            const safeSubject = (x: Course) => (x?.subject ?? '').toString();
-            const safeCode = (x: Course) => (x?.code ?? '').toString();
-            const subjectCompare = safeSubject(a).localeCompare(safeSubject(b));
-            const codeCompare = compareCourseCodes(safeCode(a), safeCode(b));
-            const tiebreak = subjectCompare !== 0 ? subjectCompare : codeCompare;
-
-            if (effectiveSort === 'az') {
-                return mult * (subjectCompare !== 0 ? subjectCompare : codeCompare);
-            }
-            if (effectiveSort === 'units') {
-                const optsA = parseUnitsOptions(a.units);
-                const optsB = parseUnitsOptions(b.units);
-                const hasA = optsA.length > 0;
-                const hasB = optsB.length > 0;
-                if (!hasA && !hasB) return tiebreak;
-                if (!hasA) return 1;  // a (null) goes to bottom
-                if (!hasB) return -1; // b (null) goes to bottom
-                const minA = Math.min(...optsA);
-                const minB = Math.min(...optsB);
-                if (minA !== minB) return mult * (minA - minB);
-                return tiebreak;
-            }
-            if (effectiveSort === 'hrsPerWeek') {
-                const mA = metricsByCourseId.get(a.id);
-                const mB = metricsByCourseId.get(b.id);
-                const hrsA = mA?.hours;
-                const hrsB = mB?.hours;
-                const hasA = hrsA != null;
-                const hasB = hrsB != null;
-                if (!hasA && !hasB) return tiebreak;
-                if (!hasA) return 1;
-                if (!hasB) return -1;
-                if (hrsA !== hrsB) return mult * (hrsA - hrsB);
-                return tiebreak;
-            }
-            if (effectiveSort === 'hrsPerUnit') {
-                const mA = metricsByCourseId.get(a.id);
-                const mB = metricsByCourseId.get(b.id);
-                const diffA = mA?.hrsPerUnit;
-                const diffB = mB?.hrsPerUnit;
-                const hasA = diffA != null;
-                const hasB = diffB != null;
-                if (!hasA && !hasB) return tiebreak;
-                if (!hasA) return 1;
-                if (!hasB) return -1;
-                if (diffA !== diffB) return mult * (diffA - diffB);
-                return tiebreak;
-            }
-            if (effectiveSort === 'rating') {
-                const mA = metricsByCourseId.get(a.id);
-                const mB = metricsByCourseId.get(b.id);
-                const qA = mA?.quality;
-                const qB = mB?.quality;
-                const hasA = qA != null;
-                const hasB = qB != null;
-                if (!hasA && !hasB) return tiebreak;
-                if (!hasA) return 1;
-                if (!hasB) return -1;
-                if (qA !== qB) return mult * (qA - qB);
-                return tiebreak;
-            }
-            return mult * tiebreak;
-        });
-    }, [filteredResult, sortBy, effectiveSortOrder, metricsByCourseId]);
+        return sortCourses(filteredResult, sortBy, effectiveSortOrder, metricsByCourseId, query);
+    }, [filteredResult, sortBy, effectiveSortOrder, metricsByCourseId, query]);
 
     const getSortDisplayValue = useCallback((course: Course): string | null => {
         const m = metricsByCourseId.get(course.id);

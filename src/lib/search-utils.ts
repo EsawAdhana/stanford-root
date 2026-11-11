@@ -1,6 +1,60 @@
 import type { Course } from '@/types/course';
 import { getAlternateCourseCodesFromTitle, normalizeCourseId } from '@/lib/utils';
 
+const nameTokens = (s: string) =>
+    s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').split(/[\s,.]+/).filter(Boolean);
+
+/**
+ * Whether a multi-word query names this instructor, in either order and with or
+ * without the comma: "Mehran Sahami", "sahami mehran" and "Sahami, Mehran" all
+ * name "Sahami, Mehran". Catalog entries often carry only an initial
+ * ("Sahami, M."), so a query word also matches an initial it starts with, but
+ * at least one word has to match a whole name, or "mehran sahami" would match
+ * every "Smith, M. S.".
+ */
+export function queryNamesInstructor(query: string, instructor: string): boolean {
+    const words = nameTokens(query);
+    if (words.length < 2) return false;
+    const parts = nameTokens(instructor);
+    const used = new Set<number>();
+    let wholeNames = 0;
+    for (const word of words) {
+        let at = parts.findIndex((p, i) => !used.has(i) && p === word);
+        if (at >= 0) wholeNames++;
+        else at = parts.findIndex((p, i) => !used.has(i) && p.length === 1 && word.startsWith(p));
+        if (at < 0) return false;
+        used.add(at);
+    }
+    return wholeNames > 0;
+}
+
+/**
+ * "CS-106A" and "cs.106a" mean "CS 106A": a hyphen, dot, underscore or slash
+ * between a subject and its number reads as a space. Only at that join, so
+ * "data-driven" and "e.g." stay as typed.
+ */
+export function normalizeSearchQuery(query: string): string {
+    return query.replace(/^(\s*[A-Za-z&]+)\s*[-.\u2010-\u2014_/]+\s*(?=\d)/, '$1 ');
+}
+
+/**
+ * For a query shaped like one course code ("cs106a", "CS 106", "cs-106a"), how
+ * closely each course's code matches it: 0 for the course itself, 1 for codes
+ * that start with the query, 2 for everything else the search found (titles,
+ * cross-listings). The list sorts by this first, so "cs106a" leads with CS 106A
+ * instead of CS 100ACE. Null for any other query, which keeps the chosen sort.
+ */
+export function codeMatchRank(query: string): ((course: Course) => number) | null {
+    const compact = normalizeSearchQuery(query).toLowerCase().replace(/\s+/g, '');
+    if (!/^[a-z&]+\d+[a-z]*$/.test(compact)) return null;
+    return course => {
+        const code = `${course.subject}${course.code}`.toLowerCase().replace(/\s+/g, '');
+        if (code === compact) return 0;
+        if (code.startsWith(compact)) return 1;
+        return 2;
+    };
+}
+
 /**
  * Filters a list of courses based on a search query.
  * This function encapsulates the core text-matching logic used across the application.
@@ -11,6 +65,7 @@ import { getAlternateCourseCodesFromTitle, normalizeCourseId } from '@/lib/utils
  */
 export function searchCourses(courses: Course[], query: string): Course[] {
     if (!query) return courses;
+    query = normalizeSearchQuery(query);
 
     let result = courses;
     const lowerQuery = query.toLowerCase().trim();
@@ -70,10 +125,50 @@ export function searchCourses(courses: Course[], query: string): Course[] {
                 const alts = getAlternateCourseCodesFromTitle(c.title || '');
                 if (alts.some(alt => alt === queryNorm)) return true;
             }
-            if (c.instructors && c.instructors.some(i => i.toLowerCase().includes(lowerQuery))) return true;
+            if (c.instructors && c.instructors.some(i => i.toLowerCase().includes(lowerQuery) || queryNamesInstructor(lowerQuery, i))) return true;
             return false;
         });
     }
 
     return result;
+}
+
+/**
+ * The exclude list after the student types a keyword and presses Enter, or null
+ * when there is nothing to add. Exclusion ignores case, so "intro" and "INTRO"
+ * are one keyword and one chip, not two.
+ */
+export function addExcludedKeyword(words: string[], input: string): string[] | null {
+    const word = input.trim();
+    if (!word) return null;
+    const lower = word.toLowerCase();
+    if (words.some(w => w.toLowerCase() === lower)) return null;
+    return [...words, word];
+}
+
+/**
+ * The department picker's search. Departments are listed by subject code (the
+ * catalog carries no department names), so "cs" finds CS, CSB and CSRE, but
+ * not ECOS.
+ */
+export function filterDepartments<T extends { code: string; name?: string }>(depts: T[], query: string): T[] {
+    const lower = query.toLowerCase().trim();
+    if (!lower) return depts;
+    return depts.filter(d => {
+        if (d.code.toLowerCase().startsWith(lower)) return true;
+        const nameLower = (d.name || '').toLowerCase();
+        if (nameLower.startsWith(lower)) return true;
+        return nameLower.split(/[\s-]+/).some(w => w.startsWith(lower));
+    });
+}
+
+/**
+ * What the department picker says when its search finds nothing. A blank list
+ * with no words read as broken; "computer science" finds nothing because the
+ * picker only knows codes, so say that.
+ */
+export function departmentSearchEmptyText(query: string): string | null {
+    const q = query.trim();
+    if (!q) return null;
+    return `No departments match \u201c${q}\u201d. Search by subject code, like CS or MATH.`;
 }
