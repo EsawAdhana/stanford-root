@@ -9,36 +9,44 @@ const Text = (about: string) => z.string().max(200).describe(about)
 
 export const STARTERS = [
   {
-    name: 'plan_my_quarter',
-    title: 'Plan my quarter',
-    example: 'Plan my Winter around what I already have saved.',
-    args: { quarter: Text('The quarter to plan, e.g. "Winter 2027".').optional() },
+    name: 'build_my_quarter',
+    title: 'Build my quarter',
+    example: "Build me a 15-unit Winter around what I've saved, with no Friday classes and nothing before 10am.",
+    args: { quarter: Text('The quarter, e.g. "Winter 2027".'), wants: Text('Units, days off, earliest start, requirements to hit.').optional() },
     text: (a: Record<string, string | undefined>) =>
-      `Look at my saved Stanford Root schedule${a.quarter ? ` for ${a.quarter}` : ''}. Tell me my units, any overlaps and anything I still have to pick, then suggest well-reviewed classes that fit around it. Ask me what I need before adding anything.`,
+      `Build my ${a.quarter} schedule around what I already have saved on Stanford Root${a.wants ? `. What I want: ${a.wants}` : ''}. Suggest well-reviewed classes that fit with no overlaps, show the units and hours per week it adds up to, and link each class. Ask me before adding anything.`,
   },
   {
-    name: 'find_a_requirement',
-    title: 'Find a class for a requirement',
-    example: 'Find a WAY-ER class that only meets Tuesday and Thursday.',
-    args: { requirement: Text('The requirement, e.g. "WAY-ER" or "WIM".'), constraints: Text('Days, times, units or anything to avoid.').optional() },
+    name: 'easiest_requirement',
+    title: 'Easiest class for a requirement',
+    example: "What's the lightest WAY-ER that still fits my Winter schedule?",
+    args: { requirement: Text('The requirement, e.g. "WAY-ER" or "WIM".'), quarter: Text('The quarter, e.g. "Winter 2027".').optional() },
     text: (a: Record<string, string | undefined>) =>
-      `Find classes that satisfy ${a.requirement}${a.constraints ? ` and fit this: ${a.constraints}` : ''}. Keep only ones that fit my saved schedule, best reviewed first, with workload and a link to each.`,
+      `What are the lightest-workload classes that satisfy ${a.requirement}${a.quarter ? ` in ${a.quarter}` : ''} and fit my saved schedule? Rank by hours per week, show the rating next to each, and link them.`,
   },
   {
     name: 'compare_classes',
-    title: 'Compare two classes',
-    example: 'Compare CS 161 and CS 154 on workload and reviews.',
+    title: 'Pick between two classes',
+    example: 'CS 161 or CS 154 next quarter? Compare the workload and what people say.',
     args: { first: Text('A course, e.g. "CS 161".'), second: Text('Another course, e.g. "CS 154".') },
     text: (a: Record<string, string | undefined>) =>
-      `Compare ${a.first} and ${a.second}: rating, hours per week, who takes them, when they are offered and what students say in reviews. Then say which you would take and why.`,
+      `${a.first} or ${a.second}? Compare rating, hours per week, who takes them, when they are offered and what students say in reviews. Then tell me which you would take and why.`,
   },
   {
-    name: 'professor_reviews',
-    title: 'What students say about a professor',
-    example: 'What do reviews say about Mehran Sahami?',
-    args: { name: Text('The instructor, e.g. "Mehran Sahami".') },
+    name: 'can_i_handle_it',
+    title: 'Can I handle adding this class?',
+    example: 'Is CS 229 a bad idea on top of my Winter schedule? How many hours a week would I be at?',
+    args: { course: Text('The course you are thinking of adding, e.g. "CS 229".'), quarter: Text('The quarter, e.g. "Winter 2027".').optional() },
     text: (a: Record<string, string | undefined>) =>
-      `What do students say about ${a.name}? Summarize their evaluations, quote a few comments, and list what they teach this year with a link to each class.`,
+      `I'm thinking of adding ${a.course}${a.quarter ? ` in ${a.quarter}` : ''}. Add up the reported hours per week for what I already have saved that quarter, then with ${a.course} on top. Tell me about any time overlaps and what reviews say about its workload, and be honest about whether it's too much.`,
+  },
+  {
+    name: 'find_open_section',
+    title: 'Find a section that fits',
+    example: 'Which CHEM 31A sections still have seats and don\'t clash with my classes?',
+    args: { course: Text('The course, e.g. "CHEM 31A".'), quarter: Text('The quarter, e.g. "Winter 2027".').optional() },
+    text: (a: Record<string, string | undefined>) =>
+      `Which sections of ${a.course}${a.quarter ? ` in ${a.quarter}` : ''} still have open seats and don't overlap my saved schedule? List each with its time, seats left and waitlist. Ask me before changing anything.`,
   },
   {
     name: 'fill_my_program_sheet',
@@ -47,14 +55,6 @@ export const STARTERS = [
     args: { program_sheet: z.string().max(20_000).describe('Your program sheet or list of remaining requirements, pasted as text.') },
     text: (a: Record<string, string | undefined>) =>
       `Here is my program sheet:\n\n${a.program_sheet}\n\nFor each requirement I still have left, find the best-reviewed class that fills it and fits my saved schedule. Say which quarter each is offered and link it. Ask me before adding anything.`,
-  },
-  {
-    name: 'export_my_calendar',
-    title: 'Export my quarter to a calendar',
-    example: 'Export my Winter schedule to my calendar.',
-    args: { quarter: Text('The quarter to export, e.g. "Winter 2027".').optional() },
-    text: (a: Record<string, string | undefined>) =>
-      `Export my saved Stanford Root schedule${a.quarter ? ` for ${a.quarter}` : ''} as an .ics file I can add to my calendar, and tell me what was left off.`,
   },
 ] as const
 
