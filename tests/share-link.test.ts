@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { MAX_SHARED_COURSES, displayCode, readShareLink, shareLinkPath, type SharedEntry } from '@/lib/share-link'
+import { MAX_SHARED_COURSES, displayCode, missingSections, readShareLink, shareLinkNotice, shareLinkPath, type SharedEntry } from '@/lib/share-link'
 
 /** What the share page reads back from a link the schedule page built. */
 function roundTrip(term: string, entries: SharedEntry[]) {
@@ -17,7 +17,7 @@ describe('share links carry the schedule', () => {
       { id: 'CS161', selectedSectionIds: [1933, 1940], selectedUnits: 4 },
       { id: 'CS224N' },
     ]
-    expect(roundTrip('Winter 2027', entries)).toEqual({ term: 'Winter 2027', entries, skipped: 0 })
+    expect(roundTrip('Winter 2027', entries)).toEqual({ term: 'Winter 2027', entries, skipped: 0, overLimit: 0 })
   })
 
   it('builds a short, readable link', () => {
@@ -84,6 +84,52 @@ describe('reading a link someone could have mangled', () => {
     expect(read('t=W27&c=CS229.12345678')?.entries).toBeUndefined()
     expect(read('t=W27&c=CS229~123')).toBeNull()
     expect(read('t=W27&c=C')).toBeNull()
+  })
+})
+
+describe('the notice for what a link holds but the page does not show', () => {
+  const F = 'Autumn 2026'
+  // CS 106A's Autumn 2026 lecture and a discussion, from the catalog dump.
+  const catalog = [
+    { id: 'CS106A', subject: 'CS', code: '106A', sections: [{ term: F, classId: 1801 }, { term: F, classId: 1802 }, { term: 'Spring 2027', classId: 99999 }] },
+    { id: 'MATH51', subject: 'MATH', code: '51', sections: [{ term: F, classId: 6636 }] },
+  ]
+  const loaded = () => true
+
+  it('says when a picked section no longer exists', () => {
+    // 99999 is a Spring class number: class numbers belong to one term.
+    const shared = read('t=F26&c=CS106A.99999~4,MATH51.6636')!
+    const missing = missingSections(shared, catalog, loaded)
+    expect(missing).toEqual([{ code: 'CS 106A', missing: 1, noneLeft: true }])
+    expect(shareLinkNotice({ unfound: 0, overLimit: 0 }, missing))
+      .toBe('1 section in this link no longer exists, so CS 106A shows its default section instead.')
+  })
+
+  it('says a class is shown without the sections that are gone', () => {
+    const shared = read('t=F26&c=CS106A.1801-5-6')!
+    expect(shareLinkNotice({ unfound: 0, overLimit: 0 }, missingSections(shared, catalog, loaded)))
+      .toBe('2 sections in this link no longer exist, so CS 106A is shown without them.')
+  })
+
+  it('does not judge sections before they have loaded', () => {
+    const shared = read('t=F26&c=CS106A.99999')!
+    expect(missingSections(shared, catalog, () => false)).toEqual([])
+  })
+
+  it('counts classes past the limit', () => {
+    const ids = Array.from({ length: MAX_SHARED_COURSES + 3 }, (_, i) => `CS${i + 1}`).join(',')
+    const shared = read(`t=W27&c=${ids}`)!
+    expect(shared.overLimit).toBe(3)
+    expect(shareLinkNotice({ unfound: 0, overLimit: shared.overLimit }, []))
+      .toBe('A shared schedule shows up to 40 classes, so the last 3 classes in this link aren\'t shown.')
+    expect(shareLinkNotice({ unfound: 0, overLimit: 1 }, []))
+      .toBe('A shared schedule shows up to 40 classes, so the last class in this link isn\'t shown.')
+  })
+
+  it('keeps the unfound-class line and joins the lines', () => {
+    expect(shareLinkNotice({ unfound: 2, overLimit: 0 }, [{ code: 'CS 106A', missing: 1, noneLeft: true }]))
+      .toBe("2 classes in this link couldn't be found in the catalog, so they aren't shown. 1 section in this link no longer exists, so CS 106A shows its default section instead.")
+    expect(shareLinkNotice({ unfound: 0, overLimit: 0 }, [])).toBe('')
   })
 })
 

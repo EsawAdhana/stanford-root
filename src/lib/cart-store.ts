@@ -111,6 +111,30 @@ function withTermItems(items: CartItem[], term: string, incoming: CartItem[]) {
   }
 }
 
+/**
+ * Saved metadata with full course data put back: from the class this tab
+ * already holds when there is one (it may carry richer data than the catalog
+ * has yet), else from the catalog, else left as metadata for hydrateLocalCart.
+ */
+function withCourseData(saved: CartItem[], held: CartItem[]): CartItem[] {
+  const heldById = new Map(held.map(i => [i.id, i]))
+  const catalog = new Map(useCourseStore.getState().courses.map(c => [c.id, c]))
+  return saved.map(item => {
+    const heldCourse = heldById.get(item.id)
+    // A held class may itself still be metadata only (before hydrateLocalCart).
+    const course = heldCourse?.title ? heldCourse : catalog.get(item.id)
+    if (!course) return item
+    return {
+      ...course,
+      selectedTerm: item.selectedTerm,
+      selectedSectionIds: item.selectedSectionIds,
+      selectedUnits: item.selectedUnits,
+      color: item.color,
+      optionalMeetings: item.optionalMeetings,
+    }
+  })
+}
+
 export const useCartStore = create<CartStore>()(
   persist(
     (set, get) => ({
@@ -236,6 +260,14 @@ export const useCartStore = create<CartStore>()(
           : -1
 
         if (existingIndex >= 0) {
+          // A class sits on one term at a time, so adding it to another term takes
+          // it off the first. Say so: otherwise the first term just looks emptied.
+          if (existing?.selectedTerm && resolvedTerm && existing.selectedTerm !== resolvedTerm) {
+            // Loaded on demand: sonner touches the document when imported, and this
+            // store is imported where there is none (sync tests, server code).
+            const message = `${course.subject} ${course.code} moved from ${existing.selectedTerm} to ${resolvedTerm}.`
+            void import('sonner').then(({ toast }) => toast(message))
+          }
           const newItems = [...currentItems]
           newItems[existingIndex] = { ...newItems[existingIndex], ...courseWithTerm }
           set({ items: siblingIndex >= 0 ? newItems.filter((_, i) => i !== siblingIndex) : newItems })
@@ -354,9 +386,13 @@ export const useCartStore = create<CartStore>()(
         unresolved: state.unresolved,
       }),
       // Plans read back from storage get the same shape check as plans read from the saved row.
+      // Classes come back as saved metadata only. Ones this tab already shows, or
+      // the catalog has, get their course data straight back, so reading another
+      // tab's write (see adoptOtherTabWrite) never leaves title-less blocks.
       merge: (persisted, current) => {
         const saved = (persisted ?? {}) as Partial<CartStore>
-        return { ...current, ...saved, plans: readPlans(saved.plans), unresolved: readSavedItems(saved.unresolved) }
+        const items = Array.isArray(saved.items) ? withCourseData(saved.items, current.items) : current.items
+        return { ...current, ...saved, items, plans: readPlans(saved.plans), unresolved: readSavedItems(saved.unresolved) }
       },
       onRehydrateStorage: () => (_state, _err) => {
         setCartHydrated()
@@ -384,3 +420,50 @@ const stopWatchingCatalog = useCourseStore.subscribe(state => {
   stopWatchingCatalog()
   repairCrossListedCart(state.courses)
 })
+
+/**
+ * Another tab saved the schedule. Each tab writes its whole schedule on every
+ * change, so a tab holding an older copy wrote it over the other tab's edit on
+ * its next change: add MATH 51 here, PSYCH 1 in a second tab, then CS 103 here,
+ * and PSYCH 1 was gone. Reading the other tab's write as it lands, the way a
+ * reload would, means this tab's next write starts from it.
+ *
+ * Signed out only. A signed-in tab gets the other tab's edits from the saved
+ * row (it pulls on focus), and reading local storage there would be unsafe:
+ * signing out in one tab empties the cart before Supabase tells the other tabs,
+ * and a signed-in tab adopting that empty cart would push it over the saved
+ * schedule. The same holds while this tab is still checking who is signed in.
+ */
+export async function adoptOtherTabWrite(): Promise<void> {
+  // Imported here, not at the top: auth-store imports this module.
+  const { useAuthStore } = await import('@/lib/auth-store')
+  const auth = useAuthStore.getState()
+  if (auth.user || auth.isLoading) return
+  await useCartStore.persist.rehydrate()
+  reattachOnEnrichment()
+}
+
+/**
+ * The catalog's first load is light (no sections or times). Classes that came
+ * from another tab before the full catalog loaded get its data when it does,
+ * as hydrateLocalCart does for the classes a tab opens with.
+ */
+let waitingForEnrichment = false
+function reattachOnEnrichment(): void {
+  if (waitingForEnrichment || useCourseStore.getState().hasEnriched) return
+  waitingForEnrichment = true
+  const stop = useCourseStore.subscribe(state => {
+    if (!state.hasEnriched) return
+    stop()
+    waitingForEnrichment = false
+    useCartStore.setState({ items: withCourseData(useCartStore.getState().items, []) })
+  })
+}
+
+if (typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
+  window.addEventListener('storage', (event: StorageEvent) => {
+    // A null key is localStorage.clear() in another tab.
+    if (event.key !== null && event.key !== 'navigator-cart') return
+    void adoptOtherTabWrite()
+  })
+}
