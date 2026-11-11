@@ -114,7 +114,11 @@ export function OAuthConsent() {
         <span className="text-foreground">{request.email}</span>.
       </p>
       <p className="text-sm text-muted-foreground -mt-6 mb-8">
-        Allowing returns you to {request.returnTo}. Disconnect it any time from Connected apps.
+        Allowing returns you to {request.returnTo}. Disconnect it any time from{' '}
+        <Link href="/connected-apps" target="_blank" className="underline underline-offset-2 hover:text-foreground">
+          Connected apps
+        </Link>
+        .
       </p>
       <div className="flex justify-center gap-3">
         <Button variant="outline" size="lg" disabled={deciding} onClick={() => void decide(false)}>
