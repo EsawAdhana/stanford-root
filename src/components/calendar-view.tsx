@@ -285,7 +285,8 @@ export function CalendarView({ currentTerm, onPrevTerm, onNextTerm, canPrevTerm 
                       key={ev.id}
                       onClick={() => openCourse(ev.courseId)}
                       className={cn(
-                        'group absolute rounded-md border px-1 sm:px-2 py-0.5 sm:py-1 text-left shadow-sm hover:shadow transition-shadow overflow-hidden cursor-pointer z-20',
+                        // A size container, so the ignore button can tell how wide its block is.
+                        'group absolute rounded-md border px-1 sm:px-2 py-0.5 sm:py-1 text-left shadow-sm hover:shadow transition-shadow overflow-hidden cursor-pointer z-20 [container-type:inline-size]',
                         getCalendarColorClasses(ev.courseId, ev.color),
                         ev.isOptional && 'opacity-55 border-dashed grayscale'
                       )}
@@ -297,7 +298,19 @@ export function CalendarView({ currentTerm, onPrevTerm, onNextTerm, canPrevTerm 
                             <TooltipTrigger asChild>
                               <button
                                 type="button"
-                                className="absolute right-1 top-1 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity rounded p-1 hover:bg-black/5 dark:hover:bg-white/10 z-20"
+                                aria-label={ev.isOptional
+                                  ? `Include this ${ev.courseCode} meeting in conflict checks`
+                                  : `Ignore this ${ev.courseCode} meeting in conflict checks`}
+                                className={cn(
+                                  'absolute right-1 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity rounded p-1 hover:bg-black/5 dark:hover:bg-white/10 z-20',
+                                  // Phones show it without hover, so on a block too narrow for the
+                                  // class code and the button it would cover the code. There it is
+                                  // left out, except to undo an ignore, which sits in the bottom
+                                  // corner instead. Desktop keeps it top right on hover.
+                                  ev.isOptional
+                                    ? 'bottom-0.5 [@container(min-width:96px)]:bottom-auto [@container(min-width:96px)]:top-1 md:bottom-auto md:top-1'
+                                    : 'top-1 hidden [@container(min-width:96px)]:block md:block',
+                                )}
                                 onClick={(e) => {
                                   e.stopPropagation()
                                   toggleOptionalMeeting(ev.courseId, ev.day, ev.startTime, ev.endTime)
