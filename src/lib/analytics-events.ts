@@ -22,6 +22,9 @@ export const ANALYTICS_EVENTS = [
   'plan_created',
   'plan_switched',
   'plan_deleted',
+  // The one-time card in src/components/whats-new.tsx.
+  'whats_new_shown',
+  'whats_new_clicked',
 ] as const
 
 export type AnalyticsEvent = typeof ANALYTICS_EVENTS[number]
