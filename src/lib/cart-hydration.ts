@@ -4,20 +4,26 @@
  * which would cause the wrong data to be merged or overwritten by a later rehydration.
  */
 let resolveHydration: (() => void) | null = null
-const hydrationPromise = new Promise<void>((r) => {
-  resolveHydration = r
+let timeoutId: ReturnType<typeof setTimeout> | null = null
+
+/** Wait for cart hydration, with a 3s timeout so a persist that never fires cannot hang sync. */
+export const cartHydrated: Promise<void> = new Promise<void>((resolve) => {
+  resolveHydration = resolve
+  timeoutId = setTimeout(() => {
+    // Only reached when hydration really never happened: setCartHydrated clears this timer.
+    if (resolveHydration) {
+      console.warn('[cart-hydration] Timed out waiting for persist rehydration; proceeding with current cart state')
+      resolveHydration = null
+      resolve()
+    }
+  }, 3000)
 })
 
-/** Wait for cart hydration, with 3s timeout to avoid hanging if persist never fires */
-export const cartHydrated: Promise<void> = Promise.race([
-  hydrationPromise,
-  new Promise<void>((r) => setTimeout(() => {
-    console.warn('[cart-hydration] Timed out waiting for persist rehydration — proceeding with current cart state')
-    r()
-  }, 3000))
-])
-
 export function setCartHydrated(): void {
+  if (timeoutId) {
+    clearTimeout(timeoutId)
+    timeoutId = null
+  }
   if (resolveHydration) {
     resolveHydration()
     resolveHydration = null
