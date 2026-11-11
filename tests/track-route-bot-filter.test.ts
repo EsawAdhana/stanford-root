@@ -25,9 +25,22 @@ vi.mock('next/headers', () => ({
   cookies: () => Promise.resolve({ getAll: () => [], set: () => {} }),
 }))
 
+// The public-key client only reads the signed-in user. Any write through it
+// is a regression: the public key no longer has INSERT on analytics_events.
+const publicKeyWrites: unknown[] = []
 vi.mock('@supabase/ssr', () => ({
   createServerClient: () => ({
     auth: { getUser: () => Promise.resolve({ data: { user: null } }) },
+    from: (table: string) => {
+      publicKeyWrites.push(table)
+      return { insert: () => Promise.resolve({ error: { message: 'permission denied' } }) }
+    },
+  }),
+}))
+
+// Rows are written with the server's key.
+vi.mock('@/lib/supabase-admin', () => ({
+  getServiceClient: () => ({
     from: () => ({
       insert: (row: Record<string, unknown>) => {
         if (failInsertsWithUserAgent && 'user_agent' in row) {
@@ -58,6 +71,7 @@ const STUDENT =
 
 beforeEach(() => {
   inserted.length = 0
+  publicKeyWrites.length = 0
   failInsertsWithUserAgent = false
 })
 
@@ -132,5 +146,18 @@ describe('a real student is still counted', () => {
     // The pre-existing boundary must survive the new one.
     await post(STUDENT, { event: 'not_a_real_event', path: '/' })
     expect(inserted).toHaveLength(0)
+  })
+})
+
+describe('analytics rows are written with the server key', () => {
+  it('never writes through the public-key client', async () => {
+    const { POST: post2 } = await import('@/app/api/track/route')
+    await post2(new Request('https://www.stanfordroot.com/api/track', {
+      method: 'POST',
+      headers: { 'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36' },
+      body: JSON.stringify({ event: 'page_viewed', path: '/CS106B' }),
+    }))
+    expect(inserted).toHaveLength(1)
+    expect(publicKeyWrites).toHaveLength(0)
   })
 })

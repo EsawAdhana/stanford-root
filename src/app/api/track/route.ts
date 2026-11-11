@@ -5,6 +5,7 @@ import { ALLOWED_EVENTS } from '@/lib/analytics-events'
 import { isKnownBot } from '@/lib/bot-agents'
 import { rateLimit, getClientIp } from '@/lib/rate-limit'
 import { isProductionRequest } from '@/lib/production-host'
+import { getServiceClient } from '@/lib/supabase-admin'
 
 const MAX_PROPS_BYTES = 2000
 const MAX_PATH_LENGTH = 512
@@ -131,7 +132,11 @@ export async function POST(request: Request) {
     // is a WHERE clause instead of a behavioural inference.
     const agent = userAgent ? userAgent.slice(0, MAX_USER_AGENT_LENGTH) : null
 
-    const { error } = await supabase
+    // Written with the server's key, not the public one, so the public key can
+    // be denied INSERT on this table and the checks above cannot be skipped by
+    // posting to Supabase directly. The cookie client above only reads the user.
+    const writer = getServiceClient()
+    const { error } = await writer
       .from('analytics_events')
       .insert({ ...row, user_agent: agent })
 
@@ -142,7 +147,7 @@ export async function POST(request: Request) {
     // the column keeps counting through that window; it costs one extra
     // round trip only while the schema is behind.
     if (error) {
-      await supabase.from('analytics_events').insert(row)
+      await writer.from('analytics_events').insert(row)
     }
   } catch {
     // Swallow — analytics must never affect the user experience.
