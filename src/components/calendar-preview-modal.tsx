@@ -48,6 +48,22 @@ interface CalendarPreviewModalProps {
     initialSelectedUnits?: number;
 }
 
+/**
+ * Grid columns for the time rail plus 5 to 7 days. Every day fits the dialog
+ * width; phones get a narrower rail (desktop keeps 52px). Written out in full
+ * so Tailwind sees each class.
+ */
+const GRID_COLUMNS: Record<number, string> = {
+    5: 'grid-cols-[30px_repeat(5,minmax(0,1fr))] sm:grid-cols-[52px_repeat(5,minmax(0,1fr))]',
+    6: 'grid-cols-[30px_repeat(6,minmax(0,1fr))] sm:grid-cols-[52px_repeat(6,minmax(0,1fr))]',
+    7: 'grid-cols-[30px_repeat(7,minmax(0,1fr))] sm:grid-cols-[52px_repeat(7,minmax(0,1fr))]',
+};
+
+/** Day labels for phones narrower than the xs breakpoint. */
+export const SHORT_DAY_LABELS: Record<CalendarDay, string> = {
+    Mon: 'M', Tue: 'Tu', Wed: 'W', Thu: 'Th', Fri: 'F', Sat: 'Sa', Sun: 'Su',
+};
+
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export function CalendarPreviewModal({
@@ -206,7 +222,7 @@ export function CalendarPreviewModal({
 
     // Saturday/Sunday columns appear only when this term's schedule uses them.
     const columns = useMemo(() => visibleDays(allEvents.map(e => e.day)), [allEvents]);
-    const gridTemplateColumns = `52px repeat(${columns.length}, minmax(0, 1fr))`;
+    const gridColumns = GRID_COLUMNS[columns.length] ?? GRID_COLUMNS[7];
 
     const gridHeight = ((endMinutes - startMinutes) / 60) * HOUR_HEIGHT;
 
@@ -277,22 +293,23 @@ export function CalendarPreviewModal({
                     ref={scrollRef}
                     className="min-h-0 flex-1 overflow-y-auto max-h-[60vh]"
                 >
-                    <div className="overflow-x-auto px-4 pb-2 pt-3">
-                        <div className="min-w-[560px]">
-                            {/* Day header */}
-                            <div className="grid border-b border-border/40 mb-0" style={{ gridTemplateColumns }}>
+                    <div className="px-2 sm:px-4 pb-2">
+                        <div>
+                            {/* Day header, pinned while the hours scroll under it */}
+                            <div className={cn("grid sticky top-0 z-30 bg-background pt-3 border-b border-border/40 mb-0", gridColumns)}>
                                 <div className="p-1" />
                                 {columns.map(d => (
                                     <div key={d.key} className="py-1.5 text-[10px] font-semibold text-muted-foreground text-center uppercase tracking-wide">
-                                        {d.label}
+                                        <span className="xs:hidden">{SHORT_DAY_LABELS[d.key]}</span>
+                                        <span className="hidden xs:inline">{d.label}</span>
                                     </div>
                                 ))}
                             </div>
 
                             {/* Grid body */}
                             <div
-                                className="grid relative"
-                                style={{ gridTemplateColumns, height: `${gridHeight}px`, '--start-minutes': startMinutes } as React.CSSProperties}
+                                className={cn("grid relative", gridColumns)}
+                                style={{ height: `${gridHeight}px`, '--start-minutes': startMinutes } as React.CSSProperties}
                             >
                                 {/* Time rail */}
                                 <div className="relative border-r border-border/30 bg-background/50">
@@ -303,7 +320,7 @@ export function CalendarPreviewModal({
                                             style={{ top: `${idx * HOUR_HEIGHT}px` }}
                                         >
                                             {idx !== hours.length - 1 && (
-                                                <div className="absolute right-0 top-0 pr-1 text-right text-[9px] text-muted-foreground whitespace-nowrap mt-1">
+                                                <div className="absolute right-0 top-0 pr-0.5 sm:pr-1 text-right text-[8px] sm:text-[9px] text-muted-foreground whitespace-nowrap mt-1">
                                                     {`${((h + 11) % 12) + 1}${h >= 12 ? 'p' : 'a'}`}
                                                 </div>
                                             )}
