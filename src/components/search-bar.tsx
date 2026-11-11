@@ -91,16 +91,21 @@ export function SearchBar() {
       settled = true
       window.removeEventListener('click', onClick)
       window.removeEventListener('pointerup', onPointerUp, true)
+      window.removeEventListener('pointercancel', onCancel, true)
       if (navigating) sync.releaseLink(true)
       else commitQuery()
     }
     // Window listeners run after React's, so defaultPrevented here means
     // Next's Link took the click and is navigating.
-    const onClick = (e: MouseEvent) => settle(e.defaultPrevented)
-    // No click at all (the pointer slid off the link): commit as a plain blur.
+    const onClick = (e: MouseEvent) =>
+      settle(e.defaultPrevented && e.target instanceof Element && e.target.closest('a[href]') != null)
+    // No click at all (released off the link, or dragged it, which cancels the
+    // pointer): commit as a plain blur.
     const onPointerUp = () => { window.setTimeout(() => settle(false), 300) }
+    const onCancel = () => settle(false)
     window.addEventListener('click', onClick)
     window.addEventListener('pointerup', onPointerUp, true)
+    window.addEventListener('pointercancel', onCancel, true)
     // A press held past this is not a quick click; committing before its click
     // is safe, since a navigation that starts later still wins.
     window.setTimeout(() => settle(false), 1500)
