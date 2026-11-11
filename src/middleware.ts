@@ -1,9 +1,11 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { isBlockedCrawler } from '@/lib/blocked-crawlers'
+import { canonicalRedirect } from '@/lib/canonical-host'
 
 /**
- * Two jobs: deny the scrapers in `lib/blocked-crawlers`, and catch an OAuth code
- * that landed somewhere other than the callback.
+ * Three jobs: send the bare domain to www (except the MCP server, see
+ * `lib/canonical-host`), deny the scrapers in `lib/blocked-crawlers`, and catch
+ * an OAuth code that landed somewhere other than the callback.
  *
  * This used to also call supabase.auth.getUser() on `/` to bounce signed-in
  * users past the marketing landing page. There is no landing page now, `/` is
@@ -13,6 +15,9 @@ import { isBlockedCrawler } from '@/lib/blocked-crawlers'
  */
 export function middleware(request: NextRequest) {
   const url = request.nextUrl
+
+  const canonical = canonicalRedirect(request.headers.get('host'), url.pathname, url.search)
+  if (canonical) return NextResponse.redirect(canonical, 308)
 
   // Before anything else, so a blocked crawler never gets HTML and never loads
   // the analytics SDK. This runs on `/api/` too: the catalog walk lands on page

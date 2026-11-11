@@ -21,8 +21,8 @@ export const GOOGLE_CONSENT_TERMS_URL = 'https://stanfordroot.com/terms'
 
 /**
  * The MCP server's address, as students paste it into a client. Spelled out on
- * the www host rather than built from SITE_URL: the apex answers with a 308,
- * and a client that signs in against the address it was given then finds the
- * server naming a different one.
+ * the www host rather than built from SITE_URL, so a local or preview override
+ * never puts a different address on the page. The bare domain serves it too
+ * (see `lib/canonical-host`), but www is the one we show.
  */
 export const MCP_URL = 'https://www.stanfordroot.com/api/mcp'
