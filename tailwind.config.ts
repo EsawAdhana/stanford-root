@@ -10,6 +10,11 @@ const config: Config = {
   ],
   theme: {
   	extend: {
+  		screens: {
+  			// Phones wide enough for full-size tab rows (most are 390px or wider);
+  			// below this, rows that would overflow shrink. Used as xs: and max-xs:.
+  			xs: '380px'
+  		},
   		fontFamily: {
   			display: ['var(--font-display)', 'ui-serif', 'Georgia', 'serif']
   		},
