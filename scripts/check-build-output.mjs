@@ -94,7 +94,11 @@ function main() {
     const built = fs.existsSync(instructorDir)
       ? fs.readdirSync(instructorDir).filter((f) => f.endsWith('.html')).sort()
       : []
-    instructor = built.find((f) => f.startsWith(`${surname}-`))?.replace(/\.html$/, '')
+    // Skip initial-only slugs such as arya-m: those pages only redirect to the
+    // full-name page, so they have no content of their own to check.
+    instructor = built
+      .filter((f) => f.startsWith(`${surname}-`) && !/-[a-z]\.html$/.test(f))
+      .map((f) => f.replace(/\.html$/, ''))[0]
     if (!instructor) {
       console.error(`check-build-output: no prerendered instructor page starts with "${surname}-" in ${instructorDir}.`)
       process.exit(1)
