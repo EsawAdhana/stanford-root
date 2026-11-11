@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { LogOut } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { StanfordLoginButton } from '@/components/stanford-login-button';
 import { useAuthStore } from '@/lib/auth-store';
@@ -31,7 +32,7 @@ export function AccountButton() {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <button aria-label="Account menu" className="outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-full transition-transform active:scale-95">
+        <Button variant="ghost" size="icon" aria-label="Account menu" className="h-auto w-auto rounded-full p-0 hover:bg-transparent transition-transform active:scale-95">
           {user.user_metadata?.avatar_url ? (
             <img
               src={user.user_metadata.avatar_url}
@@ -44,7 +45,7 @@ export function AccountButton() {
               {(user.email || '?')[0].toUpperCase()}
             </div>
           )}
-        </button>
+        </Button>
       </PopoverTrigger>
       <PopoverContent className="w-48 p-1" align="end" sideOffset={8}>
         <div className="px-2 py-1.5 text-xs font-medium text-muted-foreground border-b border-border/40 mb-1">
