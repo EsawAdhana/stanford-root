@@ -244,26 +244,25 @@ export function CourseList() {
           ) : (
             <div className="flex-1 flex flex-col items-center justify-center gap-3 text-muted-foreground px-4">
               <SearchX size={32} className="text-muted-foreground/30" />
-              <p className="text-sm font-medium">
-                {hasSearchQuery ? 'No courses match your search.' : 'No courses match your filters.'}
-              </p>
               {/* The quarter filter is on by default, so "cs229" in Autumn found
-                  nothing although CS 229 runs in Winter. Say so, and keep the query. */}
-              {otherTerms && (
-                <div className="flex flex-col items-center gap-1.5">
-                  <p className="text-xs text-muted-foreground/60 text-center">
+                  nothing although CS 229 runs in Winter. Lead with that, keep the query. */}
+              {otherTerms ? (
+                <div className="flex flex-col items-center gap-1 text-center">
+                  <p className="text-sm font-medium text-foreground">
                     {otherTerms.kind === 'one'
-                      ? `${otherTerms.label} isn't offered in ${joinTerms(selectedTerms.filter(t => t !== ANY_TERM), 'or')}.${otherTerms.offeredTerms.length > 0 ? ` It's offered in ${joinTerms(otherTerms.offeredTerms, 'and')}.` : ''}`
-                      : `Hiding ${otherTerms.count.toLocaleString('en-US')} classes not offered in ${joinTerms(selectedTerms.filter(t => t !== ANY_TERM), 'or')}.`}
+                      ? `${otherTerms.label} isn't offered in ${joinTerms(selectedTerms.filter(t => t !== ANY_TERM), 'or')}`
+                      : `Hiding ${otherTerms.count.toLocaleString('en-US')} classes not offered in ${joinTerms(selectedTerms.filter(t => t !== ANY_TERM), 'or')}`}
                   </p>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => setSelectedTerms(otherTerms.kind === 'one' ? otherTerms.target : [ANY_TERM])}
-                  >
-                    {otherTerms.kind === 'one' ? `Show ${otherTerms.label}` : 'Show all quarters'}
-                  </Button>
+                  <p className="text-xs text-muted-foreground/70">
+                    {otherTerms.kind === 'one'
+                      ? (otherTerms.offeredTerms.length > 0 ? `It's offered in ${joinTerms(otherTerms.offeredTerms, 'and')}.` : 'It isn\'t offered in another quarter this year.')
+                      : 'They match your search in other quarters.'}
+                  </p>
                 </div>
+              ) : (
+                <p className="text-sm font-medium">
+                  {hasSearchQuery ? 'No courses match your search.' : 'No courses match your filters.'}
+                </p>
               )}
               {/* A toggle with no chip is invisible; name it and offer the one
                   click that undoes it, rather than "try adjusting your filters". */}
@@ -285,8 +284,17 @@ export function CourseList() {
                   {hasSearchQuery ? 'Try a different search or clearing your filters.' : 'Try adjusting your filters.'}
                 </p>
               )}
-              {hasAnyFilter && (
-                <Button size="sm" variant="outline" onClick={resetFilters} className="mt-1">Clear all filters</Button>
+              {(otherTerms || hasAnyFilter) && (
+                <div className="mt-1 flex flex-wrap items-center justify-center gap-2">
+                  {otherTerms && (
+                    <Button size="sm" onClick={() => setSelectedTerms(otherTerms.kind === 'one' ? otherTerms.target : [ANY_TERM])}>
+                      {otherTerms.kind === 'one' ? `Show ${otherTerms.label}` : 'Show all quarters'}
+                    </Button>
+                  )}
+                  {hasAnyFilter && (
+                    <Button size="sm" variant="outline" onClick={resetFilters}>Clear all filters</Button>
+                  )}
+                </div>
               )}
             </div>
           )
