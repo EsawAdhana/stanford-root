@@ -17,6 +17,7 @@ import { useCartStore } from '@/lib/cart-store';
 import { useAuthStore } from '@/lib/auth-store';
 import { cartHydrated } from '@/lib/cart-hydration';
 import { track } from '@/lib/analytics';
+import { isSharedSchedulePath } from '@/lib/whats-new';
 
 /**
  * A one-time card announcing the November 2026 schedule features.
@@ -77,7 +78,7 @@ export function WhatsNew() {
 
   useEffect(() => {
     // A shared schedule is someone else's page; do not interrupt its viewer.
-    if (pathname?.startsWith('/s')) return;
+    if (isSharedSchedulePath(pathname)) return;
     if (alreadySeen()) return;
 
     let cancelled = false;
@@ -103,7 +104,11 @@ export function WhatsNew() {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="max-w-md gap-5 p-0 overflow-hidden max-h-[90dvh] flex flex-col">
+      <DialogContent
+        className="max-w-md gap-5 p-0 overflow-hidden max-h-[90dvh] flex flex-col"
+        // Keep focus on the dialog itself so a button does not open already ringed.
+        onOpenAutoFocus={e => e.preventDefault()}
+      >
         <DialogHeader className="px-6 pt-6 text-left">
           <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">What&apos;s new</p>
           <DialogTitle className="text-xl">Three new ways to plan your quarter</DialogTitle>
@@ -127,7 +132,7 @@ export function WhatsNew() {
         </ul>
 
         <DialogFooter className="flex-row justify-end gap-2 border-t px-6 py-4 sm:space-x-0">
-          <Button variant="outline" onClick={close}>Got it</Button>
+          <Button variant={pathname === '/schedule' ? 'default' : 'outline'} onClick={close}>Got it</Button>
           {pathname !== '/schedule' && (
             <Button asChild onClick={() => { track('whats_new_clicked', {}); close(); }}>
               <Link href="/schedule">Open my schedule</Link>
