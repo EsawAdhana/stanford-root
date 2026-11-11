@@ -61,7 +61,12 @@ export function PlanTabs({ term }: { term: string }) {
   const onCreate = () => {
     const label = createPlan(term)
     track('plan_created', { plans: order.length + 1 })
-    toast(`Plan ${label} starts as a copy of Plan ${active}. Changes here leave Plan ${active} as it is.`)
+    // One id for every plan, so making another plan (in any term) replaces
+    // this note instead of stacking a new one under it.
+    toast(`Plan ${label} starts as a copy of Plan ${active}. Changes here leave Plan ${active} as it is.`, {
+      id: 'plan-created',
+      duration: 4000,
+    })
   }
 
   const onDelete = (label: string) => {

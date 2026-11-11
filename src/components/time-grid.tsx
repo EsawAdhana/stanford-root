@@ -4,6 +4,28 @@ import { DEFAULT_END_MINUTES, DEFAULT_START_MINUTES, HOUR_HEIGHT } from '@/lib/c
 
 type Column = { key: string; label: string }
 
+const SHORT_WEEKDAY: Record<string, string> = { Sun: 'Su', Mon: 'M', Tue: 'Tu', Wed: 'W', Thu: 'Th', Fri: 'F', Sat: 'Sa' }
+
+/**
+ * A finals week header ("Mon 12/7") is cut off below the xs breakpoint, so
+ * there it shows as "M 12/7". Null for any other label, which stays as is.
+ */
+export function compactDayLabel(label: string): string | null {
+  const match = /^(Sun|Mon|Tue|Wed|Thu|Fri|Sat) (\d{1,2}\/\d{1,2})$/.exec(label)
+  return match ? `${SHORT_WEEKDAY[match[1]]} ${match[2]}` : null
+}
+
+function ColumnLabel({ label }: { label: string }) {
+  const compact = compactDayLabel(label)
+  if (!compact) return <>{label}</>
+  return (
+    <>
+      <span className="xs:hidden">{compact}</span>
+      <span className="max-xs:hidden">{label}</span>
+    </>
+  )
+}
+
 /**
  * The calendar's time grid: a header row, an hour rail, and one positioned
  * column per entry. Weekly classes and finals week both draw into it, so the
@@ -28,7 +50,7 @@ export function TimeGrid({ columns, startMinutes, endMinutes, renderColumn }: {
           <div className="p-1 px-2 sm:p-3 text-xs font-semibold text-muted-foreground border-r" />
           {columns.map(d => (
             <div key={d.key} className="p-1.5 sm:p-3 text-3xs sm:text-xs font-semibold text-muted-foreground border-r last:border-r-0 text-center truncate px-0.5">
-              {d.label}
+              <ColumnLabel label={d.label} />
             </div>
           ))}
         </div>
