@@ -267,6 +267,14 @@ describe('links and starters', () => {
     expect((await call(client, 'get_my_schedule', {})).ok.url).toBe('https://www.stanfordroot.com/schedule')
     expect((await call(client, 'get_instructor', { name: 'Doe' })).ok.url).toBe('https://www.stanfordroot.com/instructors/doe-jane')
   })
+
+  it('lists the starter prompts and fills one in', async () => {
+    const client = await connect()
+    const { prompts } = await client.listPrompts()
+    expect(prompts.map(p => p.name)).toEqual(['plan_my_quarter', 'find_a_requirement', 'compare_classes', 'professor_reviews', 'fill_my_program_sheet', 'export_my_calendar'])
+    const got = await client.getPrompt({ name: 'compare_classes', arguments: { first: 'CS 161', second: 'CS 154' } })
+    expect(JSON.stringify(got.messages)).toContain('Compare CS 161 and CS 154')
+  })
 })
 
 describe('protected resource metadata', () => {
