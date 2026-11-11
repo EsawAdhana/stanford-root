@@ -1,9 +1,10 @@
-import type { Metadata } from 'next';
+import type { Metadata, ResolvingMetadata } from 'next';
 import { notFound, redirect } from 'next/navigation';
 import { cache, Suspense } from 'react';
 import { getInstructorCoursesFromDump, getInstructorDirectory } from '@/lib/catalog-dump';
 import { resolveInstructorSlug, type InstructorResolution } from '@/lib/instructors';
 import { SITE_URL } from '@/lib/site';
+import { inheritedOgImages } from '@/lib/inherited-og-images';
 import { SiteHeader } from '@/components/site-header';
 import { InstructorDetailContent } from '@/components/instructor-detail-content';
 import { getAllInstructorSlugsFromDump } from '@/lib/catalog-dump'
@@ -21,11 +22,14 @@ const resolve = cache(async (slug: string): Promise<InstructorResolution> => {
     return resolveInstructorSlug(directory, slug);
 });
 
-export async function generateMetadata({
-    params,
-}: {
-    params: Promise<{ slug: string }>;
-}): Promise<Metadata> {
+export async function generateMetadata(
+    {
+        params,
+    }: {
+        params: Promise<{ slug: string }>;
+    },
+    parent: ResolvingMetadata,
+): Promise<Metadata> {
     const { slug } = await params;
     const resolved = await resolve(decodeURIComponent(slug));
 
@@ -56,6 +60,7 @@ export async function generateMetadata({
             description,
             url: `${SITE_URL}/instructors/${canonical}`,
             type: 'profile',
+            ...(await inheritedOgImages(parent)),
         },
     };
 }

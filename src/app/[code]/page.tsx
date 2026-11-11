@@ -1,9 +1,10 @@
 import { cache } from 'react';
-import type { Metadata } from 'next';
+import type { Metadata, ResolvingMetadata } from 'next';
 import { notFound, permanentRedirect } from 'next/navigation';
 import type { Course } from '@/types/course';
 import { compareCourseCodes } from '@/lib/utils';
 import { SITE_URL } from '@/lib/site';
+import { inheritedOgImages } from '@/lib/inherited-og-images';
 import {
     getAllCourseIdsFromDump,
     getAllSubjectsFromDump,
@@ -70,16 +71,24 @@ const resolveCode = cache(async (raw: string): Promise<Resolved> => {
     notFound();
 });
 
-export async function generateMetadata({
-    params,
-}: {
-    params: Promise<{ code: string }>;
-}): Promise<Metadata> {
+export async function generateMetadata(
+    {
+        params,
+    }: {
+        params: Promise<{ code: string }>;
+    },
+    parent: ResolvingMetadata,
+): Promise<Metadata> {
     const { code } = await params;
     const resolved = await resolveCode(code);
+    const shareImages = await inheritedOgImages(parent);
 
     if (resolved.kind === 'course') {
-        return courseMetadata(resolved.course, await getCanonicalCourseIdFromDump(resolved.course.id));
+        return courseMetadata(
+            resolved.course,
+            await getCanonicalCourseIdFromDump(resolved.course.id),
+            shareImages,
+        );
     }
 
     const { subject, courses } = resolved;
@@ -95,7 +104,7 @@ export async function generateMetadata({
         title,
         description,
         alternates: { canonical: path },
-        openGraph: { title, description, url: `${SITE_URL}${path}`, type: 'website' },
+        openGraph: { title, description, url: `${SITE_URL}${path}`, type: 'website', ...shareImages },
     };
 }
 

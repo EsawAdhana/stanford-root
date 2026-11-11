@@ -16,6 +16,7 @@ import { isWimCourse } from '@/lib/wim-courses';
 import { compareTerms } from '@/lib/terms';
 import { SITE_URL } from '@/lib/site';
 import { getDepartmentFromDump } from '@/lib/catalog-dump';
+import type { OpenGraphImages } from '@/lib/inherited-og-images';
 import { CoursePageClient } from './course-page-client';
 import CourseLoading from './loading';
 
@@ -193,8 +194,14 @@ async function RelatedCourses({ course }: { course: Course }) {
  *
  * `canonicalId` is the listing whose page actually renders -- a cross-listed class is
  * served from one of its codes, so the other codes point their canonical link there.
+ * `shareImages` is the site share card from inheritedOgImages, which this
+ * `openGraph` object would otherwise drop.
  */
-export function courseMetadata(course: Course, canonicalId = course.id): Metadata {
+export function courseMetadata(
+    course: Course,
+    canonicalId = course.id,
+    shareImages: OpenGraphImages = {},
+): Metadata {
     const code = `${course.subject} ${course.code}`;
     const title = `${code}: ${decodeHtmlEntities(course.title)} — Stanford Root`;
     const blurb = plainText(course.description);
@@ -213,6 +220,7 @@ export function courseMetadata(course: Course, canonicalId = course.id): Metadat
             description: desc,
             url: `${SITE_URL}${path}`,
             type: 'article',
+            ...shareImages,
         },
     };
 }
