@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo, useState, useEffect, useRef } from 'react';
+import React, { useId, useMemo, useState, useEffect, useRef } from 'react';
 import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { useCartStore } from '@/lib/cart-store';
@@ -63,6 +63,11 @@ const GRID_COLUMNS: Record<number, string> = {
 export const SHORT_DAY_LABELS: Record<CalendarDay, string> = {
     Mon: 'M', Tue: 'Tu', Wed: 'W', Thu: 'Th', Fri: 'F', Sat: 'Sa', Sun: 'Su',
 };
+
+/** Why Add to Calendar is disabled, shown beside the units row; null when it is enabled. */
+export function addBlockedReason(hasVariableUnits: boolean, selectedUnits: number | undefined): string | null {
+    return hasVariableUnits && selectedUnits === undefined ? 'Pick units to add this class.' : null;
+}
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
@@ -227,6 +232,8 @@ export function CalendarPreviewModal({
     const gridHeight = ((endMinutes - startMinutes) / 60) * HOUR_HEIGHT;
 
     const scrollRef = useRef<HTMLDivElement>(null);
+    const blockedReason = addBlockedReason(hasVariableUnits, selectedUnits);
+    const blockedReasonId = useId();
 
     // Modal, so Radix puts up the overlay and locks the page behind it. It was
     // non-modal with a wheel handler that handed scrolling to the page, which
@@ -421,28 +428,33 @@ export function CalendarPreviewModal({
 
                 {/* Units selector when section has variable units */}
                 {hasVariableUnits && (
-                    <div className="shrink-0 px-4 sm:px-6 py-3 border-t border-border/30 flex items-center gap-3">
-                        <span className="text-sm font-semibold text-muted-foreground">Units:</span>
-                        <div className="flex items-center gap-2">
-                            <div className={cn("grid gap-1.5", unitOptions.length <= 3 ? "grid-cols-3" : unitOptions.length === 4 ? "grid-cols-4" : "grid-cols-5")}>
-                                {unitOptions.map((u) => (
-                                    <button
-                                        key={u}
-                                        type="button"
-                                        onClick={() => setSelectedUnits(prev => prev === u ? undefined : u)}
-                                        className={cn(
-                                            "flex items-center justify-center w-9 h-8 font-bold rounded-md transition-all text-sm",
-                                            selectedUnits === u
-                                                ? "bg-primary text-primary-foreground shadow-sm"
-                                                : "bg-secondary/60 text-muted-foreground hover:bg-secondary hover:text-foreground"
-                                        )}
-                                    >
-                                        {u}
-                                    </button>
-                                ))}
+                    <div className="shrink-0 px-4 sm:px-6 py-3 border-t border-border/30">
+                        <div className="flex items-center gap-3">
+                            <span className="text-sm font-semibold text-muted-foreground">Units:</span>
+                            <div className="flex items-center gap-2">
+                                <div className={cn("grid gap-1.5", unitOptions.length <= 3 ? "grid-cols-3" : unitOptions.length === 4 ? "grid-cols-4" : "grid-cols-5")}>
+                                    {unitOptions.map((u) => (
+                                        <button
+                                            key={u}
+                                            type="button"
+                                            onClick={() => setSelectedUnits(prev => prev === u ? undefined : u)}
+                                            className={cn(
+                                                "flex items-center justify-center w-9 h-8 font-bold rounded-md transition-all text-sm",
+                                                selectedUnits === u
+                                                    ? "bg-primary text-primary-foreground shadow-sm"
+                                                    : "bg-secondary/60 text-muted-foreground hover:bg-secondary hover:text-foreground"
+                                            )}
+                                        >
+                                            {u}
+                                        </button>
+                                    ))}
+                                </div>
+                                <span className="text-xs font-semibold text-muted-foreground uppercase tracking-tight shrink-0">units</span>
                             </div>
-                            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-tight shrink-0">units</span>
                         </div>
+                        {blockedReason && (
+                            <p id={blockedReasonId} className="mt-2 text-xs text-muted-foreground">{blockedReason}</p>
+                        )}
                     </div>
                 )}
 
@@ -457,7 +469,8 @@ export function CalendarPreviewModal({
                     <Button
                         size="sm"
                         className="gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold shadow-sm"
-                        disabled={hasVariableUnits && selectedUnits === undefined}
+                        disabled={blockedReason !== null}
+                        aria-describedby={blockedReason ? blockedReasonId : undefined}
                         onClick={() => { onConfirm(hasVariableUnits ? selectedUnits : undefined); onClose(); }}
                     >
                         <CalendarPlus size={13} />
