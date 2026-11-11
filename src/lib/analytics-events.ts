@@ -17,6 +17,9 @@ export const ANALYTICS_EVENTS = [
   // Added for src/components/schedule-source-notice.tsx (written by a concurrent
   // session on 2026-08-25); the component already emits it.
   'schedule_source_notice_shown',
+  // The one-time card in src/components/whats-new.tsx.
+  'whats_new_shown',
+  'whats_new_clicked',
 ] as const
 
 export type AnalyticsEvent = typeof ANALYTICS_EVENTS[number]
