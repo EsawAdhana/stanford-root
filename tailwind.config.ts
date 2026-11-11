@@ -13,7 +13,9 @@ const config: Config = {
   		screens: {
   			// Phones wide enough for full-size tab rows (most are 390px or wider);
   			// below this, rows that would overflow shrink. Used as xs: and max-xs:.
-  			xs: '380px'
+  			xs: '380px',
+  			// Wide enough for the schedule header's wordmark beside its buttons.
+  			'wide-phone': '420px'
   		},
   		fontFamily: {
   			display: ['var(--font-display)', 'ui-serif', 'Georgia', 'serif']
@@ -24,7 +26,9 @@ const config: Config = {
   		fontSize: {
   			'2xs': '11px',
   			'3xs': '10px',
-  			'4xs': '9px'
+  			'4xs': '9px',
+  			// The section preview's hour labels on the narrowest phones.
+  			'5xs': '8px'
   		},
   		minWidth: {
   			// From sm up, the week grid scrolls sideways below this instead of squeezing.

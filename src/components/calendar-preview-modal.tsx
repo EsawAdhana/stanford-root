@@ -363,7 +363,7 @@ export function CalendarPreviewModal({
                                             style={{ top: `${idx * HOUR_HEIGHT}px` }}
                                         >
                                             {idx !== hours.length - 1 && (
-                                                <div className="absolute right-0 top-0 pr-0.5 sm:pr-1 text-right text-[8px] sm:text-[9px] text-muted-foreground whitespace-nowrap mt-1">
+                                                <div className="absolute right-0 top-0 pr-0.5 sm:pr-1 text-right text-5xs sm:text-4xs text-muted-foreground whitespace-nowrap mt-1">
                                                     {`${((h + 11) % 12) + 1}${h >= 12 ? 'p' : 'a'}`}
                                                 </div>
                                             )}
