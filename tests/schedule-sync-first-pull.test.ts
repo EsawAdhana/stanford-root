@@ -76,14 +76,18 @@ vi.mock('@/lib/store', () => ({
 
 /** This tab's in-memory cart. */
 let cartItems: Record<string, unknown>[] = []
+/** Saved entries the catalog cannot draw, which the real store keeps beside `items`. */
+let cartUnresolved: { id: string }[] = []
 vi.mock('@/lib/cart-store', () => ({
   useCartStore: {
-    getState: () => ({ items: cartItems }),
+    getState: () => ({ items: cartItems, unresolved: cartUnresolved }),
     setState: (updater: unknown) => {
+      type Cart = { items?: Record<string, unknown>[]; unresolved?: { id: string }[] }
       const next = typeof updater === 'function'
-        ? (updater as (s: { items: unknown[] }) => { items: unknown[] })({ items: cartItems })
-        : (updater as { items: Record<string, unknown>[] })
-      cartItems = next.items as Record<string, unknown>[]
+        ? (updater as (s: Cart) => Cart)({ items: cartItems, unresolved: cartUnresolved })
+        : (updater as Cart)
+      if (next.items) cartItems = next.items
+      if (next.unresolved) cartUnresolved = next.unresolved
     },
   },
 }))
@@ -128,6 +132,7 @@ describe('a tab before its first pull lands', () => {
     courseState.courses = []
     courseState.hasLoaded = false
     courseListeners = []
+    cartUnresolved = []
     serverSchedule = SAVED.map(i => ({ ...i }))
     cartItems = []
   })
@@ -268,6 +273,7 @@ describe('a tab signing out', () => {
     selectSingle.mockClear()
     serverSchedule = SAVED.map(i => ({ ...i }))
     cartItems = []
+    cartUnresolved = []
     loadCatalog()
   })
 

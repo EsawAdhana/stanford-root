@@ -6,6 +6,7 @@ import {
   planLabel,
   plansSignature,
   readPlans,
+  readSavedItems,
   termSnapshot,
   type PlansByTerm,
   type SavedItem,
@@ -87,7 +88,7 @@ describe('the cart store\'s plans', () => {
 
   beforeEach(() => {
     useCourseStore.setState({ courses: CATALOG })
-    useCartStore.setState({ items: [], plans: {} })
+    useCartStore.setState({ items: [], plans: {}, unresolved: [] })
     add('CS229'); add('CS161'); add('CS107', S)
   })
 
@@ -172,10 +173,114 @@ describe('the cart store\'s plans', () => {
     expect(useCartStore.getState().plans).toEqual({})
   })
 
-  it('drops a parked class the catalog no longer has rather than drawing an empty block', () => {
+  it('will not switch plans before the catalog has courses, so a parked plan is not emptied', () => {
     useCartStore.getState().createPlan(W)
-    useCourseStore.setState({ courses: CATALOG.filter(c => c.id !== 'CS161') })
+    add('CS255')
+    useCourseStore.setState({ courses: [] }) // still loading, or failed to load
+    expect(useCartStore.getState().switchPlan(W, 'A')).toEqual([])
+    expect(useCartStore.getState().plans[W].active).toBe('B')
+    expect(useCartStore.getState().plans[W].parked.A.map(i => i.id)).toEqual(['CS229', 'CS161'])
+    expect(ids()).toEqual(['CS107/Spring 2027', 'CS161/Winter 2027', 'CS229/Winter 2027', 'CS255/Winter 2027'])
+
+    useCourseStore.setState({ courses: CATALOG })
     useCartStore.getState().switchPlan(W, 'A')
-    expect(ids()).toEqual(['CS107/Spring 2027', 'CS229/Winter 2027'])
+    expect(ids()).toEqual(['CS107/Spring 2027', 'CS161/Winter 2027', 'CS229/Winter 2027'])
+  })
+
+  it('will not delete the plan on screen before the catalog has courses, but can drop a parked one', () => {
+    useCartStore.getState().createPlan(W)
+    useCartStore.getState().createPlan(W) // C
+    useCourseStore.setState({ courses: [] })
+    useCartStore.getState().deletePlan(W, 'C')
+    expect(useCartStore.getState().plans[W].order).toEqual(['A', 'B', 'C'])
+    useCartStore.getState().deletePlan(W, 'A')
+    expect(useCartStore.getState().plans[W].order).toEqual(['B', 'C'])
+    expect(useCartStore.getState().plans[W].active).toBe('C')
+  })
+
+  describe('a class that dropped out of the catalog', () => {
+    const unresolvedIds = () => useCartStore.getState().unresolved.map(i => `${i.id}/${i.selectedTerm}`).sort()
+    const parkedIds = (label: string) => (useCartStore.getState().plans[W].parked[label] ?? []).map(i => i.id).sort()
+    const withoutCS161 = () => useCourseStore.setState({ courses: CATALOG.filter(c => c.id !== 'CS161') })
+
+    it('is not drawn when its plan comes on screen, but stays in the plan', () => {
+      useCartStore.getState().createPlan(W)
+      useCartStore.getState().removeItem('CS161')
+      withoutCS161()
+      useCartStore.getState().switchPlan(W, 'A')
+      expect(ids()).toEqual(['CS107/Spring 2027', 'CS229/Winter 2027'])
+      expect(unresolvedIds()).toEqual(['CS161/Winter 2027'])
+
+      // Plan A goes back to the shelf with it, and Plan B does not pick it up.
+      useCartStore.getState().switchPlan(W, 'B')
+      expect(parkedIds('A')).toEqual(['CS161', 'CS229'])
+      expect(unresolvedIds()).toEqual([])
+
+      // Back in the catalog, it draws again.
+      useCourseStore.setState({ courses: CATALOG })
+      useCartStore.getState().switchPlan(W, 'A')
+      expect(ids()).toEqual(['CS107/Spring 2027', 'CS161/Winter 2027', 'CS229/Winter 2027'])
+    })
+
+    it('keeps every saved field', () => {
+      useCartStore.getState().createPlan(W)
+      const plans = useCartStore.getState().plans
+      const saved = { id: 'CS161', selectedTerm: W, selectedSectionIds: [4021, 4022], selectedUnits: 4, color: 'blue', optionalMeetings: ['Fri|9:30|10:20'] }
+      useCartStore.setState({ plans: { ...plans, [W]: { ...plans[W], parked: { A: [saved] } } } })
+      withoutCS161()
+      useCartStore.getState().switchPlan(W, 'A')
+      expect(useCartStore.getState().unresolved).toEqual([saved])
+    })
+
+    it('parks with the plan it was saved in, instead of following the open plan', () => {
+      // A signed-in pull put the open plan's dropped class in `unresolved`.
+      useCartStore.getState().createPlan(W)
+      useCartStore.setState({ unresolved: [{ id: 'CS999', selectedTerm: W }, { id: 'CS998', selectedTerm: S }] })
+      useCartStore.getState().switchPlan(W, 'A')
+      expect(parkedIds('B')).toEqual(['CS161', 'CS229', 'CS999'])
+      // Another term's entry belongs to no Winter plan and stays put.
+      expect(unresolvedIds()).toEqual(['CS998/Spring 2027'])
+    })
+
+    it('is copied into a new plan along with the drawn classes', () => {
+      useCartStore.setState({ unresolved: [{ id: 'CS999', selectedTerm: W }] })
+      useCartStore.getState().createPlan(W)
+      expect(parkedIds('A')).toEqual(['CS161', 'CS229', 'CS999'])
+      expect(unresolvedIds()).toEqual(['CS999/Winter 2027'])
+    })
+
+    it('goes with its plan when that plan is deleted, and the neighbour brings its own', () => {
+      useCartStore.getState().createPlan(W)
+      useCartStore.getState().removeItem('CS161')
+      withoutCS161()
+      useCartStore.setState({ unresolved: [{ id: 'CS999', selectedTerm: W }] }) // Plan B's
+      useCartStore.getState().deletePlan(W, 'B')
+      expect(ids()).toEqual(['CS107/Spring 2027', 'CS229/Winter 2027'])
+      expect(unresolvedIds()).toEqual(['CS161/Winter 2027'])
+    })
+
+    it('gives way to the same course coming in under another term', () => {
+      useCartStore.getState().createPlan(W)
+      useCartStore.getState().removeItem('CS161')
+      withoutCS161()
+      useCartStore.setState({ unresolved: [{ id: 'CS161', selectedTerm: S }] })
+      useCartStore.getState().switchPlan(W, 'A')
+      expect(unresolvedIds()).toEqual(['CS161/Winter 2027'])
+    })
+
+    it('is cleared with the cart at sign-out', () => {
+      useCartStore.setState({ unresolved: [{ id: 'CS999', selectedTerm: W }] })
+      useCartStore.getState().clearCart()
+      expect(useCartStore.getState().unresolved).toEqual([])
+    })
+  })
+})
+
+describe('readSavedItems', () => {
+  it('keeps well-formed entries and drops the rest', () => {
+    expect(readSavedItems([{ id: 'CS161', selectedTerm: W, selectedUnits: 4 }, { id: '' }, null, 'CS229', { selectedTerm: W }]))
+      .toEqual([{ id: 'CS161', selectedTerm: W, selectedUnits: 4 }])
+    expect(readSavedItems(undefined)).toEqual([])
+    expect(readSavedItems({ id: 'CS161' })).toEqual([])
   })
 })

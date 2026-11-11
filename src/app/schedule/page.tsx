@@ -8,9 +8,9 @@ const CalendarView = dynamic(
   { ssr: false }
 );
 import { Button } from '@/components/ui/button';
-import { ArrowDownUp, Download, LogOut, Upload } from 'lucide-react';
+import { ArrowDownUp, Download, Upload } from 'lucide-react';
 import Link from 'next/link';
-import { StanfordLoginButton } from '@/components/stanford-login-button';
+import { AccountButton } from '@/components/account-button';
 import { useSearchParams } from 'next/navigation';
 import { useCartStore } from '@/lib/cart-store';
 import { useCourseStore } from '@/lib/store';
@@ -18,7 +18,7 @@ import { useAuthStore } from '@/lib/auth-store';
 import { useEvaluationStore } from '@/lib/evaluation-store';
 import { expectedWeeklyHours, termUnitRange } from '@/lib/schedule-totals';
 import { ShareSchedule, ShareScheduleItem } from '@/components/share-schedule';
-import { PlanComparison, PlanTabs } from '@/components/plan-tabs';
+import { PlanStats, PlanTabs } from '@/components/plan-tabs';
 import { Logo } from '@/components/logo';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { SchedulePageShell } from '@/components/schedule-page-shell';
@@ -43,12 +43,9 @@ const IGNORED_OVERLOADS_KEY = 'stanford-root:ignored-overloads'
 
 function ScheduleContent() {
   const items = useCartStore(s => s.items)
-  const plans = useCartStore(s => s.plans)
   const courses = useCourseStore(s => s.courses)
   const hasLoaded = useCourseStore(s => s.hasLoaded)
   const user = useAuthStore(s => s.user)
-  const isLoading = useAuthStore(s => s.isLoading)
-  const signOut = useAuthStore(s => s.signOut)
   // term -> unit total at the moment the warning was dismissed. Persisted so one X
   // sticks across reloads; a different unit total means the schedule changed, so warn again.
   const [ignoredOverloads, setIgnoredOverloads] = useState<Record<string, number>>({})
@@ -149,7 +146,7 @@ function ScheduleContent() {
     })
   }, [items, currentTerm, courseMap])
 
-  const { min: totalUnitsMin, max: totalUnitsMax } = useMemo(
+  const { max: totalUnitsMax } = useMemo(
     () => termUnitRange(currentTermCourses, currentTerm),
     [currentTermCourses, currentTerm]
   )
@@ -192,6 +189,10 @@ function ScheduleContent() {
       computedHours: computed,
     }
   }, [currentTermCourses, loadingCourses, evaluations, getEvaluations, currentTerm])
+  const activeHours = useMemo(
+    () => ({ total: expectedHoursPerWeek, loading: expectedHoursLoading }),
+    [expectedHoursPerWeek, expectedHoursLoading]
+  )
 
   // Persist the computed value outside of render (no side effects inside useMemo)
   useEffect(() => {
@@ -488,49 +489,7 @@ END:VEVENT
               onChange={handleFileChange}
             />
 
-            {!user && !isLoading && (
-              <StanfordLoginButton
-                source="header"
-                size="default"
-                signingInLabel="Signing in…"
-                className="rounded-lg h-9 px-4 text-sm font-medium gap-2"
-              >
-                Log in
-              </StanfordLoginButton>
-            )}
-
-            {user && (
-              <Popover>
-                <PopoverTrigger asChild>
-                  <button aria-label="Account menu" className="outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-full transition-transform active:scale-95">
-                    {user.user_metadata?.avatar_url ? (
-                      <img
-                        src={user.user_metadata.avatar_url}
-                        alt=""
-                        className="h-8 w-8 rounded-full ring-2 ring-border/60 ring-offset-1 ring-offset-background hover:ring-primary/40 transition-all"
-                        referrerPolicy="no-referrer"
-                      />
-                    ) : (
-                      <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-[10px] font-bold text-primary ring-2 ring-border/60 ring-offset-1 ring-offset-background hover:ring-primary/40 transition-all">
-                        {(user.email || '?')[0].toUpperCase()}
-                      </div>
-                    )}
-                  </button>
-                </PopoverTrigger>
-                <PopoverContent className="w-48 p-1" align="end" sideOffset={8}>
-                  <div className="px-2 py-1.5 text-xs font-medium text-muted-foreground border-b border-border/40 mb-1">
-                    {user.email}
-                  </div>
-                  <button
-                    onClick={signOut}
-                    className="w-full flex items-center gap-2 px-2 py-1.5 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-sm transition-colors"
-                  >
-                    <LogOut className="h-4 w-4" />
-                    Sign out
-                  </button>
-                </PopoverContent>
-              </Popover>
-            )}
+            <AccountButton />
           </div>
         </div>
       </header>
@@ -544,7 +503,6 @@ END:VEVENT
             onNextTerm={nextTerm}
             canPrevTerm={canPrevTerm}
             canNextTerm={canNextTerm}
-            totalUnitsMin={totalUnitsMin}
             totalUnitsMax={totalUnitsMax}
             isOverload={isOverload}
             isIgnored={Boolean(isIgnored)}
@@ -557,10 +515,15 @@ END:VEVENT
               }
               return next
             })}
-            expectedHoursPerWeek={expectedHoursPerWeek}
-            expectedHoursLoading={expectedHoursLoading}
             aboveCalendar={<PlanTabs term={currentTerm} />}
-            metrics={plans[currentTerm] ? <PlanComparison term={currentTerm} activeCourses={currentTermCourses} /> : undefined}
+            stats={
+              <PlanStats
+                term={currentTerm}
+                activeCourses={currentTermCourses}
+                activeHours={activeHours}
+                overUnits={isOverload && !isIgnored}
+              />
+            }
           />
         </div>
       </main>

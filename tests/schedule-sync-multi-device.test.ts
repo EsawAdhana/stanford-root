@@ -52,14 +52,18 @@ vi.mock('@/lib/store', () => ({
 
 /** Stands in for the device-local (localStorage-persisted) cart. */
 let cartItems: Record<string, unknown>[] = []
+/** Saved entries the catalog cannot draw, which the real store keeps beside `items`. */
+let cartUnresolved: { id: string }[] = []
 vi.mock('@/lib/cart-store', () => ({
   useCartStore: {
-    getState: () => ({ items: cartItems }),
+    getState: () => ({ items: cartItems, unresolved: cartUnresolved }),
     setState: (updater: unknown) => {
+      type Cart = { items?: Record<string, unknown>[]; unresolved?: { id: string }[] }
       const next = typeof updater === 'function'
-        ? (updater as (s: { items: unknown[] }) => { items: unknown[] })({ items: cartItems })
-        : (updater as { items: Record<string, unknown>[] })
-      cartItems = next.items as Record<string, unknown>[]
+        ? (updater as (s: Cart) => Cart)({ items: cartItems, unresolved: cartUnresolved })
+        : (updater as Cart)
+      if (next.items) cartItems = next.items
+      if (next.unresolved) cartUnresolved = next.unresolved
     },
   },
 }))
@@ -94,6 +98,8 @@ function makeDevice() {
       vi.resetModules()
       ;(globalThis as { localStorage?: Storage }).localStorage = storage
       cartItems = persisted.map(i => ({ ...i }))
+      cartUnresolved = []
+
       return import('@/lib/schedule-sync')
     },
     /** What this device would have left in localStorage when it went away. */
@@ -111,6 +117,7 @@ describe('two devices on one account', () => {
     selectSingle.mockClear()
     serverSchedule = null
     cartItems = []
+    cartUnresolved = []
   })
 
   it('does not resurrect a course removed elsewhere when backgrounded', async () => {

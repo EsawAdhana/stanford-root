@@ -38,6 +38,12 @@ export function ShareSchedule(props: ShareProps) {
   const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => setCopied(false), [url])
+  // "Copied!" for a moment, then back to "Copy link" so it can be copied again.
+  useEffect(() => {
+    if (!copied) return
+    const timer = setTimeout(() => setCopied(false), 2000)
+    return () => clearTimeout(timer)
+  }, [copied])
 
   const copy = async () => {
     if (!url) return
@@ -80,7 +86,7 @@ export function ShareSchedule(props: ShareProps) {
                 className="h-9 text-xs"
               />
               <Button size="sm" className="h-9 shrink-0" onClick={copy}>
-                {copied ? 'Copied' : 'Copy link'}
+                {copied ? 'Copied!' : 'Copy link'}
               </Button>
             </div>
           </>

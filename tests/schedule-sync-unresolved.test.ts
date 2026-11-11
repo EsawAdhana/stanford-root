@@ -49,14 +49,18 @@ vi.mock('@/lib/store', () => ({
 }))
 
 let cartItems: Record<string, unknown>[] = []
+/** Saved entries the catalog cannot draw, which the real store keeps beside `items`. */
+let cartUnresolved: { id: string }[] = []
 vi.mock('@/lib/cart-store', () => ({
   useCartStore: {
-    getState: () => ({ items: cartItems }),
+    getState: () => ({ items: cartItems, unresolved: cartUnresolved }),
     setState: (updater: unknown) => {
+      type Cart = { items?: Record<string, unknown>[]; unresolved?: { id: string }[] }
       const next = typeof updater === 'function'
-        ? (updater as (s: { items: unknown[] }) => { items: unknown[] })({ items: cartItems })
-        : (updater as { items: Record<string, unknown>[] })
-      cartItems = next.items as Record<string, unknown>[]
+        ? (updater as (s: Cart) => Cart)({ items: cartItems, unresolved: cartUnresolved })
+        : (updater as Cart)
+      if (next.items) cartItems = next.items
+      if (next.unresolved) cartUnresolved = next.unresolved
     },
   },
 }))
@@ -65,6 +69,7 @@ describe('schedule sync keeps unresolvable saved courses', () => {
   beforeEach(() => {
     upsert.mockClear()
     cartItems = []
+    cartUnresolved = []
   })
 
   it('pushes back a course the catalog dropped, instead of erasing it', async () => {
@@ -87,5 +92,33 @@ describe('schedule sync keeps unresolvable saved courses', () => {
     for (const [payload] of upsert.mock.calls) {
       expect(payload.schedule.map(item => item.id)).toContain('CS224U')
     }
+  })
+
+  it('keeps every field of an undrawable entry, including a legacy single section', async () => {
+    selectSingle.mockResolvedValueOnce({
+      data: { schedule: [{ id: 'CS224U', selectedTerm: 'Spring 2027', selectedSectionId: 7154, selectedUnits: 4, color: 'blue' } as never] },
+      error: null,
+    })
+    const { pullSchedule } = await import('@/lib/schedule-sync')
+    await pullSchedule('user-3')
+    expect(cartUnresolved).toEqual([{ id: 'CS224U', selectedTerm: 'Spring 2027', selectedSectionIds: [7154], selectedUnits: 4, color: 'blue' }])
+  })
+
+  it('keeps what this device already held undrawn when a merge hydrates only the row\'s extras', async () => {
+    // A device that has not synced as this user, holding a class plus a saved
+    // entry the catalog cannot draw (a plan switch or an earlier load put it there).
+    cartItems = [{ id: 'CS106A', selectedTerm: 'Autumn 2026' }]
+    cartUnresolved = [{ id: 'CS224U', selectedTerm: 'Spring 2027' } as { id: string }]
+    selectSingle.mockResolvedValueOnce({
+      data: { schedule: [{ id: 'CS106A', selectedTerm: 'Autumn 2026' }, { id: 'PHIL187C', selectedTerm: 'Autumn 2026' }] },
+      error: null,
+    })
+    // A fresh tab: one that already pulled as another account would rightly refuse to merge.
+    vi.resetModules()
+    const { pullSchedule } = await import('@/lib/schedule-sync')
+    await pullSchedule('user-2')
+    expect(cartUnresolved.map(i => i.id).sort()).toEqual(['CS224U', 'PHIL187C'])
+    const pushed = upsert.mock.calls.at(-1)![0].schedule.map(item => item.id).sort()
+    expect(pushed).toEqual(['CS106A', 'CS224U', 'PHIL187C'])
   })
 })

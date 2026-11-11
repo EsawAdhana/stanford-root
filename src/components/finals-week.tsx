@@ -1,19 +1,19 @@
 'use client';
 
-import React, { useEffect, useMemo, useState } from 'react';
-import { AlertTriangle, X } from 'lucide-react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { TimeGrid, blockStyle, gridRange } from '@/components/time-grid';
 import { getCalendarColorClasses, layoutDayEvents } from '@/lib/calendar-utils';
 import { cn } from '@/lib/utils';
 import {
-  clashSignature,
+  clashTitle,
   examDays,
   examLoad,
   examSlotFor,
   formatExamColumn,
   formatExamDate,
-  formatExamStart,
   formatExamTime,
   hasFinalExamSchedule,
   type ExamClash,
@@ -51,18 +51,7 @@ function joinLabels(labels: string[]): string {
   return `${labels.slice(0, -1).join(', ')}, and ${labels[labels.length - 1]}`
 }
 
-/** Course ids that share an exam slot with another course, mapped to the courses they clash with. */
-export function clashPartners(clashes: ExamClash[]): Map<string, string[]> {
-  const partners = new Map<string, string[]>()
-  for (const clash of clashes) {
-    for (const entry of clash.entries) {
-      partners.set(entry.courseId, clash.entries.filter(e => e !== entry).map(e => e.label))
-    }
-  }
-  return partners
-}
-
-type ExamBlock = { id: string; courseId: string; label: string; date: string; start: number; end: number; group: boolean }
+type ExamBlock = { id: string; courseId: string; label: string; date: string; start: number; end: number }
 
 export function FinalsGrid({ term, exams, onOpenCourse }: {
   term: string
@@ -70,7 +59,6 @@ export function FinalsGrid({ term, exams, onOpenCourse }: {
   onOpenCourse: (courseId: string) => void
 }) {
   const days = examDays(term)
-  const partners = useMemo(() => clashPartners(exams.load.clashes), [exams])
   const blocks = useMemo<ExamBlock[]>(() => exams.entries.map(e => ({
     id: `${e.courseId}-exam`,
     courseId: e.courseId,
@@ -78,7 +66,6 @@ export function FinalsGrid({ term, exams, onOpenCourse }: {
     date: e.exam.date,
     start: e.exam.start,
     end: e.exam.end,
-    group: e.exam.group,
   })), [exams])
   const { startMinutes, endMinutes } = gridRange(blocks)
   const byDay = useMemo(() => {
@@ -92,29 +79,24 @@ export function FinalsGrid({ term, exams, onOpenCourse }: {
       columns={days.map(d => ({ key: d, label: formatExamColumn(d) }))}
       startMinutes={startMinutes}
       endMinutes={endMinutes}
-      renderColumn={day => (byDay[day] ?? []).map(block => {
-        const clashWith = partners.get(block.courseId)
-        return (
-          <div
-            key={block.id}
-            onClick={() => onOpenCourse(block.courseId)}
-            className={cn(
-              'group absolute rounded-md border px-1 sm:px-2 py-0.5 sm:py-1 text-left shadow-sm hover:shadow transition-shadow overflow-hidden cursor-pointer z-20',
-              getCalendarColorClasses(block.courseId),
-              clashWith && 'border-2 border-destructive ring-2 ring-destructive/40',
-            )}
-            style={blockStyle(block, startMinutes)}
-          >
-            <div className="pl-0.5">
-              <div className="text-3xs sm:text-2xs font-semibold leading-tight truncate">{block.label}</div>
-              <div className="text-4xs sm:text-3xs opacity-80 max-sm:leading-tight sm:truncate"><ExamTime start={block.start} end={block.end} /></div>
-              <div className={cn('text-4xs sm:text-3xs truncate hidden sm:block', clashWith ? 'font-semibold text-destructive' : 'opacity-80')}>
-                {clashWith ? `Clash with ${joinLabels(clashWith)}` : block.group ? 'Group exam' : 'Exam slot'}
-              </div>
-            </div>
+      renderColumn={day => (byDay[day] ?? []).map(block => (
+        <div
+          key={block.id}
+          onClick={() => onOpenCourse(block.courseId)}
+          className={cn(
+            'group absolute rounded-md border px-1 sm:px-2 py-0.5 sm:py-1 text-left shadow-sm hover:shadow transition-shadow overflow-hidden cursor-pointer z-20',
+            getCalendarColorClasses(block.courseId),
+          )}
+          style={blockStyle(block, startMinutes)}
+        >
+          {/* Course and time only. A block is three hours tall, so both wrap
+              rather than cut off when two finals share a column. */}
+          <div className="pl-0.5">
+            <div className="text-3xs sm:text-2xs font-semibold leading-tight break-words">{block.label}</div>
+            <div className="text-4xs sm:text-3xs opacity-80 leading-tight"><ExamTime start={block.start} end={block.end} /></div>
           </div>
-        )
-      })}
+        </div>
+      ))}
     />
   )
 }
@@ -131,8 +113,39 @@ function ExamTime({ start, end }: { start: number; end: number }) {
   return <>{text.slice(0, dash + 1)}<wbr />{text.slice(dash + 1)}</>
 }
 
+/**
+ * A course card's line when its class times could not be loaded, after the
+ * store's own retries. Try again sits on the card, which opens the course when
+ * clicked, so it keeps the click to itself.
+ */
+export function LoadFailedLine({ what, onRetry }: { what: string; onRetry: () => void }) {
+  return (
+    <div>
+      Couldn&apos;t load {what}.{' '}
+      <Button
+        type="button"
+        variant="link"
+        className="h-auto p-0 text-xs"
+        onClick={e => { e.stopPropagation(); onRetry() }}
+      >
+        Try again
+      </Button>
+    </div>
+  )
+}
+
 /** What a course card says about its final in finals week. */
-export function ExamSlotLine({ slot, pending, clashWith }: { slot?: ExamSlot; pending: boolean; clashWith?: string[] }) {
+export function ExamSlotLine({ slot, pending, failed = false, onRetry }: {
+  slot?: ExamSlot
+  pending: boolean
+  /** Its class times failed to load, so the slot cannot be worked out. */
+  failed?: boolean
+  onRetry?: () => void
+}) {
+  // A group exam needs no class times, so it shows even when they failed.
+  if (failed && slot?.kind !== 'slot' && onRetry) {
+    return <LoadFailedLine what="the exam slot" onRetry={onRetry} />
+  }
   if (!slot) {
     return pending ? <div className="animate-pulse">Finding the exam slot…</div> : null
   }
@@ -142,113 +155,105 @@ export function ExamSlotLine({ slot, pending, clashWith }: { slot?: ExamSlot; pe
   if (slot.kind === 'off-grid') {
     return <div className="italic">Not on the Registrar&apos;s exam grid. Check with the instructor.</div>
   }
-  const when = `${formatExamDate(slot.date)}, ${formatExamTime(slot.start, slot.end)}`
+  if (slot.kind === 'pick-lecture') {
+    return <div className="italic">The exam slot depends on your lecture. Pick one to see it.</div>
+  }
   return (
-    <div className={cn(clashWith && 'font-semibold text-destructive')}>
-      {slot.group ? 'Group exam' : 'Exam slot'}: {when}
-      {clashWith ? `, same slot as ${joinLabels(clashWith)}` : ''}
+    <div>
+      {slot.group ? 'Group exam' : 'Exam slot'}: {formatExamDate(slot.date)}, {formatExamTime(slot.start, slot.end)}
     </div>
   )
 }
-
-const DISMISSED_CLASHES_KEY = 'stanford-root:dismissed-exam-clashes'
 
 /**
- * Dismissal for the clash warning, per term. Keyed by the clashes themselves,
- * so a new clash brings the warning back after an older one was dismissed.
+ * The hazard sign in the top-right corner of a class card whose final shares its
+ * slot with another's: hovering it (or tapping, on a phone) says which finals
+ * overlap and what Stanford asks, and Ignore clears the sign for that overlap.
  */
-function useClashDismissal(term: string, signature: string) {
-  const [dismissed, setDismissed] = useState<Record<string, string>>({})
-  useEffect(() => {
-    try {
-      const raw = localStorage.getItem(DISMISSED_CLASHES_KEY)
-      if (raw) setDismissed(JSON.parse(raw))
-    } catch {
-      // unavailable or corrupt storage: show the warning
-    }
-  }, [])
-  const isDismissed = signature !== '' && dismissed[term] === signature
-  const dismiss = () => setDismissed(prev => {
-    const next = { ...prev, [term]: signature }
-    try {
-      localStorage.setItem(DISMISSED_CLASHES_KEY, JSON.stringify(next))
-    } catch {
-      // the dismissal still holds for this visit
-    }
-    return next
-  })
-  return { isDismissed, dismiss }
-}
+export function ExamClashHazard({ clash, onIgnore }: { clash: ExamClash; onIgnore: () => void }) {
+  const [open, setOpen] = useState(false)
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
+  // 'hover': shown while the mouse is over the sign or the box, and it doesn't
+  // move focus. 'pinned': opened by a click, tap or key, and stays until closed.
+  const mode = useRef<'hover' | 'pinned'>('pinned')
+  useEffect(() => () => clearTimeout(closeTimer.current), [])
 
-const COUNT_WORDS = ['Zero', 'One', 'Two', 'Three', 'Four', 'Five', 'Six']
+  // A short grace period lets the mouse cross from the sign into the box.
+  const hover = (entering: boolean) => (e: React.PointerEvent) => {
+    if (e.pointerType !== 'mouse') return
+    clearTimeout(closeTimer.current)
+    if (entering && !open) {
+      mode.current = 'hover'
+      setOpen(true)
+    } else if (!entering && mode.current === 'hover') {
+      closeTimer.current = setTimeout(() => setOpen(false), 150)
+    }
+  }
+  // Clicking a sign that hovering already opened keeps the box open instead of
+  // toggling it shut (a tap fires both on a touch laptop).
+  const pinOnClick = (e: React.MouseEvent) => {
+    if (open && mode.current === 'hover') {
+      e.preventDefault()
+      mode.current = 'pinned'
+    }
+  }
+  const onOpenChange = (next: boolean) => {
+    if (next) mode.current = 'pinned'
+    setOpen(next)
+  }
+  const keepFocus = (e: Event) => {
+    if (mode.current === 'hover') e.preventDefault()
+  }
 
-/** The big warning for two finals in one slot, on the class view and finals week alike. */
-export function ExamClashBanner({ term, clashes, onShowFinals }: {
-  term: string
-  clashes: ExamClash[]
-  /** Offered from the class view, where the clash is not on screen. */
-  onShowFinals?: () => void
-}) {
-  const { isDismissed, dismiss } = useClashDismissal(term, clashSignature(clashes))
-  if (clashes.length === 0 || isDismissed) return null
+  const title = clashTitle([clash])
 
   return (
-    <div role="alert" className="rounded-xl border-2 border-destructive bg-destructive/10 p-4 text-destructive shrink-0">
-      <div className="flex items-start gap-3">
-        <AlertTriangle className="h-5 w-5 mt-0.5 shrink-0" />
-        <div className="flex-1 min-w-0">
-          <p className="text-base font-semibold leading-tight">
-            {clashes.length === 1
-              ? `${COUNT_WORDS[clashes[0].entries.length] ?? clashes[0].entries.length} of your finals are at the same time`
-              : `Your finals clash in ${clashes.length} exam slots`}
-          </p>
-          <ul className="mt-2 space-y-1 text-sm">
-            {clashes.map(clash => (
-              <li key={`${clash.date}-${clash.start}`}>
-                <span className="font-semibold">{joinLabels(clash.entries.map(e => e.label))}</span>
-                {' '}{clash.entries.length === 2 ? 'both have' : 'all have'} the {formatExamDate(clash.date)}, {formatExamTime(clash.start, clash.end)} exam slot.
-              </li>
-            ))}
-          </ul>
-          <p className="mt-2 text-xs opacity-90">
-            Stanford asks you to sort out exam conflicts with the instructors before the Preliminary Study List deadline.
-            A class that ends in a project still holds its slot.
-          </p>
-          {onShowFinals && (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={onShowFinals}
-              className="mt-3 border-destructive/50 bg-transparent text-destructive hover:bg-destructive/10 hover:text-destructive"
-            >
-              See finals week
-            </Button>
-          )}
-        </div>
-        <button
+    <Popover open={open} onOpenChange={onOpenChange}>
+      <PopoverTrigger asChild>
+        <Button
           type="button"
-          aria-label="Dismiss exam clash warning"
-          onClick={dismiss}
-          className="rounded p-1 hover:bg-destructive/10 transition-colors shrink-0"
+          variant="ghost"
+          size="icon"
+          aria-label={title}
+          onPointerEnter={hover(true)}
+          onPointerLeave={hover(false)}
+          onClick={e => {
+            // The sign sits on the class card, which opens the course when clicked.
+            e.stopPropagation()
+            pinOnClick(e)
+          }}
+          // The same 28px box as the card's remove button beside it.
+          className="h-7 w-7 text-destructive hover:bg-destructive/10 hover:text-destructive"
         >
-          <X className="h-4 w-4" />
-        </button>
-      </div>
-    </div>
-  )
-}
-
-/** The softer note for a day with three or more exams. */
-export function HeavyExamDayNotice({ heavyDays }: { heavyDays: ExamLoad['heavyDays'] }) {
-  if (heavyDays.length === 0) return null
-  return (
-    <div className="rounded-xl border border-amber-500/40 bg-amber-500/10 p-3 text-sm text-amber-950 dark:text-amber-50 shrink-0 space-y-1">
-      {heavyDays.map(day => (
-        <p key={day.date}>
-          <span className="font-semibold">{day.entries.length} exam slots on {formatExamDate(day.date)}.</span>{' '}
-          {joinLabels(day.entries.map(e => `${e.label} at ${formatExamStart(e.exam.start)}`))}.
+          <AlertTriangle className="h-4 w-4" />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent
+        side="bottom"
+        align="end"
+        sideOffset={4}
+        collisionPadding={8}
+        className="w-72 p-3"
+        onPointerEnter={hover(true)}
+        onPointerLeave={hover(false)}
+        onOpenAutoFocus={keepFocus}
+        onCloseAutoFocus={keepFocus}
+        // React passes events up through the portal to the block, which would open the course.
+        onClick={e => e.stopPropagation()}
+      >
+        <p className="text-sm font-semibold text-destructive">{title}</p>
+        <p className="mt-1 text-xs">
+          {joinLabels(clash.entries.map(e => e.label))}: {formatExamDate(clash.date)}, {formatExamTime(clash.start, clash.end)}
         </p>
-      ))}
-    </div>
+        <p className="mt-2 text-xs text-muted-foreground">
+          Stanford asks you to sort out exam conflicts with the instructors before the Preliminary Study List deadline.
+        </p>
+        <div className="mt-2 flex justify-end">
+          <Button variant="ghost" size="sm" className="h-7 px-2 text-xs" onClick={() => { setOpen(false); onIgnore() }}>
+            Ignore
+          </Button>
+        </div>
+      </PopoverContent>
+    </Popover>
   )
 }

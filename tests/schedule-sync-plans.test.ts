@@ -52,10 +52,10 @@ vi.mock('@/lib/store', () => ({
   },
 }))
 
-type Cart = { items: Record<string, unknown>[]; plans: PlansByTerm }
+type Cart = { items: Record<string, unknown>[]; plans: PlansByTerm; unresolved: SavedItem[] }
 
 /** The cart of whichever device is acting: the active plan's items and the parked plans, as the real store holds them. */
-let cart: Cart = { items: [], plans: {} }
+let cart: Cart = { items: [], plans: {}, unresolved: [] }
 vi.mock('@/lib/cart-store', () => ({
   useCartStore: {
     getState: () => cart,
@@ -87,8 +87,8 @@ type Sync = typeof import('@/lib/schedule-sync')
  */
 function makeDevice() {
   const storage = makeStorage()
-  let persisted: Cart = { items: [], plans: {} }
-  let own: Cart = { items: [], plans: {} }
+  let persisted: Cart = { items: [], plans: {}, unresolved: [] }
+  let own: Cart = { items: [], plans: {}, unresolved: [] }
   let sync: Sync | null = null
   const device = {
     async load(): Promise<Sync> {
@@ -100,7 +100,7 @@ function makeDevice() {
       return sync
     },
     park() {
-      persisted = structuredClone({ items: cart.items.map(i => ({ id: i.id, selectedTerm: i.selectedTerm })), plans: cart.plans })
+      persisted = structuredClone({ items: cart.items.map(i => ({ id: i.id, selectedTerm: i.selectedTerm })), plans: cart.plans, unresolved: cart.unresolved })
     },
     async act<T>(fn: (sync: Sync) => Promise<T> | T): Promise<T> {
       if (!sync) await device.load()
@@ -134,7 +134,7 @@ function switchTo(label: string) {
   const parked = { ...p.parked, [p.active]: winter(...ids()) }
   const incoming = parked[label]
   delete parked[label]
-  cart = { items: incoming.map(i => ({ ...i })), plans: { [W]: { ...p, active: label, parked } } }
+  cart = { ...cart, items: incoming.map(i => ({ ...i })), plans: { [W]: { ...p, active: label, parked } } }
 }
 
 /** Adds classes to a parked plan, as the plan tabs' editor would after a switch and back. */
@@ -155,7 +155,7 @@ describe('plans on the saved row', () => {
     upsert.mockClear()
     selectSingle.mockClear()
     row = null
-    cart = { items: [], plans: {} }
+    cart = { items: [], plans: {}, unresolved: [] }
   })
 
   it('writes no plans column for a schedule without plans', async () => {
@@ -230,7 +230,7 @@ describe('plans on the saved row', () => {
     row = { schedule: winter('CS107') }
     const fresh = makeDevice()
     const sync = await fresh.load()
-    cart = { items: winter('CS229', 'CS255'), plans: { [W]: { order: ['A', 'B'], active: 'B', parked: { A: winter('CS161') } } } }
+    cart = { items: winter('CS229', 'CS255'), plans: { [W]: { order: ['A', 'B'], active: 'B', parked: { A: winter('CS161') } } }, unresolved: [] }
     await sync.pullSchedule(USER)
     expect(ids().sort()).toEqual(['CS107', 'CS229', 'CS255'])
     expect(parkedIds(cart.plans, 'A')).toEqual(['CS161'])
@@ -242,7 +242,7 @@ describe('plans on the saved row', () => {
     row = { schedule: winter('MATH51') }
     const fresh = makeDevice()
     const sync = await fresh.load()
-    cart = { items: [], plans: { [W]: { order: ['A', 'B'], active: 'B', parked: { A: winter('CS229', 'CS161') } } } }
+    cart = { items: [], plans: { [W]: { order: ['A', 'B'], active: 'B', parked: { A: winter('CS229', 'CS161') } } }, unresolved: [] }
     await sync.pullSchedule(USER)
     expect(parkedIds(cart.plans, 'A')).toEqual(['CS229', 'CS161'])
     expect(parkedIds(row?.plans, 'A')).toEqual(['CS229', 'CS161'])

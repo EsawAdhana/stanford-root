@@ -5,7 +5,7 @@ import { dedupeCrossListedItems, makeMeetingKey, mergeSectionSelection } from '@
 import { getCrossListGroupIds } from '@/lib/cross-list.mjs'
 import { useCourseStore } from '@/lib/store'
 import { setCartHydrated } from '@/lib/cart-hydration'
-import { nextPlanLabel, readPlans, termSnapshot, type PlansByTerm, type SavedItem } from '@/lib/schedule-plans'
+import { nextPlanLabel, readPlans, readSavedItems, termSnapshot, toSavedItem, type PlansByTerm, type SavedItem } from '@/lib/schedule-plans'
 
 export type CartItem = Course & {
   selectedTerm?: string
@@ -17,6 +17,14 @@ type CartStore = {
   items: CartItem[]
   /** The plans not on screen, per term (see schedule-plans). Changes with `items` in one set, so a push never sees half a switch. */
   plans: PlansByTerm
+  /**
+   * Saved entries the catalog cannot draw (a course that dropped out of it).
+   * They are not on the calendar, but they are still part of the schedule: the
+   * sync pushes them back with `items`, and a plan switch carries a term's
+   * entries with the plan they belong to. Changes with `items` and `plans` in one
+   * set, so a push never sees half a switch.
+   */
+  unresolved: SavedItem[]
   /** Starts the next plan for a term as a copy of the current one and switches to it. Returns its label. */
   createPlan: (term: string) => string
   /** Puts a parked plan on screen. Returns classes it took from another term's schedule. */
@@ -33,21 +41,60 @@ type CartStore = {
   clearCart: () => void
 }
 
-/** Full course data for saved entries. An entry the catalog no longer has cannot be drawn, so it drops out. */
-function hydrateSaved(saved: SavedItem[]): CartItem[] {
+/**
+ * Whether a parked plan can be brought on screen. It is rebuilt from the
+ * catalog, so before the catalog has courses (still loading, or failed to load)
+ * every class would drop out, and the plan's saved list would be gone with it.
+ */
+function catalogReady(): boolean {
+  return useCourseStore.getState().courses.length > 0
+}
+
+/**
+ * Full course data for saved entries. An entry the catalog no longer has cannot
+ * be drawn, so it comes back in `unresolved` instead, to be kept rather than lost.
+ */
+function hydrateSaved(saved: SavedItem[]): { items: CartItem[]; unresolved: SavedItem[] } {
   const byId = new Map(useCourseStore.getState().courses.map(c => [c.id, c]))
-  return saved.flatMap(s => {
+  const items: CartItem[] = []
+  const unresolved: SavedItem[] = []
+  for (const s of saved) {
     const course = byId.get(s.id)
-    if (!course) return []
-    return [{
+    if (!course) {
+      unresolved.push(s)
+      continue
+    }
+    items.push({
       ...course,
       selectedTerm: s.selectedTerm,
       selectedSectionIds: s.selectedSectionIds,
       selectedUnits: s.selectedUnits,
       color: s.color,
       optionalMeetings: s.optionalMeetings,
-    }]
-  })
+    })
+  }
+  return { items, unresolved }
+}
+
+/**
+ * Everything one term's plan holds: the classes on screen plus that term's
+ * entries the catalog could not draw. Those belong to the plan on screen, so
+ * parking it parks them too, or they would follow whichever plan is open.
+ */
+function planSnapshot(items: CartItem[], unresolved: SavedItem[], term: string): SavedItem[] {
+  const snapshot = termSnapshot(items, term)
+  const ids = new Set(snapshot.map(i => i.id))
+  return [...snapshot, ...termSnapshot(unresolved, term).filter(i => !ids.has(i.id))]
+}
+
+/**
+ * `unresolved` with one term's entries replaced by an incoming plan's. Like
+ * `withTermItems`, an entry for the same course under another term gives way:
+ * the schedule holds one entry per course.
+ */
+function withTermUnresolved(unresolved: SavedItem[], term: string, incoming: SavedItem[]): SavedItem[] {
+  const incomingIds = new Set(incoming.map(i => i.id))
+  return [...unresolved.filter(i => i.selectedTerm !== term && !incomingIds.has(i.id)), ...incoming.map(toSavedItem)]
 }
 
 /**
@@ -69,8 +116,10 @@ export const useCartStore = create<CartStore>()(
     (set, get) => ({
       items: [],
       plans: {},
+      unresolved: [],
       createPlan: (term) => {
-        const { items, plans } = get()
+        // The new plan is a copy, so the term's undrawable entries stay with it as well.
+        const { items, plans, unresolved } = get()
         const current = plans[term] ?? { order: ['A'], active: 'A', parked: {} }
         const label = nextPlanLabel(current.order)
         set({
@@ -79,42 +128,53 @@ export const useCartStore = create<CartStore>()(
             [term]: {
               order: [...current.order, label],
               active: label,
-              parked: { ...current.parked, [current.active]: termSnapshot(items, term) },
+              parked: { ...current.parked, [current.active]: planSnapshot(items, unresolved, term) },
             },
           },
         })
         return label
       },
       switchPlan: (term, label) => {
-        const { items, plans } = get()
+        const { items, plans, unresolved } = get()
         const current = plans[term]
-        if (!current || label === current.active || !current.order.includes(label)) return []
-        const { items: nextItems, moved } = withTermItems(items, term, hydrateSaved(current.parked[label] ?? []))
-        const parked = { ...current.parked, [current.active]: termSnapshot(items, term) }
+        if (!current || label === current.active || !current.order.includes(label) || !catalogReady()) return []
+        const incoming = hydrateSaved(current.parked[label] ?? [])
+        const { items: nextItems, moved } = withTermItems(items, term, incoming.items)
+        const parked = { ...current.parked, [current.active]: planSnapshot(items, unresolved, term) }
         delete parked[label]
-        set({ items: nextItems, plans: { ...plans, [term]: { ...current, active: label, parked } } })
+        set({
+          items: nextItems,
+          plans: { ...plans, [term]: { ...current, active: label, parked } },
+          unresolved: withTermUnresolved(unresolved, term, incoming.unresolved),
+        })
         return moved
       },
       deletePlan: (term, label) => {
-        const { items, plans } = get()
+        const { items, plans, unresolved } = get()
         const current = plans[term]
         if (!current || !current.order.includes(label) || current.order.length < 2) return
+        // Deleting the plan on screen brings its neighbour up from the catalog.
+        if (label === current.active && !catalogReady()) return
         const order = current.order.filter(l => l !== label)
         const parked = { ...current.parked }
         delete parked[label]
         let nextItems = items
+        let nextUnresolved = unresolved
         let active = current.active
         if (label === current.active) {
           const index = current.order.indexOf(label)
           active = current.order[index - 1] ?? current.order[index + 1]
-          nextItems = withTermItems(items, term, hydrateSaved(current.parked[active] ?? [])).items
+          // The deleted plan's undrawable entries go with it; the neighbour brings its own.
+          const incoming = hydrateSaved(current.parked[active] ?? [])
+          nextItems = withTermItems(items, term, incoming.items).items
+          nextUnresolved = withTermUnresolved(unresolved, term, incoming.unresolved)
           delete parked[active]
         }
         const nextPlans = { ...plans }
         // One plan left is just the schedule again.
         if (order.length < 2) delete nextPlans[term]
         else nextPlans[term] = { order, active, parked }
-        set({ items: nextItems, plans: nextPlans })
+        set({ items: nextItems, plans: nextPlans, unresolved: nextUnresolved })
       },
       addItem: (course, term, sectionId, selectedUnits) => {
         const currentItems = get().items
@@ -260,7 +320,7 @@ export const useCartStore = create<CartStore>()(
         set({ items: newItems })
       },
       // Sign-out: another person's plans must not stay behind on a shared machine.
-      clearCart: () => set({ items: [], plans: {} })
+      clearCart: () => set({ items: [], plans: {}, unresolved: [] })
     }),
     {
       name: 'navigator-cart',
@@ -291,11 +351,12 @@ export const useCartStore = create<CartStore>()(
           optionalMeetings: i.optionalMeetings,
         })) as CartItem[],
         plans: state.plans,
+        unresolved: state.unresolved,
       }),
       // Plans read back from storage get the same shape check as plans read from the saved row.
       merge: (persisted, current) => {
         const saved = (persisted ?? {}) as Partial<CartStore>
-        return { ...current, ...saved, plans: readPlans(saved.plans) }
+        return { ...current, ...saved, plans: readPlans(saved.plans), unresolved: readSavedItems(saved.unresolved) }
       },
       onRehydrateStorage: () => (_state, _err) => {
         setCartHydrated()

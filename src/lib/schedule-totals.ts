@@ -55,6 +55,12 @@ export function formatUnitRange({ min, max }: { min: number; max: number }): str
   return min === max ? String(min) : `${min}-${max}`
 }
 
+/** "~48", "…" while the total is about to jump, "0" with nothing to count. */
+export function formatWeeklyHours({ total, loading }: { total: number | null; loading: boolean }): string {
+  if (loading && total === null) return '…'
+  return total === null ? '0' : `~${total.toFixed(0)}`
+}
+
 /**
  * Expected hours a week: evaluation hours where a course has them, otherwise
  * three hours per unit. A course whose evaluations are still loading counts

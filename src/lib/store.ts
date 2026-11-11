@@ -65,6 +65,23 @@ function withDumpOnlyFields(enriched: Course, previous: Course | undefined): Cou
 
 type CacheEntry = { data: Course[]; ts: number }
 
+/** Waits before the 2nd and 3rd try of a batch detail fetch. */
+const DETAIL_RETRY_DELAYS_MS = [1000, 3000]
+
+function clearFailedDetails(
+  get: () => CourseStore,
+  set: (fn: (state: CourseStore) => Partial<CourseStore>) => void,
+  ids: string[],
+) {
+  // No set at all when nothing was failed, so subscribers are not woken for nothing.
+  if (!ids.some(id => get().failedDetailIds.has(id))) return
+  set(state => {
+    const failedDetailIds = new Set(state.failedDetailIds)
+    for (const id of ids) failedDetailIds.delete(id)
+    return { failedDetailIds }
+  })
+}
+
 /**
  * Single IndexedDB read for the catalog cache. Returns null when missing,
  * version-mismatched, or older than 24h. Callers decide fresh vs stale from
@@ -255,27 +272,38 @@ export const useCourseStore = create<CourseStore>((set, get) => ({
       return
     }
 
-    try {
-      const res = await fetch('/api/courses/batch', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ids: toFetch }),
-      })
-      if (!res.ok) throw new Error(`API error: ${res.status}`)
-      const rows: any[] = await res.json()
-      const enriched = rows.map(rowToCourse)
+    // A retry (the schedule's "Try again", or the next call) is loading again, not failed.
+    clearFailedDetails(get, set, toFetch)
 
-      set(state => {
-        const courseMap = new Map(state.courses.map(c => [c.id, c]))
-        for (const c of enriched) courseMap.set(c.id, withDumpOnlyFields(c, courseMap.get(c.id)))
-        return {
-          courses: Array.from(courseMap.values()),
-          enrichedCourseIds: new Set([...state.enrichedCourseIds, ...enriched.map(c => c.id)]),
-        }
-      })
-    } catch (err) {
-      console.error('Failed to batch fetch course details:', err)
+    // Two more tries before giving up: one network blip used to leave the
+    // schedule's class list on "Finding the exam slot…" for good.
+    for (let attempt = 0; attempt < DETAIL_RETRY_DELAYS_MS.length + 1; attempt++) {
+      if (attempt > 0) await new Promise(resolve => setTimeout(resolve, DETAIL_RETRY_DELAYS_MS[attempt - 1]))
+      try {
+        const res = await fetch('/api/courses/batch', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ids: toFetch }),
+        })
+        if (!res.ok) throw new Error(`API error: ${res.status}`)
+        const rows: any[] = await res.json()
+        const enriched = rows.map(rowToCourse)
+
+        set(state => {
+          const courseMap = new Map(state.courses.map(c => [c.id, c]))
+          for (const c of enriched) courseMap.set(c.id, withDumpOnlyFields(c, courseMap.get(c.id)))
+          return {
+            courses: Array.from(courseMap.values()),
+            enrichedCourseIds: new Set([...state.enrichedCourseIds, ...enriched.map(c => c.id)]),
+          }
+        })
+        return
+      } catch (err) {
+        console.error('Failed to batch fetch course details:', err)
+      }
     }
+    // Recorded so the schedule can say so and offer a retry instead of loading forever.
+    set(state => ({ failedDetailIds: new Set([...state.failedDetailIds, ...toFetch]) }))
   },
 
   fetchCourseDetail: async (courseId: string) => {
@@ -287,6 +315,9 @@ export const useCourseStore = create<CourseStore>((set, get) => ({
       }))
       return
     }
+    // A batch fetch from the schedule may have failed this id earlier. This
+    // fetch is a new try, so the course page shows its loader, not the failure.
+    clearFailedDetails(get, set, [courseId])
 
     try {
       const res = await fetch(`/api/courses/${encodeURIComponent(courseId)}`)

@@ -20,7 +20,9 @@ import { compareCourseCodes } from '@/lib/utils';
 import { ALL_DAYS, visibleDays, getCalendarColorClasses, layoutDayEvents, type CalendarDay } from '@/lib/calendar-utils';
 import { useFindShortcut } from '@/hooks/use-find-shortcut';
 import { TimeGrid, blockStyle, gridRange } from '@/components/time-grid';
-import { ExamClashBanner, ExamSlotLine, FinalsGrid, HeavyExamDayNotice, clashPartners, useTermExams } from '@/components/finals-week';
+import { ExamClashHazard, ExamSlotLine, FinalsGrid, LoadFailedLine, useTermExams } from '@/components/finals-week';
+import { clashSignature, type ExamClash } from '@/lib/final-exams';
+import { ignoreExamClash, useIgnoredClashStore } from '@/lib/ignored-clashes';
 import type { CartItem } from '@/lib/cart-store';
 
 type CalendarEvent = {
@@ -51,28 +53,23 @@ type CalendarViewProps = {
   /** False at the edge of the terms we have data for; the arrow disables. */
   canPrevTerm?: boolean
   canNextTerm?: boolean
-  totalUnitsMin: number
   totalUnitsMax: number
   isOverload: boolean
   isIgnored: boolean
   onIgnoreOverload: () => void
-  expectedHoursPerWeek?: number | null
-  expectedHoursLoading?: boolean
   /** Courses to draw instead of the user's own schedule (a shared link). */
   items?: CartItem[]
   /** No search, no removing, no meeting toggles, no warnings: someone else's schedule. */
   readOnly?: boolean
-  /** A line under the term name. */
-  subtitle?: string
   /** Rendered above the calendar card, such as the plan tabs. */
   aboveCalendar?: React.ReactNode
-  /** Replaces the units and hours cards, such as the plan comparison. */
-  metrics?: React.ReactNode
+  /** The units and hours table above the class list. */
+  stats: React.ReactNode
 }
 
 type ScheduleView = 'classes' | 'finals'
 
-export function CalendarView({ currentTerm, onPrevTerm, onNextTerm, canPrevTerm = true, canNextTerm = true, totalUnitsMin, totalUnitsMax, isOverload, isIgnored, onIgnoreOverload, expectedHoursPerWeek, expectedHoursLoading, items: itemsOverride, readOnly = false, subtitle, aboveCalendar, metrics }: CalendarViewProps) {
+export function CalendarView({ currentTerm, onPrevTerm, onNextTerm, canPrevTerm = true, canNextTerm = true, totalUnitsMax, isOverload, isIgnored, onIgnoreOverload, items: itemsOverride, readOnly = false, aboveCalendar, stats }: CalendarViewProps) {
   const cartItems = useCartStore(s => s.items)
   const items = itemsOverride ?? cartItems
   const addItem = useCartStore(s => s.addItem)
@@ -81,6 +78,8 @@ export function CalendarView({ currentTerm, onPrevTerm, onNextTerm, canPrevTerm 
   const courses = useCourseStore(state => state.courses)
   const isLoading = useCourseStore(state => state.isLoading)
   const enrichedCourseIds = useCourseStore(state => state.enrichedCourseIds)
+  const hasEnriched = useCourseStore(state => state.hasEnriched)
+  const failedDetailIds = useCourseStore(state => state.failedDetailIds)
   const router = useRouter()
   const openCourse = (courseId: string) => { startNavProgress(); router.push(`/${encodeURIComponent(courseId)}`); }
 
@@ -217,7 +216,24 @@ export function CalendarView({ currentTerm, onPrevTerm, onNextTerm, canPrevTerm 
   const exams = useTermExams(currentTermCourses, currentTerm)
   const [view, setView] = useState<ScheduleView>('classes')
   const showFinals = view === 'finals' && exams !== null
-  const clashWith = useMemo(() => clashPartners(exams?.load.clashes ?? []), [exams])
+
+  // A class whose final shares its slot with another's gets a hazard sign on its
+  // card in the list, on both views, until the student ignores that overlap.
+  // Ignores sync to the account (lib/ignored-clashes), so they hold on every device.
+  const ignoredSignatures = useIgnoredClashStore(s => s.byTerm[currentTerm])
+  const clashOf = useMemo(() => {
+    const ignored = new Set(ignoredSignatures ?? [])
+    const byCourse = new Map<string, ExamClash>()
+    for (const clash of exams?.load.clashes ?? []) {
+      if (ignored.has(clashSignature([clash]))) continue
+      for (const entry of clash.entries) byCourse.set(entry.courseId, clash)
+    }
+    return byCourse
+  }, [exams, ignoredSignatures])
+  const ignoreClash = (clash: ExamClash) => {
+    void ignoreExamClash(useAuthStore.getState().user?.id ?? null, currentTerm, clashSignature([clash]))
+  }
+
   const openFinals = () => {
     setView('finals')
     track('finals_week_viewed', { term: currentTerm, clashes: exams?.load.clashes.length ?? 0 })
@@ -228,13 +244,6 @@ export function CalendarView({ currentTerm, onPrevTerm, onNextTerm, canPrevTerm 
       <div className="flex flex-col relative">
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-6 items-start">
           <div className="flex flex-col gap-2 w-full min-w-0">
-            {!readOnly && exams && (
-              <ExamClashBanner
-                term={currentTerm}
-                clashes={exams.load.clashes}
-                onShowFinals={showFinals ? undefined : openFinals}
-              />
-            )}
             {aboveCalendar}
             <div className="rounded-xl border bg-card overflow-hidden flex flex-col shrink-0">
               <div className="grid grid-cols-[40px_1fr_40px] items-center border-b bg-card/80 backdrop-blur supports-[backdrop-filter]:bg-card/60 px-2 py-2">
@@ -245,7 +254,6 @@ export function CalendarView({ currentTerm, onPrevTerm, onNextTerm, canPrevTerm 
                 ) : <span />}
                 <div className="text-center">
                   <div className="font-semibold text-base">{currentTerm}</div>
-                  {subtitle && <div className="text-xs text-muted-foreground mt-0.5">{subtitle}</div>}
                   {exams && (
                     <Tabs
                       value={showFinals ? 'finals' : 'classes'}
@@ -421,33 +429,7 @@ export function CalendarView({ currentTerm, onPrevTerm, onNextTerm, canPrevTerm 
               </div>
             )}
 
-            {/* Metrics Layout */}
-            {metrics ?? (
-            <div className="grid grid-cols-2 gap-3 shrink-0">
-              <div className={cn(
-                "p-3 rounded-xl border bg-card flex flex-col items-center justify-center transition-colors",
-                isOverload && !isIgnored ? "border-destructive/50 bg-destructive/5 text-destructive" : ""
-              )}>
-                <span className="text-2xl font-semibold leading-none mb-1">
-                  {currentTermCourses.length === 0 || (totalUnitsMin === 0 && totalUnitsMax === 0) ? '0' : totalUnitsMin === totalUnitsMax ? totalUnitsMin : `${totalUnitsMin}-${totalUnitsMax}`}
-                </span>
-                <span className="text-[10px] uppercase font-semibold tracking-wider opacity-60">Units</span>
-              </div>
-              <div className="p-3 rounded-xl border bg-card flex flex-col items-center justify-center">
-                <span className="text-2xl font-semibold leading-none mb-1">
-                  {expectedHoursLoading && currentTermCourses.length > 0 && expectedHoursPerWeek == null ? (
-                    <span className="animate-pulse">…</span>
-                  ) : expectedHoursPerWeek != null ? (
-                    `~${expectedHoursPerWeek.toFixed(0)}`
-                  ) : (
-                    '0'
-                  )}
-                </span>
-                <span className="text-[10px] uppercase font-semibold tracking-wider text-muted-foreground">Hrs / Wk</span>
-              </div>
-            </div>
-            )}
-            {!readOnly && showFinals && exams && <HeavyExamDayNotice heavyDays={exams.load.heavyDays} />}
+            {stats}
             {currentTermCourses.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-12 text-center text-muted-foreground border-2 border-dashed rounded-xl bg-muted/20">
                 <Calendar className="h-10 w-10 mb-3 opacity-20" />
@@ -464,8 +446,13 @@ export function CalendarView({ currentTerm, onPrevTerm, onNextTerm, canPrevTerm 
                   const meetings = parseMeetingTimes(course, currentTerm);
                   const lines = meetings.map(formatMeetingLine).filter(Boolean) as string[];
                   // Sections arrive after the light catalog. Until then a course has
-                  // no meetings to read, which is not the same as having none.
-                  const sectionsPending = !course.sections?.length && !enrichedCourseIds.has(course.id);
+                  // no meetings to read, which is not the same as having none. Once the
+                  // full catalog is in, or its own fetch failed, it is no longer waiting.
+                  const sectionsUnknown = !course.sections?.length && !enrichedCourseIds.has(course.id) && !hasEnriched;
+                  const sectionsFailed = sectionsUnknown && failedDetailIds.has(course.id);
+                  const sectionsPending = sectionsUnknown && !sectionsFailed;
+                  const retrySections = () => void useCourseStore.getState().fetchCourseDetails([course.id]);
+                  const clash = clashOf.get(course.id);
                   return (
                     <div
                       key={course.id}
@@ -478,20 +465,28 @@ export function CalendarView({ currentTerm, onPrevTerm, onNextTerm, canPrevTerm 
                           <div className="text-xs text-muted-foreground truncate">{decodeHtmlEntities(course.title)}</div>
                         </div>
                         {!readOnly && (
-                          <Button
-                            variant="ghost" size="icon"
-                            aria-label={`Remove ${course.subject} ${course.code} from schedule`}
-                            className="h-7 w-7 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity"
-                            onClick={(e) => { e.stopPropagation(); removeItem(course.id); }}
-                          >
-                            <Trash2 size={14} />
-                          </Button>
+                          <div className="flex items-center shrink-0">
+                            <Button
+                              variant="ghost" size="icon"
+                              aria-label={`Remove ${course.subject} ${course.code} from schedule`}
+                              className="h-7 w-7 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity"
+                              onClick={(e) => { e.stopPropagation(); removeItem(course.id); }}
+                            >
+                              <Trash2 size={14} />
+                            </Button>
+                            {/* In the card's top-right corner, past the remove button. */}
+                            {clash && <ExamClashHazard clash={clash} onIgnore={() => ignoreClash(clash)} />}
+                          </div>
                         )}
                       </div>
                       <div className="mt-2 text-xs text-muted-foreground space-y-1">
                         {showFinals && exams ? (
-                          <ExamSlotLine slot={exams.byCourse.get(course.id)} pending={sectionsPending} clashWith={clashWith.get(course.id)} />
-                        ) : lines.length === 0 ? <div className="italic">Time TBA · not shown on calendar</div> : lines.map((line, i) => <div key={i}>{line}</div>)}
+                          <ExamSlotLine slot={exams.byCourse.get(course.id)} pending={sectionsPending} failed={sectionsFailed} onRetry={retrySections} />
+                        ) : lines.length === 0 ? (
+                          sectionsFailed
+                            ? <LoadFailedLine what="class times" onRetry={retrySections} />
+                            : <div className="italic">Time TBA · not shown on calendar</div>
+                        ) : lines.map((line, i) => <div key={i}>{line}</div>)}
                       </div>
                     </div>
                   );
@@ -509,7 +504,7 @@ export function CalendarView({ currentTerm, onPrevTerm, onNextTerm, canPrevTerm 
                 >
                   final exam schedule
                 </a>
-                . A class that ends in a project still holds its slot.
+                . Note that not every class uses its final exam slot, so check the class website or syllabus.
               </p>
             )}
           </div>

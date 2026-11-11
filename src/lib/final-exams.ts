@@ -1,4 +1,4 @@
-import type { Course } from '@/types/course'
+import type { Course, Section } from '@/types/course'
 import { componentRank, getParsedSectionMeetings, pickSectionsForTerm, primarySection } from '@/lib/schedule-utils'
 
 /**
@@ -133,6 +133,8 @@ export type ExamSlot =
   | { kind: 'off-grid'; days: string[]; start: number }
   /** No meeting time to look an exam up by. */
   | { kind: 'no-time' }
+  /** Only a discussion (or lab) is picked, and the lectures it could go with have different slots. */
+  | { kind: 'pick-lecture' }
 
 export function hasFinalExamSchedule(term: string): boolean {
   return term in FINAL_EXAMS
@@ -184,24 +186,36 @@ export function examSlotFor(course: Course, term: string): ExamSlot | null {
   const group = schedule.groups.find(g => g.subject === course.subject && g.codes.includes(course.code))
   if (group) return toSlot(group.day, group.slot, true)
 
-  let section = primarySection(pickSectionsForTerm(course, term))
-  // A pick of only a discussion still takes its exam from the lecture. When the
-  // term has exactly one lecture, that lecture is the student's.
+  const slotOf = (section: Section | undefined): ExamSlot => {
+    const meeting = section
+      ? getParsedSectionMeetings(section).find(m => m.days.length > 0 && m.startMinutes > 0)
+      : undefined
+    if (!meeting) return { kind: 'no-time' }
+    const family = dayFamily(meeting.days)
+    const rule = schedule.rules.find(r => ruleMatches(r, family, meeting.startMinutes))
+    if (!rule) return { kind: 'off-grid', days: meeting.days, start: meeting.startMinutes }
+    return toSlot(rule.day, rule.slot, false)
+  }
+
+  const section = primarySection(pickSectionsForTerm(course, term))
+  // A pick of only a discussion still takes its exam from the lecture, never
+  // from the discussion's own time.
   const termSections = (course.sections ?? []).filter(s => s.term === term)
   const best = primarySection(termSections)
   if (section && best && componentRank(best) < componentRank(section)) {
     const lectures = termSections.filter(s => componentRank(s) === componentRank(best))
-    if (lectures.length === 1) section = lectures[0]
+    const slots = lectures.map(slotOf)
+    // One lecture, or several that all land in the same slot: that is the exam.
+    if (slots.every(s => sameSlot(s, slots[0]))) return slots[0]
+    return { kind: 'pick-lecture' }
   }
-  const meeting = section
-    ? getParsedSectionMeetings(section).find(m => m.days.length > 0 && m.startMinutes > 0)
-    : undefined
-  if (!meeting) return { kind: 'no-time' }
+  return slotOf(section)
+}
 
-  const family = dayFamily(meeting.days)
-  const rule = schedule.rules.find(r => ruleMatches(r, family, meeting.startMinutes))
-  if (!rule) return { kind: 'off-grid', days: meeting.days, start: meeting.startMinutes }
-  return toSlot(rule.day, rule.slot, false)
+function sameSlot(a: ExamSlot, b: ExamSlot): boolean {
+  if (a.kind === 'slot' && b.kind === 'slot') return a.date === b.date && a.start === b.start
+  if (a.kind === 'off-grid' && b.kind === 'off-grid') return a.start === b.start && a.days.join() === b.days.join()
+  return a.kind === b.kind && a.kind !== 'slot' && a.kind !== 'off-grid'
 }
 
 export type ExamEntry = { courseId: string; label: string; exam: ScheduledExam }
@@ -241,6 +255,17 @@ export function clashSignature(clashes: ExamClash[]): string {
   return clashes
     .map(c => `${c.date}@${c.start}:${c.entries.map(e => e.courseId).sort().join('+')}`)
     .join(';')
+}
+
+const COUNT_WORDS = ['Zero', 'One', 'Two', 'Three', 'Four', 'Five', 'Six']
+
+/** "Two of your finals overlap", or the slot count when finals clash in more than one slot. */
+export function clashTitle(clashes: ExamClash[]): string {
+  if (clashes.length === 1) {
+    const count = clashes[0].entries.length
+    return `${COUNT_WORDS[count] ?? count} of your finals overlap`
+  }
+  return `Your finals overlap in ${clashes.length} exam slots`
 }
 
 const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']

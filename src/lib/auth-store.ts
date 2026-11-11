@@ -9,6 +9,7 @@ import {
 } from './schedule-sync'
 import { useCartStore } from './cart-store'
 import { useEvaluationStore } from './evaluation-store'
+import { clearIgnoredClashes } from './ignored-clashes'
 import { track, markLoginPending, consumeLoginPending } from './analytics'
 import {
   showAuthError,
@@ -75,6 +76,21 @@ function identifyForAnalytics(user: { id: string; email?: string | null; user_me
   })
 }
 
+/**
+ * Clears everything on this device that belongs to the signed-in student: the
+ * schedule and its plans, evaluations, and ignored finals overlaps. Pushes are
+ * suspended first, because clearing the cart fires the cart subscription,
+ * which would otherwise push an empty schedule over the saved one.
+ * `resetSyncState()` lifts the suspension.
+ */
+function clearAccountData() {
+  suspendPush()
+  cancelDebouncedPush()
+  useCartStore.getState().clearCart()
+  useEvaluationStore.getState().clearAll()
+  clearIgnoredClashes()
+}
+
 export const useAuthStore = create<AuthState>((set, get) => ({
   user: null,
   session: null,
@@ -107,6 +123,17 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       const user = session?.user ?? null
+
+      // Supabase tells every open tab about a sign-out, not just the tab where
+      // it happened. A tab that kept the student's schedule in memory would show
+      // it to the next person and, when they signed in, merge it into their
+      // account. Only when this tab had a student signed in: a rejected
+      // non-Stanford sign-in also ends in SIGNED_OUT, and the schedule a visitor
+      // built signed out has to survive that.
+      if (event === 'SIGNED_OUT' && get().user) {
+        clearAccountData()
+        resetSyncState()
+      }
 
       if (user && !user.email?.endsWith('@stanford.edu')) {
         void supabase.auth.signOut().catch(err => console.error('Failed to sign out non-Stanford user:', err))
@@ -258,13 +285,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
 
   signOut: async () => {
-    // Suspend pushes before clearing local state: clearCart() triggers the
-    // cart subscription, which would otherwise push an empty schedule and wipe
-    // the user's saved server schedule. resetSyncState() lifts the suspension.
-    suspendPush()
-    cancelDebouncedPush()
-    useCartStore.getState().clearCart()
-    useEvaluationStore.getState().clearAll()
+    clearAccountData()
     try {
       await supabase.auth.signOut()
     } finally {

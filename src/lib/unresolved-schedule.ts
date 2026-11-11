@@ -1,31 +1,17 @@
-import { create } from 'zustand'
-
 /**
- * Saved schedule entries the catalog can no longer resolve.
+ * A saved schedule entry the catalog can no longer resolve.
  *
  * `hydrateItems` drops any saved course that is not in the catalog, and the
- * shortened cart is then pushed back to `user_schedules` — so a course leaving
- * the catalog used to erase it from people's saved schedules for good. Parking
- * the entries here instead keeps them in the pushed payload, so they come back
- * on their own if the course returns, and gives the schedule page something to
- * tell the user about.
+ * shortened cart is then pushed back to `user_schedules`, so a course leaving
+ * the catalog used to erase it from people's saved schedules for good. The
+ * cart store's `unresolved` holds these entries instead, which keeps them in
+ * the pushed payload so they come back on their own if the course returns, and
+ * gives the schedule page something to tell the user about.
  */
 export type UnresolvedScheduleItem = {
   id: string
   selectedTerm?: string
 }
-
-type UnresolvedState = {
-  items: UnresolvedScheduleItem[]
-  set: (items: UnresolvedScheduleItem[]) => void
-  clear: () => void
-}
-
-export const useUnresolvedSchedule = create<UnresolvedState>((set) => ({
-  items: [],
-  set: (items) => set({ items }),
-  clear: () => set({ items: [] }),
-}))
 
 type CatalogCourse = {
   id: string

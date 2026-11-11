@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { X } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
@@ -11,9 +11,9 @@ import { useCourseStore } from '@/lib/store';
 import { useAuthStore } from '@/lib/auth-store';
 import { useEvaluationStore } from '@/lib/evaluation-store';
 import { track } from '@/lib/analytics';
-import { cn } from '@/lib/utils';
-import { expectedWeeklyHours, formatUnitRange, termUnitRange } from '@/lib/schedule-totals';
+import { expectedWeeklyHours, formatUnitRange, formatWeeklyHours, termUnitRange } from '@/lib/schedule-totals';
 import type { SavedItem } from '@/lib/schedule-plans';
+import { StatsTable, type StatsColumn } from '@/components/schedule-stats';
 
 const codeOf = (c: { subject: string; code: string }) => `${c.subject} ${c.code}`
 
@@ -22,28 +22,41 @@ function joinCodes(codes: string[]): string {
   return `${codes.slice(0, -1).join(', ')}, and ${codes[codes.length - 1]}`
 }
 
+/**
+ * Whether plans can be switched yet. A switch rebuilds the plan's classes from
+ * the catalog, so before it has courses (still loading, or failed to load) every
+ * class would drop out. The store refuses too; this keeps the controls honest.
+ */
+function useCanSwitchPlans(): boolean {
+  return useCourseStore(s => s.hasLoaded && s.courses.length > 0)
+}
+
+/** Switches the term's plan, from the tabs or the stats table's headings alike. */
+function useSwitchPlan(term: string) {
+  const switchPlan = useCartStore(s => s.switchPlan)
+  return useCallback((label: string) => {
+    const plans = useCartStore.getState().plans[term]?.order.length ?? 1
+    const moved = switchPlan(term, label)
+    track('plan_switched', { plans })
+    if (moved.length > 0) {
+      const codes = joinCodes(moved.map(codeOf))
+      toast(`${codes} moved to ${term}, since Plan ${label} has ${moved.length === 1 ? 'it' : 'them'} and a class sits on one term at a time.`)
+    }
+  }, [term, switchPlan])
+}
+
 /** Plan A, Plan B, ... above the calendar, for the term on screen. */
 export function PlanTabs({ term }: { term: string }) {
   const termPlans = useCartStore(s => s.plans[term])
   const items = useCartStore(s => s.items)
   const createPlan = useCartStore(s => s.createPlan)
-  const switchPlan = useCartStore(s => s.switchPlan)
   const deletePlan = useCartStore(s => s.deletePlan)
-  // A plan switch rebuilds classes from the catalog, so it waits for it.
-  const hasLoaded = useCourseStore(s => s.hasLoaded)
+  const canSwitch = useCanSwitchPlans()
+  const onSwitch = useSwitchPlan(term)
 
   const order = termPlans?.order ?? ['A']
   const active = termPlans?.active ?? 'A'
   const activeCount = items.filter(i => i.selectedTerm === term).length
-
-  const onSwitch = (label: string) => {
-    const moved = switchPlan(term, label)
-    track('plan_switched', { plans: order.length })
-    if (moved.length > 0) {
-      const codes = joinCodes(moved.map(codeOf))
-      toast(`${codes} moved to ${term}, since Plan ${label} has ${moved.length === 1 ? 'it' : 'them'} and a class sits on one term at a time.`)
-    }
-  }
 
   const onCreate = () => {
     const label = createPlan(term)
@@ -63,20 +76,20 @@ export function PlanTabs({ term }: { term: string }) {
           <div key={label} className="flex items-center gap-1 shrink-0">
             <TabsTrigger
               value={label}
-              disabled={!hasLoaded}
+              disabled={!canSwitch}
               className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-0 py-2 text-sm font-semibold text-muted-foreground data-[state=active]:text-foreground transition-colors hover:text-foreground/80"
             >
               Plan {label}
             </TabsTrigger>
             {label === active && order.length > 1 && (
-              <DeletePlan label={label} count={activeCount} onDelete={() => onDelete(label)} />
+              <DeletePlan label={label} count={activeCount} disabled={!canSwitch} onDelete={() => onDelete(label)} />
             )}
           </div>
         ))}
         <button
           type="button"
           onClick={onCreate}
-          disabled={!hasLoaded}
+          disabled={!canSwitch}
           className="shrink-0 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground disabled:opacity-50"
         >
           + New plan
@@ -86,7 +99,7 @@ export function PlanTabs({ term }: { term: string }) {
   )
 }
 
-function DeletePlan({ label, count, onDelete }: { label: string; count: number; onDelete: () => void }) {
+function DeletePlan({ label, count, disabled, onDelete }: { label: string; count: number; disabled: boolean; onDelete: () => void }) {
   const [open, setOpen] = useState(false)
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -94,7 +107,9 @@ function DeletePlan({ label, count, onDelete }: { label: string; count: number; 
         <button
           type="button"
           aria-label={`Delete Plan ${label}`}
-          className="rounded p-0.5 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+          // Deleting the plan on screen brings its neighbour up from the catalog.
+          disabled={disabled}
+          className="rounded p-0.5 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground disabled:opacity-50 disabled:pointer-events-none"
         >
           <X className="h-3.5 w-3.5" />
         </button>
@@ -126,13 +141,20 @@ function displayCourses(saved: SavedItem[], byId: Map<string, CartItem>): CartIt
 }
 
 /**
- * The plans side by side, in place of the units and hours cards. Every figure is
- * computed the way those cards compute it, so the active column matches what
- * the cards would have said.
+ * Units and hours for each plan of the term, Plan A alone until
+ * there is a Plan B. The plan on screen takes the page's own hours figure, which
+ * holds its last value through a refetch, so its column never flickers.
  */
-export function PlanComparison({ term, activeCourses }: { term: string; activeCourses: CartItem[] }) {
+export function PlanStats({ term, activeCourses, activeHours, overUnits }: {
+  term: string
+  activeCourses: CartItem[]
+  activeHours: { total: number | null; loading: boolean }
+  /** The plan on screen is over the unit limit and the warning wasn't dismissed. */
+  overUnits: boolean
+}) {
   const termPlans = useCartStore(s => s.plans[term])
-  const switchPlan = useCartStore(s => s.switchPlan)
+  const onSwitch = useSwitchPlan(term)
+  const canSwitch = useCanSwitchPlans()
   const courses = useCourseStore(s => s.courses)
   const user = useAuthStore(s => s.user)
   const fetchBulkEvaluations = useEvaluationStore(s => s.fetchBulkEvaluations)
@@ -140,8 +162,9 @@ export function PlanComparison({ term, activeCourses }: { term: string; activeCo
   const loadingCourses = useEvaluationStore(s => s.loadingCourses)
   const evaluations = useEvaluationStore(s => s.evaluations)
 
-  const columns = useMemo(() => {
-    if (!termPlans) return []
+  const active = termPlans?.active ?? 'A'
+  const plans = useMemo(() => {
+    if (!termPlans) return [{ label: 'A', courses: activeCourses }]
     const byId = new Map(courses.map(c => [c.id, c as CartItem]))
     return termPlans.order.map(label => ({
       label,
@@ -151,8 +174,8 @@ export function PlanComparison({ term, activeCourses }: { term: string; activeCo
 
   // Parked plans' courses need sections for their units, and evaluations for their hours.
   const parkedIds = useMemo(
-    () => [...new Set(columns.filter(c => c.label !== termPlans?.active).flatMap(c => c.courses.map(x => x.id)))],
-    [columns, termPlans]
+    () => [...new Set(plans.filter(p => p.label !== active).flatMap(p => p.courses.map(c => c.id)))],
+    [plans, active]
   )
   useEffect(() => {
     if (parkedIds.length === 0) return
@@ -162,78 +185,35 @@ export function PlanComparison({ term, activeCourses }: { term: string; activeCo
     if (user) fetchBulkEvaluations(parkedIds)
   }, [parkedIds, user, fetchBulkEvaluations])
 
-  const rows = useMemo(() => {
-    const everywhere = columns.length === 0
-      ? new Set<string>()
-      : columns.map(c => new Set(c.courses.map(x => x.id))).reduce((a, b) => new Set([...a].filter(id => b.has(id))))
-    return columns.map(({ label, courses: planCourses }) => {
-      const hours = expectedWeeklyHours(planCourses, getEvaluations, loadingCourses)
-      const rated = planCourses.filter(c => typeof c.quality === 'number')
-      const rating = rated.length > 0 ? rated.reduce((sum, c) => sum + (c.quality as number), 0) / rated.length : null
-      const differs = planCourses.filter(c => !everywhere.has(c.id)).map(codeOf)
-      return {
-        label,
-        units: formatUnitRange(termUnitRange(planCourses, term)),
-        hours: hours.loading && hours.total === null ? '…' : hours.total === null ? '0' : `~${hours.total.toFixed(0)}`,
-        rating: rating === null ? '–' : rating.toFixed(1),
-        differs,
-      }
-    })
-    // `evaluations` is what changes when a fetch lands; getEvaluations reads it.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [columns, term, getEvaluations, loadingCourses, evaluations])
+  const columns = useMemo<StatsColumn[]>(() => plans.map(({ label, courses: planCourses }) => {
+    const isActive = label === active
+    return {
+      key: label,
+      heading: isActive ? `Plan ${label}` : (
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          disabled={!canSwitch}
+          onClick={() => onSwitch(label)}
+          className="h-auto p-0 text-3xs font-semibold uppercase tracking-wider hover:bg-transparent hover:text-foreground"
+        >
+          Plan {label}
+        </Button>
+      ),
+      // A parked plan's classes come from the catalog: until it has courses,
+      // its totals are unknown, not zero.
+      units: isActive || canSwitch ? formatUnitRange(termUnitRange(planCourses, term)) : '…',
+      hours: isActive
+        ? formatWeeklyHours(activeHours)
+        : canSwitch ? formatWeeklyHours(expectedWeeklyHours(planCourses, getEvaluations, loadingCourses)) : '…',
+      active: isActive,
+      overUnits: isActive && overUnits,
+    }
+  }),
+  // `evaluations` is what changes when a fetch lands; getEvaluations reads it.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  [plans, active, term, activeHours, overUnits, onSwitch, canSwitch, getEvaluations, loadingCourses, evaluations])
 
-  if (!termPlans) return null
-
-  const cell = 'px-3 py-2.5 text-right tabular-nums'
-  const isActive = (label: string) => label === termPlans.active
-
-  return (
-    <div className="rounded-xl border bg-card overflow-x-auto shrink-0">
-      <table className="w-full text-sm">
-        <thead>
-          <tr className="border-b">
-            <th className="px-3 py-2" />
-            {rows.map(r => (
-              <th key={r.label} className={cn(cell, 'py-2 text-3xs uppercase font-semibold tracking-wider whitespace-nowrap', isActive(r.label) ? 'text-foreground' : 'text-muted-foreground')}>
-                {isActive(r.label) ? `Plan ${r.label}` : (
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => switchPlan(term, r.label)}
-                    className="h-auto p-0 text-3xs font-semibold uppercase tracking-wider hover:bg-transparent hover:text-foreground"
-                  >
-                    Plan {r.label}
-                  </Button>
-                )}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {([
-            ['Units', (r: (typeof rows)[number]) => r.units],
-            ['Hours / week', (r: (typeof rows)[number]) => r.hours],
-            ['Avg rating', (r: (typeof rows)[number]) => r.rating],
-          ] as const).map(([name, read]) => (
-            <tr key={name} className="border-b">
-              <td className="px-3 py-2.5 text-muted-foreground whitespace-nowrap">{name}</td>
-              {rows.map(r => (
-                <td key={r.label} className={cn(cell, isActive(r.label) && 'font-semibold')}>{read(r)}</td>
-              ))}
-            </tr>
-          ))}
-          <tr>
-            <td className="px-3 py-2.5 text-muted-foreground whitespace-nowrap align-top">Differs by</td>
-            {rows.map(r => (
-              <td key={r.label} className={cn('px-3 py-2.5 text-right align-top', isActive(r.label) && 'font-semibold')}>
-                {r.differs.length === 0 ? '–' : r.differs.map(code => <div key={code} className="whitespace-nowrap">{code}</div>)}
-              </td>
-            ))}
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  )
+  return <StatsTable columns={columns} />
 }

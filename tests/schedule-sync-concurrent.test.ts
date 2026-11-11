@@ -71,14 +71,18 @@ vi.mock('@/lib/store', () => ({
 }))
 
 let cartItems: Record<string, unknown>[] = []
+/** Saved entries the catalog cannot draw, which the real store keeps beside `items`. */
+let cartUnresolved: { id: string }[] = []
 vi.mock('@/lib/cart-store', () => ({
   useCartStore: {
-    getState: () => ({ items: cartItems }),
+    getState: () => ({ items: cartItems, unresolved: cartUnresolved }),
     setState: (updater: unknown) => {
+      type Cart = { items?: Record<string, unknown>[]; unresolved?: { id: string }[] }
       const next = typeof updater === 'function'
-        ? (updater as (s: { items: unknown[] }) => { items?: unknown[] })({ items: cartItems })
-        : (updater as { items?: Record<string, unknown>[] })
-      if (next.items) cartItems = next.items as Record<string, unknown>[]
+        ? (updater as (s: Cart) => Cart)({ items: cartItems, unresolved: cartUnresolved })
+        : (updater as Cart)
+      if (next.items) cartItems = next.items
+      if (next.unresolved) cartUnresolved = next.unresolved
     },
   },
 }))
@@ -106,6 +110,7 @@ async function openTab(storage: Storage, persistedCart: ScheduleItem[] = []) {
   vi.resetModules()
   ;(globalThis as { localStorage?: Storage }).localStorage = storage
   cartItems = persistedCart.map(i => ({ ...i }))
+  cartUnresolved = []
   tab = await import('@/lib/schedule-sync')
   return tab
 }

@@ -6,12 +6,14 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { Logo } from '@/components/logo';
 import { ThemeToggle } from '@/components/theme-toggle';
+import { AccountButton } from '@/components/account-button';
 import { useEnsureCatalog } from '@/hooks/use-catalog';
 import { useCourseStore } from '@/lib/store';
 import { useAuthStore } from '@/lib/auth-store';
 import { useEvaluationStore } from '@/lib/evaluation-store';
 import { readShareLink } from '@/lib/share-link';
-import { expectedWeeklyHours, termUnitRange } from '@/lib/schedule-totals';
+import { expectedWeeklyHours, formatUnitRange, formatWeeklyHours, termUnitRange } from '@/lib/schedule-totals';
+import { StatsTable } from '@/components/schedule-stats';
 import type { CartItem } from '@/lib/cart-store';
 
 const CalendarView = dynamic(
@@ -77,7 +79,10 @@ export function SharedScheduleView() {
             <Logo className="h-8 w-8 md:h-10 md:w-10" />
             <span className="font-display text-2xl md:text-3xl tracking-tight text-foreground select-none">Stanford Root</span>
           </Link>
-          <ThemeToggle />
+          <div className="flex items-center gap-3 ml-auto">
+            <ThemeToggle />
+            <AccountButton />
+          </div>
         </div>
       </header>
 
@@ -96,26 +101,41 @@ export function SharedScheduleView() {
           ) : !hasLoaded ? (
             <div className="h-[min(70vh,720px)] rounded-xl border border-border/40 bg-muted/20 animate-pulse" />
           ) : (
+            <>
+            {/* Styled like the planner's plan tabs, with one tab: this schedule is
+                someone's to look at, not a plan to edit. It runs the full width, so
+                the calendar and the totals beside it start level, as on the planner. */}
+            <div className="mb-2 flex w-full items-center border-b border-border/40">
+              <span className="inline-flex items-center whitespace-nowrap border-b-2 border-primary py-2 text-sm font-semibold text-foreground">
+                Shared schedule
+              </span>
+            </div>
             <CalendarView
               currentTerm={shared.term}
-              subtitle="Shared schedule, read only"
               readOnly
               items={items}
-              totalUnitsMin={units.min}
               totalUnitsMax={units.max}
               isOverload={false}
               isIgnored
               onIgnoreOverload={() => {}}
-              expectedHoursPerWeek={hours.total}
-              expectedHoursLoading={hours.loading}
               aboveCalendar={unreadable > 0 ? (
-                <p className="text-xs text-muted-foreground px-1">
+                <p className="text-xs text-muted-foreground">
                   {unreadable === 1
                     ? "1 class in this link couldn't be found in the catalog, so it isn't shown."
                     : `${unreadable} classes in this link couldn't be found in the catalog, so they aren't shown.`}
                 </p>
               ) : undefined}
+              stats={
+                <StatsTable
+                  columns={[{
+                    key: 'shared',
+                    units: formatUnitRange(units),
+                    hours: formatWeeklyHours(hours),
+                  }]}
+                />
+              }
             />
+            </>
           )}
         </div>
       </main>

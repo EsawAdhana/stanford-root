@@ -3,7 +3,6 @@ import { useCartStore } from './cart-store'
 import { useCourseStore } from './store'
 import { cartHydrated } from './cart-hydration'
 import { trackOnce } from './analytics'
-import { useUnresolvedSchedule } from './unresolved-schedule'
 import { dedupeCrossListedItems } from './schedule-utils'
 import { labelIndex, nextPlanLabel, plansDocument, plansSignature, readPlans, toSavedItem, type PlansByTerm } from './schedule-plans'
 
@@ -36,7 +35,7 @@ function toScheduleItems(): ScheduleItem[] {
   // Saved entries the catalog cannot resolve are not in the cart, so they would
   // be dropped from this payload and erased server-side. Carry them through.
   const inCart = new Set(items.map(i => i.id))
-  for (const unresolved of unresolvedPayload) {
+  for (const unresolved of useCartStore.getState().unresolved ?? []) {
     if (!inCart.has(unresolved.id)) items.push(unresolved)
   }
   return items
@@ -48,16 +47,16 @@ function currentDoc(): ScheduleDoc {
 }
 
 /**
- * The raw saved entries hydration could not match to a catalog course. Kept
- * verbatim so a course that returns to the catalog rehydrates untouched.
+ * Holds the saved entries hydration could not match to a catalog course in the
+ * cart's `unresolved`, every field kept, so a course that returns to the catalog
+ * rehydrates untouched. The cart persists it, so the entries survive a reload
+ * and a plan switch carries a term's entries with the plan they belong to.
  */
-let unresolvedPayload: ScheduleItem[] = []
-
 function recordUnresolved(scheduleItems: ScheduleItem[], resolvedIds: Set<string>) {
-  unresolvedPayload = scheduleItems.filter(item => !resolvedIds.has(item.id))
-  useUnresolvedSchedule.getState().set(
-    unresolvedPayload.map(item => ({ id: item.id, selectedTerm: item.selectedTerm }))
-  )
+  const found = scheduleItems
+    .filter(item => !resolvedIds.has(item.id))
+    .map(item => toSavedItem({ ...item, selectedSectionIds: readSectionIds(item) }))
+  useCartStore.setState({ unresolved: found })
 }
 
 /** Whether the catalog holds courses a saved schedule can be matched against. */
@@ -845,9 +844,24 @@ async function _pullSchedule(userId: string): Promise<void> {
     await cartHydrated
     if (signedOutSince()) return
 
+    // This cart is another account's saved schedule, not work done signed out:
+    // this tab last pulled as someone else, or the device did and no sign-out
+    // here cleared it (a session that lapsed while the browser was closed).
+    // Merging it would hand that person's classes to this account, so this
+    // account's row is taken as it is, or nothing when it has none yet.
+    const deviceUser = readSyncedDevice()
+    const cacheOfAnotherAccount =
+      (_lastPulledUserId !== null && _lastPulledUserId !== userId) ||
+      (deviceUser !== null && deviceUser !== userId)
+    if (cacheOfAnotherAccount) {
+      _synced = undefined
+      _loadedCart = EMPTY_DOC
+    }
+    const thisDevice = (): ScheduleDoc => (cacheOfAnotherAccount ? EMPTY_DOC : currentDoc())
+
     // The cart this tab loaded with, before anything here changed it.
     if (_loadedCart === undefined) _loadedCart = currentDoc()
-    const base = mergeBase(userId)
+    const base = cacheOfAnotherAccount ? null : mergeBase(userId)
 
     let read = await readRow(userId)
     for (let attempt = 1; ; attempt++) {
@@ -866,7 +880,7 @@ async function _pullSchedule(userId: string): Promise<void> {
       }
       // Read the cart after the row and the catalog, so an edit made while
       // either was loading is part of the merge.
-      const mine = withParked(currentDoc(), base)
+      const mine = withParked(thisDevice(), base)
       const merged = mergeWithRow(base, mine, theirs)
       const mineSignature = cartSignature()
 
@@ -891,7 +905,7 @@ async function _pullSchedule(userId: string): Promise<void> {
       // An edit made while the write was in flight is this device's newest
       // intent: merge it over what was just saved, then save it next.
       const editedMeanwhile = cartSignature() !== mineSignature
-      const shown = editedMeanwhile ? mergeScheduleDocs(mine, withParked(currentDoc(), base), merged) : merged
+      const shown = editedMeanwhile ? mergeScheduleDocs(mine, withParked(thisDevice(), base), merged) : merged
       applyToCart(shown)
       recordAgreement(stored, editedMeanwhile ? null : cartSignature())
       owesSave = editedMeanwhile

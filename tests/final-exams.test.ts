@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest'
 import {
   FINAL_EXAMS,
   clashSignature,
+  clashTitle,
   examLoad,
   examSlotFor,
   formatExamColumn,
@@ -134,9 +135,31 @@ describe('which section decides', () => {
     expect(slot(course('CS221', [dis, lec], { selectedSectionIds: [11] }))).toBe('Mon, Mar 15 3:30-6:30 PM')
   })
 
-  it('falls back to the discussion when the lecture is ambiguous', () => {
+  it('says it depends on the lecture when just a discussion is picked and the lectures differ', () => {
+    // The discussion alone (Fri 9:30) would read as Thu 8:30 AM, which is no lecture's slot.
     const lec2 = section({ classId: 12, component: 'LEC', sectionNumber: '02', meetings: [meeting('Tuesday, Thursday', '1:30 PM – 2:50 PM')] })
-    expect(slot(course('CS221', [dis, lec, lec2], { selectedSectionIds: [11] }))).toBe('Thu, Mar 18 8:30-11:30 AM')
+    expect(examSlotFor(course('CS221', [dis, lec, lec2], { selectedSectionIds: [11] }), WINTER)).toEqual({ kind: 'pick-lecture' })
+  })
+
+  it('takes the slot when every lecture lands in it', () => {
+    const lec2 = section({ classId: 12, component: 'LEC', sectionNumber: '02', meetings: [meeting('Monday, Wednesday', '10:30 AM – 11:20 AM')] })
+    expect(slot(course('CS221', [dis, lec, lec2], { selectedSectionIds: [11] }))).toBe('Mon, Mar 15 3:30-6:30 PM')
+  })
+
+  it('goes by the lecture once one is picked with the discussion', () => {
+    const lec2 = section({ classId: 12, component: 'LEC', sectionNumber: '02', meetings: [meeting('Tuesday, Thursday', '1:30 PM – 2:50 PM')] })
+    expect(slot(course('CS221', [dis, lec, lec2], { selectedSectionIds: [11, 12] }))).toBe('Tue, Mar 16 3:30-6:30 PM')
+  })
+
+  it('says no time, not a slot, when none of the lectures has a time', () => {
+    const tba1 = section({ classId: 14, component: 'LEC', meetings: [meeting('TBA', '')] })
+    const tba2 = section({ classId: 15, component: 'LEC', sectionNumber: '02', meetings: [] })
+    expect(examSlotFor(course('CS221', [dis, tba1, tba2], { selectedSectionIds: [11] }), WINTER)).toEqual({ kind: 'no-time' })
+  })
+
+  it('says it depends when one lecture has a time and another has none', () => {
+    const tba = section({ classId: 14, component: 'LEC', sectionNumber: '02', meetings: [] })
+    expect(examSlotFor(course('CS221', [dis, lec, tba], { selectedSectionIds: [11] }), WINTER)).toEqual({ kind: 'pick-lecture' })
   })
 
   it('ignores another term\'s sections', () => {
@@ -200,6 +223,26 @@ describe('examLoad', () => {
     const b = examLoad([entry('CS229', '2027-03-17', 930), entry('CS161', '2027-03-17', 930)])
     expect(clashSignature(a.clashes)).toBe(clashSignature(b.clashes))
     expect(clashSignature([])).toBe('')
+  })
+
+  it('titles a clash by how many finals share the slot', () => {
+    const two = examLoad([entry('CS145', '2026-12-07', 1140), entry('CS329X', '2026-12-07', 1140)])
+    expect(clashTitle(two.clashes)).toBe('Two of your finals overlap')
+    const three = examLoad([entry('A', '2026-12-07', 1140), entry('B', '2026-12-07', 1140), entry('C', '2026-12-07', 1140)])
+    expect(clashTitle(three.clashes)).toBe('Three of your finals overlap')
+  })
+
+  it('counts slots instead when finals clash in more than one', () => {
+    const load = examLoad([
+      entry('A', '2026-12-07', 1140), entry('B', '2026-12-07', 1140),
+      entry('C', '2026-12-09', 510), entry('D', '2026-12-09', 510),
+    ])
+    expect(clashTitle(load.clashes)).toBe('Your finals overlap in 2 exam slots')
+  })
+
+  it('falls back to a numeral past six finals in one slot', () => {
+    const seven = examLoad('ABCDEFG'.split('').map(id => entry(id, '2026-12-07', 1140)))
+    expect(clashTitle(seven.clashes)).toBe('7 of your finals overlap')
   })
 })
 

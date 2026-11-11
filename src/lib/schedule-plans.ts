@@ -97,6 +97,11 @@ function isLabel(value: unknown): value is string {
   return typeof value === 'string' && /^[A-Z]{1,3}$/.test(value)
 }
 
+/** Saved entries read back from storage, keeping only the well-formed ones. */
+export function readSavedItems(raw: unknown): SavedItem[] {
+  return Array.isArray(raw) ? raw.map(readItem).filter((i): i is SavedItem => i !== null) : []
+}
+
 function readItem(raw: unknown): SavedItem | null {
   if (!raw || typeof raw !== 'object') return null
   const r = raw as Record<string, unknown>

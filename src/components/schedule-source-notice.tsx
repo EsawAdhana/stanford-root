@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Megaphone, X } from 'lucide-react'
 import { useCartStore } from '@/lib/cart-store'
 import { useCourseStore } from '@/lib/store'
-import { findAffectedSchedule, useUnresolvedSchedule } from '@/lib/unresolved-schedule'
+import { findAffectedSchedule } from '@/lib/unresolved-schedule'
 import { track } from '@/lib/analytics'
 
 /**
@@ -23,7 +23,7 @@ export function ScheduleSourceNotice() {
   const items = useCartStore(s => s.items)
   const courses = useCourseStore(s => s.courses)
   const hasLoaded = useCourseStore(s => s.hasLoaded)
-  const unresolved = useUnresolvedSchedule(s => s.items)
+  const unresolved = useCartStore(s => s.unresolved)
 
   const [dismissed, setDismissed] = useState(true)
 

@@ -7,7 +7,7 @@ vi.mock('@/components/course-evaluations', () => ({
   aggregateMetrics: (evals: { hours?: number }[]) => ({ hours: evals[0]?.hours }),
 }))
 
-const { expectedWeeklyHours, formatUnitRange, termUnitRange } = await import('@/lib/schedule-totals')
+const { expectedWeeklyHours, formatUnitRange, formatWeeklyHours, termUnitRange } = await import('@/lib/schedule-totals')
 
 const W = 'Winter 2027'
 
@@ -68,5 +68,23 @@ describe('expectedWeeklyHours', () => {
 
   it('is null for an empty term rather than zero hours', () => {
     expect(expectedWeeklyHours([], noEvals, {})).toEqual({ total: null, loading: false })
+  })
+})
+
+describe('formatWeeklyHours', () => {
+  it('rounds to a whole number of hours', () => {
+    expect(formatWeeklyHours({ total: 47.6, loading: false })).toBe('~48')
+  })
+
+  it('shows a pending mark, not zero, while the only figure is still loading', () => {
+    expect(formatWeeklyHours({ total: null, loading: true })).toBe('…')
+  })
+
+  it('keeps showing a total it has while more evaluations load', () => {
+    expect(formatWeeklyHours({ total: 12, loading: true })).toBe('~12')
+  })
+
+  it('says zero for an empty term', () => {
+    expect(formatWeeklyHours({ total: null, loading: false })).toBe('0')
   })
 })
