@@ -4,6 +4,7 @@ import { cookies } from 'next/headers'
 import { ALLOWED_EVENTS } from '@/lib/analytics-events'
 import { isKnownBot } from '@/lib/bot-agents'
 import { rateLimit, getClientIp } from '@/lib/rate-limit'
+import { isProductionRequest } from '@/lib/production-host'
 
 const MAX_PROPS_BYTES = 2000
 const MAX_PATH_LENGTH = 512
@@ -37,6 +38,11 @@ export async function POST(request: Request) {
   const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
   if (!url || !key) {
     // Analytics is best-effort — never error the client.
+    return new NextResponse(null, { status: 204 })
+  }
+
+  // Not the live site: answer as usual and write nothing.
+  if (!isProductionRequest(request)) {
     return new NextResponse(null, { status: 204 })
   }
 
