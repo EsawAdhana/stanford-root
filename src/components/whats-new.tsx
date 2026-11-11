@@ -3,13 +3,13 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { X } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
-  DialogFooter,
-  DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -20,7 +20,8 @@ import { track } from '@/lib/analytics';
 import { isSharedSchedulePath } from '@/lib/whats-new';
 
 /**
- * A one-time card announcing the November 2026 schedule features.
+ * A one-time carousel announcing the November 2026 schedule features and the
+ * Stanford Root MCP (its last slide links to /connect).
  *
  * Shown once per browser, and only to people who have used the schedule
  * before (a saved class in this browser, or signed in). A first-time visitor
@@ -34,24 +35,30 @@ const SEEN_KEY = 'whats-new-seen:2026-11-schedule';
 /** Wait for the page to settle so the card never lands on top of a loading screen. */
 const SHOW_DELAY_MS = 1200;
 
-const ITEMS = [
+const SLIDES = [
   {
     title: 'Plan A and Plan B',
-    body: 'Keep a backup schedule for a quarter and switch between them. Each plan shows its units and hours a week.',
+    body: 'Keep a backup schedule for a quarter and switch between them. The table on the right compares units and hours a week for each plan.',
     image: '/whats-new/plans.png',
-    alt: 'The schedule page with Plan A and Plan B tabs above the calendar',
+    alt: 'Plan A and Plan B side by side in the schedule page totals table',
   },
   {
     title: 'Finals week',
-    body: 'See when each final exam is, and which ones land at the same time.',
+    body: 'Flip the calendar to Finals week to see when each exam is, and which ones land at the same time.',
     image: '/whats-new/finals.png',
-    alt: 'The Finals week view showing exam times for each class',
+    alt: 'The Finals week view showing three exams across Monday to Wednesday',
   },
   {
     title: 'Share your schedule',
-    body: 'Send friends a read-only link of the classes you\'re taking next quarter.',
+    body: "Send friends a read-only link of the classes you're taking next quarter.",
     image: '/whats-new/share.png',
     alt: 'A shared schedule opened from a link',
+  },
+  {
+    title: 'Stanford Root in Claude',
+    body: "MCP lets AI assistants like Claude and Codex use other apps. Connect Stanford Root and ask things like \"find me a 1 or 2 unit class people enjoy\": it searches courses, reads evaluations and adds classes to your schedule. It plans, but never enrolls you.",
+    image: '/whats-new/mcp.png',
+    alt: 'Example questions to ask Stanford Root from Claude',
   },
 ] as const;
 
@@ -100,45 +107,95 @@ export function WhatsNew() {
     };
   }, [pathname]);
 
+  const [index, setIndex] = useState(0);
+  const slide = SLIDES[index];
+  const last = index === SLIDES.length - 1;
   const close = () => setOpen(false);
+  const go = (next: number) => setIndex(Math.max(0, Math.min(SLIDES.length - 1, next)));
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent
-        className="max-w-md gap-5 p-0 overflow-hidden max-h-[90dvh] flex flex-col"
+        hideClose
+        className="max-w-lg gap-0 p-0 overflow-hidden max-h-[92dvh] flex flex-col"
         // Keep focus on the dialog itself so a button does not open already ringed.
         onOpenAutoFocus={e => e.preventDefault()}
+        onKeyDown={e => {
+          if (e.key === 'ArrowRight') go(index + 1);
+          if (e.key === 'ArrowLeft') go(index - 1);
+        }}
       >
-        <DialogHeader className="px-6 pt-6 text-left">
-          <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">What&apos;s new</p>
-          <DialogTitle className="text-xl">Three new ways to plan your quarter</DialogTitle>
-          <DialogDescription className="sr-only">
-            Plan A and Plan B, a Finals week view, and shareable schedule links.
-          </DialogDescription>
-        </DialogHeader>
+        {/* Its own close button: the default one sat directly on the screenshot. */}
+        <DialogClose className="absolute right-3 top-3 z-10 flex h-8 w-8 items-center justify-center rounded-full border bg-background/90 text-muted-foreground shadow-sm transition-colors hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+          <X className="h-4 w-4" />
+          <span className="sr-only">Close</span>
+        </DialogClose>
+        <div className="relative aspect-[16/10] w-full shrink-0 border-b bg-muted">
+          <Image
+            key={slide.image}
+            src={slide.image}
+            alt={slide.alt}
+            fill
+            sizes="(max-width: 640px) 100vw, 512px"
+            className="object-cover object-left-top"
+            priority={index === 0}
+          />
+        </div>
 
-        <ul className="flex flex-col gap-4 px-6 overflow-y-auto">
-          {ITEMS.map(item => (
-            <li key={item.title} className="flex gap-4 items-start">
-              <div className="relative h-[82px] w-[128px] shrink-0 overflow-hidden rounded-md border bg-muted">
-                <Image src={item.image} alt={item.alt} fill sizes="128px" className="object-cover object-left-top" />
+        <div className="flex flex-col gap-1.5 px-6 pt-5 pb-2 overflow-y-auto">
+          <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+            What&apos;s new &middot; {index + 1} of {SLIDES.length}
+          </p>
+          {/* Every slide's text sits in the same grid cell, only the current one
+              visible, so the card keeps the height of the longest slide and the
+              buttons do not jump when moving between slides. */}
+          <div className="grid">
+            {SLIDES.map((s, i) => (
+              <div
+                key={s.title}
+                className={`col-start-1 row-start-1 flex flex-col gap-1.5 ${i === index ? '' : 'invisible'}`}
+                aria-hidden={i !== index}
+              >
+                {/* Identical markup on every slide, so each one measures the same. */}
+                <p className="text-xl font-semibold leading-none tracking-tight text-foreground">{s.title}</p>
+                <p className="text-sm text-muted-foreground leading-relaxed">{s.body}</p>
               </div>
-              <div className="min-w-0">
-                <p className="text-sm font-semibold text-foreground">{item.title}</p>
-                <p className="mt-0.5 text-sm text-muted-foreground leading-snug">{item.body}</p>
-              </div>
-            </li>
-          ))}
-        </ul>
+            ))}
+          </div>
+          <DialogTitle className="sr-only">{slide.title}</DialogTitle>
+          <DialogDescription className="sr-only">{slide.body}</DialogDescription>
+        </div>
 
-        <DialogFooter className="flex-row justify-end gap-2 border-t px-6 py-4 sm:space-x-0">
-          <Button variant={pathname === '/schedule' ? 'default' : 'outline'} onClick={close}>Got it</Button>
-          {pathname !== '/schedule' && (
-            <Button asChild onClick={() => { track('whats_new_clicked', {}); close(); }}>
-              <Link href="/schedule">Open my schedule</Link>
-            </Button>
-          )}
-        </DialogFooter>
+        <div className="flex h-[4.5rem] shrink-0 items-center justify-between gap-3 px-6 pb-2">
+          <div className="flex items-center gap-1.5" role="tablist" aria-label="Slides">
+            {SLIDES.map((s, i) => (
+              <button
+                key={s.title}
+                type="button"
+                role="tab"
+                aria-selected={i === index}
+                aria-label={`${s.title} (${i + 1} of ${SLIDES.length})`}
+                onClick={() => go(i)}
+                className={`h-2 rounded-full transition-all ${i === index ? 'w-5 bg-primary' : 'w-2 bg-muted-foreground/30 hover:bg-muted-foreground/50'}`}
+              />
+            ))}
+          </div>
+          <div className="flex items-center gap-2">
+            {index > 0 && (
+              <Button variant="ghost" onClick={() => go(index - 1)}>Back</Button>
+            )}
+            {last ? (
+              <>
+                <Button variant="outline" onClick={close}>Done</Button>
+                <Button asChild onClick={() => { track('whats_new_clicked', { target: 'connect' }); close(); }}>
+                  <Link href="/connect">Set it up</Link>
+                </Button>
+              </>
+            ) : (
+              <Button onClick={() => go(index + 1)}>Next</Button>
+            )}
+          </div>
+        </div>
       </DialogContent>
     </Dialog>
   );
