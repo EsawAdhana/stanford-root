@@ -104,6 +104,20 @@ describe('a fixed order for sections and instructors', () => {
         expect(JSON.stringify(again)).toBe(JSON.stringify(sorted))
     })
 
+    it('keeps a primary class ahead of the discussions that share its section number', () => {
+        // GSBGEN 208 numbers each CAS and its four DIS sections alike; the CAS has units.
+        const course = {
+            course_id: 'GSBGEN208', instructors: [], terms: [],
+            sections: [
+                { term: 'Winter 2027', sectionNumber: '2', component: 'DIS', units: '', classId: 11 },
+                { term: 'Winter 2027', sectionNumber: '2', component: 'LEC', units: '3', classId: 12 },
+                { term: 'Winter 2027', sectionNumber: '1', component: 'DIS', units: '', classId: 13 },
+            ],
+        }
+        const sorted = canonicalizeCourse(course, { termKey: termSortKey }).sections
+        expect(sorted.map((s: any) => s.classId)).toEqual([13, 12, 11])
+    })
+
     it('keeps exactly the instructors the row had, including ones no meeting names and none it lacked', () => {
         const course = {
             course_id: 'X2', terms: [],

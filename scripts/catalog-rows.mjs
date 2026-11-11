@@ -30,6 +30,8 @@ function compareSections(termKey) {
         termKey(a.term) - termKey(b.term) ||
         naturalOrder.compare(String(a.term ?? ''), String(b.term ?? '')) ||
         naturalOrder.compare(String(a.sectionNumber ?? ''), String(b.sectionNumber ?? '')) ||
+        // A section with units is the primary class; it led its discussions before.
+        Number(!a.units) - Number(!b.units) ||
         naturalOrder.compare(String(a.component ?? ''), String(b.component ?? '')) ||
         (Number(a.classId) || 0) - (Number(b.classId) || 0) ||
         naturalOrder.compare(stableStringify(a), stableStringify(b))
@@ -37,8 +39,9 @@ function compareSections(termKey) {
 
 /**
  * One fixed order for a course's sections and instructors, whatever order the
- * reads finished in. Sections go by term (chronological), then section number,
- * component and class number, the order the course page already shows them in.
+ * reads finished in. Sections go by term (chronological), then section number
+ * (the order the course page already shows them in), the primary class before
+ * the discussions that share its number, then component and class number.
  * Instructors keep exactly the set the row had, ordered by where they first
  * teach in those sections; any name no meeting carries goes last, alphabetically.
  * Mutates and returns the course.
