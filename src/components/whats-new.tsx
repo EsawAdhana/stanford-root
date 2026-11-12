@@ -18,20 +18,19 @@ import { useAuthStore } from '@/lib/auth-store';
 import { cartHydrated } from '@/lib/cart-hydration';
 import { track } from '@/lib/analytics';
 import { isReturningVisitor, isSharedSchedulePath, onceForPageLoad } from '@/lib/whats-new';
+import { readSeen, useWhatsNewStore } from '@/lib/whats-new-store';
 
 /**
  * A one-time carousel announcing the November 2026 schedule features and the
  * Stanford Root MCP (its last slide links to /connect).
  *
- * Shown once per browser, and only to people who have used the schedule
- * before (a saved class in this browser when the page loaded, or signed in).
- * A first-time visitor, including one who adds a class during this visit,
- * has nothing to compare
- * against, so a "what's new" card would only be in their way.
- *
- * Bump SEEN_KEY for the next announcement; the old key is simply ignored.
+ * Opens by itself once per browser, and only for people who have used the
+ * schedule before (a saved class in this browser when the page loaded, or
+ * signed in). A first-time visitor, including one who adds a class during this
+ * visit, has nothing to compare against, so it would only be in their way.
+ * Anyone can open it from the header's New button, which has a dot until the
+ * card has been opened (lib/whats-new-store).
  */
-const SEEN_KEY = 'whats-new-seen:2026-11-schedule';
 
 /** Wait for the page to settle so the card never lands on top of a loading screen. */
 const SHOW_DELAY_MS = 1200;
@@ -99,41 +98,24 @@ const returningAtLoad = onceForPageLoad(async () => {
 // first render of the app, before the visitor can add anything.
 if (typeof window !== 'undefined') void returningAtLoad();
 
-function alreadySeen(): boolean {
-  try {
-    return window.localStorage.getItem(SEEN_KEY) !== null;
-  } catch {
-    // Storage blocked (private mode): never nag, since we could not remember a dismissal.
-    return true;
-  }
-}
-
-function markSeen() {
-  try {
-    window.localStorage.setItem(SEEN_KEY, new Date().toISOString());
-  } catch {
-    // Nothing to do; the card will not show again this session either way.
-  }
-}
-
 export function WhatsNew() {
   const pathname = usePathname();
-  const [open, setOpen] = useState(false);
+  const open = useWhatsNewStore(s => s.open);
+  const setOpen = useWhatsNewStore(s => s.setOpen);
 
   useEffect(() => {
     // A shared schedule is someone else's page; do not interrupt its viewer.
     if (isSharedSchedulePath(pathname)) return;
-    if (alreadySeen()) return;
+    if (readSeen()) return;
 
     let cancelled = false;
     let timer: ReturnType<typeof setTimeout> | undefined;
     returningAtLoad().then(returning => {
       if (cancelled || !returning) return;
       timer = setTimeout(() => {
-        if (cancelled || alreadySeen()) return;
-        markSeen();
-        setOpen(true);
-        track('whats_new_shown', { path: pathname ?? '' });
+        if (cancelled || readSeen()) return;
+        useWhatsNewStore.getState().show();
+        track('whats_new_shown', { path: pathname ?? '', source: 'auto' });
       }, SHOW_DELAY_MS);
     });
     return () => {
@@ -144,6 +126,8 @@ export function WhatsNew() {
 
   const contentRef = useRef<HTMLDivElement>(null);
   const [index, setIndex] = useState(0);
+  // Every opening starts on the first slide, including a reopen from the header.
+  useEffect(() => { if (open) setIndex(0); }, [open]);
   const slide = SLIDES[index];
   const last = index === SLIDES.length - 1;
   const close = () => setOpen(false);
