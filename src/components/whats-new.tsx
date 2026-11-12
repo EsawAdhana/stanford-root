@@ -227,10 +227,10 @@ export function WhatsNew() {
             )}
             {last ? (
               <>
-                <Button variant="outline" onClick={close}>Done</Button>
                 <Button asChild onClick={() => { track('whats_new_clicked', { target: 'connect' }); close(); }}>
                   <Link href="/connect">Set it up</Link>
                 </Button>
+                <Button variant="outline" onClick={close}>Done</Button>
               </>
             ) : (
               <Button onClick={() => go(index + 1)}>Next</Button>
