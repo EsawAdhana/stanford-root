@@ -1,11 +1,12 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { SiteHeader } from '@/components/site-header';
 import { AlertCircle, RefreshCcw } from 'lucide-react';
 import { track } from '@/lib/analytics';
 import { crashProps } from '@/lib/crash-report';
+import { isStaleChunkError, reloadForStaleChunk } from '@/lib/stale-chunk-reload';
 
 export default function ErrorBoundary({
     error,
@@ -14,11 +15,24 @@ export default function ErrorBoundary({
     error: Error & { digest?: string };
     reset: () => void;
 }) {
+    // A tab open from before a deploy asks for code that no longer exists; reload
+    // into the new deploy instead of showing an error (lib/stale-chunk-reload).
+    // Blank while that reload is decided, so the error page does not flash first.
+    const [reloading, setReloading] = useState(() => isStaleChunkError(error));
+
     useEffect(() => {
         console.error('Unhandled application error:', error);
+        let storage: Storage | null = null;
+        try { storage = window.sessionStorage; } catch { /* blocked: no reload, see the helper */ }
+        const reloaded = reloadForStaleChunk(error, { storage, reload: () => window.location.reload() });
         // Record it too: a crash on someone else's phone is otherwise invisible.
-        track('app_crashed', crashProps(error));
+        // Sent with sendBeacon, so it still arrives when the page reloads.
+        track('app_crashed', { ...crashProps(error), autoReloaded: reloaded });
+        if (!reloaded) setReloading(false);
     }, [error]);
+
+    // Blank for the moment before the reload lands, rather than flashing the error page.
+    if (reloading) return <div className="min-h-screen bg-background" />;
 
     return (
         <div className="min-h-screen flex flex-col bg-background">
