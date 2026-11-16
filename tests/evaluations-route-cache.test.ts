@@ -31,6 +31,9 @@ vi.mock('@/lib/supabase-admin', () => ({
 
 const { POST } = await import('@/app/api/evaluations/route')
 const { clearEvaluationCache } = await import('@/lib/evaluation-cache')
+const { setSharedCacheForTests } = await import('@/lib/shared-evaluation-cache')
+// These tests are about the per-instance cache; the shared one has its own file.
+setSharedCacheForTests(null)
 
 const post = async (courseIds: string[]) => {
   const res = await POST(new Request('http://localhost/api/evaluations', {

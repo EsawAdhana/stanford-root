@@ -6,7 +6,11 @@ import { getStanfordUser } from '@/lib/stanford-auth'
 import { EVALUATION_COLUMNS, toCourseEvaluation, type EvaluationRow } from '@/lib/evaluation-row'
 import { readCachedEvaluations, writeCachedEvaluations } from '@/lib/evaluation-cache'
 import { attachSentiment } from '@/lib/comment-sentiment'
+import { isEvaluationList, readShared, writeShared } from '@/lib/shared-evaluation-cache'
 import type { CourseEvaluation } from '@/types/course'
+
+const SHARED_KIND = 'course'
+const isCourseEvaluationList = (data: unknown): data is CourseEvaluation[] => isEvaluationList(data)
 
 const MAX_COURSE_IDS = 50
 const MAX_COURSE_ID_LENGTH = 64
@@ -50,12 +54,25 @@ export async function POST(request: Request) {
     // One course costs ~550KB to read, and the browser cache is per student, so
     // without this every student shopping the same course pays for it again.
     const byCourse: Record<string, CourseEvaluation[]> = {}
-    const missing: string[] = []
+    const notInInstance: string[] = []
     for (const id of ids) {
       const cached = readCachedEvaluations(id)
       byCourse[id] = cached ?? []
-      if (!cached) missing.push(id)
+      if (!cached) notInInstance.push(id)
     }
+
+    // Then the copy every instance shares (lib/shared-evaluation-cache).
+    const missing: string[] = []
+    const shared = await Promise.all(notInInstance.map(id => readShared(SHARED_KIND, id, isCourseEvaluationList)))
+    notInInstance.forEach((id, i) => {
+      const hit = shared[i]
+      if (hit) {
+        byCourse[id] = hit
+        writeCachedEvaluations(id, hit)
+      } else {
+        missing.push(id)
+      }
+    })
 
     if (missing.length > 0) {
       const supabase = getServiceClient()
@@ -78,7 +95,10 @@ export async function POST(request: Request) {
       }
       // Before writing the cache, so the scores are cached with the comments.
       await attachSentiment(fetched)
-      for (const id of missing) writeCachedEvaluations(id, byCourse[id])
+      for (const id of missing) {
+        writeCachedEvaluations(id, byCourse[id])
+        writeShared(SHARED_KIND, id, byCourse[id])
+      }
     }
 
     return NextResponse.json(byCourse, {

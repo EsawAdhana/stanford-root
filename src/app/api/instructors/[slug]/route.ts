@@ -7,9 +7,12 @@ import { getInstructorDirectory } from '@/lib/catalog-dump'
 import { resolveInstructorSlug } from '@/lib/instructors'
 import { EVALUATION_COLUMNS, toCourseEvaluation, type EvaluationRow } from '@/lib/evaluation-row'
 import { attachSentiment } from '@/lib/comment-sentiment'
+import { isEvaluationList, readShared, writeShared } from '@/lib/shared-evaluation-cache'
 import type { CourseEvaluation } from '@/types/course'
 
 export type InstructorEvaluation = CourseEvaluation & { courseId: string }
+
+const isInstructorEvaluationList = (data: unknown): data is InstructorEvaluation[] => isEvaluationList(data)
 
 /**
  * GET /api/instructors/[slug] — every evaluation written for one person.
@@ -39,6 +42,16 @@ export async function GET(
       return NextResponse.json({ error: 'Instructor not found' }, { status: 404 })
     }
 
+    // The copy every instance shares (lib/shared-evaluation-cache), keyed by the
+    // canonical slug so every alias of a name lands on one entry.
+    const cached = await readShared('instructor', resolved.entry.slug, isInstructorEvaluationList)
+    if (cached) {
+      return NextResponse.json(
+        { slug: resolved.entry.slug, name: resolved.entry.name, evaluations: cached },
+        { headers: { 'Cache-Control': 'private, no-store' } }
+      )
+    }
+
     const supabase = getServiceClient()
     const { data, error } = await supabase
       .from('evaluations')
@@ -66,6 +79,7 @@ export async function GET(
     }
 
     await attachSentiment(evaluations)
+    writeShared('instructor', resolved.entry.slug, evaluations)
 
     return NextResponse.json(
       { slug: resolved.entry.slug, name: resolved.entry.name, evaluations },
