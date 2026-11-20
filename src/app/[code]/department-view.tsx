@@ -37,6 +37,17 @@ export function DepartmentView({
         <SiteHeader />
       </Suspense>
       <main className="mx-auto w-full max-w-3xl px-6 py-12 flex-1">
+        {/* MCP is also Molecular and Cellular Physiology, so stanfordroot.com/mcp lands here
+            for anyone looking for the MCP server's setup page. */}
+        {subject === 'MCP' && (
+          <p className="mb-6 rounded-md border border-primary/30 bg-primary/5 px-4 py-3 text-sm text-foreground/90">
+            Trying to use Stanford Root with an AI assistant (MCP)? Click{' '}
+            <Link href="/connect" className="font-medium text-primary underline underline-offset-2">
+              here
+            </Link>{' '}
+            to set it up.
+          </p>
+        )}
         <nav className="mb-6 text-sm text-muted-foreground">
           <Link href="/departments" className="hover:text-primary transition-colors">
             &larr; All departments
