@@ -40,7 +40,7 @@ describe('a single class offered only in other quarters', () => {
         if (m?.kind !== 'one') return
         expect(m.label).toBe('CS 229')
         expect(m.offeredTerms).toEqual(termsOf('CS229'))
-        expect(m.offeredTerms).toEqual(['Winter 2027', 'Spring 2027'])
+        expect(m.offeredTerms).toEqual(['Winter 2027', 'Spring 2027', 'Summer 2027'])
         expect(m.target).toEqual(['Winter 2027'])
         // The button's promise: the class is in the list it lands on.
         expect(inView('cs229', { selectedTerms: m.target }).map(c => c.id)).toEqual(['CS229'])
