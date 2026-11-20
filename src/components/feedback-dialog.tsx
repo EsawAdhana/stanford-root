@@ -119,6 +119,17 @@ export function FeedbackDialog() {
                 </>
               )}
             </DialogDescription>
+            <p className="text-sm text-muted-foreground">
+              Looking for the MCP? Click{' '}
+              <Link
+                href="/connect"
+                onClick={() => setOpen(false)}
+                className="font-medium text-foreground underline underline-offset-2"
+              >
+                here
+              </Link>{' '}
+              to set it up.
+            </p>
           </DialogHeader>
           <form onSubmit={handleSubmit} className="grid gap-4">
             <div className="grid gap-2">
