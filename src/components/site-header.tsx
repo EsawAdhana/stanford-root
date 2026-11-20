@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { SearchBar } from '@/components/search-bar';
 import { MobileFilterMenu } from '@/components/mobile-filter-menu';
 import { Logo } from '@/components/logo';
@@ -12,8 +12,6 @@ import Link from 'next/link';
 import { CalendarDays, LogOut } from 'lucide-react';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { useWhatsNewStore } from '@/lib/whats-new-store';
-import { track } from '@/lib/analytics';
 
 export function SiteHeader() {
     const pathname = usePathname();
@@ -24,13 +22,6 @@ export function SiteHeader() {
     const user = useAuthStore(s => s.user);
     const isLoading = useAuthStore(s => s.isLoading);
     const signOut = useAuthStore(s => s.signOut);
-
-    // "New" opens the what's-new card (its last slide is the MCP). It has a red
-    // dot until this browser has opened the card, by itself or from here.
-    const whatsNewSeen = useWhatsNewStore(s => s.seen);
-    const loadWhatsNewSeen = useWhatsNewStore(s => s.load);
-    const showWhatsNew = useWhatsNewStore(s => s.show);
-    useEffect(() => { loadWhatsNewSeen(); }, [loadWhatsNewSeen]);
 
     const scheduleHref = useMemo(() => {
         const params = new URLSearchParams(searchParams.toString());
@@ -80,16 +71,6 @@ export function SiteHeader() {
                 <div className={isCatalog ? 'hidden sm:flex' : 'flex'}>
                     <ThemeToggle />
                 </div>
-
-                <Button
-                    variant="ghost"
-                    onClick={() => { track('whats_new_shown', { path: pathname ?? '', source: 'header' }); showWhatsNew(); }}
-                    aria-label={whatsNewSeen === false ? "What's new (unread)" : "What's new"}
-                    className="relative hidden lg:inline-flex rounded-lg h-9 w-16 px-0 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-secondary/80 transition-all"
-                >
-                    New
-                    {whatsNewSeen === false && <span aria-hidden className="absolute top-1.5 right-2.5 h-2 w-2 rounded-full bg-primary" />}
-                </Button>
 
                     <Button
                         asChild
