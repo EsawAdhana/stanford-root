@@ -78,7 +78,7 @@ export default function ConnectPage() {
           </section>
 
           <section>
-            <h2 className="text-lg font-semibold text-foreground mb-3">Things to ask</h2>
+            <h2 className="text-lg font-semibold text-foreground mb-3">Example things to ask</h2>
             <ul className="divide-y divide-border border border-border rounded-md">
               {STARTERS.map(s => (
                 <li key={s.name} className="px-4 py-2.5 text-foreground">
@@ -97,7 +97,7 @@ export default function ConnectPage() {
               <li>Import and export your schedule as a calendar file.</li>
             </ul>
             <p className="mt-4">
-              Disconnect an app any time from{' '}
+              Disconnect an app from{' '}
               <Link href="/connected-apps" className="text-primary hover:underline">
                 Connected apps
               </Link>
