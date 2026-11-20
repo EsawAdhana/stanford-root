@@ -53,7 +53,16 @@ export function getCurrentTerm(now: Date = new Date()): string {
 }
 
 /**
- * The term to default UI to. Prefers the in-session term when it has data, with
+ * The quarter students are planning, set by hand once enrollment for the next
+ * quarter opens and nobody is looking at the one in session any more. The app
+ * opens on it instead of the calendar quarter until the calendar passes it, so
+ * it never needs clearing: once Spring 2027 starts it is in the past and ignored.
+ */
+export const PLANNING_TERM = 'Winter 2027'
+
+/**
+ * The term to default UI to. PLANNING_TERM wins while it is current or ahead
+ * and has data. Otherwise it prefers the in-session term when it has data, with
  * two exceptions that both land users on the most recent Autumn term:
  *   - Summer: nobody enrolls over summer; students are planning the upcoming
  *     autumn, whose catalog isn't published until August. Last year's autumn is
@@ -62,9 +71,11 @@ export function getCurrentTerm(now: Date = new Date()): string {
  * Falls back to the in-session term (if present) then the latest available term,
  * so the app never lands users on an empty term.
  */
-export function getDefaultTerm(availableTerms?: string[]): string {
-  const current = getCurrentTerm()
+export function getDefaultTerm(availableTerms?: string[], now: Date = new Date()): string {
+  const current = getCurrentTerm(now)
+  const planning = compareTerms(PLANNING_TERM, current) >= 0 ? PLANNING_TERM : null
   if (availableTerms && availableTerms.length > 0) {
+    if (planning && availableTerms.includes(planning)) return planning
     const { season } = parseTerm(current)
     if (season !== 'Summer' && availableTerms.includes(current)) return current
     const autumns = availableTerms.filter(t => {
@@ -77,7 +88,7 @@ export function getDefaultTerm(availableTerms?: string[]): string {
     if (availableTerms.includes(current)) return current
     return [...availableTerms].sort(compareTerms)[availableTerms.length - 1]
   }
-  return current
+  return planning ?? current
 }
 
 /**
