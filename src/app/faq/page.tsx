@@ -1,5 +1,6 @@
 import type { Metadata, ResolvingMetadata } from 'next'
 import { Suspense } from 'react'
+import Link from 'next/link'
 import { SiteHeader } from '@/components/site-header'
 import { pageMetadata } from '@/lib/page-metadata'
 
@@ -94,6 +95,25 @@ export default function FaqPage() {
             <p>
               No. As stated above, course browsing and schedule building are available to everyone. A
               Stanford account is only required to view evaluations and sync a schedule across devices.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-lg font-semibold text-foreground mb-2">
+              Can I use Stanford Root from Claude or another AI assistant?
+            </h2>
+            <p>
+              Yes. Stanford Root has an MCP server, so Claude, Codex, or any assistant that supports MCP
+              can search courses, read evaluations, and plan your saved schedule after you sign in with
+              your Stanford account. It never enrolls you in anything. The{' '}
+              <Link href="/connect" className="text-primary hover:underline">
+                MCP page
+              </Link>{' '}
+              shows how to add it, and you can remove an assistant&apos;s access from{' '}
+              <Link href="/connected-apps" className="text-primary hover:underline">
+                Connected apps
+              </Link>
+              .
             </p>
           </section>
 
