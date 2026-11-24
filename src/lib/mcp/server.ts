@@ -78,7 +78,7 @@ export_calendar makes an .ics file of a quarter.
 
 Quarters are spelled "${TERMS[0]}"; valid now: ${TERMS.join(', ')}. Pass the
 quarter the user named to add_to_schedule. Without one it only saves when there
-is no choice to make (the course is already saved, or is offered in one of those
+is no choice to make (the course is already saved in one, or is offered in one of those
 quarters); otherwise it fails with term_required and the quarters to choose
 from: ask the user, don't pick.
 
@@ -145,6 +145,23 @@ async function saveWithRetry<T>(caller: Caller, change: (items: ScheduleItem[]) 
   }
   throw new ToolFailure('conflict', 'The schedule kept changing while saving (probably edited in a browser tab at the same time).', { retryable: true, retryAfterSeconds: 2 })
 }
+
+/** The saved entry a tool means. A repeatable course can be saved in several quarters, so then the quarter has to be named. */
+function savedEntry(items: ScheduleItem[], id: string, term: string | undefined): ScheduleItem {
+  const saved = items.filter(i => i.id === id)
+  const terms = [...new Set(saved.flatMap(i => i.selectedTerm ?? []))].sort((a, b) => termKey(a) - termKey(b))
+  if (!term && terms.length > 1) throw new ToolFailure('term_required', `${id} is saved in ${terms.join(', ')}, and no quarter was given.`, {
+    retryable: false, hint: 'Ask the user which of details.saved_terms they mean, then pass it as term. Do not pick one for them.', details: { saved_terms: terms },
+  })
+  const target = term ? saved.find(i => i.selectedTerm === term) ?? saved.find(i => !i.selectedTerm) : saved[0]
+  if (!target) throw new ToolFailure('not_in_schedule', `${id} is not on the saved schedule${saved.length ? ` in ${term}` : ''}.`, {
+    retryable: false, hint: 'Call get_my_schedule for the course_ids that are saved.',
+    details: { saved_course_ids: [...new Set(items.map(i => i.id))], ...(saved.length && { saved_terms: terms }) },
+  })
+  return target
+}
+
+const SavedTerm = Term.optional().describe('The quarter it is saved in. Needed only for a repeatable course saved in more than one.')
 
 const overlapsIn = (cat: Catalog, items: ScheduleItem[], term: string) => conflicts(cat, entriesFor(cat, items, term))
 
@@ -405,11 +422,11 @@ export function registerTools(server: McpServer) {
 
   server.registerTool('add_to_schedule', {
     title: 'Add to schedule',
-    description: "Save a course (course_id from search_courses) to the user's Stanford Root schedule, or change a saved course's quarter, sections or units. Works like the site's Add to Calendar: moving to another quarter starts the section picks over, and a cross-listed sibling already saved that quarter is replaced. Reports overlaps and anything still to pick. Planning only; this does not enroll.",
+    description: "Save a course (course_id from search_courses) to the user's Stanford Root schedule, or change a saved course's quarter, sections or units. Works like the site's Add to Calendar: adding a saved course to another quarter moves it there and starts the section picks over, except a course Stanford marks repeatable for credit, which stays in both (to move one, also remove it from the old quarter). A cross-listed sibling already saved that quarter is replaced. Reports overlaps and anything still to pick. Planning only; this does not enroll.",
     annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: true },
     inputSchema: z.object({
       course_id: CourseId,
-      term: Term.optional().describe('Quarter to plan it for, as the user named it. Omit only when they did not say: a saved course keeps its quarter, a course offered in one quarter uses it, and anything else fails with term_required so you can ask.'),
+      term: Term.optional().describe('Quarter to plan it for, as the user named it. Omit only when they did not say: a course saved in one quarter keeps it, a course offered in one quarter uses it, and anything else fails with term_required so you can ask.'),
       section_ids: z.array(z.number().int()).max(6).optional().describe('section_id values from get_course for this course and quarter. Each replaces the pick of the same component (a new DIS replaces the old DIS, the LEC stays).'),
       units: z.number().min(0).max(20).optional().describe('Units to take it for, for variable-unit courses.'),
     }).strict(),
@@ -422,7 +439,8 @@ export function registerTools(server: McpServer) {
     let term = args.term
     if (!term) {
       // No quarter named: save only when there is nothing to choose between.
-      const savedIn = ((await readSchedule(caller)) ?? []).find(i => i.id === c.id)?.selectedTerm
+      const saved = (await readSchedule(caller)) ?? []
+      const savedIn = saved.some(i => i.id === c.id) ? savedEntry(saved, c.id, undefined).selectedTerm : undefined
       const plannable = offered.filter(t => TERMS.includes(t))
       if (savedIn && offered.includes(savedIn)) term = savedIn
       else if (plannable.length === 1) term = plannable[0]
@@ -450,8 +468,9 @@ export function registerTools(server: McpServer) {
     if (mine.picked) for (const s of mine.drawn) { const st = displayedStatus(s.status, s, s.combined); if (st.toLowerCase() !== 'open') warnings.push(`Section ${s.classId} (${s.component}) is ${st}.`) }
     if (!mine.picked && secs.length) warnings.push("No section picked: the calendar shows the site's default section. Pick with section_ids from get_course.")
     else if (mine.unpicked.length) warnings.push(`Still to pick: ${mine.unpicked.join(', ')}.`)
-    const item = saved.find(i => i.id === c.id)!
-    if (options.length > 1 && typeof item.selectedUnits !== 'number') warnings.push(`Variable units (${unitsLabel([Math.min(...options), Math.max(...options)])}); pass units to choose.`)
+    const alsoIn = saved.filter(i => i.id === c.id && i !== mine.item && i.selectedTerm).map(i => i.selectedTerm!)
+    if (alsoIn.length) warnings.push(`Repeatable for credit, so it is also still saved in ${alsoIn.sort((a, b) => termKey(a) - termKey(b)).join(', ')}.`)
+    if (options.length > 1 && typeof mine.item.selectedUnits !== 'number') warnings.push(`Variable units (${unitsLabel([Math.min(...options), Math.max(...options)])}); pass units to choose.`)
     return {
       action: result.action, entry: entryOut(mine), term_was_defaulted: !args.term, schedule_url: `${SITE_URL}/schedule`, replaced_cross_listing: result.replaced,
       overlaps: conflicts(cat, entries).filter(o => o.course_ids.includes(c.id)), term_units: unitsLabel(unitTotal(entries)) ?? '0', warnings, total_saved: saved.length,
@@ -464,6 +483,7 @@ export function registerTools(server: McpServer) {
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true, openWorldHint: true },
     inputSchema: z.object({
       course_id: z.string().min(2).max(32).describe('A course_id from get_my_schedule.'),
+      term: SavedTerm,
       section_ids: z.array(z.number().int()).max(6).optional().describe('Remove only these picked sections. Removing the last picked section removes the course, as on the site.'),
       dry_run: z.boolean().default(true).describe('True (default) only previews. Pass false to actually remove, after the user agrees.'),
       confirm_token: z.string().max(32).optional().describe('The confirm_token from the preview. Required when dry_run is false.'),
@@ -472,11 +492,10 @@ export function registerTools(server: McpServer) {
     const caller = callerOf(ctx)
     const cat = await getCatalog()
     const id = normalizeCourseId(args.course_id).replace(/[^A-Z0-9&]/g, '')
-    const tokenFor = (items: ScheduleItem[]) => token(id, [...(args.section_ids ?? [])].sort(), items.map(sortKeys))
+    const tokenFor = (items: ScheduleItem[], target: ScheduleItem) => token(id, target.selectedTerm ?? null, [...(args.section_ids ?? [])].sort(), items.map(sortKeys))
     const plan = (items: ScheduleItem[]) => {
-      if (!args.dry_run && args.confirm_token !== tokenFor(items)) throw previewRequired('Removing', !!args.confirm_token)
-      const target = items.find(i => i.id === id)
-      if (!target) throw new ToolFailure('not_in_schedule', `${id} is not on the saved schedule.`, { retryable: false, hint: 'Call get_my_schedule for the course_ids that are saved.', details: { saved_course_ids: items.map(i => i.id) } })
+      const target = savedEntry(items, id, args.term)
+      if (!args.dry_run && args.confirm_token !== tokenFor(items, target)) throw previewRequired('Removing', !!args.confirm_token)
       if (!args.section_ids?.length) return { items: items.filter(i => i !== target), result: { target, removed: [] as number[], whole: true } }
       const picked = pickedIds(target)
       const notPicked = args.section_ids.filter(s => !picked.includes(s))
@@ -490,7 +509,7 @@ export function registerTools(server: McpServer) {
     if (args.dry_run) {
       const items = (await readSchedule(caller)) ?? []
       const p = plan(items)
-      return { dry_run: true, removed: entryOut(entryOf(cat, p.result.target)), removed_section_ids: p.result.removed, whole_course: p.result.whole, total_saved_after: p.items.length, confirm_token: tokenFor(items), note: waitForYes('Nothing is removed', 'what would go', 'Commit') }
+      return { dry_run: true, removed: entryOut(entryOf(cat, p.result.target)), removed_section_ids: p.result.removed, whole_course: p.result.whole, total_saved_after: p.items.length, confirm_token: tokenFor(items, p.result.target), note: waitForYes('Nothing is removed', 'what would go', 'Commit') }
     }
     const { result, saved } = await saveWithRetry(caller, plan)
     return { dry_run: false, removed: entryOut(entryOf(cat, result.target)), removed_section_ids: result.removed, whole_course: result.whole, total_saved_after: saved.length, confirm_token: null, note: null }
@@ -502,6 +521,7 @@ export function registerTools(server: McpServer) {
     annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: true },
     inputSchema: z.object({
       course_id: z.string().min(2).max(32).describe('A course_id from get_my_schedule.'),
+      term: SavedTerm,
       optional: z.boolean().default(true).describe("True to mark optional (the site's eye icon), false to count them again."),
       section_id: z.number().int().optional().describe("Only this drawn section's meetings, e.g. the lecture."),
       days: z.array(Day).optional().describe('Only meetings on these days.'),
@@ -511,8 +531,7 @@ export function registerTools(server: McpServer) {
     const cat = await getCatalog()
     const id = normalizeCourseId(args.course_id).replace(/[^A-Z0-9&]/g, '')
     const { result, saved } = await saveWithRetry(caller, items => {
-      const target = items.find(i => i.id === id)
-      if (!target) throw new ToolFailure('not_in_schedule', `${id} is not on the saved schedule.`, { retryable: false, hint: 'Call get_my_schedule for the course_ids that are saved.', details: { saved_course_ids: items.map(i => i.id) } })
+      const target = savedEntry(items, id, args.term)
       const e = entryOf(cat, target)
       const secs = e.drawn.filter(s => args.section_id === undefined || s.classId === args.section_id)
       if (args.section_id !== undefined && !secs.length) throw new ToolFailure('invalid_section', `Section ${args.section_id} is not on the calendar for ${id}.`, { retryable: false, details: { drawn_section_ids: e.drawn.map(s => s.classId) } })

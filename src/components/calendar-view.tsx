@@ -15,6 +15,7 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useRouter } from 'next/navigation';
 import { startNavProgress } from '@/components/nav-progress';
+import { setPreferredTerms } from '@/lib/preferred-term';
 import { searchCourses } from '@/lib/search-utils';
 import { compareCourseCodes } from '@/lib/utils';
 import { ALL_DAYS, visibleDays, getCalendarColorClasses, layoutDayEvents, type CalendarDay } from '@/lib/calendar-utils';
@@ -81,7 +82,12 @@ export function CalendarView({ currentTerm, onPrevTerm, onNextTerm, canPrevTerm 
   const hasEnriched = useCourseStore(state => state.hasEnriched)
   const failedDetailIds = useCourseStore(state => state.failedDetailIds)
   const router = useRouter()
-  const openCourse = (courseId: string) => { startNavProgress(); router.push(`/${encodeURIComponent(courseId)}`); }
+  const openCourse = (courseId: string) => {
+    // A class in several quarters opens on the one it was clicked in.
+    setPreferredTerms([currentTerm])
+    startNavProgress()
+    router.push(`/${encodeURIComponent(courseId)}`)
+  }
 
   const [searchQuery, setSearchQuery] = useState('')
   const [isSearchFocused, setIsSearchFocused] = useState(false)
@@ -314,7 +320,7 @@ export function CalendarView({ currentTerm, onPrevTerm, onNextTerm, canPrevTerm 
                                 )}
                                 onClick={(e) => {
                                   e.stopPropagation()
-                                  toggleOptionalMeeting(ev.courseId, ev.day, ev.startTime, ev.endTime)
+                                  toggleOptionalMeeting(ev.courseId, ev.day, ev.startTime, ev.endTime, currentTerm)
                                 }}
                               >
                                 {ev.isOptional ? <Eye className="h-3 w-3 sm:h-3.5 sm:w-3.5" /> : <EyeOff className="h-3 w-3 sm:h-3.5 sm:w-3.5" />}
@@ -486,7 +492,7 @@ export function CalendarView({ currentTerm, onPrevTerm, onNextTerm, canPrevTerm 
                               variant="ghost" size="icon"
                               aria-label={`Remove ${course.subject} ${course.code} from schedule`}
                               className="h-7 w-7 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity"
-                              onClick={(e) => { e.stopPropagation(); removeItem(course.id); }}
+                              onClick={(e) => { e.stopPropagation(); removeItem(course.id, currentTerm); }}
                             >
                               <Trash2 size={14} />
                             </Button>

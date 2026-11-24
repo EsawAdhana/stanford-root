@@ -36,6 +36,8 @@ const COURSES: Course[] = [
   course('CS106B', 'CS', '106B', 'Programming Abstractions', [A], [sec(500, A, 'LEC', 'Monday, Wednesday, Friday', '11:30 AM - 12:20 PM')]),
   // Offered twice, so adding it without a quarter is a choice the user has to make.
   course('ENGLISH9', 'ENGLISH', '9', 'Masterpieces', [A, W], [sec(700, A, 'LEC', 'Tuesday', '9:00 AM - 9:50 AM'), sec(701, W, 'LEC', 'Tuesday', '9:00 AM - 9:50 AM')]),
+  // Repeatable, so it can be planned in both quarters at once.
+  course('MUSIC181', 'MUSIC', '181', 'Jazz Combos', [A, W], [sec(7322, A, 'ACT', 'Monday', '7:00 PM - 8:50 PM', { units: '1' }), sec(7485, W, 'ACT', 'Monday', '7:00 PM - 8:50 PM', { units: '1' })], { units: '1' }),
   // WAY-FR and not CS, but Mon/Wed/Fri: only the days filter keeps it out of "Tue/Thu only".
   course('MATH51', 'MATH', '51', 'Linear Algebra', [W], [sec(1100, W, 'LEC', 'Monday, Wednesday, Friday', '10:30 AM - 11:20 AM', { gers: ['WAY-FR'] })]),
 ]
@@ -255,6 +257,72 @@ describe('adding without a quarter', () => {
     expect(changed.ok).toMatchObject({ action: 'updated', entry: { term: W } })
     // The Autumn section is not a section of the quarter it is saved in.
     expect((await call(client, 'add_to_schedule', { course_id: 'ENGLISH9', section_ids: [700] })).error?.code).toBe('invalid_section')
+  })
+})
+
+describe('a repeatable course in several quarters', () => {
+  const both = async (client: Client) => {
+    await call(client, 'add_to_schedule', { course_id: 'MUSIC181', term: A, section_ids: [7322] })
+    return call(client, 'add_to_schedule', { course_id: 'MUSIC181', term: W, section_ids: [7485] })
+  }
+  const terms = () => schedule!.map(i => [i.id, i.selectedTerm])
+  const total = async (client: Client, term: string) => (await call(client, 'get_my_schedule', { term })).ok.terms[0].total_units
+
+  it('keeps Autumn and its total when it is also added to Winter', async () => {
+    const client = await connect()
+    schedule = [{ id: 'CS106B', selectedTerm: A, selectedSectionIds: [500] }, { id: 'MATH51', selectedTerm: W, selectedSectionIds: [1100] }]
+    const autumnBefore = await total(client, A)
+    await call(client, 'add_to_schedule', { course_id: 'MUSIC181', term: A, section_ids: [7322] })
+    const autumnWith = await total(client, A)
+    const added = await call(client, 'add_to_schedule', { course_id: 'MUSIC181', term: W, section_ids: [7485] })
+    expect(added.ok).toMatchObject({ action: 'added', entry: { course_id: 'MUSIC181', term: W, units: '1' }, total_saved: 4 })
+    expect(added.ok.warnings).toContain('Repeatable for credit, so it is also still saved in Autumn 2026.')
+    expect([autumnBefore, autumnWith, await total(client, A), await total(client, W)]).toEqual(['3-5', '4-6', '4-6', '4-6'])
+    expect(terms()).toEqual([['CS106B', A], ['MATH51', W], ['MUSIC181', A], ['MUSIC181', W]])
+  })
+
+  it('changes only the quarter named, and asks when none is', async () => {
+    const client = await connect()
+    await both(client)
+    expect((await call(client, 'add_to_schedule', { course_id: 'MUSIC181', term: W, section_ids: [7485] })).ok.action).toBe('unchanged')
+    const asked = await call(client, 'add_to_schedule', { course_id: 'MUSIC181', section_ids: [7322] })
+    expect(asked.error).toMatchObject({ code: 'term_required', retryable: false, details: { saved_terms: [A, W] } })
+    await call(client, 'set_meetings_optional', { course_id: 'MUSIC181', term: W })
+    expect(schedule!.map(i => i.optionalMeetings?.length ?? 0)).toEqual([0, 1])
+    expect((await call(client, 'set_meetings_optional', { course_id: 'MUSIC181' })).error?.code).toBe('term_required')
+  })
+
+  it('removes only the quarter named', async () => {
+    const client = await connect()
+    await both(client)
+    expect((await call(client, 'remove_from_schedule', { course_id: 'MUSIC181' })).error).toMatchObject({ code: 'term_required', details: { saved_terms: [A, W] } })
+    const preview = await call(client, 'remove_from_schedule', { course_id: 'MUSIC181', term: W })
+    expect(preview.ok.removed.term).toBe(W)
+    // That preview is not a yes to removing the other quarter.
+    expect((await call(client, 'remove_from_schedule', { course_id: 'MUSIC181', term: A, dry_run: false, confirm_token: preview.ok.confirm_token })).error?.code).toBe('preview_required')
+    await call(client, 'remove_from_schedule', { course_id: 'MUSIC181', term: W, dry_run: false, confirm_token: preview.ok.confirm_token })
+    expect(terms()).toEqual([['MUSIC181', A]])
+    // Saved once again, so no quarter is needed; the wrong one is refused.
+    expect((await call(client, 'remove_from_schedule', { course_id: 'MUSIC181' })).ok.removed.term).toBe(A)
+    expect((await call(client, 'remove_from_schedule', { course_id: 'MUSIC181', term: W })).error).toMatchObject({ code: 'not_in_schedule', details: { saved_terms: [A] } })
+  })
+
+  it('imports a second quarter beside the first', async () => {
+    const client = await connect()
+    await call(client, 'add_to_schedule', { course_id: 'MUSIC181', term: W, section_ids: [7485] })
+    const { ics } = (await call(client, 'export_calendar', { term: W })).ok
+    schedule = [{ id: 'MUSIC181', selectedTerm: A, selectedSectionIds: [7322] }]
+    const preview = await call(client, 'import_calendar', { ics })
+    await call(client, 'import_calendar', { ics, dry_run: false, confirm_token: preview.ok.confirm_token })
+    expect(terms()).toEqual([['MUSIC181', A], ['MUSIC181', W]])
+  })
+
+  it('still moves a course that is not repeatable', async () => {
+    const client = await connect()
+    await call(client, 'add_to_schedule', { course_id: 'ENGLISH9', term: A })
+    const moved = await call(client, 'add_to_schedule', { course_id: 'ENGLISH9', term: W })
+    expect(moved.ok.action).toBe('updated')
+    expect(terms()).toEqual([['ENGLISH9', W]])
   })
 })
 

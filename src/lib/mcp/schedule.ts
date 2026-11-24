@@ -2,6 +2,7 @@ import type { Course, Section } from '@/types/course'
 import type { ScheduleItem } from '@/lib/schedule-sync'
 import { getCurrentTerm } from '@/lib/terms'
 import { mergeSectionSelection, isScheduledForTerm } from '@/lib/schedule-utils'
+import { entryForAdd } from '@/lib/repeatable-courses'
 import { displayedStatus } from '@/lib/seats'
 import { parseUnitsOptions } from '@/lib/utils'
 import { type Catalog, byComponent, code, findCourse, groupOf, sectionsIn, standIn, termKey } from './catalog'
@@ -125,10 +126,10 @@ export function entryOut(e: Entry) {
   }
 }
 
-/** The site's addItem for one saved row: same quarter merges picks by component, another quarter starts over, a sibling listing is replaced. */
+/** The site's addItem for one saved row: same quarter merges picks by component, another quarter starts over (beside the first for a repeatable course, else in its place), a sibling listing is replaced. */
 export function applyAdd(items: ScheduleItem[], cat: Catalog, c: Course, term: string, sectionIds: number[], units?: number): { items: ScheduleItem[]; action: 'added' | 'updated' | 'unchanged'; replaced: string | null } {
   const list = items.map(i => ({ ...i }))
-  const existing = list.find(i => i.id === c.id)
+  const existing = entryForAdd(list, c.id, term)
   const group = new Set(groupOf(cat, c.id))
   const sibling = list.find(i => i.id !== c.id && group.has(i.id) && (i.selectedTerm ?? term) === term)
   let picks = existing && existing.selectedTerm === term ? pickedIds(existing) : []

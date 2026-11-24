@@ -1,7 +1,8 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import type { Course } from '@/types/course'
-import { dedupeCrossListedItems, makeMeetingKey, mergeSectionSelection } from '@/lib/schedule-utils'
+import { dedupeCrossListedItems, isScheduledForTerm, makeMeetingKey, mergeSectionSelection } from '@/lib/schedule-utils'
+import { entryForAdd, entryKey } from '@/lib/repeatable-courses'
 import { getCrossListGroupIds } from '@/lib/cross-list.mjs'
 import { useCourseStore } from '@/lib/store'
 import { setCartHydrated } from '@/lib/cart-hydration'
@@ -32,14 +33,18 @@ type CartStore = {
   /** Drops a plan and its classes. Deleting the active plan switches to its neighbour first. */
   deletePlan: (term: string, label: string) => void
   addItem: (course: Course, term?: string, sectionId?: number, selectedUnits?: number) => void
-  removeSection: (courseId: string, sectionId: number) => void
-  setSelectedUnits: (courseId: string, units: number | undefined) => void
-  removeItem: (courseId: string) => void
+  // A repeatable course can be in several quarters, so these name the quarter they change.
+  removeSection: (courseId: string, sectionId: number, term: string) => void
+  setSelectedUnits: (courseId: string, units: number | undefined, term: string) => void
+  removeItem: (courseId: string, term: string) => void
   hasItem: (courseId: string) => boolean
   getItem: (courseId: string) => CartItem | undefined
-  toggleOptionalMeeting: (courseId: string, day: string, startTime: string, endTime: string) => void
+  toggleOptionalMeeting: (courseId: string, day: string, startTime: string, endTime: string, term: string) => void
   clearCart: () => void
 }
+
+/** The entry a course has in a term. */
+const isEntry = (item: CartItem, courseId: string, term: string) => item.id === courseId && isScheduledForTerm(item, term)
 
 /**
  * Whether a parked plan can be brought on screen. It is rebuilt from the
@@ -89,25 +94,25 @@ function planSnapshot(items: CartItem[], unresolved: SavedItem[], term: string):
 
 /**
  * `unresolved` with one term's entries replaced by an incoming plan's. Like
- * `withTermItems`, an entry for the same course under another term gives way:
- * the schedule holds one entry per course.
+ * `withTermItems`, an entry for the same course under another term gives way
+ * unless the course is repeatable (see entryKey).
  */
 function withTermUnresolved(unresolved: SavedItem[], term: string, incoming: SavedItem[]): SavedItem[] {
-  const incomingIds = new Set(incoming.map(i => i.id))
-  return [...unresolved.filter(i => i.selectedTerm !== term && !incomingIds.has(i.id)), ...incoming.map(toSavedItem)]
+  const incomingKeys = new Set(incoming.map(entryKey))
+  return [...unresolved.filter(i => i.selectedTerm !== term && !incomingKeys.has(entryKey(i))), ...incoming.map(toSavedItem)]
 }
 
 /**
  * `items` with one term's entries replaced by a plan's. A class in that plan
- * that sits on another term's schedule moves to this term, as adding it would:
- * the cart holds one entry per course.
+ * that sits on another term's schedule moves to this term, as adding it would.
+ * A repeatable one stays in both.
  */
 function withTermItems(items: CartItem[], term: string, incoming: CartItem[]) {
-  const incomingIds = new Set(incoming.map(i => i.id))
+  const incomingKeys = new Set(incoming.map(entryKey))
   const others = items.filter(i => i.selectedTerm !== term)
   return {
-    items: [...others.filter(i => !incomingIds.has(i.id)), ...incoming],
-    moved: others.filter(i => incomingIds.has(i.id)),
+    items: [...others.filter(i => !incomingKeys.has(entryKey(i))), ...incoming],
+    moved: others.filter(i => incomingKeys.has(entryKey(i))),
   }
 }
 
@@ -202,8 +207,9 @@ export const useCartStore = create<CartStore>()(
       },
       addItem: (course, term, sectionId, selectedUnits) => {
         const currentItems = get().items
-        const existingIndex = currentItems.findIndex(c => c.id === course.id)
-        const existing = existingIndex >= 0 ? currentItems[existingIndex] : undefined
+        const resolvedTerm = term || course.selectedTerm || course.terms?.[0]
+        const existing = entryForAdd(currentItems, course.id, resolvedTerm)
+        const existingIndex = existing ? currentItems.indexOf(existing) : -1
 
         // Preserve existing color if updating same course
         const existingColor = existing?.color
@@ -215,8 +221,6 @@ export const useCartStore = create<CartStore>()(
             : course.selectedUnits !== undefined
               ? course.selectedUnits
               : existing?.selectedUnits
-
-        const resolvedTerm = term || course.selectedTerm || course.terms?.[0]
 
         // Picks belong to a term, so switching terms starts the selection over.
         const priorIds = existing && existing.selectedTerm === resolvedTerm
@@ -260,8 +264,8 @@ export const useCartStore = create<CartStore>()(
           : -1
 
         if (existingIndex >= 0) {
-          // A class sits on one term at a time, so adding it to another term takes
-          // it off the first. Say so: otherwise the first term just looks emptied.
+          // A class that is not repeatable sits on one term at a time, so adding it
+          // to another term takes it off the first. Say so: otherwise the first term just looks emptied.
           if (existing?.selectedTerm && resolvedTerm && existing.selectedTerm !== resolvedTerm) {
             // Loaded on demand: sonner touches the document when imported, and this
             // store is imported where there is none (sync tests, server code).
@@ -293,16 +297,16 @@ export const useCartStore = create<CartStore>()(
        * pick came straight back on the next render and the term's total never
        * moved.
        */
-      setSelectedUnits: (courseId, units) => {
+      setSelectedUnits: (courseId, units, term) => {
         set(state => ({
           items: state.items.map(item =>
-            item.id === courseId ? { ...item, selectedUnits: units } : item
+            isEntry(item, courseId, term) ? { ...item, selectedUnits: units } : item
           ),
         }))
       },
-      removeSection: (courseId, sectionId) => {
+      removeSection: (courseId, sectionId, term) => {
         const currentItems = get().items
-        const index = currentItems.findIndex(c => c.id === courseId)
+        const index = currentItems.findIndex(c => isEntry(c, courseId, term))
         if (index < 0) return
 
         const item = currentItems[index]
@@ -310,7 +314,7 @@ export const useCartStore = create<CartStore>()(
 
         // Dropping the last section means the course is off the schedule.
         if (remaining.length === 0) {
-          set({ items: currentItems.filter(c => c.id !== courseId) })
+          set({ items: currentItems.filter(c => c !== item) })
           return
         }
 
@@ -318,8 +322,8 @@ export const useCartStore = create<CartStore>()(
         newItems[index] = { ...item, selectedSectionIds: remaining }
         set({ items: newItems })
       },
-      removeItem: (courseId) => {
-        set(state => ({ items: state.items.filter(c => c.id !== courseId) }))
+      removeItem: (courseId, term) => {
+        set(state => ({ items: state.items.filter(c => !isEntry(c, courseId, term)) }))
       },
       hasItem: (courseId) => {
         return get().items.some(c => c.id === courseId)
@@ -327,9 +331,9 @@ export const useCartStore = create<CartStore>()(
       getItem: (courseId) => {
         return get().items.find(c => c.id === courseId)
       },
-      toggleOptionalMeeting: (courseId, day, startTime, endTime) => {
+      toggleOptionalMeeting: (courseId, day, startTime, endTime, term) => {
         const currentItems = get().items
-        const courseIndex = currentItems.findIndex(c => c.id === courseId)
+        const courseIndex = currentItems.findIndex(c => isEntry(c, courseId, term))
         if (courseIndex < 0) return
 
         const course = currentItems[courseIndex]

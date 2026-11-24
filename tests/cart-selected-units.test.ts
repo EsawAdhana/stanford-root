@@ -33,7 +33,7 @@ beforeEach(() => {
 describe('setSelectedUnits', () => {
   it('sets units on a course already on the schedule', () => {
     useCartStore.getState().addItem(COMM272, TERM)
-    useCartStore.getState().setSelectedUnits('COMM272', 4)
+    useCartStore.getState().setSelectedUnits('COMM272', 4, TERM)
 
     expect(useCartStore.getState().items[0].selectedUnits).toBe(4)
   })
@@ -48,7 +48,7 @@ describe('setSelectedUnits', () => {
     useCartStore.getState().addItem(COMM272, TERM, undefined, undefined)
     expect(useCartStore.getState().items[0].selectedUnits).toBe(4)
 
-    useCartStore.getState().setSelectedUnits('COMM272', undefined)
+    useCartStore.getState().setSelectedUnits('COMM272', undefined, TERM)
     expect(useCartStore.getState().items[0].selectedUnits).toBeUndefined()
   })
 
@@ -58,7 +58,7 @@ describe('setSelectedUnits', () => {
       items: useCartStore.getState().items.map(i => ({ ...i, selectedSectionIds: [12515] })),
     })
 
-    useCartStore.getState().setSelectedUnits('COMM272', 5)
+    useCartStore.getState().setSelectedUnits('COMM272', 5, TERM)
     const [item] = useCartStore.getState().items
 
     expect(item.id).toBe('COMM272')
@@ -74,14 +74,14 @@ describe('setSelectedUnits', () => {
     // COMM172, whose cross-list dedupe then drops COMM272 — renaming the block on
     // the student's calendar as a side effect of picking a unit count.
     useCartStore.getState().addItem(COMM272, TERM)
-    useCartStore.getState().setSelectedUnits('COMM272', 4)
+    useCartStore.getState().setSelectedUnits('COMM272', 4, TERM)
 
     expect(useCartStore.getState().items.map(i => i.id)).toEqual(['COMM272'])
   })
 
   it('is a no-op for a course that is not on the schedule', () => {
     useCartStore.getState().addItem(COMM272, TERM)
-    useCartStore.getState().setSelectedUnits('COMM172', 5)
+    useCartStore.getState().setSelectedUnits('COMM172', 5, TERM)
 
     expect(useCartStore.getState().items.map(i => `${i.id}=${i.selectedUnits}`)).toEqual(['COMM272=undefined'])
   })

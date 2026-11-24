@@ -159,4 +159,12 @@ describe('diffLines', () => {
     expect(diffLines({ schedule: { bad: true } }, null)).toEqual([])
     expect(diffLines({ schedule: [{ id: 'A' }] }, undefined)).toEqual(['+ A'])
   })
+
+  it('compares each quarter of a course saved in several', () => {
+    const autumn = { id: 'MUSIC181', selectedTerm: 'Autumn 2026' }
+    const winter = { id: 'MUSIC181', selectedTerm: 'Winter 2027' }
+    expect(diffLines({ schedule: [autumn, winter] }, { schedule: [winter] })).toEqual(['+ MUSIC181  Autumn 2026'])
+    expect(diffLines({ schedule: [winter] }, { schedule: [autumn, winter] })).toEqual(['- MUSIC181  Autumn 2026'])
+    expect(diffLines({ schedule: [autumn, winter] }, { schedule: [autumn, winter] })).toEqual([])
+  })
 })

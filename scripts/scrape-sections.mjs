@@ -72,6 +72,10 @@ const PRIOR_OFFERINGS_PATH = join(__dirname, 'prior-offerings.json')
 // run starts, so a class ExploreCourses misses is still read.
 const PREVIOUS_DUMP_PATH = join(__dirname, '../data/catalog/full.json')
 
+// Courses that can be planned in several quarters. The site reads this file, and it
+// is only ever added to (see src/lib/repeatable-courses.ts).
+const REPEATABLE_PATH = join(__dirname, '../src/lib/repeatable-courses.json')
+
 // NQTR attribute value → human-readable term.
 // Derived from the active academic year so it self-rolls every year and never
 // needs manual edits. Only used as a fallback when a section lacks a <term>
@@ -459,6 +463,19 @@ async function fetchSubjectCourses(subject, academicYear) {
     })
 }
 
+/** Ids of the courses ExploreCourses marks repeatable for credit. Kept off the rows: the table has no column for it. */
+export function repeatableIds(nodes) {
+    return nodes
+        .filter(node => textVal(node?.repeatable) === 'true')
+        .map(node => `${textVal(node?.subject)}${textVal(node?.code)}`.replace(/\s+/g, '').toUpperCase())
+        .filter(Boolean)
+}
+
+/** The recorded list with any of `found` the catalog holds added. Nothing is ever dropped. */
+export function addRepeatable(recorded, found, catalogIds) {
+    return [...new Set([...recorded, ...[...found].filter(id => catalogIds.has(id))])].sort()
+}
+
 function ingestCourseNodes(catalog, nodes) {
     let added = 0
     for (const node of nodes) {
@@ -538,11 +555,15 @@ async function fetchCatalog(academicYear) {
     }
 
     const catalog = new Map()
+    const repeatable = new Set()
     for (let i = 0; i < departments.length; i += CATALOG_CONCURRENCY) {
         const batch = departments.slice(i, i + CATALOG_CONCURRENCY)
         const results = await Promise.all(batch.map(department => fetchDepartmentCourses(department, academicYear)))
 
-        for (const nodes of results) ingestCourseNodes(catalog, nodes)
+        for (const nodes of results) {
+            ingestCourseNodes(catalog, nodes)
+            for (const id of repeatableIds(nodes)) repeatable.add(id)
+        }
         process.stdout.write(`\rFetched ${Math.min(i + CATALOG_CONCURRENCY, departments.length)}/${departments.length} departments`)
     }
     process.stdout.write('\n')
@@ -553,7 +574,7 @@ async function fetchCatalog(academicYear) {
     if (scheduledCourses.length < 5000) {
         throw new Error(`Catalog validation failed: found only ${scheduledCourses.length} scheduled courses; no database writes made`)
     }
-    return { departments, courses: scheduledCourses }
+    return { departments, courses: scheduledCourses, repeatable }
 }
 
 /**
@@ -1085,12 +1106,14 @@ async function main() {
     // the run learns about classes the last dump did not have.
     let ecCourses = []
     let departmentCount = null
+    let repeatable = new Set()
     if (opts.withExploreCourses) {
         console.log('Fetching ExploreCourses...')
         try {
-            const { departments, courses } = await fetchCatalog(opts.academicYear)
-            departmentCount = departments.length
-            ecCourses = courses
+            const fetched = await fetchCatalog(opts.academicYear)
+            departmentCount = fetched.departments.length
+            ecCourses = fetched.courses
+            repeatable = fetched.repeatable
         } catch (err) {
             console.warn(`  ⚠ ExploreCourses skipped, so only the last dump's classes are read and no gaps are filled: ${err.message}`)
         }
@@ -1158,6 +1181,12 @@ async function main() {
     // Written only after the table matches it, so a dump built from this file
     // never shows rows the table does not hold.
     if (opts.saveRows) writeFileSync(opts.saveRows, JSON.stringify(courses))
+    if (repeatable.size) {
+        const recorded = JSON.parse(readFileSync(REPEATABLE_PATH, 'utf8'))
+        const next = addRepeatable(recorded, repeatable, incomingIds)
+        writeFileSync(REPEATABLE_PATH, `${JSON.stringify(next, null, 2)}\n`)
+        console.log(`${next.length - recorded.length} newly repeatable courses recorded; ${next.length} in all.`)
+    }
     console.log(`Done. ${courses.length} courses scraped, ${rowsToUpsert.length} written; cleared ${staleToClear.length} stale schedules.`)
 }
 

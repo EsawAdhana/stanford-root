@@ -4,6 +4,7 @@ import { useCourseStore } from './store'
 import { cartHydrated } from './cart-hydration'
 import { trackOnce } from './analytics'
 import { dedupeCrossListedItems } from './schedule-utils'
+import { entryKey } from './repeatable-courses'
 import { labelIndex, nextPlanLabel, plansDocument, plansSignature, readPlans, toSavedItem, type PlansByTerm } from './schedule-plans'
 
 // Minimal payload stored server-side — no full Course catalog data
@@ -34,9 +35,9 @@ function toScheduleItems(): ScheduleItem[] {
   }))
   // Saved entries the catalog cannot resolve are not in the cart, so they would
   // be dropped from this payload and erased server-side. Carry them through.
-  const inCart = new Set(items.map(i => i.id))
+  const inCart = new Set(items.map(entryKey))
   for (const unresolved of useCartStore.getState().unresolved ?? []) {
-    if (!inCart.has(unresolved.id)) items.push(unresolved)
+    if (!inCart.has(entryKey(unresolved))) items.push(unresolved)
   }
   return items
 }
@@ -228,9 +229,10 @@ function sameSchedule(a: ScheduleItem[], b: ScheduleItem[]): boolean {
   return a.length === b.length && a.every((item, i) => itemKey(item) === itemKey(b[i]))
 }
 
-function byId(items: ScheduleItem[]): Map<string, ScheduleItem> {
+/** Entries by what makes them the same one: the course, and for a repeatable course its quarter. */
+function byEntry(items: ScheduleItem[]): Map<string, ScheduleItem> {
   const map = new Map<string, ScheduleItem>()
-  for (const item of items) if (!map.has(item.id)) map.set(item.id, item)
+  for (const item of items) if (!map.has(entryKey(item))) map.set(entryKey(item), item)
   return map
 }
 
@@ -243,7 +245,7 @@ function byId(items: ScheduleItem[]): Map<string, ScheduleItem> {
  *  - mine:   this device's schedule now.
  *  - theirs: the row now, as other devices and the MCP left it.
  *
- * The rule, in plain words:
+ * The rule, in plain words (a repeatable course counts once per quarter):
  *  - A course added on either side since base is kept.
  *  - A course removed on either side since base is removed, even if the other
  *    side changed its section or units meanwhile.
@@ -260,14 +262,14 @@ function byId(items: ScheduleItem[]): Map<string, ScheduleItem> {
  * so a merge that changes nothing returns exactly the row and writes nothing.
  */
 export function mergeSchedules(base: ScheduleItem[] | null, mine: ScheduleItem[], theirs: ScheduleItem[]): ScheduleItem[] {
-  const baseById = base ? byId(base) : null
-  const mineById = byId(mine)
-  const theirsById = byId(theirs)
+  const baseBy = base ? byEntry(base) : null
+  const mineBy = byEntry(mine)
+  const theirsBy = byEntry(theirs)
 
   const out: ScheduleItem[] = []
-  for (const their of theirsById.values()) {
-    const my = mineById.get(their.id)
-    const was = baseById?.get(their.id)
+  for (const [key, their] of theirsBy) {
+    const my = mineBy.get(key)
+    const was = baseBy?.get(key)
     if (!my) {
       if (was) continue // removed here
       out.push(their) // added there
@@ -277,9 +279,9 @@ export function mergeSchedules(base: ScheduleItem[] | null, mine: ScheduleItem[]
     else if (was && itemKey(their) === itemKey(was)) out.push(my) // only this device changed it
     else out.push(itemKey(my) === itemKey(their) ? their : my) // both changed it, or no base
   }
-  for (const my of mineById.values()) {
-    if (theirsById.has(my.id)) continue
-    if (baseById?.has(my.id)) continue // removed there
+  for (const [key, my] of mineBy) {
+    if (theirsBy.has(key)) continue
+    if (baseBy?.has(key)) continue // removed there
     out.push(my) // added here
   }
   return out
@@ -444,18 +446,19 @@ export function mergeScheduleDocs(base: ScheduleDoc | null, mine: ScheduleDoc, t
     plans[term] = { order: merged.order, active: merged.active, parked }
   }
 
-  // The cart holds one entry per course. Two terms can each bring the same
-  // course; this device's entry wins, as it does within a term.
-  const mineKeys = new Map(mine.schedule.map(i => [i.id, itemKey(i)]))
+  // A course that is not repeatable has one entry. Two terms can each bring the
+  // same course; this device's entry wins, as it does within a term.
+  const mineKeys = new Map(mine.schedule.map(i => [entryKey(i), itemKey(i)]))
   const chosen = new Map<string, ScheduleItem>()
   for (const item of produced) {
-    const held = chosen.get(item.id)
-    if (!held || (itemKey(held) !== mineKeys.get(item.id) && itemKey(item) === mineKeys.get(item.id))) chosen.set(item.id, item)
+    const key = entryKey(item)
+    const held = chosen.get(key)
+    if (!held || (itemKey(held) !== mineKeys.get(key) && itemKey(item) === mineKeys.get(key))) chosen.set(key, item)
   }
-  const rowOrder = new Map(theirs.schedule.map((i, n) => [i.id, n]))
+  const rowOrder = new Map(theirs.schedule.map((i, n) => [entryKey(i), n]))
   const schedule = [...chosen.values()]
     .map((item, n) => ({ item, n }))
-    .sort((x, y) => (rowOrder.get(x.item.id) ?? Infinity) - (rowOrder.get(y.item.id) ?? Infinity) || x.n - y.n)
+    .sort((x, y) => (rowOrder.get(entryKey(x.item)) ?? Infinity) - (rowOrder.get(entryKey(y.item)) ?? Infinity) || x.n - y.n)
     .map(({ item }) => item)
   return { schedule, plans }
 }
@@ -484,13 +487,13 @@ function mergeWithRow(base: ScheduleDoc | null, mine: ScheduleDoc, theirs: Sched
  */
 function withParked(doc: ScheduleDoc, base: ScheduleDoc | null): ScheduleDoc {
   if (!base) return doc
-  const inCart = new Set(doc.schedule.map(i => i.id))
+  const inCart = new Set(doc.schedule.map(entryKey))
   const listed = new Set(useCourseStore.getState().courses.map(c => c.id))
   const parkedHere = (item: ScheduleItem) => {
     const p = item.selectedTerm !== undefined ? doc.plans[item.selectedTerm] : undefined
     return !!p && Object.values(p.parked).some(list => list.some(i => i.id === item.id))
   }
-  const missing = base.schedule.filter(b => !inCart.has(b.id) && !listed.has(b.id) && !parkedHere(b))
+  const missing = base.schedule.filter(b => !inCart.has(entryKey(b)) && !listed.has(b.id) && !parkedHere(b))
   return missing.length ? { ...doc, schedule: [...doc.schedule, ...missing] } : doc
 }
 

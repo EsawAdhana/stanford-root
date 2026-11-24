@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useShallow } from 'zustand/react/shallow';
 import { useCourseStore } from '@/lib/store';
 import { ExternalLink, MapPin, Clock, Check, FileText, Calendar, ChevronLeft, ChevronRight, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -23,6 +24,7 @@ import { takePreferredTerms } from '@/lib/preferred-term';
 import { CalendarPreviewModal } from './calendar-preview-modal';
 import { unpickedComponents, stripSeconds, isScheduledForTerm, scheduledSectionIds } from '@/lib/schedule-utils';
 import { isWimCourse } from '@/lib/wim-courses';
+import { isRepeatableCourse } from '@/lib/repeatable-courses';
 import { compareTerms, getDefaultTerm } from '@/lib/terms';
 import { useLiveSeats } from '@/hooks/use-seats';
 import { displayedStatus } from '@/lib/seats';
@@ -75,8 +77,9 @@ export function CourseDetailContent({ course }: CourseDetailContentProps) {
         if (canViewEvals && crossListIds.length > 0) fetchBulkEvaluations(crossListIds);
     }, [crossListIds, fetchBulkEvaluations, canViewEvals]);
 
-    // Subscribe to only this course's cart entry so unrelated cart changes don't re-render the page
-    const cartItem = useCartStore(s => s.items.find(i => i.id === course.id));
+    // Subscribe to only this course's cart entries so unrelated cart changes don't
+    // re-render the page. A repeatable course can have one per quarter.
+    const cartItems = useCartStore(useShallow(s => s.items.filter(i => i.id === course.id)));
 
     /**
      * Another listing of this same class already on the schedule. The schedule search
@@ -85,7 +88,8 @@ export function CourseDetailContent({ course }: CourseDetailContentProps) {
      * student can put the same meeting on the calendar twice and have the term's units
      * counted twice.
      */
-    const scheduledSibling = useCartStore(s => s.items.find(i => i.id !== course.id && crossListIds.includes(i.id)));
+    const scheduledSiblings = useCartStore(useShallow(s => s.items.filter(i => i.id !== course.id && crossListIds.includes(i.id))));
+    const siblingInTerm = (term: string) => scheduledSiblings.find(i => isScheduledForTerm(i, term));
 
     /**
      * Sections of this course on the term being shown, by classId.
@@ -96,18 +100,16 @@ export function CourseDetailContent({ course }: CourseDetailContentProps) {
      * a course the student was looking at on their own calendar a click earlier.
      */
     const selectedIdsForTerm = (term: string) =>
-        scheduledSectionIds(course, cartItem, term);
+        scheduledSectionIds(course, cartItems.find(i => isScheduledForTerm(i, term)), term);
 
     /**
-     * The term this class sits on the schedule for, under whichever listing holds
-     * it. The sibling matters because the schedule search offers every listing but
+     * Where this class sits on the schedule, under whichever listing holds it. The sibling matters because the schedule search offers every listing but
      * this page is reached through the canonical id: adding ANTHRO 443 for Winter
      * and clicking its own calendar block lands on /ANTHRO143, where the cart entry
-     * is the sibling. Consulting only `cartItem` opened the default tab (Autumn)
+     * is the sibling. Consulting only `cartItems` opened the default tab (Autumn)
      * instead, so the class looked unadded on the only tab the student ever saw.
      */
-    const scheduledEntry = cartItem ?? scheduledSibling;
-    const scheduledTerm = scheduledEntry?.selectedTerm;
+    const scheduledEntries = [...cartItems, ...scheduledSiblings];
 
     // Group sections by term (dedup by classId), sort sections + terms — memoized so this
     // doesn't re-run on every render (e.g. tab switches, hover state).
@@ -129,16 +131,21 @@ export function CourseDetailContent({ course }: CourseDetailContentProps) {
     // Term(s) carried over from the browse filter (?terms=). When the user arrived
     // having filtered to a specific quarter, open that quarter's tab if this course
     // offers it, instead of defaulting to the latest offered term.
+    const scheduledTerms = terms.filter(t => scheduledEntries.some(i => i.selectedTerm === t));
+
     // State for active tab
     const [activeTerm, setActiveTerm] = useState<string>(() => {
-        if (scheduledTerm && terms.includes(scheduledTerm)) {
-            return scheduledTerm;
-        }
-        return getDefaultTerm(terms);
+        const defaultTerm = getDefaultTerm(terms);
+        return scheduledTerms.length === 0 || scheduledTerms.includes(defaultTerm) ? defaultTerm : scheduledTerms[0];
     });
+    const activeEntry = scheduledEntries.find(i => isScheduledForTerm(i, activeTerm));
+    // Units picked for another quarter carry over only when adding here would move that entry.
+    const scheduledEntry = activeEntry ?? (isRepeatableCourse(course.id) ? undefined : scheduledEntries[0]);
 
     // Consumed once by the term effect below.
     const preferredTermApplied = useRef(false);
+    // The scheduled terms that effect last saw, to tell one gained from one removed.
+    const seenScheduled = useRef<{ id: string; terms: string[] }>({ id: '', terms: [] });
 
     // Live enrollment for the term on screen. The catalog dump is refreshed once
     // a day (refresh-courses.yml), which is hours stale during enrollment week —
@@ -221,12 +228,14 @@ export function CourseDetailContent({ course }: CourseDetailContentProps) {
         return undefined
     })
 
-    // Sync selectedUnits when cart item changes
+    // Sync selectedUnits when the cart item changes, or the tab shows another quarter's
     useEffect(() => {
         if (scheduledEntry?.selectedUnits !== undefined && unitOptions.includes(scheduledEntry.selectedUnits)) {
             setSelectedUnits(scheduledEntry.selectedUnits)
+        } else if (scheduledEntries.length > 0 && isRepeatableCourse(course.id)) {
+            setSelectedUnits(undefined)
         }
-    }, [scheduledEntry?.selectedUnits, unitOptions.join(',')]) // eslint-disable-line react-hooks/exhaustive-deps
+    }, [scheduledEntry?.selectedUnits, activeEntry?.selectedTerm, unitOptions.join(',')]) // eslint-disable-line react-hooks/exhaustive-deps
 
     // Representative section for the selected term, used for term-specific
     // course facts like class level.
@@ -255,9 +264,10 @@ export function CourseDetailContent({ course }: CourseDetailContentProps) {
     // disabled-then-enabled on a course that does have one.
     const syllabusPending = !syllabusLoaded
 
-    // Which term the Sections panel shows, in priority order: the term this class is
-    // scheduled for, then the term they were browsing when they clicked through, then
-    // the default. One effect rather than two, because two writing the same state on the
+    // Which term the Sections panel shows, in priority order: a term this class was just
+    // scheduled for (of several, the one they came from, else the one on screen), then the
+    // term they were browsing when they clicked through, then the default. Taking it off
+    // one quarter of several leaves the tab where it is. One effect rather than two, because two writing the same state on the
     // same `terms` change race -- the second reads the pre-update value and clobbers it.
     //
     // The browsed term arrives via sessionStorage (src/lib/preferred-term.ts), not the
@@ -265,12 +275,16 @@ export function CourseDetailContent({ course }: CourseDetailContentProps) {
     // server-rendered and a render-time read would desync hydration, and consumed once so
     // a later direct visit gets the default instead of a stale term.
     useEffect(() => {
-        if (scheduledTerm && terms.includes(scheduledTerm)) {
-            setActiveTerm(scheduledTerm);
+        const seen = seenScheduled.current.id === course.id ? seenScheduled.current.terms : [];
+        seenScheduled.current = { id: course.id, terms: scheduledTerms };
+        const gained = scheduledTerms.filter(t => !seen.includes(t));
+        if (gained.length > 0) {
+            const from = takePreferredTerms();
+            setActiveTerm(shown => scheduledTerms.find(t => from.includes(t)) ?? (scheduledTerms.includes(shown) ? shown : gained[0]));
             return;
         }
         if (terms.length === 0) return;
-        if (!preferredTermApplied.current) {
+        if (!preferredTermApplied.current && scheduledTerms.length === 0) {
             preferredTermApplied.current = true;
             const browsed = takePreferredTerms().filter(t => terms.includes(t)).sort(compareTerms);
             if (browsed[0]) {
@@ -279,7 +293,7 @@ export function CourseDetailContent({ course }: CourseDetailContentProps) {
             }
         }
         if (!terms.includes(activeTerm)) setActiveTerm(getDefaultTerm(terms));
-    }, [course.id, scheduledTerm, terms.length]); // eslint-disable-line react-hooks/exhaustive-deps -- activeTerm omitted to avoid loop; setActiveTerm is stable
+    }, [course.id, scheduledTerms.join('|'), terms.length]); // eslint-disable-line react-hooks/exhaustive-deps -- activeTerm omitted to avoid loop; setActiveTerm is stable
 
     // GER (General Education Requirements / WAYS) from sections — dedupe by display abbreviation
     // so e.g. "Writing in the Major (WIM)" (injected in store) and "WIM" do not both show as WIM.
@@ -306,7 +320,7 @@ export function CourseDetailContent({ course }: CourseDetailContentProps) {
 
     const handleSelectSection = (sectionId: number, section?: Section, selectedUnitsOverride?: number) => {
         if (selectedIdsForTerm(activeTerm).includes(sectionId)) {
-            removeSection(course.id, sectionId);
+            removeSection(course.id, sectionId, activeTerm);
         } else {
             // Section may have single value (e.g. "4") while course has range ("3-4"); use course as fallback
             const sectionOpts = parseUnitsOptions(section?.units ?? '');
@@ -331,13 +345,11 @@ export function CourseDetailContent({ course }: CourseDetailContentProps) {
         setSelectedUnits(newValue);
         // Write to the listing that actually holds the class. On a cross-listed
         // page that is usually the sibling -- the schedule says COMM 272 and this
-        // page is COMM 172 -- and keying off `cartItem` meant the chip lit up
+        // page is COMM 172 -- and keying off `cartItems` meant the chip lit up
         // while the term's unit total never moved. By id rather than through
         // addItem, so clearing a pick works and so the listing on the calendar
         // stays the one the student added.
-        if (scheduledEntry && isScheduledForTerm(scheduledEntry, activeTerm)) {
-            setCartUnits(scheduledEntry.id, newValue);
-        }
+        if (activeEntry) setCartUnits(activeEntry.id, newValue, activeTerm);
     };
 
     return (
@@ -595,7 +607,8 @@ export function CourseDetailContent({ course }: CourseDetailContentProps) {
                                             return termSections.map((section) => {
                                                 const isSelected = selectedIds.includes(section.classId);
                                                 // Only the term on screen: the same class in another quarter is a real choice.
-                                                const blockedBySibling = !isSelected && Boolean(scheduledSibling) && isScheduledForTerm(scheduledSibling!, term);
+                                                const sibling = isSelected ? undefined : siblingInTerm(term);
+                                                const blockedBySibling = Boolean(sibling);
                                                 const enrollAgg = enrollmentBySectionId.get(`${term}|${section.classId}`) ?? aggregateCrossListedSectionEnrollment(section, crossListIds, courses, term === activeTerm ? liveSeats : undefined);
                                                 const liveSeat = term === activeTerm ? liveSeats.get(section.classId) : undefined;
                                                 // A live reading replaces the snapshot's seats, room included.
@@ -765,7 +778,7 @@ export function CourseDetailContent({ course }: CourseDetailContentProps) {
                                                                 size="sm"
                                                                 variant={isSelected ? "default" : "outline"}
                                                                 disabled={blockedBySibling}
-                                                                title={blockedBySibling ? `This class is already on your ${term} schedule as ${scheduledSibling!.subject} ${scheduledSibling!.code}.` : undefined}
+                                                                title={blockedBySibling ? `This class is already on your ${term} schedule as ${sibling!.subject} ${sibling!.code}.` : undefined}
                                                                 className={cn(
                                                                     "h-10 text-[16px] px-5 rounded-lg font-bold transition-all whitespace-nowrap",
                                                                     isSelected
@@ -787,7 +800,7 @@ export function CourseDetailContent({ course }: CourseDetailContentProps) {
                                                                 {isSelected
                                                                     ? "Added"
                                                                     : blockedBySibling
-                                                                        ? `Added as ${scheduledSibling!.subject} ${scheduledSibling!.code}`
+                                                                        ? `Added as ${sibling!.subject} ${sibling!.code}`
                                                                         : "View on Calendar"}
                                                             </Button>
                                                         </div>

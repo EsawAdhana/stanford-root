@@ -107,7 +107,7 @@ describe('signed-out schedule in two tabs', () => {
     one.cart.getState().addItem(course('MATH51'), A)
     one.cart.getState().addItem(course('PSYCH1'), A)
     await settle()
-    two.cart.getState().removeItem('PSYCH1')
+    two.cart.getState().removeItem('PSYCH1', A)
     await settle()
     one.cart.getState().addItem(course('CS103'), A)
     await settle()

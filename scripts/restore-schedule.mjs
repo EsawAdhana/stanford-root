@@ -54,23 +54,25 @@ function describeItem(item) {
   return parts.join('  ')
 }
 
-/** Lines comparing a history version with the current row, by course id. */
+/** Lines comparing a history version with the current row, by course id (and quarter, for a course saved in several). */
 export function diffLines(version, current) {
   const lines = []
   const from = Array.isArray(current?.schedule) ? current.schedule : []
   const to = Array.isArray(version?.schedule) ? version.schedule : []
-  const byId = list => new Map(list.map(item => [item?.id, item]))
-  const fromIds = byId(from)
-  const toIds = byId(to)
+  const inSeveral = new Set([from, to].flatMap(list => list.map(item => item?.id).filter((id, i, all) => all.indexOf(id) !== i)))
+  const keyOf = item => (inSeveral.has(item?.id) ? `${item?.id}|${item?.selectedTerm ?? ''}` : item?.id)
+  const byKey = list => new Map(list.map(item => [keyOf(item), item]))
+  const fromBy = byKey(from)
+  const toBy = byKey(to)
 
   for (const item of to) {
-    if (!fromIds.has(item?.id)) lines.push(`+ ${describeItem(item)}`)
-    else if (JSON.stringify(fromIds.get(item?.id)) !== JSON.stringify(item)) {
-      lines.push(`~ ${describeItem(item)}   (now: ${describeItem(fromIds.get(item?.id))})`)
+    if (!fromBy.has(keyOf(item))) lines.push(`+ ${describeItem(item)}`)
+    else if (JSON.stringify(fromBy.get(keyOf(item))) !== JSON.stringify(item)) {
+      lines.push(`~ ${describeItem(item)}   (now: ${describeItem(fromBy.get(keyOf(item)))})`)
     }
   }
   for (const item of from) {
-    if (!toIds.has(item?.id)) lines.push(`- ${describeItem(item)}`)
+    if (!toBy.has(keyOf(item))) lines.push(`- ${describeItem(item)}`)
   }
   for (const key of ['plans', 'ignored_exam_clashes']) {
     const a = JSON.stringify(current?.[key] ?? null)

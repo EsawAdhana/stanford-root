@@ -105,7 +105,7 @@ describe('the cart store\'s plans', () => {
   it('edits only the active plan, then swaps plans whole', () => {
     const store = useCartStore.getState()
     store.createPlan(W)
-    store.removeItem('CS161')
+    store.removeItem('CS161', W)
     add('CS255')
     expect(ids()).toEqual(['CS107/Spring 2027', 'CS229/Winter 2027', 'CS255/Winter 2027'])
 
@@ -119,7 +119,7 @@ describe('the cart store\'s plans', () => {
 
   it('leaves other terms alone', () => {
     useCartStore.getState().createPlan(W)
-    useCartStore.getState().removeItem('CS229')
+    useCartStore.getState().removeItem('CS229', W)
     useCartStore.getState().switchPlan(W, 'A')
     expect(ids()).toContain('CS107/Spring 2027')
   })
@@ -156,7 +156,7 @@ describe('the cart store\'s plans', () => {
 
   it('deleting a parked plan only drops it, and one plan left is a plain schedule', () => {
     useCartStore.getState().createPlan(W)
-    useCartStore.getState().removeItem('CS161')
+    useCartStore.getState().removeItem('CS161', W)
     useCartStore.getState().deletePlan(W, 'A')
     expect(useCartStore.getState().plans[W]).toBeUndefined()
     expect(ids()).toEqual(['CS107/Spring 2027', 'CS229/Winter 2027'])
@@ -205,7 +205,7 @@ describe('the cart store\'s plans', () => {
 
     it('is not drawn when its plan comes on screen, but stays in the plan', () => {
       useCartStore.getState().createPlan(W)
-      useCartStore.getState().removeItem('CS161')
+      useCartStore.getState().removeItem('CS161', W)
       withoutCS161()
       useCartStore.getState().switchPlan(W, 'A')
       expect(ids()).toEqual(['CS107/Spring 2027', 'CS229/Winter 2027'])
@@ -251,7 +251,7 @@ describe('the cart store\'s plans', () => {
 
     it('goes with its plan when that plan is deleted, and the neighbour brings its own', () => {
       useCartStore.getState().createPlan(W)
-      useCartStore.getState().removeItem('CS161')
+      useCartStore.getState().removeItem('CS161', W)
       withoutCS161()
       useCartStore.setState({ unresolved: [{ id: 'CS999', selectedTerm: W }] }) // Plan B's
       useCartStore.getState().deletePlan(W, 'B')
@@ -261,7 +261,7 @@ describe('the cart store\'s plans', () => {
 
     it('gives way to the same course coming in under another term', () => {
       useCartStore.getState().createPlan(W)
-      useCartStore.getState().removeItem('CS161')
+      useCartStore.getState().removeItem('CS161', W)
       withoutCS161()
       useCartStore.setState({ unresolved: [{ id: 'CS161', selectedTerm: S }] })
       useCartStore.getState().switchPlan(W, 'A')

@@ -3,7 +3,7 @@ import { execFileSync } from 'node:child_process'
 import { mkdtempSync, symlinkSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import { classCandidates, offeringsFromDump } from '../scripts/scrape-sections.mjs'
+import { addRepeatable, classCandidates, offeringsFromDump, repeatableIds } from '../scripts/scrape-sections.mjs'
 
 /**
  * The year is read from class records, so which class numbers a run tries, and
@@ -45,6 +45,23 @@ describe('the year that just ended, from the last dump', () => {
 
     it('is empty for a year the dump does not hold', () => {
         expect(offeringsFromDump('20272028', dump).size).toBe(0)
+    })
+})
+
+describe('which courses are repeatable', () => {
+    it('reads ExploreCourses\' flag, under the id the catalog uses', () => {
+        expect(repeatableIds([
+            { subject: 'MUSIC', code: '181', repeatable: 'true' },
+            { subject: 'MS&E', code: '408', repeatable: true },
+            { subject: 'MATH', code: '51', repeatable: 'false' },
+            { subject: 'CS', code: '106B' },
+        ])).toEqual(['MUSIC181', 'MS&E408'])
+    })
+
+    it('only adds, and only courses the catalog holds', () => {
+        const catalog = new Set(['MUSIC181', 'CS195'])
+        expect(addRepeatable(['MUSIC181', 'OLD1'], new Set(['CS195', 'GONE2']), catalog)).toEqual(['CS195', 'MUSIC181', 'OLD1'])
+        expect(addRepeatable(['MUSIC181'], new Set(), catalog)).toEqual(['MUSIC181'])
     })
 })
 
